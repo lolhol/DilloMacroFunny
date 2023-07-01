@@ -39,7 +39,10 @@ public class IsOnBlock {
       if (startCheck) {
         if (curTicks <= checkTime) {
           if (blockPos != null) {
-            if (Math.abs(ids.mc.thePlayer.posX - blockPos.getX() - 0.5) < 0.0001 && Math.abs(ids.mc.thePlayer.posZ - blockPos.getZ() - 0.5) < 0.0001) {
+            if (
+              Math.abs(ids.mc.thePlayer.posX - blockPos.getX() - 0.5) < 0.0001 &&
+              Math.abs(ids.mc.thePlayer.posZ - blockPos.getZ() - 0.5) < 0.0001
+            ) {
               startCheck = false;
 
               SendChat.chat(prefix.prefix + "Teleported successfully!");
@@ -71,8 +74,7 @@ public class IsOnBlock {
         }
       }
 
-      if (startCheck)
-        curTicks++;
+      if (startCheck) curTicks++;
     }
   }
 }

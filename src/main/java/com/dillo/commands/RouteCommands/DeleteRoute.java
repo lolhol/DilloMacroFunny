@@ -7,23 +7,24 @@ import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
 
 public class DeleteRoute extends Command {
-    public DeleteRoute() {
-        super("deleteRoute");
-    }
 
-    @DefaultHandler
-    public void handle() {
-        if (currentRoute.currentRouteFile != null) {
-            currentRoute.currentRouteFile.delete();
-            currentRoute.currentRoute.clear();
-            currentRoute.strucList.clear();
-            currentRoute.currentRouteFile = null;
-            currentRoute.currentRouteSelected = null;
-            currentRoute.currentBlock = null;
+  public DeleteRoute() {
+    super("deleteRoute");
+  }
 
-            SendChat.chat(prefix.prefix + "Route deleted.");
-        } else {
-            SendChat.chat(prefix.prefix + "No route selected :/. Select it then run command again.");
-        }
+  @DefaultHandler
+  public void handle() {
+    if (currentRoute.currentRouteFile != null) {
+      currentRoute.currentRouteFile.delete();
+      currentRoute.currentRoute.clear();
+      currentRoute.strucList.clear();
+      currentRoute.currentRouteFile = null;
+      currentRoute.currentRouteSelected = null;
+      currentRoute.currentBlock = null;
+
+      SendChat.chat(prefix.prefix + "Route deleted.");
+    } else {
+      SendChat.chat(prefix.prefix + "No route selected :/. Select it then run command again.");
     }
+  }
 }

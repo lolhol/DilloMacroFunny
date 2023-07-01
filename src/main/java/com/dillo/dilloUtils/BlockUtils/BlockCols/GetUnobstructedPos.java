@@ -2,6 +2,8 @@ package com.dillo.dilloUtils.BlockUtils.BlockCols;
 
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -11,10 +13,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class GetUnobstructedPos {
+
   public static Vec3 getUnobstructedPos(BlockPos block) {
     EntityPlayer player = ids.mc.thePlayer; // Get the player object
     Vec3 playerPos = player.getPositionEyes(0);
@@ -35,7 +35,10 @@ public class GetUnobstructedPos {
                 double z = centerOfBlock.zCoord + offsetZ * signZ;
 
                 MovingObjectPosition movingObjectPosition = world.rayTraceBlocks(playerPos, new Vec3(x, y, z));
-                if (movingObjectPosition == null || movingObjectPosition.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) {
+                if (
+                  movingObjectPosition == null ||
+                  movingObjectPosition.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK
+                ) {
                   // Check if the block at the given position is a glass pane
                   return new Vec3(x, y, z);
                 }
@@ -71,7 +74,10 @@ public class GetUnobstructedPos {
                 double z = centerOfBlock.zCoord + offsetZ * signZ;
 
                 MovingObjectPosition movingObjectPosition = world.rayTraceBlocks(playerPos, new Vec3(x, y, z));
-                if (movingObjectPosition == null || movingObjectPosition.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) {
+                if (
+                  movingObjectPosition == null ||
+                  movingObjectPosition.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK
+                ) {
                   // Check if the block at the given position is a glass pane
                   BlockPos blockAtPos = new BlockPos(x, y, z);
                   Block blockType = ids.mc.theWorld.getBlockState(blockAtPos).getBlock();
@@ -80,7 +86,11 @@ public class GetUnobstructedPos {
                     collisionHitTypes.add(blockType);
                   }
 
-                  AxisAlignedBB collisionBox = blockType.getCollisionBoundingBox(world, blockAtPos, world.getBlockState(blockAtPos));
+                  AxisAlignedBB collisionBox = blockType.getCollisionBoundingBox(
+                    world,
+                    blockAtPos,
+                    world.getBlockState(blockAtPos)
+                  );
                   if (collisionBox == null || collisionBox.getAverageEdgeLength() >= 1.0) {
                     continue;
                   }

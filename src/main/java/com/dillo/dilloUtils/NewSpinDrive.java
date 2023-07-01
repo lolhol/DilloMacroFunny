@@ -16,12 +16,10 @@ import com.dillo.utils.GetAngleToBlock;
 import com.dillo.utils.degreeToRad;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
-
+import com.dillo.utils.previous.random.prefix;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.dillo.utils.previous.random.prefix;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -31,6 +29,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 
 public class NewSpinDrive {
+
   public static float angleTudaSuda = 0;
   public static float angle = 0;
   public static java.util.Random random = new java.util.Random();
@@ -80,8 +79,14 @@ public class NewSpinDrive {
       //IBlockState blockUnder = ids.mc.theWorld.getBlockState(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY - 2, ids.mc.thePlayer.posZ));
 
       LookAt.smoothLook(LookAt.getRotation(new Vec3(x, y, z)), time);
-    } else if (getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)).size() > 0 && blockTime < 20) {
-      List<BlockPos> blocks = getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ));
+    } else if (
+      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)).size() >
+      0 &&
+      blockTime < 20
+    ) {
+      List<BlockPos> blocks = getBlocksLayer(
+        new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)
+      );
 
       float angle = GetAngleToBlock.calcAngle(blocks.get(0));
 

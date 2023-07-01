@@ -3,6 +3,7 @@ package com.dillo.dilloUtils.BlockUtils.fileUtils;
 import static com.dillo.dilloUtils.BlockUtils.fileUtils.WriteFile.gson;
 
 import com.google.common.reflect.TypeToken;
+import com.google.gson.JsonObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -10,8 +11,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.gson.JsonObject;
 import net.minecraft.util.BlockPos;
 
 public class ReadFileContents {

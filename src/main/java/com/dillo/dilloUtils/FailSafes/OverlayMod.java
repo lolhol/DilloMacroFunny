@@ -3,13 +3,12 @@ package com.dillo.dilloUtils.FailSafes;
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.data.config;
 import com.dillo.utils.previous.SendChat;
+import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.util.Objects;
 
 public class OverlayMod {
 
@@ -60,8 +59,6 @@ public class OverlayMod {
             draw("Detected Player!", config.overlayX, config.overlayY);
             return;
         }
-
-
       }
 
       if (currState == null && Objects.equals(currOnOffState, "offline")) {

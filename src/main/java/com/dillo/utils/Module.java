@@ -1,7 +1,7 @@
 package com.dillo.utils;
 
 public interface Module {
-    boolean toggled();
+  boolean toggled();
 
-    String name();
+  String name();
 }

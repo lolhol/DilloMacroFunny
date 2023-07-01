@@ -11,7 +11,6 @@ import com.dillo.utils.previous.random.prefix;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -85,7 +84,10 @@ public class WalkOnPath {
     if (event.phase == TickEvent.Phase.END) {
       if (startWalking) {
         if (!isOnBlock(nextBlock, 1.2)) {
-          LookAt.smoothLook(LookAt.getRotation(new Vec3(nextBlock.getX() + 0.5, nextBlock.getY() + 1, nextBlock.getZ() + 0.5)), 20);
+          LookAt.smoothLook(
+            LookAt.getRotation(new Vec3(nextBlock.getX() + 0.5, nextBlock.getY() + 1, nextBlock.getZ() + 0.5)),
+            20
+          );
         }
       }
 
@@ -99,7 +101,10 @@ public class WalkOnPath {
 
           //SendChat.chat(Math.abs(currPlayerPos.xCoord - ids.mc.thePlayer.posX) + " " + Math.abs(currPlayerPos.zCoord - ids.mc.thePlayer.posZ));
 
-          if (Math.abs(currPlayerPos.xCoord - ids.mc.thePlayer.posX) < 0.5 && Math.abs(currPlayerPos.zCoord - ids.mc.thePlayer.posZ) < 0.5) {
+          if (
+            Math.abs(currPlayerPos.xCoord - ids.mc.thePlayer.posX) < 0.5 &&
+            Math.abs(currPlayerPos.zCoord - ids.mc.thePlayer.posZ) < 0.5
+          ) {
             if (timesTriggered >= 10) {
               SendChat.chat(prefix.prefix + "Detected stuck! Restarting!");
               stopWalking();
@@ -127,7 +132,10 @@ public class WalkOnPath {
   public void onRenderWorld(RenderWorldLastEvent event) {
     if (startWalking) {
       if (!isOnBlock(nextBlock, 0.2)) {
-        if (!isPathObstructed(ids.mc.thePlayer, nextBlock) || DistanceFromTo.distanceFromTo(nextBlock, ids.mc.thePlayer.getPosition()) > 2) {
+        if (
+          !isPathObstructed(ids.mc.thePlayer, nextBlock) ||
+          DistanceFromTo.distanceFromTo(nextBlock, ids.mc.thePlayer.getPosition()) > 2
+        ) {
           if (canBreakBlock(nextBlock)) {
             KeyBinding.setKeyBindState(FORWARD.getKeyCode(), true);
 
@@ -169,16 +177,29 @@ public class WalkOnPath {
   }
 
   public static boolean cannotJump(BlockPos originBlock) {
-    if (DistanceFromTo.distanceFromTo(originBlock, ids.mc.thePlayer.getPosition()) - DistanceFromTo.distanceFromTo(new BlockPos(ids.mc.thePlayer.posX + 1, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ), ids.mc.thePlayer.getPosition()) < 0.01) {
+    if (
+      DistanceFromTo.distanceFromTo(originBlock, ids.mc.thePlayer.getPosition()) -
+      DistanceFromTo.distanceFromTo(
+        new BlockPos(ids.mc.thePlayer.posX + 1, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ),
+        ids.mc.thePlayer.getPosition()
+      ) <
+      0.01
+    ) {
       BlockPos blockPX = new BlockPos(originBlock.getX() + 1, originBlock.getY(), originBlock.getZ());
       BlockPos blockMX = new BlockPos(originBlock.getX() - 1, originBlock.getY(), originBlock.getZ());
       BlockPos blockPXY = new BlockPos(originBlock.getX() + 1, originBlock.getY() + 1, originBlock.getZ());
       BlockPos blockMXY = new BlockPos(originBlock.getX() - 1, originBlock.getY() + 1, originBlock.getZ());
 
-      if (ids.mc.theWorld.getBlockState(blockPX).getBlock() != Blocks.air || ids.mc.theWorld.getBlockState(blockMX).getBlock() != Blocks.air) {
+      if (
+        ids.mc.theWorld.getBlockState(blockPX).getBlock() != Blocks.air ||
+        ids.mc.theWorld.getBlockState(blockMX).getBlock() != Blocks.air
+      ) {
         return true;
       } else {
-        if (ids.mc.theWorld.getBlockState(blockPXY).getBlock() != Blocks.air || ids.mc.theWorld.getBlockState(blockMXY).getBlock() != Blocks.air) {
+        if (
+          ids.mc.theWorld.getBlockState(blockPXY).getBlock() != Blocks.air ||
+          ids.mc.theWorld.getBlockState(blockMXY).getBlock() != Blocks.air
+        ) {
           return true;
         }
       }

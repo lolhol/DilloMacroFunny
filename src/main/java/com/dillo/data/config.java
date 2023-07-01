@@ -26,18 +26,18 @@ public class config extends Vigilant {
   public static boolean renderRoute = true;
 
   @Property(
-          type = PropertyType.SWITCH,
-          name = "Alr Checker Lobby",
-          description = "If u ran /checkRoute and it came out false in a lobby it will mark that lobby as checked and will display if u alr checked.",
-          category = "Main"
+    type = PropertyType.SWITCH,
+    name = "Alr Checker Lobby",
+    description = "If u ran /checkRoute and it came out false in a lobby it will mark that lobby as checked and will display if u alr checked.",
+    category = "Main"
   )
   public static boolean alrCheckedLobby = true;
 
   @Property(
-          type = PropertyType.SWITCH,
-          name = "Render Big Text When Route Check can be used",
-          description = "When all blocks are loaded (~~ when ur 200 blocks away from the furthest block)",
-          category = "Main"
+    type = PropertyType.SWITCH,
+    name = "Render Big Text When Route Check can be used",
+    description = "When all blocks are loaded (~~ when ur 200 blocks away from the furthest block)",
+    category = "Main"
   )
   public static boolean onRouteCheck = true;
 
@@ -263,211 +263,194 @@ public class config extends Vigilant {
   public static int restartTrigerTime = 10;
 
   @Property(
-          type = PropertyType.SWITCH,
-          name = "Walk forward when TP",
-          description = "Walks a bit when u tp. This A) makes admins less suspect of u and B) sometimes makes it so u can actually tp. WARNING MAY MESS UP SOME ROUTES!",
-          category = "Main"
+    type = PropertyType.SWITCH,
+    name = "Walk forward when TP",
+    description = "Walks a bit when u tp. This A) makes admins less suspect of u and B) sometimes makes it so u can actually tp. WARNING MAY MESS UP SOME ROUTES!",
+    category = "Main"
   )
   public static boolean walkOnTP = false;
 
   @Property(
-          type = PropertyType.SWITCH,
-          name = "Structure Scan",
-          description = "Scan for dillo structures",
-          category = "Main"
+    type = PropertyType.SWITCH,
+    name = "Structure Scan",
+    description = "Scan for dillo structures",
+    category = "Main"
   )
   public static boolean stuctureFinder = false;
 
   @Property(
-          type = PropertyType.SLIDER,
-          name = "Angle Rotation",
-          description = "Rotated angle be4 moving on.",
-          category = "Main",
-          min = 1,
-          max = 1440
+    type = PropertyType.SLIDER,
+    name = "Angle Rotation",
+    description = "Rotated angle be4 moving on.",
+    category = "Main",
+    min = 1,
+    max = 1440
   )
   public static int angleRotation = 10;
 
   @Property(
-          type = PropertyType.SWITCH,
-          name = "Current Action Overlay",
-          description = "Self Explanatory (for qol)",
-          category = "Main"
+    type = PropertyType.SWITCH,
+    name = "Current Action Overlay",
+    description = "Self Explanatory (for qol)",
+    category = "Main"
   )
   public static boolean currentActionOverlay = true;
 
   @Property(
-          type = PropertyType.SLIDER,
-          name = "Overlay X",
-          description = "The pos of overlay in X direction.",
-          category = "Main",
-          min = 1,
-          max = 700
+    type = PropertyType.SLIDER,
+    name = "Overlay X",
+    description = "The pos of overlay in X direction.",
+    category = "Main",
+    min = 1,
+    max = 700
   )
   public static int overlayX = 10;
 
   @Property(
-          type = PropertyType.SLIDER,
-          name = "Overlay Y",
-          description = "The pos of overlay in Y direction.",
-          category = "Main",
-          min = 1,
-          max = 700
+    type = PropertyType.SLIDER,
+    name = "Overlay Y",
+    description = "The pos of overlay in Y direction.",
+    category = "Main",
+    min = 1,
+    max = 700
   )
   public static int overlayY = 10;
 
   @Property(
-          type = PropertyType.SWITCH,
-          name = "Player Failsafe",
-          description = "(ONG???) Player failsafe. :O (fr no swear)",
-          category = "Main"
+    type = PropertyType.SWITCH,
+    name = "Player Failsafe",
+    description = "(ONG???) Player failsafe. :O (fr no swear)",
+    category = "Main"
   )
   public static boolean playerFailsafe = true;
 
   @Property(
-          type = PropertyType.SLIDER,
-          name = "Player Failsafe Range",
-          description = "Range of player to trigger. (blocks)",
-          category = "Main",
-          min = 1,
-          max = 100
+    type = PropertyType.SLIDER,
+    name = "Player Failsafe Range",
+    description = "Range of player to trigger. (blocks)",
+    category = "Main",
+    min = 1,
+    max = 100
   )
   public static int playerFailsafeRange = 10;
 
   @Property(
-          type = PropertyType.SWITCH,
-          name = "Hack Accusations",
-          description = "Auto answer messages containing ur name and words that u put in the file (there are defaults). Modify the file at './MiningInTwo/chatAnswers'.",
-          category = "Main"
+    type = PropertyType.SWITCH,
+    name = "Hack Accusations",
+    description = "Auto answer messages containing ur name and words that u put in the file (there are defaults). Modify the file at './MiningInTwo/chatAnswers'.",
+    category = "Main"
   )
   public static boolean hackAccusationAnswer = false;
 
   @Property(
-          type = PropertyType.SWITCH,
-          name = "Hypixel Bazaar Fetches",
-          description = "Basically if you turn this off the mod will not request hypixel bazaar data every ___ seconds and will only request it once and on start. (Turning this off means that the tracker will be less accurate.)",
-          category = "Main"
+    type = PropertyType.SWITCH,
+    name = "Hypixel Bazaar Fetches",
+    description = "Basically if you turn this off the mod will not request hypixel bazaar data every ___ seconds and will only request it once and on start. (Turning this off means that the tracker will be less accurate.)",
+    category = "Main"
   )
   public static boolean hypixelBZFetches = true;
 
   @Property(
-          type = PropertyType.SLIDER,
-          name = "Time between hypixel bz api fetches",
-          description = "The lower u put this the the more lag ur gona get but more accurate rates. (seconds)",
-          category = "Main",
-          min = 1,
-          max = 1000
+    type = PropertyType.SLIDER,
+    name = "Time between hypixel bz api fetches",
+    description = "The lower u put this the the more lag ur gona get but more accurate rates. (seconds)",
+    category = "Main",
+    min = 1,
+    max = 1000
   )
   public static int hypixelBzFetchTime = 500;
 
   @Property(
-          type = PropertyType.SLIDER,
-          name = "Profit tracker X",
-          description = "X",
-          category = "Main",
-          min = 1,
-          max = 1000
+    type = PropertyType.SLIDER,
+    name = "Profit tracker X",
+    description = "X",
+    category = "Main",
+    min = 1,
+    max = 1000
   )
   public static int profitTrackerX = 50;
 
   @Property(
-          type = PropertyType.SLIDER,
-          name = "Profit tracker Y",
-          description = "Y",
-          category = "Main",
-          min = 1,
-          max = 1000
+    type = PropertyType.SLIDER,
+    name = "Profit tracker Y",
+    description = "Y",
+    category = "Main",
+    min = 1,
+    max = 1000
   )
   public static int profitTrackerY = 50;
 
   @Property(
-          type = PropertyType.SLIDER,
-          name = "Profit tracker size",
-          description = "size",
-          category = "Main",
-          min = 1,
-          max = 10
+    type = PropertyType.SLIDER,
+    name = "Profit tracker size",
+    description = "size",
+    category = "Main",
+    min = 1,
+    max = 10
   )
   public static int profitTrackerSize = 2;
 
-  @Property(
-          type = PropertyType.SLIDER,
-          name = "Nuker BPS",
-          description = "BPS",
-          category = "Main",
-          min = 20,
-          max = 80
-  )
+  @Property(type = PropertyType.SLIDER, name = "Nuker BPS", description = "BPS", category = "Main", min = 20, max = 80)
   public static int nukerBPS = 20;
 
   @Property(
-          type = PropertyType.SWITCH,
-          name = "Check if unobstructed",
-          description = "Nuker checks to see if block is visible (eg -> if u can break, the nuker can break)",
-          category = "Main"
+    type = PropertyType.SWITCH,
+    name = "Check if unobstructed",
+    description = "Nuker checks to see if block is visible (eg -> if u can break, the nuker can break)",
+    category = "Main"
   )
   public static boolean nukerUnObstructedChecks = false;
 
   @Property(
-          type = PropertyType.SWITCH,
-          name = "Nuker actually look",
-          description = "The neker will actually look at the block being nuked (very anoying ik but it is what it is)",
-          category = "Main"
+    type = PropertyType.SWITCH,
+    name = "Nuker actually look",
+    description = "The neker will actually look at the block being nuked (very anoying ik but it is what it is)",
+    category = "Main"
   )
   public static boolean nukerActualLook = false;
 
   @Property(
-          type = PropertyType.SLIDER,
-          name = "Nuker FOV",
-          description = "Nuker field of view to actually nuke.",
-          category = "Main",
-          min = 20,
-          max = 360
+    type = PropertyType.SLIDER,
+    name = "Nuker FOV",
+    description = "Nuker field of view to actually nuke.",
+    category = "Main",
+    min = 20,
+    max = 360
   )
   public static int nukerFOV = 20;
 
   @Property(
-          type = PropertyType.SWITCH,
-          name = "Re-Teleport",
-          description = "If the macro will tp somewhere random (prev vers had that :<) then it will attempt a re-tp",
-          category = "Main"
+    type = PropertyType.SWITCH,
+    name = "Re-Teleport",
+    description = "If the macro will tp somewhere random (prev vers had that :<) then it will attempt a re-tp",
+    category = "Main"
   )
   public static boolean reTeleport = false;
 
   @Property(
-          type = PropertyType.SLIDER,
-          name = "Re-Tp Amount Of times",
-          description = "The amount of times that macro will attempt to re-teleport.",
-          category = "Main",
-          min = 1,
-          max = 5
+    type = PropertyType.SLIDER,
+    name = "Re-Tp Amount Of times",
+    description = "The amount of times that macro will attempt to re-teleport.",
+    category = "Main",
+    min = 1,
+    max = 5
   )
   public static int reTpTimes = 2;
 
-  @Property(
-          type = PropertyType.SWITCH,
-          name = "Time / Vein display",
-          description = "What it seems.",
-          category = "Main"
-  )
+  @Property(type = PropertyType.SWITCH, name = "Time / Vein display", description = "What it seems.", category = "Main")
   public static boolean timeVein = true;
 
   @Property(
-          type = PropertyType.SLIDER,
-          name = "Wait before starting the dillo movement (rod / drill switch delay)",
-          description = "idk where to set this to but i assume its ab ur ping. (dont set too high tho). This module is made to prevent low procs bc of the dillo starting too fast and the dill not updating.",
-          category = "Main",
-          min = 1,
-          max = 1000
+    type = PropertyType.SLIDER,
+    name = "Wait before starting the dillo movement (rod / drill switch delay)",
+    description = "idk where to set this to but i assume its ab ur ping. (dont set too high tho). This module is made to prevent low procs bc of the dillo starting too fast and the dill not updating.",
+    category = "Main",
+    min = 1,
+    max = 1000
   )
   public static int rod_drill_switch_time = 200;
 
-  @Property(
-          type = PropertyType.SWITCH,
-          name = "Include Mithril",
-          description = "What it seems.",
-          category = "Main"
-  )
+  @Property(type = PropertyType.SWITCH, name = "Include Mithril", description = "What it seems.", category = "Main")
   public static boolean includeMithril = true;
 
   public static config INSTANCE = new config();

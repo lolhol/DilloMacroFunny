@@ -1,17 +1,17 @@
 package com.dillo.keybinds;
 
+import static com.dillo.commands.RouteCommands.StructurePoints.render;
+
 import com.dillo.armadillomacro;
 import com.dillo.dilloUtils.RouteUtils.Nuker.StartNuker;
 import com.dillo.utils.StartMacro;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-import static com.dillo.commands.RouteCommands.StructurePoints.render;
-
 public class Keybinds {
+
   public static boolean isNuking = false;
   public static boolean wasDown = false;
-
 
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {

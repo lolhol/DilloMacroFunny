@@ -1,15 +1,14 @@
 package com.dillo.commands.UtilCommands;
 
+import static com.dillo.utils.ScoreboardUtils.GetCurArea.getArea;
+
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleLines;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
-import net.minecraft.util.BlockPos;
-
 import java.util.List;
-
-import static com.dillo.utils.ScoreboardUtils.GetCurArea.getArea;
+import net.minecraft.util.BlockPos;
 
 public class WalkToCustom extends Command {
 
@@ -27,7 +26,6 @@ public class WalkToCustom extends Command {
     // ArmadilloStates.currentState = "spinDrive";
 
     getArea();
-
     //new Thread(GetCurGemPrice::getCurrGemPrice).start();
 
     //GetSBItems.getSack();
@@ -78,7 +76,7 @@ public class WalkToCustom extends Command {
       playerYaw = (float) (ids.mc.thePlayer.rotationYaw - (Math.floor(ids.mc.thePlayer.rotationYaw / 360)) * 360);
     }
 
-   // SendChat.chat(" !!! " + playerYaw + " !!! ");
+    // SendChat.chat(" !!! " + playerYaw + " !!! ");
 
     if (playerYaw > 180) {
       playerYaw -= 360;

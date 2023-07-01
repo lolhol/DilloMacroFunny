@@ -1,5 +1,7 @@
 package com.dillo.commands.RouteCommands;
 
+import static com.dillo.MITGUI.Overlay.curTime;
+
 import com.dillo.dilloUtils.BlockUtils.fileUtils.ReadFileContents;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.utils.GetConfigFolder;
@@ -10,13 +12,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
-import net.minecraft.util.BlockPos;
-import scala.tools.nsc.io.Jar;
-
 import java.io.File;
 import java.util.Objects;
-
-import static com.dillo.MITGUI.Overlay.curTime;
+import net.minecraft.util.BlockPos;
+import scala.tools.nsc.io.Jar;
 
 public class SelectRouteCommand extends Command {
 
@@ -45,7 +44,9 @@ public class SelectRouteCommand extends Command {
           if (currentRouteArr.size() > 0) {
             for (JsonElement element : currentRouteArr) {
               JsonObject curObj = element.getAsJsonObject();
-              currentRoute.currentRoute.add(new BlockPos(curObj.get("x").getAsInt(), curObj.get("y").getAsInt(), curObj.get("z").getAsInt()));
+              currentRoute.currentRoute.add(
+                new BlockPos(curObj.get("x").getAsInt(), curObj.get("y").getAsInt(), curObj.get("z").getAsInt())
+              );
             }
           }
 
@@ -54,7 +55,9 @@ public class SelectRouteCommand extends Command {
           if (currentStrucArr.size() > 0) {
             for (JsonElement element : currentStrucArr) {
               JsonObject curObj = element.getAsJsonObject();
-              currentRoute.strucList.add(new BlockPos(curObj.get("x").getAsInt(), curObj.get("y").getAsInt(), curObj.get("z").getAsInt()));
+              currentRoute.strucList.add(
+                new BlockPos(curObj.get("x").getAsInt(), curObj.get("y").getAsInt(), curObj.get("z").getAsInt())
+              );
             }
           }
         } else {

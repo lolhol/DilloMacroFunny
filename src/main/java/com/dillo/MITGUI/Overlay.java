@@ -14,6 +14,8 @@ import com.dillo.data.config;
 import com.dillo.dilloUtils.WorldScan.Utils.StringUtils;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
+import java.awt.*;
+import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -21,10 +23,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.awt.*;
-import java.util.Objects;
-
 public class Overlay {
+
   public static long curTime = System.currentTimeMillis();
   private static long lastLobbyCheck = System.currentTimeMillis();
 
@@ -53,7 +53,14 @@ public class Overlay {
 
           String text = "Total Earned: " + earnings.totalEarningString + "$";
           String textPerHour = "Per hour: " + earnings.perHour + "$/hr";
-          drawTextInBox(text, textPerHour, config.profitTrackerX, config.profitTrackerY, 30 * config.profitTrackerSize / 2, 20 * config.profitTrackerSize / 2);
+          drawTextInBox(
+            text,
+            textPerHour,
+            config.profitTrackerX,
+            config.profitTrackerY,
+            30 * config.profitTrackerSize / 2,
+            20 * config.profitTrackerSize / 2
+          );
         } else {
           started = false;
           GetTotalEarned.clearTotalEarned();

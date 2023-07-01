@@ -68,7 +68,14 @@ public class ArmadilloMain {
         if (Objects.equals(ArmadilloStates.currentState, "restartPathfinder")) {
           ArmadilloStates.currentState = null;
           BlockPos playerPos = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ);
-          PathFinderV2.restartFinder(new BlockNode(playerPos, DistanceFromTo.distanceFromTo(PathFinderV2.lastFinalDestination.blockPos(), playerPos), 0.0, null));
+          PathFinderV2.restartFinder(
+            new BlockNode(
+              playerPos,
+              DistanceFromTo.distanceFromTo(PathFinderV2.lastFinalDestination.blockPos(), playerPos),
+              0.0,
+              null
+            )
+          );
         }
 
         if (Objects.equals(ArmadilloStates.currentState, "resumeWalking")) {

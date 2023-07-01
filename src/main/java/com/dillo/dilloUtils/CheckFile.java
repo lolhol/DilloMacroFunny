@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class CheckFile {
+
   private static List<List<String>> defaultAcusations = new ArrayList<List<String>>();
   public static File file = new File(GetConfigFolder.getMcDir() + "/MiningInTwo");
   public static File configFile = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/default-route.json");
@@ -28,8 +28,7 @@ public class CheckFile {
     if (!configFile.exists()) {
       try {
         configFile.createNewFile();
-      } catch (IOException e) {
-      }
+      } catch (IOException e) {}
     }
 
     if (!answersFile.exists()) {
@@ -40,7 +39,9 @@ public class CheckFile {
         makeAcusations();
         writeStringFile(answersFile, gson.toJson(defaultAcusations));
       } catch (IOException e) {
-        System.out.println("Error creating ________________________________________________________________________________________________________________________________");
+        System.out.println(
+          "Error creating ________________________________________________________________________________________________________________________________"
+        );
       }
     }
   }
@@ -50,9 +51,7 @@ public class CheckFile {
       FileWriter writer = new FileWriter(file);
       writer.write(text);
       writer.close();
-    } catch (Exception e) {
-
-    }
+    } catch (Exception e) {}
   }
 
   private static void makeAcusations() {

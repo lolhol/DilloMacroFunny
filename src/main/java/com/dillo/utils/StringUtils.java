@@ -6,7 +6,8 @@ package com.dillo.utils;
  * @brief String Utilities
  */
 public class StringUtils {
-    public static String removeFormatting(String input) {
-        return input.replaceAll("[§|&][0-9,a-f,k-o,r]", "");
-    }
+
+  public static String removeFormatting(String input) {
+    return input.replaceAll("[§|&][0-9,a-f,k-o,r]", "");
+  }
 }

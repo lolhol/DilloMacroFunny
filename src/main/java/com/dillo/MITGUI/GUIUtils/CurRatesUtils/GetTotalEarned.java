@@ -6,70 +6,71 @@ import static com.dillo.MITGUI.GUIUtils.CurRatesUtils.ItemsPickedUp.getJsonObjec
 
 import com.dillo.utils.previous.SendChat;
 import com.google.gson.JsonObject;
-
 import java.util.Arrays;
 import java.util.List;
 
 public class GetTotalEarned {
-    public static class TotalEarning {
-        public double totalEarned = 0;
-        public String perHour = "";
-        public String totalEarningString = "";
-    }
 
-    public static TotalEarning totalEarned() {
-        double total = 0;
-        List<String> gems = Arrays.asList("RUBY", "AMBER", "TOPAZ", "SAPPHIRE", "AMETHYST", "JASPER", "JADE");
-        JsonObject jsonObj = getJsonObject();
+  public static class TotalEarning {
 
-        for (String gem : gems) {
-            double currTotal = 0;
+    public double totalEarned = 0;
+    public String perHour = "";
+    public String totalEarningString = "";
+  }
 
-            if (jsonObj.has("FLAWED_" + gem)) {
-                double price = getPrice("FLAWED_" + gem + "_GEM");
+  public static TotalEarning totalEarned() {
+    double total = 0;
+    List<String> gems = Arrays.asList("RUBY", "AMBER", "TOPAZ", "SAPPHIRE", "AMETHYST", "JASPER", "JADE");
+    JsonObject jsonObj = getJsonObject();
 
-                if (price != -1) {
-                    currTotal = jsonObj.get("FLAWED_" + gem).getAsInt() * price;
-                } else {
-                    currTotal = 0;
-                }
-            }
+    for (String gem : gems) {
+      double currTotal = 0;
 
-            total += currTotal;
+      if (jsonObj.has("FLAWED_" + gem)) {
+        double price = getPrice("FLAWED_" + gem + "_GEM");
+
+        if (price != -1) {
+          currTotal = jsonObj.get("FLAWED_" + gem).getAsInt() * price;
+        } else {
+          currTotal = 0;
         }
+      }
 
-        TotalEarning totalEarnings = new TotalEarning();
-        totalEarnings.totalEarned = total;
-
-        long time = System.currentTimeMillis() - firstTime;
-        int number = (int) Math.floor(total * (3600000 / time));
-
-        totalEarnings.perHour = numberWithCommas(number);
-        totalEarnings.totalEarningString = numberWithCommas((int) total);
-
-        return totalEarnings;
+      total += currTotal;
     }
 
-    private static String numberWithCommas(int x) {
-        if (x == -1) {
-            return "";
-        }
+    TotalEarning totalEarnings = new TotalEarning();
+    totalEarnings.totalEarned = total;
 
-        String[] parts = Integer.toString(x).split("\\.");
-        parts[0] = parts[0].replaceAll("(?<=\\d)(?=(\\d{3})+(?!\\d))", ",");
-        return String.join(".", parts);
+    long time = System.currentTimeMillis() - firstTime;
+    int number = (int) Math.floor(total * (3600000 / time));
+
+    totalEarnings.perHour = numberWithCommas(number);
+    totalEarnings.totalEarningString = numberWithCommas((int) total);
+
+    return totalEarnings;
+  }
+
+  private static String numberWithCommas(int x) {
+    if (x == -1) {
+      return "";
     }
 
-    public static void clearTotalEarned() {
-        ItemsPickedUp.first = true;
-        List<String> gems = Arrays.asList("RUBY", "AMBER", "TOPAZ", "SAPPHIRE", "AMETHYST", "JASPER", "JADE");
-        JsonObject jsonObj = getJsonObject();
-        firstTime = System.currentTimeMillis();
+    String[] parts = Integer.toString(x).split("\\.");
+    parts[0] = parts[0].replaceAll("(?<=\\d)(?=(\\d{3})+(?!\\d))", ",");
+    return String.join(".", parts);
+  }
 
-        for (String gem : gems) {
-            if (jsonObj.has("FLAWED_" + gem)) {
-                jsonObj.remove("FLAWED_" + gem);
-            }
-        }
+  public static void clearTotalEarned() {
+    ItemsPickedUp.first = true;
+    List<String> gems = Arrays.asList("RUBY", "AMBER", "TOPAZ", "SAPPHIRE", "AMETHYST", "JASPER", "JADE");
+    JsonObject jsonObj = getJsonObject();
+    firstTime = System.currentTimeMillis();
+
+    for (String gem : gems) {
+      if (jsonObj.has("FLAWED_" + gem)) {
+        jsonObj.remove("FLAWED_" + gem);
+      }
     }
+  }
 }

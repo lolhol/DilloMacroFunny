@@ -10,7 +10,7 @@ import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.throwRod;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-
+import java.util.concurrent.TimeUnit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.BlockPos;
@@ -19,8 +19,6 @@ import net.minecraft.util.IThreadListener;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
-import java.util.concurrent.TimeUnit;
 
 public class RemoteControl {
 
@@ -102,6 +100,7 @@ public class RemoteControl {
       } catch (InterruptedException e) {
         KeyBinding.setKeyBindState(jump.getKeyCode(), false);
       }
-    }).start();
+    })
+      .start();
   }
 }

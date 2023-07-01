@@ -13,7 +13,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -44,7 +43,9 @@ public class GetRemoteControl {
             SendChat.chat(e.toString());
           }
 
-          JsonArray output = requestData("http://localhost:3000/api/getUserData?name=" + getCurrentUsername().toLowerCase() + "&chat=" + encodedChat);
+          JsonArray output = requestData(
+            "http://localhost:3000/api/getUserData?name=" + getCurrentUsername().toLowerCase() + "&chat=" + encodedChat
+          );
           //SendChat.chat(String.valueOf(output));
           RemoteControlChat.chatArray = new ArrayList<>();
           if (output != null) {

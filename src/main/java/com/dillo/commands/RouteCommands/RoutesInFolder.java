@@ -20,7 +20,6 @@ public class RoutesInFolder extends Command {
   }
 
   public static void getAllRoutes() {
-
     File folder = new File(GetConfigFolder.getMcDir() + "/MiningInTwo");
 
     if (folder.isDirectory()) {

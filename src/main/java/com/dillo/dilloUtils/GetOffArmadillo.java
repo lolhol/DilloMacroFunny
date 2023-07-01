@@ -43,8 +43,7 @@ public class GetOffArmadillo {
         if (currTicks <= ammountOfCheckTicks) {
           if (Objects.equals(ArmadilloStates.offlineState, "online")) {
             if (ids.mc.thePlayer.posY - blockYPos - 1 - config.distanceToGround / 10 < 0.0001) {
-              if (sneak)
-                KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
+              if (sneak) KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
               startOff = false;
               currTicks = 0;
               ArmadilloStates.currentState = setNewState;

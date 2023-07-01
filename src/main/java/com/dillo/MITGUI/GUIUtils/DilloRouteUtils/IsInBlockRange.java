@@ -7,21 +7,22 @@ import com.dillo.utils.previous.random.ids;
 import net.minecraft.util.BlockPos;
 
 public class IsInBlockRange {
-    public static boolean isInCheckRange() {
-        double curFurthest = 0;
 
-        for (BlockPos block : currentRoute.currentRoute) {
-            double dist = DistanceFromTo.distanceFromTo(block, ids.mc.thePlayer.getPosition());
+  public static boolean isInCheckRange() {
+    double curFurthest = 0;
 
-            if (dist > curFurthest) {
-                curFurthest = dist;
-            }
-        }
+    for (BlockPos block : currentRoute.currentRoute) {
+      double dist = DistanceFromTo.distanceFromTo(block, ids.mc.thePlayer.getPosition());
 
-        if (curFurthest > 200 || currentRoute.currentRoute.size() < 1) {
-            return false;
-        }
-
-        return true;
+      if (dist > curFurthest) {
+        curFurthest = dist;
+      }
     }
+
+    if (curFurthest > 200 || currentRoute.currentRoute.size() < 1) {
+      return false;
+    }
+
+    return true;
+  }
 }

@@ -3,19 +3,20 @@ package com.dillo.dilloUtils.WorldScan.Utils.objects;
 import net.minecraft.util.BlockPos;
 
 public class HighlightBlock {
-    private final BlockPos blockPos;
-    private final String name;
 
-    public HighlightBlock(BlockPos blockPos, String name) {
-        this.blockPos = blockPos;
-        this.name = name;
-    }
+  private final BlockPos blockPos;
+  private final String name;
 
-    public BlockPos getBlockPos() {
-        return blockPos;
-    }
+  public HighlightBlock(BlockPos blockPos, String name) {
+    this.blockPos = blockPos;
+    this.name = name;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public BlockPos getBlockPos() {
+    return blockPos;
+  }
+
+  public String getName() {
+    return name;
+  }
 }

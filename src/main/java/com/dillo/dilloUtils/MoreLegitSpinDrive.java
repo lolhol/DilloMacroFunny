@@ -9,7 +9,6 @@ import com.dillo.utils.degreeToRad;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
 import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -19,6 +18,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 
 public class MoreLegitSpinDrive {
+
   public static float angleTudaSuda = 0;
   public static float angle = 0;
   public static java.util.Random random = new java.util.Random();
@@ -100,7 +100,7 @@ public class MoreLegitSpinDrive {
       long time = (int) (config.headMovement * 24.5);
 
       IBlockState blockUnder = ids.mc.theWorld.getBlockState(
-              new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY - 2, ids.mc.thePlayer.posZ)
+        new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY - 2, ids.mc.thePlayer.posZ)
       );
 
       LookAt.smoothLook(LookAt.getRotation(new BlockPos(x, y + 2, z)), time);

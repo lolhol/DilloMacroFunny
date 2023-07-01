@@ -32,7 +32,6 @@ public class DetectEntityUnderCommand extends Command {
       ArmadilloStates.offlineState = "offline";
       ArmadilloStates.currentState = null;
     }
-
     /*if (Objects.equals(arg, "true")) {
       RenderMultipleBlocksMod.renderMultipleBlocks(null, false);
       RenderMultipleLines.renderMultipleLines(null, null, false);

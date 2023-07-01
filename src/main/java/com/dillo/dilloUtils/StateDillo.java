@@ -29,7 +29,11 @@ public class StateDillo {
   public static int checkedNumber = 0;
 
   public static void stateDilloNoGettingOn() {
-    if (getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)).size() > 0 && Objects.equals(ArmadilloStates.offlineState, "online")) {
+    if (
+      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)).size() >
+      0 &&
+      Objects.equals(ArmadilloStates.offlineState, "online")
+    ) {
       ArmadilloStates.currentState = null;
       swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
       ArmadilloStates.currentState = "spinDrive";
@@ -42,7 +46,11 @@ public class StateDillo {
   }
 
   public static void stateDillo() {
-    if (getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)).size() > 0 && Objects.equals(ArmadilloStates.offlineState, "online")) {
+    if (
+      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)).size() >
+      0 &&
+      Objects.equals(ArmadilloStates.offlineState, "online")
+    ) {
       throwRod.throwRodInv();
       ArmadilloStates.currentState = null;
       swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
@@ -53,9 +61,9 @@ public class StateDillo {
 
           playerYBe4 = (float) ids.mc.thePlayer.posY;
           ids.mc.playerController.sendUseItem(
-                  ids.mc.thePlayer,
-                  ids.mc.theWorld,
-                  ids.mc.thePlayer.inventory.getStackInSlot(ids.mc.thePlayer.inventory.currentItem)
+            ids.mc.thePlayer,
+            ids.mc.theWorld,
+            ids.mc.thePlayer.inventory.getStackInSlot(ids.mc.thePlayer.inventory.currentItem)
           );
 
           if (Objects.equals(ArmadilloStates.offlineState, "online")) {
@@ -64,7 +72,8 @@ public class StateDillo {
         } catch (InterruptedException e) {
           throw new RuntimeException(e);
         }
-      }).start();
+      })
+        .start();
     } else {
       if (Objects.equals(ArmadilloStates.offlineState, "online")) {
         ArmadilloStates.currentState = null;

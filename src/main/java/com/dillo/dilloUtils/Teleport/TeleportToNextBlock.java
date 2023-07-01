@@ -16,10 +16,8 @@ import com.dillo.dilloUtils.TpUtils.WaitThenCall;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
-
 import java.util.List;
 import java.util.Objects;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
