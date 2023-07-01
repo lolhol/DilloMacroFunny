@@ -91,6 +91,8 @@ public class armadillomacro {
       new KeyBinding("Add Point", Keyboard.KEY_NONE, "Mining In Two")
     );
 
+    // Comment
+
     registerCommands(
       new StartMacroCommand(),
       new DetectEntityUnderCommand(),
