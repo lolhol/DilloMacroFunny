@@ -56,7 +56,7 @@ import org.lwjgl.opengl.Display;
 @Mod(modid = "MITExtras", name = "MITExtras", version = "1.0.0", clientSideOnly = true)
 @SideOnly(Side.CLIENT)
 public class armadillomacro {
-
+  // fff
   @Mod.Instance("MITExtras")
   public static armadillomacro instance;
 
