@@ -4,7 +4,6 @@ import static com.dillo.dilloUtils.FailSafes.AnswerPPL.makeAcusation;
 
 import com.dillo.ArmadilloMain.ArmadilloMain;
 import com.dillo.Events.DoneNukerBlocks;
-import com.dillo.Events.DonePathEvent;
 import com.dillo.MITGUI.GUIUtils.CurRatesUtils.GetCurGemPrice;
 import com.dillo.MITGUI.GUIUtils.CurRatesUtils.ItemsPickedUp;
 import com.dillo.MITGUI.GUIUtils.CurTimeVein.CurTime;
@@ -54,12 +53,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
-@Mod(
-  modid = "MITExtras",
-  name = "MITExtras",
-  version = "1.0.0",
-  clientSideOnly = true
-)
+@Mod(modid = "MITExtras", name = "MITExtras", version = "1.0.0", clientSideOnly = true)
 @SideOnly(Side.CLIENT)
 public class armadillomacro {
 
@@ -74,22 +68,10 @@ public class armadillomacro {
   public void init(FMLInitializationEvent event) {
     Display.setTitle("PornHub");
     CheckFile.checkFiles();
-    keybinds.add(
-      new KeyBinding("Enable Macro", Keyboard.KEY_NONE, "Mining In Two")
-    );
-    keybinds.add(
-      new KeyBinding("Enable Nuker", Keyboard.KEY_NONE, "Mining In Two")
-    );
-    keybinds.add(
-      new KeyBinding(
-        "Quick View Structures",
-        Keyboard.KEY_NONE,
-        "Mining In Two"
-      )
-    );
-    keybinds.add(
-      new KeyBinding("Add Point", Keyboard.KEY_NONE, "Mining In Two")
-    );
+    keybinds.add(new KeyBinding("Enable Macro", Keyboard.KEY_NONE, "Mining In Two"));
+    keybinds.add(new KeyBinding("Enable Nuker", Keyboard.KEY_NONE, "Mining In Two"));
+    keybinds.add(new KeyBinding("Quick View Structures", Keyboard.KEY_NONE, "Mining In Two"));
+    keybinds.add(new KeyBinding("Add Point", Keyboard.KEY_NONE, "Mining In Two"));
 
     // Comment
 
@@ -161,9 +143,7 @@ public class armadillomacro {
     );
 
     registerKeybinds(keybinds);
-    makeAcusation(
-      new File(GetConfigFolder.getMcDir() + "/MiningInTwo/chatAnswers.json")
-    );
+    makeAcusation(new File(GetConfigFolder.getMcDir() + "/MiningInTwo/chatAnswers.json"));
 
     new Thread(GetCurGemPrice::getCurrGemPrice).start();
   }
