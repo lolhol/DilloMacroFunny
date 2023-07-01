@@ -1,0 +1,14 @@
+{
+  "package": "com.dillo.mixin",
+  "refmap": "mixins.armadillomacro.refmap.json",
+  "minVersion": "0.7",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "MixinGuiMainMenu"
+  ],
+  "mixins": [
+    "RenderManagerAccessor"
+  ]
+}
