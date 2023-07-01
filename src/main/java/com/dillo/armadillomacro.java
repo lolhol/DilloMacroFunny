@@ -62,7 +62,7 @@ import org.lwjgl.opengl.Display;
 )
 @SideOnly(Side.CLIENT)
 public class armadillomacro {
-
+  // fff
   @Mod.Instance("MITExtras")
   public static armadillomacro instance;
 
