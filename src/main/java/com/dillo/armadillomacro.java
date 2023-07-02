@@ -69,7 +69,7 @@ public class armadillomacro {
   public void init(FMLInitializationEvent event) {
     Display.setTitle("PornHub");
     CheckFile.checkFiles();
-    keybinds.add(new KeyBinding("Enable Macro", Keyboard.KEY_NONE, "Mining In Two"));
+    keybinds.add(new KeyBinding("Enable Macro", Keyboard.KEY_NONE, "Mining In Three"));
     keybinds.add(new KeyBinding("Enable Nuker", Keyboard.KEY_NONE, "Mining In Two"));
     keybinds.add(new KeyBinding("Quick View Structures", Keyboard.KEY_NONE, "Mining In Two"));
     keybinds.add(new KeyBinding("Add Point", Keyboard.KEY_NONE, "Mining In Two"));
