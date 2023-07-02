@@ -35,7 +35,7 @@ public class config extends Vigilant {
 
   @Property(
     type = PropertyType.SWITCH,
-    name = "Alr Checker Lobby",
+    name = "Alr Checked Lobby",
     description = "If u ran /checkRoute and it came out false in a lobby it will mark that lobby as checked and will display if u alr checked.",
     category = "Main"
   )
@@ -43,8 +43,16 @@ public class config extends Vigilant {
 
   @Property(
     type = PropertyType.SWITCH,
+    name = "Alr Checked Lobby Sound",
+    description = "Plays annoying sound.",
+    category = "Main"
+  )
+  public static boolean alrCheckedLobbySound = false;
+
+  @Property(
+    type = PropertyType.SWITCH,
     name = "Render Big Text When Route Check can be used",
-    description = "When all blocks are loaded (~~ when ur 200 blocks away from the furthest block)",
+    description = "When all blocks are loaded (~~ when ur 120 blocks away from the furthest block)",
     category = "Main"
   )
   public static boolean onRouteCheck = true;

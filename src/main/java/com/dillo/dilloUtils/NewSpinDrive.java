@@ -50,8 +50,6 @@ public class NewSpinDrive {
 
       float y = block.getY() + yPosition;
 
-      yPosition += 0.05;
-
       float anglePlayerToBlock = GetAnglePlayerToBlock.getAnglePlayerToBlock(block);
       angleTudaSuda = angle;
 
@@ -80,8 +78,11 @@ public class NewSpinDrive {
 
       LookAt.smoothLook(LookAt.getRotation(new Vec3(x, y, z)), time);
     } else if (
-      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)).size() >
-      0 &&
+      (
+        getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)).size() >
+        0 ||
+        getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 1, ids.mc.thePlayer.posZ)).size() > 0
+      ) &&
       blockTime < 20
     ) {
       List<BlockPos> blocks = getBlocksLayer(
@@ -93,7 +94,7 @@ public class NewSpinDrive {
       if (angle > curRotation()) {
         LookYaw.lookToYaw(config.headMovement * 10L, -config.headMovement * 7 + random.nextFloat() * 10);
       } else {
-        LookYaw.lookToYaw(config.headMovement * 10L, -config.headMovement * 7 + random.nextFloat() * 10);
+        LookYaw.lookToYaw(config.headMovement * 10L, config.headMovement * 7 + random.nextFloat() * 10);
       }
 
       blockTime++;

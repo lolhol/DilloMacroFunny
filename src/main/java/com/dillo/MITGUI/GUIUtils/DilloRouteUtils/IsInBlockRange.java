@@ -19,7 +19,7 @@ public class IsInBlockRange {
       }
     }
 
-    if (curFurthest > 200 || currentRoute.currentRoute.size() < 1) {
+    if (curFurthest > 120 || currentRoute.currentRoute.size() < 1) {
       return false;
     }
 

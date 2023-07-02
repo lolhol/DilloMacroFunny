@@ -104,20 +104,27 @@ public class LegitRouteClear {
 
         if (neededClear.size() > 1) {
           secBlock = neededClear.get(1);
-          RenderBox.drawBox(secBlock.getX(), secBlock.getY(), secBlock.getZ(), Color.white, 0.2F, event.partialTicks);
+          if (secBlock != firstBlock) {
+            RenderBox.drawBox(secBlock.getX(), secBlock.getY(), secBlock.getZ(), Color.white, 0.2F, event.partialTicks);
+          } else {
+            neededClear.remove(1);
+          }
         }
 
         if (neededClear.size() > 2) {
           thirdBlock = neededClear.get(2);
-
-          RenderBox.drawBox(
-            thirdBlock.getX(),
-            thirdBlock.getY(),
-            thirdBlock.getZ(),
-            Color.white,
-            0.2F,
-            event.partialTicks
-          );
+          if (thirdBlock != secBlock && firstBlock != thirdBlock) {
+            RenderBox.drawBox(
+              thirdBlock.getX(),
+              thirdBlock.getY(),
+              thirdBlock.getZ(),
+              Color.white,
+              0.2F,
+              event.partialTicks
+            );
+          } else {
+            neededClear.remove(2);
+          }
         }
 
         if (!IsAbleToMine.isAbleToMine(firstBlock)) {

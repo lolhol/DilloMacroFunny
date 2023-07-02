@@ -101,7 +101,9 @@ public class Overlay {
           GlStateManager.scale(3, 3, 3);
           FontRenderer fontRenderer = ids.mc.fontRendererObj;
 
-          playSound(0.5f, 0.5f, "random.orb");
+          if (alrCheckedLobbySound) {
+            playSound(0.5f, 0.5f, "random.orb");
+          }
 
           fontRenderer.drawStringWithShadow("Alr checked lobby!", 10, 50, Color.red.getRGB());
           GlStateManager.popMatrix();
