@@ -87,10 +87,9 @@ public class StateDillo {
     if (event.phase == TickEvent.Phase.END) {
       if (canCheckIfOnDillo && Objects.equals(ArmadilloStates.offlineState, "online")) {
         if (tickDilloCheckCount >= 2) {
-          if (playerYBe4 + (config.onDilloDist / 10) < ids.mc.thePlayer.posY) {
+          if (ids.mc.thePlayer.isRiding()) {
             checkedNumber = 0;
             tickDilloCheckCount = 0;
-            swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
 
             canCheckIfOnDillo = false;
 

@@ -65,25 +65,6 @@ public class BlockUtils {
       if (block.getY() <= currentRoute.currentBlock.getY() + 0.2) {
         outList.remove(block);
       }
-
-      //Ignores blocks that are not full blocks.
-      if (config.ignorePanes) {
-        Block blockType = ids.mc.theWorld.getBlockState(block).getBlock();
-
-        if (blockType.toString().contains("pane")) {
-          outList.remove(block);
-        }
-      }
-
-      if (config.blockBreakSkip) {
-        if (alreadyBroken.contains(block)) {
-          outList.remove(block);
-        }
-      }
-    }
-
-    if (blockReturnList.size() <= config.cutOff) {
-      return null;
     }
 
     return outList;

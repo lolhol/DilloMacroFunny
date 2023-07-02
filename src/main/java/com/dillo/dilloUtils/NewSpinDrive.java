@@ -118,14 +118,8 @@ public class NewSpinDrive {
         BlockPos newBlock = new BlockPos(referencePoint.getX() + i, referencePoint.getY(), referencePoint.getZ() + j);
 
         if (!newBlock.equals(referencePoint)) {
-          if (config.ignorePanes) {
-            if (canAddIgnorePanes(newBlock)) {
-              blocks.add(newBlock);
-            }
-          } else {
-            if (canAdd(newBlock)) {
-              blocks.add(newBlock);
-            }
+          if (canAdd(newBlock)) {
+            blocks.add(newBlock);
           }
         }
       }

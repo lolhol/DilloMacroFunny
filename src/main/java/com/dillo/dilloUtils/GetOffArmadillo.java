@@ -42,7 +42,7 @@ public class GetOffArmadillo {
       if (startOff) {
         if (currTicks <= ammountOfCheckTicks) {
           if (Objects.equals(ArmadilloStates.offlineState, "online")) {
-            if (ids.mc.thePlayer.posY - blockYPos - 1 - config.distanceToGround / 10 < 0.0001) {
+            if (!ids.mc.thePlayer.isRiding()) {
               if (sneak) KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
               startOff = false;
               currTicks = 0;
