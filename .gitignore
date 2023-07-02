@@ -257,8 +257,6 @@ fabric.properties
 # Ignore everything but code style settings and run configurations
 # that are supposed to be shared within teams.
 
-.idea/*
-
 !.idea/codeStyles
 !.idea/runConfigurations
 
@@ -376,3 +374,4 @@ gradle-app.setting
 .gradletasknamecache
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,forgegradle,kotlin,macos,intellij,intellij+all,eclipse,visualstudiocode
+/.idea/compiler.xml
