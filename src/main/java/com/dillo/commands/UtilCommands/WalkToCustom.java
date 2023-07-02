@@ -1,7 +1,10 @@
 package com.dillo.commands.UtilCommands;
 
-import static com.dillo.utils.ScoreboardUtils.GetCurArea.getArea;
+import static com.dillo.MITGUI.GUIUtils.MatchServer.MatchTimeDate.matchServer;
+import static com.dillo.MITGUI.Overlay.playSound;
+import static com.dillo.utils.ScoreboardUtils.GetCurArea.*;
 
+import com.dillo.MITGUI.GUIUtils.MatchServer.MatchTimeDate;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleLines;
@@ -24,8 +27,10 @@ public class WalkToCustom extends Command {
     // NewSpinDrive.putAllTogether();
     // ArmadilloStates.offlineState = "online";
     // ArmadilloStates.currentState = "spinDrive";
-
-    getArea();
+    //List<String> scoreBoard = getScoreboard();
+    //String currentServer = MatchTimeDate.matchServer(cleanSB(scoreBoard.get(scoreBoard.size() - 1)));
+    //SendChat.chat(currentServer);
+    //getArea();
     //new Thread(GetCurGemPrice::getCurrGemPrice).start();
 
     //GetSBItems.getSack();

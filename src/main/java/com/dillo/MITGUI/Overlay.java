@@ -4,6 +4,7 @@ import static com.dillo.MITGUI.GUIUtils.CurRatesUtils.ItemsPickedUp.started;
 import static com.dillo.MITGUI.GUIUtils.DilloRouteUtils.IsInBlockRange.isInCheckRange;
 import static com.dillo.MITGUI.GUIUtils.MatchServer.IsChecked.isChecked;
 import static com.dillo.data.config.*;
+import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Reference;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.MITGUI.GUIUtils.CurRatesUtils.GetTotalEarned;
@@ -17,16 +18,23 @@ import com.dillo.utils.previous.random.ids;
 import java.awt.*;
 import java.util.Objects;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SoundCategory;
+import net.minecraft.client.audio.SoundHandler;
+import net.minecraft.client.audio.SoundList;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.sound.SoundEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class Overlay {
 
   public static long curTime = System.currentTimeMillis();
   private static long lastLobbyCheck = System.currentTimeMillis();
+  private static SoundHandler soundHandler = ids.mc.getSoundHandler();
 
   @SubscribeEvent
   public void renderGameOverlay(RenderGameOverlayEvent event) {
@@ -78,7 +86,7 @@ public class Overlay {
           GlStateManager.scale(4, 4, 4);
           FontRenderer fontRenderer = ids.mc.fontRendererObj;
 
-          fontRenderer.drawStringWithShadow("Use Path Check!", 49, 35, Color.GREEN.getRGB());
+          fontRenderer.drawStringWithShadow("Use Path Check!", 55, 35, Color.GREEN.getRGB());
           GlStateManager.popMatrix();
         }
       } else {
@@ -86,20 +94,34 @@ public class Overlay {
       }
     }
 
-    if (alrCheckedLobby) {
+    if (alrCheckedLobby && !ids.mc.isSingleplayer()) {
       if (isChecked()) {
         if (lastLobbyCheck + 5000 > System.currentTimeMillis()) {
           GlStateManager.pushMatrix();
           GlStateManager.scale(3, 3, 3);
           FontRenderer fontRenderer = ids.mc.fontRendererObj;
 
-          fontRenderer.drawStringWithShadow("Alr checked lobby!", 10, 70, Color.red.getRGB());
+          playSound(0.5f, 0.5f, "random.orb");
+
+          fontRenderer.drawStringWithShadow("Alr checked lobby!", 10, 50, Color.red.getRGB());
           GlStateManager.popMatrix();
         }
       } else {
         lastLobbyCheck = System.currentTimeMillis();
       }
     }
+  }
+
+  public static void playSound(float volume, float pitch, String sound) {
+    ids.mc.theWorld.playSound(
+      ids.mc.thePlayer.posX,
+      ids.mc.thePlayer.posY,
+      ids.mc.thePlayer.posZ,
+      sound,
+      volume,
+      pitch,
+      false
+    );
   }
 
   private static void draw(String text, int x, int y) {

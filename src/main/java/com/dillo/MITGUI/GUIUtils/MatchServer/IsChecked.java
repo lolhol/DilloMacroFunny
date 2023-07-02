@@ -12,7 +12,12 @@ public class IsChecked {
 
   public static boolean isChecked() {
     List<String> scoreBoard = getScoreboard();
-    String currentServer = MatchTimeDate.matchServer(cleanSB(scoreBoard.get(scoreBoard.size() - 1)));
-    return isChecked.contains(currentServer);
+
+    String currentServer = null;
+    if (scoreBoard.size() > 0) {
+      currentServer = MatchTimeDate.matchServer(cleanSB(scoreBoard.get(scoreBoard.size() - 1)));
+    }
+
+    return currentServer != null && isChecked.contains(currentServer);
   }
 }

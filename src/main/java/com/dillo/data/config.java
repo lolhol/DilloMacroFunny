@@ -27,6 +27,14 @@ public class config extends Vigilant {
 
   @Property(
     type = PropertyType.SWITCH,
+    name = "Include Mithril",
+    description = "Will include mithril when dilloing.",
+    category = "Main"
+  )
+  public static boolean isIncludeMithril = false;
+
+  @Property(
+    type = PropertyType.SWITCH,
     name = "Alr Checker Lobby",
     description = "If u ran /checkRoute and it came out false in a lobby it will mark that lobby as checked and will display if u alr checked.",
     category = "Main"

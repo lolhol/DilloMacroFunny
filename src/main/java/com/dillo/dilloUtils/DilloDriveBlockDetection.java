@@ -1,5 +1,7 @@
 package com.dillo.dilloUtils;
 
+import static com.dillo.data.config.isIncludeMithril;
+
 import com.dillo.dilloUtils.BlockUtils.FromBlockToHP;
 import com.dillo.utils.GetAngleToBlock;
 import com.dillo.utils.previous.SendChat;
@@ -80,14 +82,26 @@ public class DilloDriveBlockDetection {
       for (int z = -1; z <= 1; z++) {
         BlockPos block = MoreLegitSpinDrive.makeNewBlock(x, 0, z, refrenceBlock);
 
-        if (
-          (
-            ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass_pane ||
-            ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass
-          ) &&
-          !isSameBlock(block, refrenceBlock)
-        ) {
-          blocks.add(block);
+        if (!isIncludeMithril) {
+          if (
+            (
+              ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass_pane ||
+              ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass
+            ) &&
+            !isSameBlock(block, refrenceBlock)
+          ) {
+            blocks.add(block);
+          }
+        } else {
+          if (
+            (
+              ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.prismarine ||
+              ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.wool
+            ) &&
+            !isSameBlock(block, refrenceBlock)
+          ) {
+            blocks.add(block);
+          }
         }
       }
     }

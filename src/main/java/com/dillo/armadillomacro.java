@@ -63,7 +63,7 @@ public class armadillomacro {
 
   @Mod.EventHandler
   public void init(FMLInitializationEvent event) {
-    Display.setTitle("PornHub");
+    Display.setTitle("MiningInTwo");
     CheckFile.checkFiles();
     keybinds.add(new KeyBinding("Enable Macro", Keyboard.KEY_NONE, "Mining In Two"));
     keybinds.add(new KeyBinding("Enable Nuker", Keyboard.KEY_NONE, "Mining In Two"));

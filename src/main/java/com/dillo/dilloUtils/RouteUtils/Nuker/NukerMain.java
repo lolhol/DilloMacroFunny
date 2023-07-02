@@ -22,6 +22,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -90,7 +91,7 @@ public class NukerMain {
               isAbleToMine(block) &&
               isInDillo()
             ) {
-              sendStart.sendStartPacket(block, getBlockEnum.getEnum(block));
+              sendStart.sendStartPacket(block, EnumFacing.fromAngle(ids.mc.thePlayer.rotationYaw));
               nuking.remove(block);
               broken.add(block);
             }
@@ -109,7 +110,7 @@ public class NukerMain {
 
   public static boolean isInDillo() {
     Entity dillo = isSummoned();
-    return dillo == null || DistanceFromTo.distanceFromTo(dillo.getPosition(), ids.mc.thePlayer.getPosition()) < 2;
+    return dillo == null || DistanceFromTo.distanceFromTo(dillo.getPosition(), ids.mc.thePlayer.getPosition()) > 2;
   }
 
   public static boolean isOnGround() {
