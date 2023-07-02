@@ -375,3 +375,6 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,forgegradle,kotlin,macos,intellij,intellij+all,eclipse,visualstudiocode
 /.idea/compiler.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/google-java-format.xml
+/.idea/palantir-java-format.xml
