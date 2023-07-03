@@ -28,7 +28,6 @@ public class CheckForStruc {
 
   public static boolean isObstructed() {
     List<String> scoreBoard = getScoreboard();
-    isChecked.add(MatchTimeDate.matchServer(cleanSB(scoreBoard.get(scoreBoard.size() - 1))));
 
     if (canCheckFurther()) {
       for (BlockPos block : currentRoute.strucList) {
@@ -36,6 +35,8 @@ public class CheckForStruc {
           return true;
         }
       }
+    } else {
+      isChecked.add(MatchTimeDate.matchServer(cleanSB(scoreBoard.get(scoreBoard.size() - 1))));
     }
 
     return false;
