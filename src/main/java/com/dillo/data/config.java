@@ -161,6 +161,14 @@ public class config extends Vigilant {
   )
   public static int reTpTimes = 2;
 
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Walk forward when TP",
+    description = "Walks a bit when u tp. This A) makes admins less suspect of u and B) sometimes makes it so u can actually tp. WARNING MAY MESS UP SOME ROUTES!",
+    category = "Teleportation Options"
+  )
+  public static boolean walkOnTP = false;
+
   // Failsafes
 
   @Property(
@@ -375,29 +383,21 @@ public class config extends Vigilant {
     min = 20,
     max = 360
   )
-  public static int nukerFOV = 20;
+  public static int nukerFOV = 150;
 
   // TO DO:
   @Property(
     type = PropertyType.SWITCH,
     name = "Smart Tp",
-    description = "Actually finds a teleport 'path' to the next vein. PAID ONLY.",
+    description = "Actually finds a teleport 'path' to the next vein.",
     category = "Teleportation Options"
   )
   public static boolean smartTeleport = false;
 
   @Property(
-    type = PropertyType.SWITCH,
-    name = "Walk forward when TP",
-    description = "Walks a bit when u tp. This A) makes admins less suspect of u and B) sometimes makes it so u can actually tp. WARNING MAY MESS UP SOME ROUTES!",
-    category = "Teleportation Options"
-  )
-  public static boolean walkOnTP = false;
-
-  @Property(
     type = PropertyType.SLIDER,
     name = "Restart Macro after",
-    description = "Set the amount of seconds you want the macro restart failsafe to be triggered",
+    description = "Set the amount of seconds you want the macro restart failsafe to be triggered. (may not work)",
     category = "Failsafes",
     min = 1,
     max = 30

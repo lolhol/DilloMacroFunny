@@ -1,5 +1,8 @@
 package com.dillo.dilloUtils.Teleport;
 
+import static com.dillo.data.config.walkOnTP;
+import static com.dillo.dilloUtils.TpUtils.WalkForward.walkForward;
+
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.dilloUtils.BlockUtils.BlockCols.GetUnobstructedPos;
 import com.dillo.dilloUtils.LookAt;
@@ -30,16 +33,21 @@ public class TeleportToBlock {
 
     nextBlock = block;
 
-    Vec3 nextBlockPos = GetUnobstructedPos.getUnobstructedPos(block);
+    if (!walkOnTP) {
+      Vec3 nextBlockPos = GetUnobstructedPos.getUnobstructedPos(block);
 
-    if (nextBlockPos == null) {
-      SendChat.chat(prefix.prefix + "Failed to teleport!");
-      return false;
+      if (nextBlockPos == null) {
+        SendChat.chat(prefix.prefix + "Failed to teleport!");
+        return false;
+      }
+
+      LookAt.smoothLook(LookAt.getRotation(nextBlockPos), time);
+
+      WaitThenCall.waitThenCall(waitTime + time, "tpStage2");
+    } else {
+      walkForward(10, "tpStageWalk");
     }
 
-    LookAt.smoothLook(LookAt.getRotation(nextBlockPos), time);
-
-    WaitThenCall.waitThenCall(waitTime + time, "tpStage2");
     return true;
   }
 
@@ -68,8 +76,24 @@ public class TeleportToBlock {
     WaitThenCall.waitThenCall(20, "tpStage3");
   }
 
+  public static void tpStageWalk() {
+    ArmadilloStates.currentState = null;
+    Vec3 nextBlockPos = GetUnobstructedPos.getUnobstructedPos(nextBlock);
+
+    if (nextBlockPos == null) {
+      SendChat.chat(prefix.prefix + "Failed to teleport!");
+      ArmadilloStates.currentState = null;
+      ArmadilloStates.offlineState = "offline";
+      return;
+    }
+
+    LookAt.smoothLook(LookAt.getRotation(nextBlockPos), 100);
+
+    WaitThenCall.waitThenCall(300, "tpStage2");
+  }
+
   public static void teleportStage3() {
     ArmadilloStates.currentState = null;
-    IsOnBlock.isOnBlock(500, nextBlock, newStateType);
+    IsOnBlock.isOnBlock(100, nextBlock, newStateType);
   }
 }

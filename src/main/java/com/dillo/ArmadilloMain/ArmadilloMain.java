@@ -1,6 +1,7 @@
 package com.dillo.ArmadilloMain;
 
 import static com.dillo.dilloUtils.FailSafes.AnswerPPL.answerAccusation;
+import static com.dillo.dilloUtils.Teleport.TeleportToBlock.tpStageWalk;
 import static com.dillo.dilloUtils.Utils.CenterPlayer.centerStage2;
 
 import com.dillo.Pathfinding.BlockNode;
@@ -25,7 +26,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class ArmadilloMain {
 
-  int dilloCounter = 0;
   public static int newDilloCounter = 0;
   private static final KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
 
@@ -33,6 +33,10 @@ public class ArmadilloMain {
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
       if (Objects.equals(ArmadilloStates.offlineState, "online")) {
+        if (Objects.equals(ArmadilloStates.currentState, "tpStageWalk")) {
+          tpStageWalk();
+        }
+
         if (Objects.equals(ArmadilloStates.currentState, "routeObstructedClear")) {
           SpinDrive.onStateSpinDrive();
         }

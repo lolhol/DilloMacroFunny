@@ -1,6 +1,7 @@
 package com.dillo.dilloUtils.RouteUtils.LegitRouteClear;
 
 import static com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker.Blockss;
+import static com.dillo.utils.previous.random.IsSameBlock.isSameBlock;
 
 import com.dillo.Events.DoneNukerBlocks;
 import com.dillo.Events.DonePathEvent;
@@ -104,7 +105,7 @@ public class LegitRouteClear {
 
         if (neededClear.size() > 1) {
           secBlock = neededClear.get(1);
-          if (secBlock != firstBlock) {
+          if (!isSameBlock(firstBlock, secBlock)) {
             RenderBox.drawBox(secBlock.getX(), secBlock.getY(), secBlock.getZ(), Color.white, 0.2F, event.partialTicks);
           } else {
             neededClear.remove(1);
@@ -113,7 +114,7 @@ public class LegitRouteClear {
 
         if (neededClear.size() > 2) {
           thirdBlock = neededClear.get(2);
-          if (thirdBlock != secBlock && firstBlock != thirdBlock) {
+          if (!isSameBlock(firstBlock, thirdBlock) && isSameBlock(secBlock, thirdBlock)) {
             RenderBox.drawBox(
               thirdBlock.getX(),
               thirdBlock.getY(),

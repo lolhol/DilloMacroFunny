@@ -2,6 +2,7 @@ package com.dillo.commands.UtilCommands;
 
 import static com.dillo.MITGUI.GUIUtils.MatchServer.MatchTimeDate.matchServer;
 import static com.dillo.MITGUI.Overlay.playSound;
+import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
 import static com.dillo.utils.ScoreboardUtils.GetCurArea.*;
 
 import com.dillo.MITGUI.GUIUtils.MatchServer.MatchTimeDate;
@@ -37,6 +38,7 @@ public class WalkToCustom extends Command {
 
     // usePathfinder(new BlockPos(x, y, z));
 
+    SendChat.chat(String.valueOf(curRotation()));
     // StartNuker.startNuker();
 
     // SendChat.chat(String.valueOf(detectBlocks()));

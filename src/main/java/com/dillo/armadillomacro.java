@@ -34,6 +34,7 @@ import com.dillo.dilloUtils.StateDillo;
 import com.dillo.dilloUtils.Teleport.IsOnBlock;
 import com.dillo.dilloUtils.TpUtils.LookWhileGoingDown;
 import com.dillo.dilloUtils.TpUtils.WaitThenCall;
+import com.dillo.dilloUtils.TpUtils.WalkForward;
 import com.dillo.dilloUtils.Utils.GetOnArmadillo;
 import com.dillo.keybinds.Keybinds;
 import com.dillo.utils.GetConfigFolder;
@@ -97,7 +98,9 @@ public class armadillomacro {
       new ViewHelperLines(),
       new MainHelp(),
       new HelpStructureCheck(),
-      new InsertInMiddle()
+      new InsertInMiddle(),
+      new RemoveBlockRoute(),
+      new ReplaceBlockRoute()
     );
 
     registerEvents(
@@ -136,7 +139,8 @@ public class armadillomacro {
       new CurTime(),
       new StructurePoints(),
       new LegitRouteClear(),
-      new ViewClearLines()
+      new ViewClearLines(),
+      new WalkForward()
     );
 
     registerKeybinds(keybinds);

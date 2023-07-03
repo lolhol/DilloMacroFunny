@@ -18,7 +18,7 @@ public class RouteChecker extends Command {
     boolean result = isObstructed();
     SendChat.chat(
       result
-        ? prefix.prefix + "The route appears to be unobstructed!"
+        ? prefix.prefix + "§2The route appears to be unobstructed!"
         : prefix.prefix + "There is a high chance that the route is obstructed!"
     );
   }

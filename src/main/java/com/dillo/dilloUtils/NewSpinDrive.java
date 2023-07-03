@@ -41,7 +41,6 @@ public class NewSpinDrive {
 
   public static void newSpinDrive() {
     if (angle < lastBlockAngle + 50) {
-      // SendChat.chat(String.valueOf(lastBlockAngle) + ":!!");
       angle += config.headMovement * 7 + random.nextFloat() * 10;
 
       KeyBinding.setKeyBindState(jump.getKeyCode(), true);
@@ -50,20 +49,12 @@ public class NewSpinDrive {
 
       float y = block.getY() + yPosition;
 
+      yPosition += 0.5;
+
       float anglePlayerToBlock = GetAnglePlayerToBlock.getAnglePlayerToBlock(block);
       angleTudaSuda = angle;
 
       angleTudaSuda += anglePlayerToBlock - 90;
-
-      /*if (anglePlayerToBlock != -1234567) {
-        if (angleTudaSuda > 360) {
-          angleTudaSuda = 360 - angleTudaSuda;
-        }
-
-        angleTudaSuda += anglePlayerToBlock - 90;
-      } else {
-        y -= 5;
-      }*/
 
       float radians = (float) degreeToRad.degreeToRad(angleTudaSuda);
       float dx = (float) (Math.cos(radians) * 5);
@@ -85,16 +76,45 @@ public class NewSpinDrive {
       ) &&
       blockTime < 20
     ) {
-      List<BlockPos> blocks = getBlocksLayer(
+      List<BlockPos> blocks1 = getBlocksLayer(
         new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)
       );
 
-      float angle = GetAngleToBlock.calcAngle(blocks.get(0));
+      List<BlockPos> blocks2 = getBlocksLayer(
+        new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 1, ids.mc.thePlayer.posZ)
+      );
+
+      List<BlockPos> combined = new ArrayList<>();
+      combined.addAll(blocks1);
+      combined.addAll(blocks2);
+
+      List<DilloDriveBlockDetection.BlockAngle> angles = new ArrayList<>();
+
+      for (BlockPos block : combined) {
+        float angle = GetAngleToBlock.calcAngle(block);
+
+        DilloDriveBlockDetection.BlockAngle blockAngle = new DilloDriveBlockDetection.BlockAngle(angle, block);
+        angles.add(blockAngle);
+      }
+
+      angles.sort((a, b) -> {
+        return a.angle < b.angle ? -1 : 1;
+      });
+
+      List<BlockPos> blocks = getBlocksLayer(
+          new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)
+        )
+          .size() >
+        0
+        ? getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ))
+        : getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 1, ids.mc.thePlayer.posZ));
+
+      float angle = GetAngleToBlock.calcAngle(angles.get(angles.size() - 1).blockPos);
 
       if (angle > curRotation()) {
-        LookYaw.lookToYaw(config.headMovement * 10L, -config.headMovement * 7 + random.nextFloat() * 10);
+        LookYaw.lookToYaw(config.headMovement * 10L, config.headMovement * 12 + random.nextFloat() * 10);
       } else {
-        LookYaw.lookToYaw(config.headMovement * 10L, config.headMovement * 7 + random.nextFloat() * 10);
+        LookYaw.lookToYaw(config.headMovement * 10L, -config.headMovement * 12 + random.nextFloat() * 10);
       }
 
       blockTime++;
@@ -141,7 +161,7 @@ public class NewSpinDrive {
       } else {
         DilloDriveBlockDetection.BlockAngle lastPos = returnBlocks.get(returnBlocks.size() - 1);
         lastBlockAngle = lastPos.angle;
-        yPosition = -1;
+        yPosition = -5;
       }
     } else {
       ArmadilloStates.currentState = null;

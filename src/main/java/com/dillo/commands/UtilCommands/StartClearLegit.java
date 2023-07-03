@@ -9,7 +9,7 @@ public class StartClearLegit extends Command {
   public static boolean isClearing = false;
 
   public StartClearLegit() {
-    super("clearRouteLegit");
+    super("clearLegit");
   }
 
   @DefaultHandler

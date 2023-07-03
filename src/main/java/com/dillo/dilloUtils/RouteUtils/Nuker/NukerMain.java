@@ -91,6 +91,10 @@ public class NukerMain {
               isAbleToMine(block) &&
               isInDillo()
             ) {
+              if (config.nukerUnObstructedChecks && canBeBroken(block)) {
+                return;
+              }
+
               sendStart.sendStartPacket(block, EnumFacing.fromAngle(ids.mc.thePlayer.rotationYaw));
               nuking.remove(block);
               broken.add(block);
@@ -172,13 +176,12 @@ public class NukerMain {
   public static boolean canBeBroken(BlockPos block) {
     BlockPos playerPos = ids.mc.thePlayer.getPosition();
 
-    Vec3 startVec = new Vec3(playerPos.getX() + 0.5, playerPos.getY() + 1, playerPos.getZ() + 0.5);
+    Vec3 startVec = new Vec3(playerPos.getX() + 0.5, playerPos.getY() + 1.5, playerPos.getZ() + 0.5);
     Vec3 endVec = new Vec3(block.getX() + 0.5, block.getY() + 0.5, block.getZ() + 0.5);
 
     MovingObjectPosition result = ids.mc.theWorld.rayTraceBlocks(startVec, endVec, false);
 
     if (result == null || result.typeOfHit == MovingObjectPosition.MovingObjectType.MISS) {
-      // No obstruction found
       return false;
     }
 
@@ -189,7 +192,6 @@ public class NukerMain {
       ) &&
       result.hitVec != endVec
     ) {
-      // Obstruction found
       return true;
     }
 
