@@ -34,6 +34,7 @@ public class TeleportToNextBlock {
     if (!Objects.equals(ArmadilloStates.offlineState, "offline")) {
       BlockPos nextBlock = GetNextBlock.getNextBlock();
       nextBlockInList = nextBlock;
+      isTeleporting = true;
 
       if (nextBlock == null) {
         SendChat.chat(prefix.prefix + "FAILED TO TELEPORT FOR SOME REASON! DM GODBRIGERO!");
@@ -52,7 +53,6 @@ public class TeleportToNextBlock {
     boolean result = TeleportToBlock.teleportToBlock(nextBlockInList, 200, config.tpWait, "armadillo");
 
     if (!result) {
-      isTeleporting = false;
       SendChat.chat(prefix.prefix + "Route is obstructed!");
       ArmadilloStates.currentState = null;
       ArmadilloStates.offlineState = "online";

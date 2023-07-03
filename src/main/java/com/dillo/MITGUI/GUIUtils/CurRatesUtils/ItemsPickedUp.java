@@ -33,7 +33,7 @@ public class ItemsPickedUp {
   public void onChatReceived(ClientChatReceivedEvent event) {
     if (event.message.getUnformattedText().contains("Gemstone")) {
       if (first) {
-        SendChat.chat(":?");
+        //SendChat.chat(":?");
         firstTime = System.currentTimeMillis();
       }
 
@@ -57,14 +57,13 @@ public class ItemsPickedUp {
           if (!jsonObject.has(jsonGem)) {
             StringParserClass result = StringParser.parseStringFlawed(unformattedText);
             jsonObject.addProperty(jsonGem, result.ammount);
-
-            SendChat.chat(jsonObject.get(jsonGem).getAsString());
+            //SendChat.chat(jsonObject.get(jsonGem).getAsString());
           } else {
             int currNumber = jsonObject.get(jsonGem).getAsInt();
             StringParserClass result = StringParser.parseStringFlawed(unformattedText);
             //SendChat.chat(result.toString());
             jsonObject.addProperty(jsonGem, result.ammount + currNumber);
-            SendChat.chat(jsonObject.get(jsonGem).getAsString());
+            //SendChat.chat(jsonObject.get(jsonGem).getAsString());
           }
         }
       }

@@ -112,9 +112,9 @@ public class NewSpinDrive {
       float angle = GetAngleToBlock.calcAngle(angles.get(angles.size() - 1).blockPos);
 
       if (angle > curRotation()) {
-        LookYaw.lookToYaw(config.headMovement * 10L, config.headMovement * 12 + random.nextFloat() * 10);
+        LookYaw.lookToYaw(config.headMovement * 10L, config.headMovement * 3 + random.nextFloat() * 10);
       } else {
-        LookYaw.lookToYaw(config.headMovement * 10L, -config.headMovement * 12 + random.nextFloat() * 10);
+        LookYaw.lookToYaw(config.headMovement * 10L, -config.headMovement * 3 + random.nextFloat() * 10);
       }
 
       blockTime++;

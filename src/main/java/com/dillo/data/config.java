@@ -45,6 +45,16 @@ public class config extends Vigilant {
   )
   public static int rod_drill_switch_time = 200;
 
+  @Property(
+    type = PropertyType.SLIDER,
+    name = "Route Check % of gems exist.",
+    description = "Glass % per vein.",
+    category = "Main",
+    min = 50,
+    max = 100
+  )
+  public static int untouched = 60;
+
   //Route Utils
 
   @Property(
@@ -54,6 +64,14 @@ public class config extends Vigilant {
     category = "Route Utils"
   )
   public static boolean alrCheckedLobby = true;
+
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Alr checked lobby auto warp out",
+    description = "Does /is if lobby is alr checked",
+    category = "Route Utils"
+  )
+  public static boolean alrCheckedLobbyWarpOut = false;
 
   @Property(
     type = PropertyType.SWITCH,
@@ -228,7 +246,7 @@ public class config extends Vigilant {
   @Property(
     type = PropertyType.SWITCH,
     name = "Remote control",
-    description = "Turns on the remote control via the website. THIS WILL NOT WORK IF U DIDNT PAY ME (L git good).",
+    description = "THIS IS EXPERIMENTAL AND THE SITE IS STILL UNDER DEVELOPMENT. (AKA -> DOES NOT WORK)",
     category = "Online / Remote Control"
   )
   public static boolean remoteControl = false;
@@ -236,7 +254,7 @@ public class config extends Vigilant {
   @Property(
     type = PropertyType.SLIDER,
     name = "Time between fetches",
-    description = "The time between the macro requests the information from the server. This could potentially be deadly to my server if set to too low (dono tho) and ur wifi. (This is in seconds)",
+    description = "THIS IS EXPERIMENTAL AND THE SITE IS STILL UNDER DEVELOPMENT. (AKA -> DOES NOT WORK)",
     category = "Online / Remote Control",
     min = 1,
     max = 60
@@ -246,7 +264,7 @@ public class config extends Vigilant {
   @Property(
     type = PropertyType.SLIDER,
     name = "Time between executions",
-    description = "The time between the macro executes the commands it received from the server. (seconds)",
+    description = "THIS IS EXPERIMENTAL AND THE SITE IS STILL UNDER DEVELOPMENT. (AKA -> DOES NOT WORK)",
     category = "Online / Remote Control",
     min = 1,
     max = 30
@@ -256,7 +274,7 @@ public class config extends Vigilant {
   @Property(
     type = PropertyType.SLIDER,
     name = "Pause",
-    description = "The time of the macro pause when triggered. (seconds)",
+    description = "THIS IS EXPERIMENTAL AND THE SITE IS STILL UNDER DEVELOPMENT. (AKA -> DOES NOT WORK)",
     category = "Online / Remote Control",
     min = 1,
     max = 120
@@ -266,7 +284,7 @@ public class config extends Vigilant {
   @Property(
     type = PropertyType.SLIDER,
     name = "Walk Time",
-    description = "Applies for anything that relates to walking in the macro. (seconds)",
+    description = "THIS IS EXPERIMENTAL AND THE SITE IS STILL UNDER DEVELOPMENT. (AKA -> DOES NOT WORK)",
     category = "Online / Remote Control",
     min = 1,
     max = 30

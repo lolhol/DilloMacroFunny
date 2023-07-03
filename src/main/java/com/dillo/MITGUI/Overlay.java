@@ -25,6 +25,7 @@ import net.minecraft.client.audio.SoundList;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.sound.SoundEvent;
@@ -35,6 +36,7 @@ public class Overlay {
   public static long curTime = System.currentTimeMillis();
   private static long lastLobbyCheck = System.currentTimeMillis();
   private static SoundHandler soundHandler = ids.mc.getSoundHandler();
+  private static boolean isFirst = true;
 
   @SubscribeEvent
   public void renderGameOverlay(RenderGameOverlayEvent event) {
@@ -105,10 +107,16 @@ public class Overlay {
             playSound(0.5f, 0.5f, "random.orb");
           }
 
+          if (alrCheckedLobbyWarpOut && isFirst) {
+            ids.mc.thePlayer.addChatMessage(new ChatComponentText("/is"));
+          }
+
+          isFirst = false;
           fontRenderer.drawStringWithShadow("Alr checked lobby!", 10, 50, Color.red.getRGB());
           GlStateManager.popMatrix();
         }
       } else {
+        isFirst = true;
         lastLobbyCheck = System.currentTimeMillis();
       }
     }

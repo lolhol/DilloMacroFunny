@@ -22,7 +22,7 @@ public class ViewClearLines {
     if (currentRoute.currentRoute.size() > 0) {
       SendChat.chat(prefix.prefix + "Displaying lines!");
       routeBlocks = currentRoute.currentRoute;
-      SendChat.chat(String.valueOf(routeBlocks.size()));
+      //SendChat.chat(String.valueOf(routeBlocks.size()));
       isRender = true;
     } else {
       SendChat.chat(prefix.prefix + "There are no blocks in ur route...");

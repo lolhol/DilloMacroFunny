@@ -14,7 +14,7 @@ import net.minecraft.scoreboard.*;
 public class GetCurArea {
 
   public static String getArea() {
-    SendChat.chat(cleanSB(getScoreboard().get(getScoreboard().size() - 1)));
+    //SendChat.chat(cleanSB(getScoreboard().get(getScoreboard().size() - 1)));
 
     return "";
   }

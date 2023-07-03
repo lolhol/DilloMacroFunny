@@ -1,6 +1,7 @@
 package com.dillo.dilloUtils.RouteChecker;
 
 import static com.dillo.MITGUI.GUIUtils.MatchServer.IsChecked.isChecked;
+import static com.dillo.data.config.untouched;
 import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
 import static com.dillo.utils.ScoreboardUtils.GetCurArea.cleanSB;
 import static com.dillo.utils.ScoreboardUtils.GetCurArea.getScoreboard;
@@ -109,7 +110,7 @@ public class CheckForStruc {
       }
     }
 
-    if (totalCount == 0 || (glassCount / totalCount) * 100 < 50) {
+    if (totalCount == 0 || (glassCount / totalCount) * 100 < untouched) {
       return true;
     }
 

@@ -32,7 +32,7 @@ public class CurTime {
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
       if (ArmadilloStates.offlineState == "online") {
-        if (timeList.size() == 10) {
+        if (timeList.size() >= 10) {
           timeList.remove(0);
         }
 
