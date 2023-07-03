@@ -12,4 +12,5 @@ public class currentRoute {
   public static File currentRouteFile = null;
   public static BlockPos currentBlock = null;
   public static List<BlockPos> strucList = new ArrayList<BlockPos>();
+  public static BlockPos curPlayerPos = null;
 }

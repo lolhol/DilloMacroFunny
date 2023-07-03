@@ -24,7 +24,7 @@ public class StructurePoints extends Command {
   public void handle() {
     if (currentRoute.strucList.size() > 0) {
       render = !render;
-      SendChat.chat(String.valueOf(currentRoute.strucList.size()));
+      //SendChat.chat(String.valueOf(currentRoute.strucList.size()));
       SendChat.chat(render ? prefix.prefix + "Displaying structures!" : prefix.prefix + "Stopped displaying!");
     } else {
       SendChat.chat(prefix.prefix + "There is nothing to display!");

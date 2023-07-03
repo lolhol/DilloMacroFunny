@@ -5,7 +5,6 @@ import com.dillo.utils.previous.SendChat;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
 import java.io.File;
-import java.util.Objects;
 
 public class RoutesInFolder extends Command {
 

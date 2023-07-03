@@ -18,7 +18,7 @@ public class AddStucture extends Command {
   public void handle() {
     BlockPos block = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ);
     currentRoute.strucList.add(block);
-    SendChat.chat(currentRoute.strucList.size() + "SO");
+    //SendChat.chat(currentRoute.strucList.size() + "SO");
     ReWriteFile.reWriteFile(currentRoute.currentRouteFile);
   }
 }

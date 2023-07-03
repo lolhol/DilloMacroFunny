@@ -1,7 +1,6 @@
 package com.dillo.RemoteControl;
 
 import com.dillo.data.config;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -40,7 +39,7 @@ public class GetRemoteControl {
           try {
             encodedChat = URLEncoder.encode(currChat, "UTF-8");
           } catch (java.io.UnsupportedEncodingException e) {
-            SendChat.chat(e.toString());
+            //SendChat.chat(e.toString());
           }
 
           JsonArray output = requestData(

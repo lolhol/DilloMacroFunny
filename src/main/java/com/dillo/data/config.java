@@ -50,10 +50,10 @@ public class config extends Vigilant {
     name = "Route Check % of gems exist.",
     description = "Glass % per vein.",
     category = "Main",
-    min = 50,
+    min = 1,
     max = 100
   )
-  public static int untouched = 60;
+  public static int untouched = 20;
 
   //Route Utils
 
@@ -127,7 +127,7 @@ public class config extends Vigilant {
     type = PropertyType.SWITCH,
     name = "TPS Overlay",
     description = "Turn on the TPS overlay (the position is not changeable YET)",
-    category = ""
+    category = "Fun"
   )
   public static boolean TPSOverlay = false;
 
@@ -324,6 +324,14 @@ public class config extends Vigilant {
   public static int overlayY = 10;
 
   // Profit Tracker
+
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Profit Tracker NPC price",
+    description = "Instead of getting the price from bazaar it will get them from a stationary value - NPC sell price.",
+    category = "Profit Tracker"
+  )
+  public static boolean npcPrice = false;
 
   @Property(
     type = PropertyType.SWITCH,

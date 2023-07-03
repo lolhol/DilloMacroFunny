@@ -10,6 +10,7 @@ import com.dillo.MITGUI.GUIUtils.MatchServer.MatchTimeDate;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
+import com.dillo.utils.previous.random.prefix;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -80,13 +81,17 @@ public class CheckForStruc {
   }
 
   private static boolean canCheckFurther() {
-    for (BlockPos block : currentRoute.currentRoute) {
+    boolean canCheckFurther = true;
+
+    for (int i = 0; i < currentRoute.currentRoute.size(); i++) {
+      BlockPos block = currentRoute.currentRoute.get(i);
       if (isBroken(block)) {
-        return false;
+        SendChat.chat(prefix.prefix + "Point " + i + 1 + " appears to be obstructed! Proceed with caution.");
+        canCheckFurther = false;
       }
     }
 
-    return true;
+    return canCheckFurther;
   }
 
   private static boolean isBroken(BlockPos originalBlock) {
@@ -110,7 +115,9 @@ public class CheckForStruc {
       }
     }
 
-    if (totalCount == 0 || (glassCount / totalCount) * 100 < untouched) {
+    double percent = ((double) glassCount / totalCount) * 100;
+
+    if (percent < untouched) {
       return true;
     }
 

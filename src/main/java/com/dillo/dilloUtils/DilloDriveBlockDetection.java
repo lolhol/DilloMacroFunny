@@ -1,17 +1,17 @@
 package com.dillo.dilloUtils;
 
-import static com.dillo.data.config.isIncludeMithril;
-
 import com.dillo.dilloUtils.BlockUtils.FromBlockToHP;
 import com.dillo.utils.GetAngleToBlock;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.dillo.data.config.isIncludeMithril;
 
 public class DilloDriveBlockDetection {
 
@@ -106,7 +106,7 @@ public class DilloDriveBlockDetection {
       }
     }
 
-    SendChat.chat(String.valueOf(blocks.size()));
+    //SendChat.chat(String.valueOf(blocks.size()));
     return blocks;
   }
 

@@ -1,17 +1,8 @@
 package com.dillo.commands.UtilCommands;
 
-import static com.dillo.MITGUI.GUIUtils.MatchServer.MatchTimeDate.matchServer;
-import static com.dillo.MITGUI.Overlay.playSound;
-import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
-import static com.dillo.utils.ScoreboardUtils.GetCurArea.*;
-
-import com.dillo.MITGUI.GUIUtils.MatchServer.MatchTimeDate;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.renderUtils.renderModules.RenderMultipleLines;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
-import java.util.List;
 import net.minecraft.util.BlockPos;
 
 public class WalkToCustom extends Command {
@@ -32,13 +23,15 @@ public class WalkToCustom extends Command {
     //String currentServer = MatchTimeDate.matchServer(cleanSB(scoreBoard.get(scoreBoard.size() - 1)));
     //SendChat.chat(currentServer);
     //getArea();
+
+    ids.mc.thePlayer.sendChatMessage("/is");
     //new Thread(GetCurGemPrice::getCurrGemPrice).start();
 
     //GetSBItems.getSack();
 
     // usePathfinder(new BlockPos(x, y, z));
 
-    SendChat.chat(String.valueOf(curRotation()));
+    //SendChat.chat(String.valueOf(curRotation()));
     // StartNuker.startNuker();
 
     // SendChat.chat(String.valueOf(detectBlocks()));

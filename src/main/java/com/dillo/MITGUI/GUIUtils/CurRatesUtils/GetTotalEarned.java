@@ -1,13 +1,14 @@
 package com.dillo.MITGUI.GUIUtils.CurRatesUtils;
 
+import com.dillo.data.config;
+import com.google.gson.JsonObject;
+
+import java.util.Arrays;
+import java.util.List;
+
 import static com.dillo.MITGUI.GUIUtils.CurRatesUtils.GetCurGemPrice.getPrice;
 import static com.dillo.MITGUI.GUIUtils.CurRatesUtils.ItemsPickedUp.firstTime;
 import static com.dillo.MITGUI.GUIUtils.CurRatesUtils.ItemsPickedUp.getJsonObject;
-
-import com.dillo.utils.previous.SendChat;
-import com.google.gson.JsonObject;
-import java.util.Arrays;
-import java.util.List;
 
 public class GetTotalEarned {
 
@@ -27,7 +28,14 @@ public class GetTotalEarned {
       double currTotal = 0;
 
       if (jsonObj.has("FLAWED_" + gem)) {
-        double price = getPrice("FLAWED_" + gem + "_GEM");
+        double price = 0;
+        // jjj
+
+        if (config.npcPrice) {
+          price = 240;
+        } else {
+          price = getPrice("FLAWED_" + gem + "_GEM");
+        }
 
         if (price != -1) {
           currTotal = jsonObj.get("FLAWED_" + gem).getAsInt() * price;
@@ -43,7 +51,7 @@ public class GetTotalEarned {
     totalEarnings.totalEarned = total;
 
     long time = System.currentTimeMillis() - firstTime;
-    int number = (int) Math.floor(total * (3600000 / time));
+    int number = (int) Math.floor(total * ((double) 3600000 / time));
 
     totalEarnings.perHour = numberWithCommas(number);
     totalEarnings.totalEarningString = numberWithCommas((int) total);

@@ -1,10 +1,8 @@
 package com.dillo.MITGUI;
 
 import static com.dillo.MITGUI.GUIUtils.CurRatesUtils.ItemsPickedUp.started;
-import static com.dillo.MITGUI.GUIUtils.DilloRouteUtils.IsInBlockRange.isInCheckRange;
 import static com.dillo.MITGUI.GUIUtils.MatchServer.IsChecked.isChecked;
 import static com.dillo.data.config.*;
-import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Reference;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.MITGUI.GUIUtils.CurRatesUtils.GetTotalEarned;
@@ -12,23 +10,14 @@ import com.dillo.MITGUI.GUIUtils.CurRatesUtils.ItemsPickedUp;
 import com.dillo.MITGUI.GUIUtils.CurTimeVein.CurTime;
 import com.dillo.MITGUI.GUIUtils.DilloRouteUtils.IsInBlockRange;
 import com.dillo.data.config;
-import com.dillo.dilloUtils.WorldScan.Utils.StringUtils;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import java.awt.*;
 import java.util.Objects;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.audio.SoundList;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.sound.SoundEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class Overlay {
@@ -108,7 +97,7 @@ public class Overlay {
           }
 
           if (alrCheckedLobbyWarpOut && isFirst) {
-            ids.mc.thePlayer.addChatMessage(new ChatComponentText("/is"));
+            ids.mc.thePlayer.sendChatMessage("/is");
           }
 
           isFirst = false;
