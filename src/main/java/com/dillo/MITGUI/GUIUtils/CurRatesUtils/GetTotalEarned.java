@@ -1,14 +1,13 @@
 package com.dillo.MITGUI.GUIUtils.CurRatesUtils;
 
-import com.dillo.data.config;
-import com.google.gson.JsonObject;
-
-import java.util.Arrays;
-import java.util.List;
-
 import static com.dillo.MITGUI.GUIUtils.CurRatesUtils.GetCurGemPrice.getPrice;
 import static com.dillo.MITGUI.GUIUtils.CurRatesUtils.ItemsPickedUp.firstTime;
 import static com.dillo.MITGUI.GUIUtils.CurRatesUtils.ItemsPickedUp.getJsonObject;
+
+import com.dillo.data.config;
+import com.google.gson.JsonObject;
+import java.util.Arrays;
+import java.util.List;
 
 public class GetTotalEarned {
 
