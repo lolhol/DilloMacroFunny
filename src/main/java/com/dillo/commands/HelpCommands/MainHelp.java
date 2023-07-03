@@ -53,7 +53,7 @@ public class MainHelp extends Command {
     SendChat.chat(
       "/helperLines -> will display route-clear-help lines to help you clear legit (why is this here? just use /clearRouteLegit."
     );
-    SendChat.chat("/clearRouteLegit -> will display the blocks you have to break in order for the route to be clear.");
+    SendChat.chat("/clearLegit -> will display the blocks you have to break in order for the route to be clear.");
     SendChat.chat("+++++++++++++++++++++");
     SendChat.chat("                                  ");
     SendChat.chat("+++++ FailSafes +++++");

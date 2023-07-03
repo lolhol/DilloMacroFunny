@@ -1,21 +1,20 @@
 package com.dillo.dilloUtils.RouteChecker;
 
-import com.dillo.MITGUI.GUIUtils.MatchServer.MatchTimeDate;
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
-import com.dillo.utils.previous.SendChat;
-import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.previous.random.prefix;
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
-
-import java.util.List;
-
 import static com.dillo.MITGUI.GUIUtils.MatchServer.IsChecked.isChecked;
 import static com.dillo.data.config.untouched;
 import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
 import static com.dillo.utils.ScoreboardUtils.GetCurArea.cleanSB;
 import static com.dillo.utils.ScoreboardUtils.GetCurArea.getScoreboard;
+
+import com.dillo.MITGUI.GUIUtils.MatchServer.MatchTimeDate;
+import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.utils.previous.SendChat;
+import com.dillo.utils.previous.random.ids;
+import com.dillo.utils.previous.random.prefix;
+import java.util.List;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 
 public class CheckForStruc {
 
