@@ -1,10 +1,10 @@
 package com.dillo.MITGUI.GUIUtils.DilloRouteUtils;
 
+import static com.dillo.MITGUI.GUIUtils.MatchServer.IsChecked.isChecked;
+
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.random.ids;
-
-import static com.dillo.MITGUI.GUIUtils.MatchServer.IsChecked.isChecked;
 
 public class IsInBlockRange {
 

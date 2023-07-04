@@ -1,20 +1,25 @@
 package com.dillo.dilloUtils.RouteChecker;
 
-import static com.dillo.MITGUI.GUIUtils.MatchServer.IsChecked.isChecked;
-import static com.dillo.data.config.untouched;
-import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
-import static com.dillo.utils.ScoreboardUtils.GetCurArea.cleanSB;
-import static com.dillo.utils.ScoreboardUtils.GetCurArea.getScoreboard;
-
 import com.dillo.MITGUI.GUIUtils.MatchServer.MatchTimeDate;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
-import java.util.List;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+
+import java.util.List;
+
+import static com.dillo.MITGUI.GUIUtils.MatchServer.IsChecked.isChecked;
+import static com.dillo.data.config.untouched;
+import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
+import static com.dillo.utils.ScoreboardUtils.GetCurArea.cleanSB;
+import static com.dillo.utils.ScoreboardUtils.GetCurArea.getScoreboard;
 
 public class CheckForStruc {
 
@@ -64,6 +69,59 @@ public class CheckForStruc {
     }
 
     return (100 / total) * uo < 80;
+  }
+
+  public static boolean isStructureBetween(BlockPos block1, BlockPos block2) {
+    EntityPlayer player = ids.mc.thePlayer; // Get the player object
+    Vec3 playerPos = new Vec3(block1.getX() + 0.5, block1.getY() + 2.64, block1.getZ() + 0.5);
+
+    World world = player.worldObj;
+    Vec3 centerOfBlock = new Vec3(block2.getX() + 0.5, block2.getY() + 0.5, block2.getZ() + 0.5);
+
+    //RenderPoints.renderPoint(centerOfBlock, 0.4, true);
+
+    for (double offsetX = 0.0; offsetX < 0.5; offsetX += 0.05) {
+      for (double offsetY = 0.0; offsetY < 0.5; offsetY += 0.05) {
+        for (double offsetZ = 0.0; offsetZ < 0.5; offsetZ += 0.05) {
+          for (int signX = -1; signX <= 1; signX += 2) {
+            for (int signY = -1; signY <= 1; signY += 2) {
+              for (int signZ = -1; signZ <= 1; signZ += 2) {
+                double x = centerOfBlock.xCoord + offsetX * signX;
+                double y = centerOfBlock.yCoord + offsetY * signY;
+                double z = centerOfBlock.zCoord + offsetZ * signZ;
+
+                MovingObjectPosition movingObjectPosition = world.rayTraceBlocks(
+                  playerPos,
+                  new Vec3(x, y, z),
+                  true,
+                  false,
+                  false
+                );
+
+                while (movingObjectPosition != null && !isNaturalBlock(movingObjectPosition.getBlockPos())) {
+                  BlockPos block = movingObjectPosition.getBlockPos();
+
+                  movingObjectPosition =
+                    world.rayTraceBlocks(
+                      new Vec3(block.getX() + 0.5, block.getY(), block.getZ() + 0.5),
+                      new Vec3(x, y, z),
+                      true,
+                      false,
+                      false
+                    );
+                }
+
+                SendChat.chat(
+                  String.valueOf(ids.mc.theWorld.getBlockState(movingObjectPosition.getBlockPos()).getBlock()) + "!!!!"
+                );
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return false;
   }
 
   private static boolean isNaturalBlock(BlockPos block) {

@@ -1,6 +1,5 @@
 package com.dillo.dilloUtils.BlockUtils.BlockCols;
 
-import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,6 @@ public class GetUnobstructedPos {
                   movingObjectPosition == null ||
                   movingObjectPosition.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK
                 ) {
-                  // Check if the block at the given position is a glass pane
                   return new Vec3(x, y, z);
                 }
               }

@@ -1,10 +1,7 @@
 package com.dillo.commands.UtilCommands;
 
-import static com.dillo.dilloUtils.GetAnglePlayerToBlock.getAnglePlayerToBlock;
-import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
+import static com.dillo.dilloUtils.RouteChecker.CheckForStruc.isStructureBetween;
 
-import com.dillo.utils.GetAngleToBlock;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
@@ -29,21 +26,10 @@ public class WalkToCustom extends Command {
     //SendChat.chat(currentServer);
     //getArea();
 
-    SendChat.chat(GetAngleToBlock.calcAngle(new BlockPos(x, y, z)) + "!!!");
-    SendChat.chat(curRotation() + "???");
-    //new Thread(GetCurGemPrice::getCurrGemPrice).start();
+    //SendChat.chat(GetAngleToBlock.calcAngle(new BlockPos(x, y, z)) + "!!!");
+    //SendChat.chat(curRotation() + "???");
 
-    //GetSBItems.getSack();
-
-    // usePathfinder(new BlockPos(x, y, z));
-
-    //SendChat.chat(String.valueOf(curRotation()));
-    // StartNuker.startNuker();
-
-    // SendChat.chat(String.valueOf(detectBlocks()));
-    //SendChat.chat(String.valueOf(getYawBlock(new BlockPos(29, 86, 261))));
-    //SendChat.chat(String.valueOf(getYawBlock(new BlockPos(28, 86, 262))));
-
+    isStructureBetween(ids.mc.thePlayer.getPosition(), new BlockPos(x, y, z));
     /*RenderMultipleLines.renderMultipleLines(null, null, false);
 
         List<BlockPos> foundRoute = FindPathToBlock.pathfinderTest(new BlockPos(x, y, z));
