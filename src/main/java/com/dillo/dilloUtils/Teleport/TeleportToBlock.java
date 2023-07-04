@@ -1,5 +1,9 @@
 package com.dillo.dilloUtils.Teleport;
 
+import static com.dillo.data.config.forwardForTicks;
+import static com.dillo.data.config.walkOnTP;
+import static com.dillo.dilloUtils.TpUtils.WalkForward.walkForward;
+
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.dilloUtils.BlockUtils.BlockCols.GetUnobstructedPos;
 import com.dillo.dilloUtils.LookAt;
@@ -13,10 +17,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
-
-import static com.dillo.data.config.forwardForTicks;
-import static com.dillo.data.config.walkOnTP;
-import static com.dillo.dilloUtils.TpUtils.WalkForward.walkForward;
 
 public class TeleportToBlock {
 

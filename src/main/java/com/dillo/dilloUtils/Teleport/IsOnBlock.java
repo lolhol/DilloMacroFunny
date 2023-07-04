@@ -44,6 +44,7 @@ public class IsOnBlock {
               Math.abs(ids.mc.thePlayer.posZ - blockPos.getZ() - 0.5) < 0.0001
             ) {
               startCheck = false;
+              curReTps = 0;
 
               SendChat.chat(prefix.prefix + "Teleported successfully!");
               ids.mc.thePlayer.rotationPitch = 5;

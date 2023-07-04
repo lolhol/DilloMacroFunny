@@ -26,16 +26,20 @@ public class CheckForStruc {
   // Im actually serious. Add me to the #credits.
 
   public static boolean isObstructed() {
-    List<String> scoreBoard = getScoreboard();
+    if (!ids.mc.isSingleplayer()) {
+      List<String> scoreBoard = getScoreboard();
 
-    if (canCheckFurther()) {
-      for (BlockPos block : currentRoute.strucList) {
-        if (isStructureInWay(block)) {
-          return true;
+      if (canCheckFurther()) {
+        for (BlockPos block : currentRoute.strucList) {
+          if (isStructureInWay(block)) {
+            return true;
+          }
         }
+      } else {
+        isChecked.add(MatchTimeDate.matchServer(cleanSB(scoreBoard.get(scoreBoard.size() - 1))));
       }
     } else {
-      isChecked.add(MatchTimeDate.matchServer(cleanSB(scoreBoard.get(scoreBoard.size() - 1))));
+      SendChat.chat(prefix.prefix + "It appears that u are playing single-player. Route check does not work there.");
     }
 
     return false;
