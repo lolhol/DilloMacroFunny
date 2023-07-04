@@ -1,10 +1,17 @@
 package com.dillo.dilloUtils.RouteChecker;
 
+import static com.dillo.MITGUI.GUIUtils.MatchServer.IsChecked.isChecked;
+import static com.dillo.data.config.untouched;
+import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
+import static com.dillo.utils.ScoreboardUtils.GetCurArea.cleanSB;
+import static com.dillo.utils.ScoreboardUtils.GetCurArea.getScoreboard;
+
 import com.dillo.MITGUI.GUIUtils.MatchServer.MatchTimeDate;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
+import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -12,14 +19,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-
-import java.util.List;
-
-import static com.dillo.MITGUI.GUIUtils.MatchServer.IsChecked.isChecked;
-import static com.dillo.data.config.untouched;
-import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
-import static com.dillo.utils.ScoreboardUtils.GetCurArea.cleanSB;
-import static com.dillo.utils.ScoreboardUtils.GetCurArea.getScoreboard;
 
 public class CheckForStruc {
 
@@ -90,27 +89,9 @@ public class CheckForStruc {
                 double y = centerOfBlock.yCoord + offsetY * signY;
                 double z = centerOfBlock.zCoord + offsetZ * signZ;
 
-                MovingObjectPosition movingObjectPosition = world.rayTraceBlocks(
-                  playerPos,
-                  new Vec3(x, y, z),
-                  true,
-                  false,
-                  false
-                );
+                Vec3 end = new Vec3(x, y, z);
 
-                while (movingObjectPosition != null && !isNaturalBlock(movingObjectPosition.getBlockPos())) {
-                  BlockPos block = movingObjectPosition.getBlockPos();
-
-                  movingObjectPosition =
-                    world.rayTraceBlocks(
-                      new Vec3(block.getX() + 0.5, block.getY(), block.getZ() + 0.5),
-                      new Vec3(x, y, z),
-                      true,
-                      false,
-                      false
-                    );
-                }
-
+                MovingObjectPosition movingObjectPosition = world.rayTraceBlocks(playerPos, end, true, false, false);
                 SendChat.chat(
                   String.valueOf(ids.mc.theWorld.getBlockState(movingObjectPosition.getBlockPos()).getBlock()) + "!!!!"
                 );
