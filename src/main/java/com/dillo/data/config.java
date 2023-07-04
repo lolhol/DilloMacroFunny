@@ -161,6 +161,16 @@ public class config extends Vigilant {
 
   @Property(
     type = PropertyType.SLIDER,
+    name = "Walk Forward when tping amount of time",
+    description = "Customise for how many ticks u move forward (1 tick = 1/20 second)",
+    category = "Failsafes",
+    min = 1,
+    max = 20
+  )
+  public static int forwardForTicks = 3;
+
+  @Property(
+    type = PropertyType.SLIDER,
     name = "Teleport Head Movement Speed",
     description = "The _____ of ms it takes for the macro to turn to the next block.",
     category = "Teleportation Options",
