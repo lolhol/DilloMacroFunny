@@ -1,5 +1,10 @@
 package com.dillo.commands.UtilCommands;
 
+import static com.dillo.dilloUtils.GetAnglePlayerToBlock.getAnglePlayerToBlock;
+import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
+
+import com.dillo.utils.GetAngleToBlock;
+import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
@@ -14,7 +19,7 @@ public class WalkToCustom extends Command {
   }
 
   @DefaultHandler
-  public void handle() {
+  public void handle(int x, int y, int z) {
     //SendChat.chat(String.valueOf(ids.mc.thePlayer.isRiding()));
     // NewSpinDrive.putAllTogether();
     // ArmadilloStates.offlineState = "online";
@@ -24,7 +29,8 @@ public class WalkToCustom extends Command {
     //SendChat.chat(currentServer);
     //getArea();
 
-    ids.mc.thePlayer.sendChatMessage("/is");
+    SendChat.chat(GetAngleToBlock.calcAngle(new BlockPos(x, y, z)) + "!!!");
+    SendChat.chat(curRotation() + "???");
     //new Thread(GetCurGemPrice::getCurrGemPrice).start();
 
     //GetSBItems.getSack();
