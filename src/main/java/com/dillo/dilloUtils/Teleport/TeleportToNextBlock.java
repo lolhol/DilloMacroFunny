@@ -1,28 +1,19 @@
 package com.dillo.dilloUtils.Teleport;
 
-import static com.dillo.dilloUtils.Utils.GetOnArmadillo.getOnArmadillo;
-
-import com.dillo.ArmadilloMain.ArmadilloMain;
 import com.dillo.ArmadilloMain.ArmadilloStates;
-import com.dillo.RemoteControl.Movements;
 import com.dillo.data.config;
-import com.dillo.dilloUtils.BlockUtils.BlockCols.GetUnobstructedPos;
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
-import com.dillo.dilloUtils.GetOffArmadillo;
-import com.dillo.dilloUtils.LookAt;
-import com.dillo.dilloUtils.StateDillo;
 import com.dillo.dilloUtils.TpUtils.LookWhileGoingDown;
-import com.dillo.dilloUtils.TpUtils.WaitThenCall;
+import com.dillo.utils.GetSBItems;
 import com.dillo.utils.previous.SendChat;
-import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
-import java.util.List;
-import java.util.Objects;
-import net.minecraft.block.Block;
+import com.dillo.utils.previous.random.swapToSlot;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
+
+import java.util.Objects;
+
+import static com.dillo.data.config.actuallySwitchAOTV;
 
 public class TeleportToNextBlock {
 
@@ -35,6 +26,8 @@ public class TeleportToNextBlock {
       BlockPos nextBlock = GetNextBlock.getNextBlock();
       nextBlockInList = nextBlock;
       isTeleporting = true;
+
+      if (actuallySwitchAOTV) swapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
 
       if (nextBlock == null) {
         SendChat.chat(prefix.prefix + "FAILED TO TELEPORT FOR SOME REASON! DM GODBRIGERO!");

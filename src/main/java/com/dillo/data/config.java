@@ -55,6 +55,14 @@ public class config extends Vigilant {
   )
   public static int untouched = 20;
 
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Actually Switch to aotv",
+    description = "Switches to aotv on tp",
+    category = "Main"
+  )
+  public static boolean actuallySwitchAOTV = true;
+
   //Route Utils
 
   @Property(
