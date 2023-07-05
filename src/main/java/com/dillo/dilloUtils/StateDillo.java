@@ -12,10 +12,15 @@ import com.dillo.utils.SetStatesNull;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.swapToSlot;
 import com.dillo.utils.throwRod;
+import java.util.List;
 import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -82,11 +87,36 @@ public class StateDillo {
     }
   }
 
+  public boolean isDilloSummoned() {
+    Minecraft mc = Minecraft.getMinecraft();
+    EntityPlayer player = mc.thePlayer;
+
+    AxisAlignedBB boundingBox = new AxisAlignedBB(
+      player.posX - 3,
+      player.posY - 3,
+      player.posZ - 3,
+      player.posX + 3,
+      player.posY + 3,
+      player.posZ + 3
+    );
+
+    List<Entity> entityList = mc.theWorld.getEntitiesWithinAABB(Entity.class, boundingBox);
+    for (Entity entity : entityList) {
+      if (!(entity instanceof EntityPlayer)) {
+        if (entity.getName().contains(player.getName())) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
       if (canCheckIfOnDillo && Objects.equals(ArmadilloStates.offlineState, "online")) {
-        if (tickDilloCheckCount >= 2) {
+        if (tickDilloCheckCount >= 10) {
           if (ids.mc.thePlayer.isRiding()) {
             checkedNumber = 0;
             tickDilloCheckCount = 0;
@@ -104,7 +134,9 @@ public class StateDillo {
               }
             }
           } else {
-            rightClick();
+            if (isDilloSummoned()) {
+              rightClick();
+            }
           }
 
           tickDilloCheckCount = 0;

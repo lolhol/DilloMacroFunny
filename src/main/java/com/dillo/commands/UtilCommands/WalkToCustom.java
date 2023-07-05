@@ -2,10 +2,17 @@ package com.dillo.commands.UtilCommands;
 
 import static com.dillo.dilloUtils.RouteChecker.CheckForStruc.isStructureBetween;
 
+import com.dillo.utils.BlockUtils;
+import com.dillo.utils.DistanceFromTo;
+import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
+import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 
 public class WalkToCustom extends Command {
 
@@ -29,7 +36,48 @@ public class WalkToCustom extends Command {
     //SendChat.chat(GetAngleToBlock.calcAngle(new BlockPos(x, y, z)) + "!!!");
     //SendChat.chat(curRotation() + "???");
 
-    isStructureBetween(ids.mc.thePlayer.getPosition(), new BlockPos(x, y, z));
+    Vec3 init = new Vec3(x + 0.5, y + 0.5, z + 0.5);
+    Vec3 player = ids.mc.thePlayer.getPositionVector();
+
+    MovingObjectPosition pos = ids.mc.theWorld.rayTraceBlocks(init, ids.mc.thePlayer.getPositionVector());
+
+    double dx = player.xCoord - init.xCoord;
+    double dy = player.yCoord - init.yCoord;
+    double dz = player.zCoord - init.zCoord;
+
+    double length = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+    double stepX = dx / length;
+    double stepY = dy / length;
+    double stepZ = dz / length;
+
+    int count = 0;
+
+    // Add a check for if the vector goes too far
+
+    RenderOneBlockMod.renderOneBlock(BlockUtils.fromBlockPosToVec3(pos.getBlockPos()), false);
+
+    while (
+      pos != null &&
+      (
+        ids.mc.theWorld.getBlockState(pos.getBlockPos()).getBlock() == Blocks.stone ||
+        ids.mc.theWorld.getBlockState(pos.getBlockPos()).getBlock() == Blocks.cobblestone
+      ) &&
+      !pos.getBlockPos().equals(ids.mc.thePlayer.playerLocation)
+    ) {
+      init.addVector(stepX, stepY, stepZ);
+      pos = ids.mc.theWorld.rayTraceBlocks(init, ids.mc.thePlayer.getPositionVector());
+
+      count++;
+    }
+
+    if (pos == null) {
+      SendChat.chat("NULL!!");
+    } else {
+      SendChat.chat("FOUND!");
+      RenderOneBlockMod.renderOneBlock(BlockUtils.fromBlockPosToVec3(pos.getBlockPos()), true);
+    }
+    //isStructureBetween(ids.mc.thePlayer.getPosition(), new BlockPos(x, y, z));
     /*RenderMultipleLines.renderMultipleLines(null, null, false);
 
         List<BlockPos> foundRoute = FindPathToBlock.pathfinderTest(new BlockPos(x, y, z));

@@ -3,11 +3,13 @@ package com.dillo.dilloUtils.RouteChecker;
 import static com.dillo.MITGUI.GUIUtils.MatchServer.IsChecked.isChecked;
 import static com.dillo.data.config.untouched;
 import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
+import static com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker.findBlocks;
 import static com.dillo.utils.ScoreboardUtils.GetCurArea.cleanSB;
 import static com.dillo.utils.ScoreboardUtils.GetCurArea.getScoreboard;
 
 import com.dillo.MITGUI.GUIUtils.MatchServer.MatchTimeDate;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.utils.BlockUtils;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
@@ -71,38 +73,22 @@ public class CheckForStruc {
   }
 
   public static boolean isStructureBetween(BlockPos block1, BlockPos block2) {
-    EntityPlayer player = ids.mc.thePlayer; // Get the player object
-    Vec3 playerPos = new Vec3(block1.getX() + 0.5, block1.getY() + 2.64, block1.getZ() + 0.5);
+    List<BlockPos> blocksInBetween = findBlocks(
+      new Vec3(block1.getX() + 0.5, block1.getY() + 2.64, block1.getZ() + 0.5),
+      new Vec3(block2.getX() + 0.5, block2.getY(), block2.getZ() + 0.5),
+      0.5
+    );
 
-    World world = player.worldObj;
-    Vec3 centerOfBlock = new Vec3(block2.getX() + 0.5, block2.getY() + 0.5, block2.getZ() + 0.5);
+    int total = blocksInBetween.size();
+    int unnatural = 0;
 
-    //RenderPoints.renderPoint(centerOfBlock, 0.4, true);
-
-    for (double offsetX = 0.0; offsetX < 0.5; offsetX += 0.05) {
-      for (double offsetY = 0.0; offsetY < 0.5; offsetY += 0.05) {
-        for (double offsetZ = 0.0; offsetZ < 0.5; offsetZ += 0.05) {
-          for (int signX = -1; signX <= 1; signX += 2) {
-            for (int signY = -1; signY <= 1; signY += 2) {
-              for (int signZ = -1; signZ <= 1; signZ += 2) {
-                double x = centerOfBlock.xCoord + offsetX * signX;
-                double y = centerOfBlock.yCoord + offsetY * signY;
-                double z = centerOfBlock.zCoord + offsetZ * signZ;
-
-                Vec3 end = new Vec3(x, y, z);
-
-                MovingObjectPosition movingObjectPosition = world.rayTraceBlocks(playerPos, end, true, false, false);
-                SendChat.chat(
-                  String.valueOf(ids.mc.theWorld.getBlockState(movingObjectPosition.getBlockPos()).getBlock()) + "!!!!"
-                );
-              }
-            }
-          }
-        }
+    for (BlockPos block : blocksInBetween) {
+      if (!isNaturalBlock(block) && ids.mc.theWorld.getBlockState(block).getBlock() != Blocks.air) {
+        unnatural++;
       }
     }
 
-    return false;
+    return ((double) unnatural / total) * 100 >= 10;
   }
 
   private static boolean isNaturalBlock(BlockPos block) {
