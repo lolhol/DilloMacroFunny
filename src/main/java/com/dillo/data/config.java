@@ -435,9 +435,19 @@ public class config extends Vigilant {
   public static int nukerBPS = 20;
 
   @Property(
+    type = PropertyType.SLIDER,
+    name = "Nuker Range",
+    description = "The block range of the nuker",
+    category = "Nuker",
+    min = 1,
+    max = 4
+  )
+  public static int nukerRange = 3;
+
+  @Property(
     type = PropertyType.SWITCH,
     name = "Check if unobstructed",
-    description = "WARNING! THIS IS EXPERIMENTAL AND MAY NOT WORK!",
+    description = "WARNING! THIS MAY CAUSE MASSIVE AMOUNTS OF LAG!",
     category = "Nuker"
   )
   public static boolean nukerUnObstructedChecks = false;

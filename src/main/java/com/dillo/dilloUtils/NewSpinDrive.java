@@ -38,7 +38,7 @@ public class NewSpinDrive {
 
   public static void newSpinDrive() {
     if (angle < lastBlockAngle + 50) {
-      angle += config.headMovement * 7 + random.nextFloat() * 10;
+      angle += config.headMovement * 8 + random.nextFloat() * 10;
 
       KeyBinding.setKeyBindState(jump.getKeyCode(), true);
       BlockPos block = returnBlocks.get((int) Math.floor(returnBlocks.size() / 2)).blockPos;

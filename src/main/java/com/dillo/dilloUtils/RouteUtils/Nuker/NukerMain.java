@@ -1,9 +1,10 @@
 package com.dillo.dilloUtils.RouteUtils.Nuker;
 
-import static com.dillo.dilloUtils.BlockUtils.BlockCols.GetUnobstructedPos.getUnobstructedPos;
+import static com.dillo.data.config.nukerRange;
 import static com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker.Blockss;
 import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isAbleToMine;
 import static com.dillo.dilloUtils.Utils.GetOnArmadillo.isSummoned;
+import static com.dillo.utils.RayTracingUtils.adjustLook;
 
 import com.dillo.data.config;
 import com.dillo.utils.DistanceFromTo;
@@ -16,6 +17,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -81,12 +83,12 @@ public class NukerMain {
             if (
               isInFOV(block, config.nukerFOV) &&
               isHoldingDrill() &&
-              DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), block) < 4.5 &&
+              DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), block) < nukerRange + 0.1 &&
               isOnGround() &&
               isAbleToMine(block) &&
               isInDillo()
             ) {
-              if (config.nukerUnObstructedChecks && canBeBroken(block)) {
+              if (config.nukerUnObstructedChecks && !canBeBroken(block)) {
                 return;
               }
 
@@ -169,7 +171,12 @@ public class NukerMain {
   }
 
   public static boolean canBeBroken(BlockPos block) {
-    Vec3 blockHit = getUnobstructedPos(block);
+    Vec3 blockHit = adjustLook(
+      ids.mc.thePlayer.getPosition(),
+      block,
+      new net.minecraft.block.Block[] { Blocks.air },
+      false
+    );
     return blockHit != null;
   }
 }

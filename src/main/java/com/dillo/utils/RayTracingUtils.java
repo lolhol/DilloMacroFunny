@@ -3,7 +3,6 @@ package com.dillo.utils;
 import static com.dillo.utils.previous.random.IsSameBlock.isSameBlock;
 
 import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.renderUtils.renderModules.RenderPoints;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -50,8 +49,6 @@ public class RayTracingUtils {
     double radiusStep = 0.1;
     double radiusMax = Math.sqrt(3) / 2 + radiusStep;
 
-    RenderPoints.renderPoint(destBlockCenter, 0.2, false);
-
     for (double radius = radiusStep; radius < radiusMax; radius += radiusStep) {
       double angleStep = (radiusMax / radius) * 5;
       for (double angle = 0; angle < 360 + angleStep; angle += angleStep) {
@@ -67,8 +64,6 @@ public class RayTracingUtils {
           destBlockCenter.yCoord + vec.yCoord,
           destBlockCenter.zCoord + vec.zCoord
         );
-
-        RenderPoints.renderPoint(point, 0.2, true);
 
         CollisionResult collisionPoint = getCollisionBlock(
           ids.mc.thePlayer.posX,
@@ -199,17 +194,13 @@ public class RayTracingUtils {
   public static double[] intersection(double[] ro, double[] rd, double[][] aabb) {
     double d = distance(ro, rd, aabb);
 
-    if (d == Double.NEGATIVE_INFINITY || d == Double.POSITIVE_INFINITY) {
-      return null;
-    } else {
-      double[] out = new double[ro.length];
+    double[] out = new double[ro.length];
 
-      for (int i = 0; i < ro.length; i++) {
-        out[i] = ro[i] + rd[i] * d;
-      }
-
-      return out;
+    for (int i = 0; i < ro.length; i++) {
+      out[i] = ro[i] + rd[i] * d;
     }
+
+    return out;
   }
 
   public static double distance(double[] ro, double[] rd, double[][] aabb) {

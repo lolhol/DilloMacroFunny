@@ -114,7 +114,7 @@ public class Overlay {
     }
 
     if (failCheckRouteDisplay && isStartRenderPoints) {
-      if (startTime > System.currentTimeMillis() + 10000) {
+      if (startTime + 10000 > System.currentTimeMillis()) {
         int x = 20;
         int y = 40;
 
@@ -135,7 +135,7 @@ public class Overlay {
           isStartRenderPoints = false;
         }
       } else {
-        curTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
       }
     }
   }
