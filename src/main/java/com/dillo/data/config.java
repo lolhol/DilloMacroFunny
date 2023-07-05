@@ -63,6 +63,14 @@ public class config extends Vigilant {
   )
   public static boolean actuallySwitchAOTV = true;
 
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Faster Getting on dillo mode",
+    description = "More Blatant (spam-clicks) but hopefully makes the process faster.",
+    category = "Main"
+  )
+  public static boolean fasterDillo = true;
+
   //Route Utils
   @Property(
     type = PropertyType.SWITCH,

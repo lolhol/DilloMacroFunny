@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import java.util.List;
 import java.util.Objects;
 
+import static com.dillo.data.config.fasterDillo;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
 import static com.dillo.utils.keyBindings.rightClick;
 
@@ -114,7 +115,7 @@ public class StateDillo {
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
       if (canCheckIfOnDillo && Objects.equals(ArmadilloStates.offlineState, "online")) {
-        if (tickDilloCheckCount >= 3) {
+        if (tickDilloCheckCount >= 4) {
           if (ids.mc.thePlayer.isRiding()) {
             checkedNumber = 0;
             tickDilloCheckCount = 0;
@@ -132,7 +133,11 @@ public class StateDillo {
               }
             }
           } else {
-            if (isDilloSummoned()) {
+            if (!fasterDillo) {
+              if (isDilloSummoned()) {
+                rightClick();
+              }
+            } else {
               rightClick();
             }
           }
