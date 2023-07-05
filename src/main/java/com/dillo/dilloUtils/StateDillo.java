@@ -1,28 +1,26 @@
 package com.dillo.dilloUtils;
 
-import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
-import static com.dillo.utils.keyBindings.rightClick;
-
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.data.config;
-import com.dillo.dilloUtils.BlockUtils.BlockUtils;
 import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
 import com.dillo.utils.GetSBItems;
-import com.dillo.utils.SetStatesNull;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.swapToSlot;
 import com.dillo.utils.throwRod;
-import java.util.List;
-import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import java.util.List;
+import java.util.Objects;
+
+import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
+import static com.dillo.utils.keyBindings.rightClick;
 
 public class StateDillo {
 
@@ -116,7 +114,7 @@ public class StateDillo {
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
       if (canCheckIfOnDillo && Objects.equals(ArmadilloStates.offlineState, "online")) {
-        if (tickDilloCheckCount >= 10) {
+        if (tickDilloCheckCount >= 3) {
           if (ids.mc.thePlayer.isRiding()) {
             checkedNumber = 0;
             tickDilloCheckCount = 0;
