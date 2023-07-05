@@ -6,7 +6,6 @@ import static com.dillo.dilloUtils.TpUtils.WalkForward.walkForward;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
-import com.dillo.dilloUtils.BlockUtils.BlockCols.GetUnobstructedPos;
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.TpUtils.WaitThenCall;
 import com.dillo.utils.GetSBItems;
@@ -37,7 +36,12 @@ public class TeleportToBlock {
     nextBlock = block;
 
     if (!walkOnTP) {
-      Vec3 nextBlockPos = GetUnobstructedPos.getUnobstructedPos(block);
+      Vec3 nextBlockPos = adjustLook(
+        ids.mc.thePlayer.getPosition(),
+        nextBlock,
+        new net.minecraft.block.Block[] { Blocks.air },
+        false
+      );
 
       if (nextBlockPos == null) {
         SendChat.chat(prefix.prefix + "Failed to teleport!");
@@ -81,7 +85,12 @@ public class TeleportToBlock {
 
   public static void tpStageWalk() {
     ArmadilloStates.currentState = null;
-    Vec3 nextBlockPos = adjustLook(nextBlock, new net.minecraft.block.Block[] { Blocks.air });
+    Vec3 nextBlockPos = adjustLook(
+      ids.mc.thePlayer.getPosition(),
+      nextBlock,
+      new net.minecraft.block.Block[] { Blocks.air },
+      false
+    );
 
     if (nextBlockPos == null) {
       SendChat.chat(prefix.prefix + "Failed to teleport!");

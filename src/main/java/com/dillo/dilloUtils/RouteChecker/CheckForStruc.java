@@ -1,21 +1,25 @@
 package com.dillo.dilloUtils.RouteChecker;
 
+import static com.dillo.MITGUI.GUIUtils.MatchServer.IsChecked.isChecked;
+import static com.dillo.MITGUI.Overlay.isStartRenderPoints;
+import static com.dillo.data.config.isAbleToTeleportChecks;
+import static com.dillo.data.config.untouched;
+import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
+import static com.dillo.utils.RayTracingUtils.adjustLook;
+import static com.dillo.utils.ScoreboardUtils.GetCurArea.cleanSB;
+import static com.dillo.utils.ScoreboardUtils.GetCurArea.getScoreboard;
+
+import com.dillo.MITGUI.GUIUtils.CheckRoute.GetFailPointsList;
 import com.dillo.MITGUI.GUIUtils.MatchServer.MatchTimeDate;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
+import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
-
-import java.util.List;
-
-import static com.dillo.MITGUI.GUIUtils.MatchServer.IsChecked.isChecked;
-import static com.dillo.data.config.untouched;
-import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
-import static com.dillo.utils.ScoreboardUtils.GetCurArea.cleanSB;
-import static com.dillo.utils.ScoreboardUtils.GetCurArea.getScoreboard;
+import net.minecraft.util.Vec3;
 
 public class CheckForStruc {
 
@@ -28,9 +32,29 @@ public class CheckForStruc {
 
   public static boolean isObstructed() {
     if (!ids.mc.isSingleplayer()) {
+      GetFailPointsList.clearFailList();
+
+      isStartRenderPoints = true;
       List<String> scoreBoard = getScoreboard();
 
       if (canCheckFurther()) {
+        if (isAbleToTeleportChecks) {
+          for (int i = 0; i < currentRoute.currentRoute.size(); i++) {
+            int next = i + 1;
+            if (i == currentRoute.currentRoute.size() - 1) next = 0;
+
+            boolean result = isStructurePreventingTP(
+              currentRoute.currentRoute.get(i),
+              currentRoute.currentRoute.get(next)
+            );
+
+            if (!result) {
+              GetFailPointsList.addToFailList(currentRoute.currentRoute.get(i), i);
+              GetFailPointsList.addToFailList(currentRoute.currentRoute.get(next), next);
+            }
+          }
+        }
+
         for (BlockPos block : currentRoute.strucList) {
           if (isStructureInWay(block)) {
             return true;
@@ -67,6 +91,28 @@ public class CheckForStruc {
     return (100 / total) * uo < 80;
   }
 
+  public static boolean isStructurePreventingTP(BlockPos block1, BlockPos block2) {
+    Vec3 pos = adjustLook(
+      makeNewBlock(0, 1, 0, block1),
+      block2,
+      new net.minecraft.block.Block[] {
+        Blocks.stone,
+        Blocks.coal_ore,
+        Blocks.emerald_ore,
+        Blocks.diamond_ore,
+        Blocks.gold_ore,
+        Blocks.iron_ore,
+        Blocks.lapis_ore,
+        Blocks.lit_redstone_ore,
+        Blocks.redstone_ore,
+        Blocks.air,
+      },
+      true
+    );
+
+    return pos != null;
+  }
+
   private static boolean isNaturalBlock(BlockPos block) {
     Block blockType = ids.mc.theWorld.getBlockState(block).getBlock();
 
@@ -92,7 +138,8 @@ public class CheckForStruc {
     for (int i = 0; i < currentRoute.currentRoute.size(); i++) {
       BlockPos block = currentRoute.currentRoute.get(i);
       if (isBroken(block)) {
-        SendChat.chat(prefix.prefix + "Point " + (int) (i + 1) + " appears to be obstructed! Proceed with caution.");
+        GetFailPointsList.addToFailList(block, i);
+        //SendChat.chat(prefix.prefix + "Point " + (int) (i + 1) + " appears to be obstructed! Proceed with caution.");
         canCheckFurther = false;
       }
     }

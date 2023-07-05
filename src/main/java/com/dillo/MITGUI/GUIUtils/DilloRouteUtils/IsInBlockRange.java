@@ -10,8 +10,9 @@ public class IsInBlockRange {
 
   public static boolean isInCheckRange() {
     if (
-      currentRoute.currentRoute.size() < 1 ||
-      DistanceFromTo.distanceFromTo(ids.mc.thePlayer.playerLocation, currentRoute.currentRoute.get(0)) > 120 ||
+      currentRoute.currentRoute.size() == 0 ||
+      currentRoute.currentRoute == null ||
+      DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), currentRoute.currentRoute.get(0)) > 120 ||
       isChecked()
     ) {
       return false;

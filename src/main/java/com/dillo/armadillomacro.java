@@ -100,7 +100,8 @@ public class armadillomacro {
       new HelpStructureCheck(),
       new InsertInMiddle(),
       new RemoveBlockRoute(),
-      new ReplaceBlockRoute()
+      new ReplaceBlockRoute(),
+      new ObstructedPoints()
     );
 
     registerEvents(

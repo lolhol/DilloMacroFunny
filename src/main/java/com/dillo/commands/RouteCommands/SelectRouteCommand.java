@@ -15,7 +15,6 @@ import gg.essential.api.commands.DefaultHandler;
 import java.io.File;
 import java.util.Objects;
 import net.minecraft.util.BlockPos;
-import scala.tools.nsc.io.Jar;
 
 public class SelectRouteCommand extends Command {
 
@@ -50,7 +49,7 @@ public class SelectRouteCommand extends Command {
             }
           }
 
-          JsonArray currentStrucArr = object.get("route").getAsJsonArray();
+          JsonArray currentStrucArr = object.get("structures").getAsJsonArray();
           currentRoute.strucList.clear();
           if (currentStrucArr.size() > 0) {
             for (JsonElement element : currentStrucArr) {

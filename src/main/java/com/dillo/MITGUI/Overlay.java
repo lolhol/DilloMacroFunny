@@ -5,16 +5,18 @@ import static com.dillo.MITGUI.GUIUtils.MatchServer.IsChecked.isChecked;
 import static com.dillo.data.config.*;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.MITGUI.GUIUtils.CheckRoute.GetFailPointsList;
 import com.dillo.MITGUI.GUIUtils.CurRatesUtils.GetTotalEarned;
 import com.dillo.MITGUI.GUIUtils.CurRatesUtils.ItemsPickedUp;
 import com.dillo.MITGUI.GUIUtils.CurTimeVein.CurTime;
 import com.dillo.MITGUI.GUIUtils.DilloRouteUtils.IsInBlockRange;
 import com.dillo.data.config;
+import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
+import com.dillo.utils.previous.random.prefix;
 import java.awt.*;
 import java.util.Objects;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -24,8 +26,9 @@ public class Overlay {
 
   public static long curTime = System.currentTimeMillis();
   private static long lastLobbyCheck = System.currentTimeMillis();
-  private static SoundHandler soundHandler = ids.mc.getSoundHandler();
   private static boolean isFirst = true;
+  public static boolean isStartRenderPoints = true;
+  public static long startTime = System.currentTimeMillis();
 
   @SubscribeEvent
   public void renderGameOverlay(RenderGameOverlayEvent event) {
@@ -107,6 +110,32 @@ public class Overlay {
       } else {
         isFirst = true;
         lastLobbyCheck = System.currentTimeMillis();
+      }
+    }
+
+    if (failCheckRouteDisplay && isStartRenderPoints) {
+      if (startTime > System.currentTimeMillis() + 10000) {
+        int x = 20;
+        int y = 40;
+
+        draw("Fail Points: ", x, y);
+
+        if (GetFailPointsList.failListPoints.size() < 6) {
+          for (int block : GetFailPointsList.failListPoints) {
+            y += 8;
+            draw("Point " + ((int) block + 1), x, y);
+          }
+        } else {
+          isStartRenderPoints = false;
+          SendChat.chat(prefix.prefix + "To View All the points that might be obstructed, run /obstructedPoints");
+        }
+
+        if (GetFailPointsList.failListPoints.size() == 0) {
+          SendChat.chat(prefix.prefix + "No Obstruction Points found!");
+          isStartRenderPoints = false;
+        }
+      } else {
+        curTime = System.currentTimeMillis();
       }
     }
   }

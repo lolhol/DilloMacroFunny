@@ -32,7 +32,12 @@ public class WalkToCustom extends Command {
 
     //SendChat.chat(GetAngleToBlock.calcAngle(new BlockPos(x, y, z)) + "!!!");
     //SendChat.chat(curRotation() + "???");
-    Vec3 pos = adjustLook(new BlockPos(x, y, z), new net.minecraft.block.Block[] { Blocks.air, Blocks.stone });
+    Vec3 pos = adjustLook(
+      ids.mc.thePlayer.getPosition(),
+      new BlockPos(x, y, z),
+      new net.minecraft.block.Block[] { Blocks.air, Blocks.stone },
+      false
+    );
 
     if (pos == null) {
       SendChat.chat("NULL!!");

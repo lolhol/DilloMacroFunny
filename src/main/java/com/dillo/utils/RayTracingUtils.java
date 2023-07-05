@@ -8,21 +8,27 @@ import java.util.Comparator;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 
 public class RayTracingUtils {
 
   public static Block[] blocksToIgnore = null;
+  private static boolean isCheck = false;
+  private static BlockPos destBlock1 = null;
+  private static BlockPos destBlock2 = null;
 
-  public static Vec3 adjustLook(BlockPos destBlock, Block[] blocksToIgnore) {
+  public static Vec3 adjustLook(BlockPos block1, BlockPos destBlock, Block[] blocksToIgnore, boolean isCheck) {
     double playerHeight = 1.64;
     RayTracingUtils.blocksToIgnore = blocksToIgnore;
+    RayTracingUtils.destBlock1 = block1;
+    RayTracingUtils.destBlock2 = destBlock;
 
     Vec3 destBlockCenter = new Vec3(destBlock.getX() + 0.5, destBlock.getY() + 0.5, destBlock.getZ() + 0.5);
 
     double distToBlockCenter = getDistance(
-      new Vec3(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + playerHeight, ids.mc.thePlayer.posZ),
+      new Vec3(block1.getX(), block1.getY() + playerHeight, block1.getZ()),
       destBlockCenter
     );
 
@@ -121,7 +127,13 @@ public class RayTracingUtils {
             Block block = blockState.getBlock();
 
             if (isContains(blocksToIgnore, block)) {
-              continue;
+              if (!isCheck) {
+                continue;
+              } else {
+                if (canCheck(new BlockPos(x, y, z), destBlock1, destBlock2)) {
+                  continue;
+                }
+              }
             }
 
             double[] ro = new double[] { x1, y1, z1 };
@@ -149,6 +161,24 @@ public class RayTracingUtils {
     collidingBlocks.sort(Comparator.comparingDouble(a -> getDistanceB(new double[] { x1, y1, z1 }, a.output)));
 
     return collidingBlocks.size() > 0 ? collidingBlocks.get(0) : null;
+  }
+
+  private static boolean canCheck(BlockPos block, BlockPos routeBlock1, BlockPos routeBlock2) {
+    if (
+      (
+        DistanceFromTo.distanceFromTo(block, routeBlock1) < 4 || DistanceFromTo.distanceFromTo(block, routeBlock2) < 4
+      ) &&
+      (
+        ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass ||
+        ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass_pane
+      ) &&
+      block.getY() >= routeBlock1.getY() &&
+      block.getY() >= routeBlock2.getY()
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
   public static boolean isContains(Block[] blocks, Block match) {

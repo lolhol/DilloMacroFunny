@@ -64,6 +64,21 @@ public class config extends Vigilant {
   public static boolean actuallySwitchAOTV = true;
 
   //Route Utils
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Route Check Check If able to tp",
+    description = "WARNING THIS MAY LAG! Depending on ur route length this may lag.",
+    category = "Route Utils"
+  )
+  public static boolean isAbleToTeleportChecks = false;
+
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Fail CheckRoute Route Points Display",
+    description = "If there are going to be any points on route that fail the route check, there is going to be a thing that will display them.",
+    category = "Route Utils"
+  )
+  public static boolean failCheckRouteDisplay = true;
 
   @Property(
     type = PropertyType.SWITCH,
