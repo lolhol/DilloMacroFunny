@@ -1,5 +1,6 @@
 package com.dillo.dilloUtils.RouteUtils.Nuker;
 
+import static com.dillo.dilloUtils.BlockUtils.BlockCols.GetUnobstructedPos.getUnobstructedPos;
 import static com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker.Blockss;
 import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isAbleToMine;
 import static com.dillo.dilloUtils.Utils.GetOnArmadillo.isSummoned;
@@ -7,23 +8,17 @@ import static com.dillo.dilloUtils.Utils.GetOnArmadillo.isSummoned;
 import com.dillo.data.config;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.SendChat;
-import com.dillo.utils.previous.packets.getBlockEnum;
 import com.dillo.utils.previous.packets.sendStart;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.renderUtils.RenderBox;
-import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.block.Block;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -174,27 +169,7 @@ public class NukerMain {
   }
 
   public static boolean canBeBroken(BlockPos block) {
-    BlockPos playerPos = ids.mc.thePlayer.getPosition();
-
-    Vec3 startVec = new Vec3(playerPos.getX() + 0.5, playerPos.getY() + 1.5, playerPos.getZ() + 0.5);
-    Vec3 endVec = new Vec3(block.getX() + 0.5, block.getY() + 0.5, block.getZ() + 0.5);
-
-    MovingObjectPosition result = ids.mc.theWorld.rayTraceBlocks(startVec, endVec, false);
-
-    if (result == null || result.typeOfHit == MovingObjectPosition.MovingObjectType.MISS) {
-      return false;
-    }
-
-    if (
-      (
-        result.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK ||
-        result.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY
-      ) &&
-      result.hitVec != endVec
-    ) {
-      return true;
-    }
-
-    return false;
+    Vec3 blockHit = getUnobstructedPos(block);
+    return blockHit != null;
   }
 }

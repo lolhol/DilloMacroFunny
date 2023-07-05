@@ -10,7 +10,7 @@ public class RenderLine {
   public static void drawLine(Vec3 vec1, Vec3 vec2, float width, Color color, float partialTicks) {
     Minecraft mc = Minecraft.getMinecraft();
 
-    Vec3 playerPos = mc.thePlayer.getPositionEyes(partialTicks);
+    Vec3 playerPos = mc.thePlayer.getPositionVector();
 
     GL11.glPushMatrix();
     GL11.glTranslated(-playerPos.xCoord, -playerPos.yCoord, -playerPos.zCoord);
