@@ -3,6 +3,7 @@ package com.dillo.dilloUtils.Teleport;
 import static com.dillo.data.config.forwardForTicks;
 import static com.dillo.data.config.walkOnTP;
 import static com.dillo.dilloUtils.TpUtils.WalkForward.walkForward;
+import static com.dillo.utils.RayTracingUtils.adjustLook;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.dilloUtils.BlockUtils.BlockCols.GetUnobstructedPos;
@@ -15,6 +16,7 @@ import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.previous.random.swapToSlot;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 
@@ -79,7 +81,7 @@ public class TeleportToBlock {
 
   public static void tpStageWalk() {
     ArmadilloStates.currentState = null;
-    Vec3 nextBlockPos = GetUnobstructedPos.getUnobstructedPos(nextBlock);
+    Vec3 nextBlockPos = adjustLook(nextBlock, new net.minecraft.block.Block[] { Blocks.air });
 
     if (nextBlockPos == null) {
       SendChat.chat(prefix.prefix + "Failed to teleport!");

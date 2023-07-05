@@ -8,16 +8,16 @@ import java.util.Comparator;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 
 public class RayTracingUtils {
 
-  public static Vec3 adjustLook(BlockPos destBlock) {
+  public static Block[] blocksToIgnore = null;
+
+  public static Vec3 adjustLook(BlockPos destBlock, Block[] blocksToIgnore) {
     double playerHeight = 1.64;
+    RayTracingUtils.blocksToIgnore = blocksToIgnore;
 
     Vec3 destBlockCenter = new Vec3(destBlock.getX() + 0.5, destBlock.getY() + 0.5, destBlock.getZ() + 0.5);
 
@@ -120,7 +120,7 @@ public class RayTracingUtils {
             IBlockState blockState = ids.mc.theWorld.getBlockState(new BlockPos(x, y, z));
             Block block = blockState.getBlock();
 
-            if (block == Blocks.air) {
+            if (isContains(blocksToIgnore, block)) {
               continue;
             }
 
@@ -149,6 +149,16 @@ public class RayTracingUtils {
     collidingBlocks.sort(Comparator.comparingDouble(a -> getDistanceB(new double[] { x1, y1, z1 }, a.output)));
 
     return collidingBlocks.size() > 0 ? collidingBlocks.get(0) : null;
+  }
+
+  public static boolean isContains(Block[] blocks, Block match) {
+    for (Block block : blocks) {
+      if (block == match) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   public static double[] intersection(double[] ro, double[] rd, double[][] aabb) {

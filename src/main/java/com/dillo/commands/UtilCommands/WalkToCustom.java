@@ -1,10 +1,7 @@
 package com.dillo.commands.UtilCommands;
 
-import static com.dillo.dilloUtils.RouteChecker.CheckForStruc.isStructureBetween;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 
-import com.dillo.utils.BlockUtils;
-import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
@@ -12,7 +9,6 @@ import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
 public class WalkToCustom extends Command {
@@ -36,7 +32,7 @@ public class WalkToCustom extends Command {
 
     //SendChat.chat(GetAngleToBlock.calcAngle(new BlockPos(x, y, z)) + "!!!");
     //SendChat.chat(curRotation() + "???");
-    Vec3 pos = adjustLook(new BlockPos(x, y, z));
+    Vec3 pos = adjustLook(new BlockPos(x, y, z), new net.minecraft.block.Block[] { Blocks.air, Blocks.stone });
 
     if (pos == null) {
       SendChat.chat("NULL!!");
