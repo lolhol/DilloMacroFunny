@@ -34,4 +34,20 @@ public class GetAngleToBlock {
     double angle = Math.atan2(dz, dx);
     return (Math.toDegrees(angle) - player.rotationYaw) > 0;
   }
+
+  public static float calcAngleFromYaw(BlockPos pos, float curYaw) {
+    float yaw = Math.abs(curYaw);
+    float angle = Math.abs(yaw - getBlockYaw(pos.getX(), pos.getZ(), ids.mc.thePlayer));
+
+    if (isBlockToLeft(pos.getX(), pos.getZ(), ids.mc.thePlayer)) {
+      angle = 360.0f - angle;
+    }
+
+    angle %= 360.0f;
+    if (angle < 0.0f) {
+      angle += 360.0f;
+    }
+
+    return angle;
+  }
 }

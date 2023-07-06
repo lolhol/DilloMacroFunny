@@ -179,4 +179,24 @@ public class NukerMain {
     );
     return blockHit != null;
   }
+
+  public static Float getYawBlockAround(BlockPos block, float curRotationYaw) {
+    double dX = block.getX() + 0.5 - ids.mc.thePlayer.posX;
+    double dZ = block.getZ() + 0.5 - ids.mc.thePlayer.posZ;
+
+    double angle = Math.atan2(dZ, dX);
+    float rotationYaw = (float) Math.toDegrees(angle) - 90.0f;
+
+    if (rotationYaw < 0.0f) {
+      rotationYaw += 360.0f;
+    }
+
+    rotationYaw = Math.abs(curRotationYaw - rotationYaw);
+
+    if (rotationYaw > 360) {
+      rotationYaw = (float) (((curRotationYaw / 360) - (Math.floor(curRotationYaw / 360))) * 360);
+    }
+
+    return Math.abs(rotationYaw);
+  }
 }

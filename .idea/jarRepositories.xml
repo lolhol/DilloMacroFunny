@@ -71,5 +71,10 @@
       <option name="name" value="maven3" />
       <option name="url" value="https://repo.sk1er.club/repository/maven-public/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="UserLocalRemappedMods" />
+      <option name="name" value="UserLocalRemappedMods" />
+      <option name="url" value="file:$PROJECT_DIR$/.gradle/loom-cache/remapped_mods/" />
+    </remote-repository>
   </component>
 </project>

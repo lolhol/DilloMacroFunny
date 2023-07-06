@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ArmadilloMacro.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ArmadilloMacro.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.armadillomacro.archloomtemplate.ArmadilloMacro.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.armadillomacro.archloomtemplate.ArmadilloMacro.main.iml" />
     </modules>
   </component>
 </project>
