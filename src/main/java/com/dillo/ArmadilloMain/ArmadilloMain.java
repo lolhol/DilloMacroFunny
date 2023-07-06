@@ -1,33 +1,33 @@
 package com.dillo.ArmadilloMain;
 
-import com.dillo.Pathfinding.BlockNode;
-import com.dillo.Pathfinding.PathFinderV2;
-import com.dillo.Pathfinding.WalkOnPath;
-import com.dillo.data.config;
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
-import com.dillo.dilloUtils.*;
-import com.dillo.dilloUtils.Teleport.TeleportToBlock;
-import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
-import com.dillo.dilloUtils.Utils.LookYaw;
-import com.dillo.utils.DistanceFromTo;
-import com.dillo.utils.StartMacro;
-import com.dillo.utils.previous.random.ids;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import static com.dillo.commands.UtilCommands.DetectEntityUnderCommand.getAngleToBlockPos;
+import static com.dillo.dilloUtils.DilloDriveBlockDetection.detectBlocks;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
 import static com.dillo.dilloUtils.FailSafes.AnswerPPL.answerAccusation;
 import static com.dillo.dilloUtils.NewSpinDrive.random;
 import static com.dillo.dilloUtils.Teleport.TeleportToBlock.tpStageWalk;
 import static com.dillo.dilloUtils.Utils.CenterPlayer.centerStage2;
+
+import com.dillo.Pathfinding.BlockNode;
+import com.dillo.Pathfinding.PathFinderV2;
+import com.dillo.Pathfinding.WalkOnPath;
+import com.dillo.data.config;
+import com.dillo.dilloUtils.*;
+import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.dilloUtils.Teleport.TeleportToBlock;
+import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
+import com.dillo.dilloUtils.Utils.LookYaw;
+import com.dillo.utils.DistanceFromTo;
+import com.dillo.utils.StartMacro;
+import com.dillo.utils.previous.SendChat;
+import com.dillo.utils.previous.random.ids;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class ArmadilloMain {
 
@@ -35,9 +35,12 @@ public class ArmadilloMain {
   private static final KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
   private static int blockTime = 0;
   public static boolean test = false;
+  private static boolean testv1 = false;
   private static boolean isDone = true;
+  private static float closest = 0;
   private static List<DilloDriveBlockDetection.BlockAngle> angles = new ArrayList<>();
-  private static List<BlockPos> combined = new ArrayList<>();
+  private static float lastBlockAngle = 0;
+  private static List<DilloDriveBlockDetection.BlockAngle> returnBlocks = new ArrayList<>();
 
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
@@ -150,69 +153,48 @@ public class ArmadilloMain {
         blockTime < 1000
       ) {
         if (isDone) {
-          combined.clear();
-          angles.clear();
-          List<BlockPos> blocks1 = getBlocksLayer(
-            new BlockPos(
-              currentRoute.curPlayerPos.getX(),
-              currentRoute.curPlayerPos.getY() + 2,
-              currentRoute.curPlayerPos.getZ()
-            )
-          );
+          returnBlocks = detectBlocks();
 
-          List<BlockPos> blocks2 = getBlocksLayer(
-            new BlockPos(
-              currentRoute.curPlayerPos.getX(),
-              currentRoute.curPlayerPos.getY() + 1,
-              currentRoute.curPlayerPos.getZ()
-            )
-          );
-
-          List<BlockPos> blocks3 = getBlocksLayer(
-            new BlockPos(
-              currentRoute.curPlayerPos.getX(),
-              currentRoute.curPlayerPos.getY(),
-              currentRoute.curPlayerPos.getZ()
-            )
-          );
-
-          combined.addAll(blocks1);
-          combined.addAll(blocks2);
-          combined.addAll(blocks3);
-
-          for (BlockPos block : combined) {
-            double angle = getAngleToBlockPos(block);
-
-            DilloDriveBlockDetection.BlockAngle blockAngle = new DilloDriveBlockDetection.BlockAngle(
-              (float) angle,
-              block
-            );
-            angles.add(blockAngle);
+          if (returnBlocks != null) {
+            if (returnBlocks.size() < 1) {
+              ArmadilloStates.currentState = null;
+              ArmadilloStates.offlineState = "offline";
+              com.dillo.utils.previous.chatUtils.SendChat.chat("NO BLOCKS FOUND....");
+            } else {
+              DilloDriveBlockDetection.BlockAngle lastPos = returnBlocks.get(returnBlocks.size() - 1);
+              lastBlockAngle = lastPos.angle;
+              closest = returnBlocks.get(0).angle;
+              currentRoute.curPlayerPos = ids.mc.thePlayer.getPosition();
+            }
           }
-
-          angles.sort((a, b) -> {
-            return a.angle < b.angle ? -1 : 1;
-          });
 
           isDone = false;
         }
 
-        if (angles.size() > 0) {
-          float angleMax = angles.get(angles.size() - 1).angle;
-          float newAngle = (float) getAngleToBlockPos(angles.get(angles.size() - 1).blockPos);
+        if (lastBlockAngle > 0) {
+          if (!testv1) {
+            float yaw = config.headMovement * 3 + random.nextFloat() * 10;
 
-          if (Math.abs(Math.abs(newAngle) - Math.abs(angleMax)) < 3) {
-            if (angleMax < 0) {
-              LookYaw.lookToYaw(config.headMovement * 10L, -config.headMovement * 3 + random.nextFloat() * 10);
-            } else {
-              LookYaw.lookToYaw(config.headMovement * 10L, config.headMovement * 3 + random.nextFloat() * 10);
-            }
+            LookYaw.lookToYaw(config.headMovement * 10L, yaw);
+            lastBlockAngle -= yaw;
+          }
+        } else {
+          testv1 = true;
+        }
+
+        if (testv1) {
+          if (lastBlockAngle < closest) {
+            float yaw = config.headMovement * 3 + random.nextFloat() * 10;
+            LookYaw.lookToYaw(-config.headMovement * 10L, yaw);
+            SendChat.chat(String.valueOf(lastBlockAngle));
+            lastBlockAngle += yaw;
           } else {
             isDone = true;
+            testv1 = false;
           }
-
-          blockTime++;
         }
+
+        blockTime++;
       }
     }
   }
