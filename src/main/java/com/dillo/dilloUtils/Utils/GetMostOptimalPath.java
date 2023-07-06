@@ -36,7 +36,7 @@ public class GetMostOptimalPath {
       displacement += 10;
     }
 
-    return new OptimalPath(best, displacement);
+    return new OptimalPath(best, bestDisplacement);
   }
 
   @Getter
