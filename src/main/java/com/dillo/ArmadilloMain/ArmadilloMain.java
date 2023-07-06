@@ -1,6 +1,8 @@
 package com.dillo.ArmadilloMain;
 
+import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
 import static com.dillo.dilloUtils.FailSafes.AnswerPPL.answerAccusation;
+import static com.dillo.dilloUtils.NewSpinDrive.random;
 import static com.dillo.dilloUtils.Teleport.TeleportToBlock.tpStageWalk;
 import static com.dillo.dilloUtils.Utils.CenterPlayer.centerStage2;
 
@@ -10,13 +12,15 @@ import com.dillo.Pathfinding.WalkOnPath;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.*;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
-import com.dillo.dilloUtils.FailSafes.ServerTPSFailsafe;
 import com.dillo.dilloUtils.Teleport.TeleportToBlock;
 import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
+import com.dillo.dilloUtils.Utils.LookYaw;
 import com.dillo.utils.DistanceFromTo;
+import com.dillo.utils.GetAngleToBlock;
 import com.dillo.utils.StartMacro;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -28,6 +32,8 @@ public class ArmadilloMain {
 
   public static int newDilloCounter = 0;
   private static final KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
+  private static int blockTime = 0;
+  public static boolean test = false;
 
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
@@ -102,6 +108,95 @@ public class ArmadilloMain {
 
         if (Objects.equals(ArmadilloStates.currentState, "ANSWER_ACCUSATION")) {
           answerAccusation();
+        }
+      }
+    }
+
+    if (test) {
+      if (
+        (
+          getBlocksLayer(
+            new BlockPos(
+              currentRoute.curPlayerPos.getX(),
+              currentRoute.curPlayerPos.getY() + 2,
+              currentRoute.curPlayerPos.getZ()
+            )
+          )
+            .size() >
+          0 ||
+          getBlocksLayer(
+            new BlockPos(
+              currentRoute.curPlayerPos.getX(),
+              currentRoute.curPlayerPos.getY() + 1,
+              currentRoute.curPlayerPos.getZ()
+            )
+          )
+            .size() >
+          0 ||
+          getBlocksLayer(
+            new BlockPos(
+              currentRoute.curPlayerPos.getX(),
+              currentRoute.curPlayerPos.getY(),
+              currentRoute.curPlayerPos.getZ()
+            )
+          )
+            .size() >
+          0
+        ) &&
+        blockTime < 1000
+      ) {
+        List<BlockPos> blocks1 = getBlocksLayer(
+          new BlockPos(
+            currentRoute.curPlayerPos.getX(),
+            currentRoute.curPlayerPos.getY() + 2,
+            currentRoute.curPlayerPos.getZ()
+          )
+        );
+
+        List<BlockPos> blocks2 = getBlocksLayer(
+          new BlockPos(
+            currentRoute.curPlayerPos.getX(),
+            currentRoute.curPlayerPos.getY() + 1,
+            currentRoute.curPlayerPos.getZ()
+          )
+        );
+
+        List<BlockPos> blocks3 = getBlocksLayer(
+          new BlockPos(
+            currentRoute.curPlayerPos.getX(),
+            currentRoute.curPlayerPos.getY(),
+            currentRoute.curPlayerPos.getZ()
+          )
+        );
+
+        List<BlockPos> combined = new ArrayList<>();
+        combined.addAll(blocks1);
+        combined.addAll(blocks2);
+        combined.addAll(blocks3);
+
+        List<DilloDriveBlockDetection.BlockAngle> angles = new ArrayList<>();
+
+        for (BlockPos block : combined) {
+          float angle = GetAngleToBlock.calcAngle(block);
+
+          DilloDriveBlockDetection.BlockAngle blockAngle = new DilloDriveBlockDetection.BlockAngle(angle, block);
+          angles.add(blockAngle);
+        }
+
+        angles.sort((a, b) -> {
+          return a.angle < b.angle ? -1 : 1;
+        });
+
+        if (angles.size() > 0) {
+          float angleMax = angles.get(angles.size() - 1).angle;
+
+          if (angleMax > 180) {
+            LookYaw.lookToYaw(config.headMovement * 10L, config.headMovement * 3 + random.nextFloat() * 10);
+          } else {
+            LookYaw.lookToYaw(config.headMovement * 10L, -config.headMovement * 3 + random.nextFloat() * 10);
+          }
+
+          blockTime++;
         }
       }
     }

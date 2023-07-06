@@ -1,19 +1,12 @@
 package com.dillo.commands.UtilCommands;
 
-import com.dillo.ArmadilloMain.ArmadilloStates;
-import com.dillo.Pathfinding.BlockNode;
-import com.dillo.Pathfinding.PathFinderV2;
-import com.dillo.Pathfinding.WalkOnPath;
-import com.dillo.utils.DistanceFromTo;
+import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
-import com.dillo.utils.renderUtils.renderModules.RenderMultipleLines;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
-import java.util.List;
-import java.util.Objects;
-import net.minecraft.util.BlockPos;
+
+import static com.dillo.ArmadilloMain.ArmadilloMain.test;
 
 public class DetectEntityUnderCommand extends Command {
 
@@ -24,14 +17,10 @@ public class DetectEntityUnderCommand extends Command {
   }
 
   @DefaultHandler
-  public void handle(String args) {
-    if (Objects.equals(args, "true")) {
-      ArmadilloStates.offlineState = "online";
-      ArmadilloStates.currentState = "spinDrive";
-    } else {
-      ArmadilloStates.offlineState = "offline";
-      ArmadilloStates.currentState = null;
-    }
+  public void handle() {
+    SendChat.chat("Testing");
+    currentRoute.curPlayerPos = ids.mc.thePlayer.getPosition();
+    test = !test;
     /*if (Objects.equals(arg, "true")) {
       RenderMultipleBlocksMod.renderMultipleBlocks(null, false);
       RenderMultipleLines.renderMultipleLines(null, null, false);

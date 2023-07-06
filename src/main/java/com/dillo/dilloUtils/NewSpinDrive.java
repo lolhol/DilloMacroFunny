@@ -2,7 +2,6 @@ package com.dillo.dilloUtils;
 
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.detectBlocks;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
-import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.data.config;
@@ -38,15 +37,13 @@ public class NewSpinDrive {
 
   public static void newSpinDrive() {
     if (angle < lastBlockAngle + 50) {
-      angle += config.headMovement * 8 + random.nextFloat() * 10;
+      angle += config.headMovement * 7 + random.nextFloat() * 10;
 
       KeyBinding.setKeyBindState(jump.getKeyCode(), true);
       BlockPos block = returnBlocks.get((int) Math.floor(returnBlocks.size() / 2)).blockPos;
       BlockUtils.alreadyBroken.add(block);
 
       float y = block.getY() + yPosition;
-
-      yPosition += 0.5;
 
       float anglePlayerToBlock = GetAnglePlayerToBlock.getAnglePlayerToBlock(block);
       angleTudaSuda = angle;
@@ -70,7 +67,7 @@ public class NewSpinDrive {
         getBlocksLayer(
           new BlockPos(
             currentRoute.curPlayerPos.getX(),
-            currentRoute.curPlayerPos.getY(),
+            currentRoute.curPlayerPos.getY() + 2,
             currentRoute.curPlayerPos.getZ()
           )
         )
@@ -95,7 +92,7 @@ public class NewSpinDrive {
           .size() >
         0
       ) &&
-      blockTime < 20
+      blockTime < 1000
     ) {
       List<BlockPos> blocks1 = getBlocksLayer(
         new BlockPos(
@@ -142,10 +139,10 @@ public class NewSpinDrive {
       if (angles.size() > 0) {
         float angle = GetAngleToBlock.calcAngle(angles.get(angles.size() - 1).blockPos);
 
-        if (angle > curRotation()) {
-          LookYaw.lookToYaw(config.headMovement * 10L, config.headMovement * 3 + random.nextFloat() * 10);
+        if (angle - 360 > 0) {
+          LookYaw.lookToYaw(config.headMovement * 10L, config.headMovement * 7 + random.nextFloat() * 10);
         } else {
-          LookYaw.lookToYaw(config.headMovement * 10L, -config.headMovement * 3 + random.nextFloat() * 10);
+          LookYaw.lookToYaw(config.headMovement * 10L, -config.headMovement * 7 + random.nextFloat() * 10);
         }
 
         blockTime++;
@@ -193,7 +190,6 @@ public class NewSpinDrive {
       } else {
         DilloDriveBlockDetection.BlockAngle lastPos = returnBlocks.get(returnBlocks.size() - 1);
         lastBlockAngle = lastPos.angle;
-        yPosition = -5;
         currentRoute.curPlayerPos = ids.mc.thePlayer.getPosition();
       }
     } else {
