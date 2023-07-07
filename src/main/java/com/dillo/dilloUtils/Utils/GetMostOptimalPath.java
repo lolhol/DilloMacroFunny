@@ -1,15 +1,21 @@
 package com.dillo.dilloUtils.Utils;
 
+import static com.dillo.data.config.headRotationMax;
+import static com.dillo.dilloUtils.LookAt.getNeededChange;
+import static com.dillo.dilloUtils.LookAt.getRotation;
 import static com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain.getYawBlockAround;
 import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
 import static com.dillo.utils.GetAngleToBlock.calcAngleFromYaw;
 
-import com.dillo.utils.previous.chatUtils.SendChat;
+import com.dillo.dilloUtils.LookAt;
+import com.dillo.utils.previous.SendChat;
+import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.Vec3;
 
 public class GetMostOptimalPath {
 
@@ -22,8 +28,10 @@ public class GetMostOptimalPath {
       List<BlockPos> prevBest = new ArrayList<>();
 
       for (BlockPos block : originBlocks) {
-        float yaw = calcAngleFromYaw(block, currentLook + displacement);
-        if (yaw < 80 || yaw > 280) {
+        Vec3 centeredBlock = centerBlock(block);
+
+        float yaw = getYawNeededVec(centeredBlock, displacement);
+        if (yaw < 60 && yaw > 0) {
           prevBest.add(block);
         }
       }
@@ -33,7 +41,7 @@ public class GetMostOptimalPath {
         best = new ArrayList<>(prevBest);
       }
 
-      displacement += 10;
+      displacement += 5;
     }
 
     return new OptimalPath(best, bestDisplacement);
@@ -45,5 +53,21 @@ public class GetMostOptimalPath {
 
     public List<BlockPos> path = null;
     public float displacement = 0;
+  }
+
+  public static Vec3 centerBlock(BlockPos block) {
+    return new Vec3(block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
+  }
+
+  public static float getYawNeededVec(Vec3 block, float addCurYaw) {
+    LookAt.Rotation rotation = getRotation(block);
+    LookAt.Rotation startRot = new LookAt.Rotation(
+      ids.mc.thePlayer.rotationPitch,
+      ids.mc.thePlayer.rotationYaw + addCurYaw
+    );
+    LookAt.Rotation neededChange = getNeededChange(startRot, rotation);
+    LookAt.Rotation endRot = new LookAt.Rotation(startRot.pitch + neededChange.pitch, startRot.yaw + neededChange.yaw);
+
+    return neededChange.yaw;
   }
 }

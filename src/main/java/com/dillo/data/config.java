@@ -37,6 +37,16 @@ public class config extends Vigilant {
 
   @Property(
     type = PropertyType.SLIDER,
+    name = "Head Max Rotation",
+    description = "The maximum rotation that the macro will take",
+    category = "Main",
+    min = 100,
+    max = 360
+  )
+  public static int headRotationMax = 180;
+
+  @Property(
+    type = PropertyType.SLIDER,
     name = "Wait before starting the dillo movement (rod / drill switch delay)",
     description = "idk where to set this to but i assume its ab ur ping. (dont set too high tho). This module is made to prevent low procs bc of the dillo starting too fast and the dill not updating.",
     category = "Main",

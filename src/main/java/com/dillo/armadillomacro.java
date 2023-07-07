@@ -17,10 +17,7 @@ import com.dillo.commands.AnswerCommands.RemoveAccusation;
 import com.dillo.commands.HelpCommands.HelpStructureCheck;
 import com.dillo.commands.HelpCommands.MainHelp;
 import com.dillo.commands.RouteCommands.*;
-import com.dillo.commands.UtilCommands.DetectEntityUnderCommand;
-import com.dillo.commands.UtilCommands.RouteChecker;
-import com.dillo.commands.UtilCommands.StartClearLegit;
-import com.dillo.commands.UtilCommands.WalkToCustom;
+import com.dillo.commands.UtilCommands.*;
 import com.dillo.dilloUtils.BlockESP.BlockOnRouteESP;
 import com.dillo.dilloUtils.BlockUtils.JumpLook;
 import com.dillo.dilloUtils.CheckFile;
@@ -141,7 +138,8 @@ public class armadillomacro {
       new StructurePoints(),
       new LegitRouteClear(),
       new ViewClearLines(),
-      new WalkForward()
+      new WalkForward(),
+      new Test()
     );
 
     registerKeybinds(keybinds);

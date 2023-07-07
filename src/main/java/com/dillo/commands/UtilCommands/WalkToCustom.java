@@ -1,7 +1,13 @@
 package com.dillo.commands.UtilCommands;
 
+import static com.dillo.dilloUtils.LookAt.getNeededChange;
+import static com.dillo.dilloUtils.LookAt.getRotation;
+import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getYawNeededVec;
+import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
+import static com.dillo.utils.GetAngleToBlock.calcAngleFromYaw;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 
+import com.dillo.dilloUtils.LookAt;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
@@ -20,7 +26,7 @@ public class WalkToCustom extends Command {
   }
 
   @DefaultHandler
-  public void handle(int x, int y, int z) {
+  public void handle(int x, int y, int z, int displacement) {
     //SendChat.chat(String.valueOf(ids.mc.thePlayer.isRiding()));
     // NewSpinDrive.putAllTogether();
     // ArmadilloStates.offlineState = "online";
@@ -32,7 +38,9 @@ public class WalkToCustom extends Command {
 
     //SendChat.chat(GetAngleToBlock.calcAngle(new BlockPos(x, y, z)) + "!!!");
     //SendChat.chat(curRotation() + "???");
-    Vec3 pos = adjustLook(
+
+    SendChat.chat(String.valueOf(getYawNeededVec(new Vec3(x, y, z), displacement)));
+    /* Vec3 pos = adjustLook(
       ids.mc.thePlayer.getPosition(),
       new BlockPos(x, y, z),
       new net.minecraft.block.Block[] { Blocks.air, Blocks.stone },
@@ -44,7 +52,7 @@ public class WalkToCustom extends Command {
     } else {
       SendChat.chat("FOUND!");
       RenderOneBlockMod.renderOneBlock(pos, true);
-    }
+    }*/
     //isStructureBetween(ids.mc.thePlayer.getPosition(), new BlockPos(x, y, z));
     /*RenderMultipleLines.renderMultipleLines(null, null, false);
 
