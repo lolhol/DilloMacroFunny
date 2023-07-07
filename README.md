@@ -1,30 +1,57 @@
-# Architectury Loom based template for 1.8.9 forge mods
+# Armadillo Macro for Hypixel Skyblock
 
-**For other templates, do check out the [other branches of this repository](https://github.com/romangraef/Forge1.8.9Template/branches/all)**
+If you would like to use this QOL modification for Hypixel Skyblock, download this mod and place it into ur `.minecraft/mods` folder.
+If you have any inquiries, check out the [DISCORD](https://discord.gg/vHrYUdEgC3).
+## CURRENT FEATURES
+### **==== Nuker ====**
+- Better nuker and a "legit clear" option that displays blocks that you need to mine
+- Option to customize ur FOV to minimize ban chance
+- Helper render lines in order to see where you have to break blocks (If u want to be 100% safe)
 
-To get started, clone this repository and replace all references to `examplemod` or `com.example` with your own names.
+### **==== Route Check ====**
+- Option to check for structures around ur route. (run /helpStructureCheck in game for more info).
 
-If you don't want mixins (which allow for modifying vanilla code), then you can remove the references to mixins from
-the `build.gradle.kts`, delete the `mixins.examplemod.json` and the `com.example.mixin` package.
+### **==== Player Failsafes ====**
+- Player failsafe that will stop the macro and switch to the skyblock menu if a player is close by. 
+- Option to check if the player can actually see you.
+- Answer hack accusations with customizable prompts.
 
-This project uses [DevAuth](https://github.com/DJtheRedstoner/DevAuth) per default, so you can log in using your real
-minecraft account. If you don't need that, you can remove it from the buildscript.
+### **==== Macro Failsafes ====**
+- Auto restart macro if it stops for some reason (I MIGHT create a dedicated module that can turn on pathfinding if it stops or cant tp)
+- Option to reattempt TP if the macro tped on the wrong block.
+- (BETA) A server TPS failsafe.
+- (BETA) Option to actually attempt to find a block where u can tp to then tp to the destination block (MAY LAG!)
 
-To run the mod you will need two JDKs, one Java 17 jdk and one Java 1.8 jdk. You can download those
-from [here](https://adoptium.net/temurin/releases) (or use your own downloads).
+### **==== Remote Control ====**
+#### **WARNING! THIS IS A BETA FEATURE AND MAY NOT WORK AS INTENDED!**
+- Website with various options including "Say", "Restart", and "Stop".
+- Chat on website.
 
-When you import your project into IntelliJ, you need to set the gradle jvm to the Java 17 JDK in the gradle tab, and the
-Project SDK to the Java 1.8 JDK. Then click on the sync button in IntelliJ, and it should create a run task
-called `Minecraft Client`. If it doesn't then try relaunching your IntelliJ. **Warning for Mac users**: You might have to remove the `-XStartOnFirstThread` vm argument from your run configuration. In the future, that should be handled by the plugin, but for now you'll probably have to do that manually. 
-
-To export your project, run the `gradle build` task, and give other people the
-file `build/libs/<modid>-<version>.jar`. Ignore the jars in the `build/badjars` folder. Those are intermediary jars that
-are used by the build system but *do not work* in a normal forge installation.
-
-### For those who have not an attention span
-
-[![Youtube Tutorial](https://i.ytimg.com/vi/nWzHlomdCgc/maxresdefault.jpg)](https://www.youtube.com/watch?v=nWzHlomdCgc)
-
-## Licensing
-
-This template is licensed under the Unlicense (license copy present in this repository), or alternatively under [Creative Commons 1.0 Universal (CC0 1.0)](https://creativecommons.org/publicdomain/zero/1.0/), and all contributions and PR to this template are expected to follow this. This means your mod, based on this template can be licensed whatever way you want, and does not need to reference back to this template in any way.
+### **==== Route Sharing Utils ====**
+- Option to import a route from Pastebin (Soopy or coleweight format, use .
+- Option to import route from clipboard.
+All the routes and data will be stored in the dedicated folder `.minecraft/MiningInTwo`
+- (SOON) Include number of default routes that you can quick import and edit to your liking.
+## Commands
+- /mitmenu -> Opens menu.
+- /block -> Adds a block to route.
+- /clear -> Clears the route.
+- /createRoute (route name) -> Will create a new route and select it.
+- /selectRoute (name) -> Will select the route you provided if it exists in the folder.
+- /insertInMiddle (number) -> Will insert the block you are standing on to the route.
+- /removeBlock (number) -> Removes the block from the route selected.
+- /replaceBlock (number) -> Replaces the # block with the one you are standing on.
+- /addStructure -> Creates a new structure point to later be used in structure checks.
+- /clearStructures -> Deletes all the structures that you have previously added.
+- /removeStructure (point) -> Will remove a structure at a specific point.
+- /structurePoints -> Will display a point at every structure that you added.
+- /checkRoute -> **WARNING! MAY LAG!** This is a complicated process. Run /helpStructureCheck to see how works.
+- /currentRoute -> Says the name of the route currently selected.
+- /deleteRoute -> Deletes the route completely (including the file).
+- /currentRoutes -> Will show all the routes that you currently have.
+- /importRoute (name) -> Will attempt to make a new route with whatever you have in ur clipboard
+- /importFromWeb (link) (name) -> Imports route from PASTEBIN.COM.
+- /helperLines -> Will display route-clear-help lines to help you clear legit (Suggested to use /clearRouteLegit instead).
+- /clearRouteLegit -> Will display the blocks you have to break in order for the route to be clear.
+- /addAccusation (detection) (answer) -> Will add an accusation to the list. AKA if player says something that contains (detection) then the macro will respond with (answer).
+- /removeAccusation (detection) -> will remove an accusation. Yes, u have to put the EXACT 'detection'.
