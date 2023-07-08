@@ -214,6 +214,14 @@ public class config extends Vigilant {
 
   @Property(
     type = PropertyType.SWITCH,
+    name = "Within block radius check",
+    description = "Might slow performance but what this does is it basically checks if the closest block to u is within 240 blocks. (this will prob work for admin bedrock boxing u 2)",
+    category = "Teleportation Options"
+  )
+  public static boolean withinBlockRadiusChecks = true;
+
+  @Property(
+    type = PropertyType.SWITCH,
     name = "Re-Teleport",
     description = "If the macro will tp somewhere random (prev vers had that :> ) then it will attempt a re-tp",
     category = "Teleportation Options"

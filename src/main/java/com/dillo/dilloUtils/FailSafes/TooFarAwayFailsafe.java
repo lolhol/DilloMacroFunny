@@ -1,5 +1,7 @@
 package com.dillo.dilloUtils.FailSafes;
 
+import static com.dillo.data.config.withinBlockRadiusChecks;
+
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.utils.DistanceFromTo;
@@ -13,7 +15,7 @@ public class TooFarAwayFailsafe {
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
-      if (currentRoute.currentRoute.size() > 0) {
+      if (currentRoute.currentRoute.size() > 0 && withinBlockRadiusChecks) {
         double distance = 100000000;
 
         for (BlockPos point : currentRoute.currentRoute) {
