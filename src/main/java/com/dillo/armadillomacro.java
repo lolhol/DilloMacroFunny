@@ -139,7 +139,8 @@ public class armadillomacro {
       new LegitRouteClear(),
       new ViewClearLines(),
       new WalkForward(),
-      new Test()
+      new Test(),
+      new TooFarAwayFailsafe()
     );
 
     registerKeybinds(keybinds);
