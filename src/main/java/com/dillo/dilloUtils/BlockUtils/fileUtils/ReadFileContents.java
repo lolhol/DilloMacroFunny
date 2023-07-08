@@ -27,10 +27,6 @@ public class ReadFileContents {
       e.printStackTrace();
     }
 
-    System.out.println("________________________________________________________________");
-    System.out.println(content.toString());
-    System.out.println("________________________________________________________________");
-
     if (!content.toString().equals("null") && !content.toString().equals("") && !content.toString().equals(" ")) {
       return gson.fromJson(content.toString(), JsonObject.class);
     } else {

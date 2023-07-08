@@ -5,6 +5,7 @@ import com.dillo.utils.previous.SendChat;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import java.io.File;
 import java.io.FileWriter;
 import net.minecraft.util.BlockPos;
@@ -17,13 +18,21 @@ public class ReWriteFile {
     JsonArray arr = new JsonArray();
 
     for (BlockPos routeBlock : currentRoute.currentRoute) {
-      arr.add(gson.toJsonTree(routeBlock));
+      JsonObject newJson = new JsonObject();
+      newJson.add("x", new JsonPrimitive(routeBlock.getX()));
+      newJson.add("y", new JsonPrimitive(routeBlock.getY()));
+      newJson.add("z", new JsonPrimitive(routeBlock.getX()));
+      arr.add(newJson);
     }
 
     JsonArray strucArr = new JsonArray();
     if (currentRoute.strucList.size() > 0) {
-      for (BlockPos block : currentRoute.strucList) {
-        strucArr.add(gson.toJsonTree(block));
+      for (BlockPos blockPos : currentRoute.strucList) {
+        JsonObject newJson = new JsonObject();
+        newJson.add("x", new JsonPrimitive(blockPos.getX()));
+        newJson.add("y", new JsonPrimitive(blockPos.getY()));
+        newJson.add("z", new JsonPrimitive(blockPos.getX()));
+        strucArr.add(newJson);
       }
     } else {
       strucArr.add(null);
