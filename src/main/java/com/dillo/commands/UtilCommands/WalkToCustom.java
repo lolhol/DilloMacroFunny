@@ -1,21 +1,12 @@
 package com.dillo.commands.UtilCommands;
 
-import static com.dillo.dilloUtils.LookAt.getNeededChange;
-import static com.dillo.dilloUtils.LookAt.getRotation;
-import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getYawNeededVec;
-import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
-import static com.dillo.utils.GetAngleToBlock.calcAngleFromYaw;
-import static com.dillo.utils.RayTracingUtils.adjustLook;
+import static com.dillo.dilloUtils.Teleport.SmartTP.smartTP;
 
-import com.dillo.dilloUtils.LookAt;
-import com.dillo.utils.previous.SendChat;
+import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
 
 public class WalkToCustom extends Command {
 
@@ -26,7 +17,7 @@ public class WalkToCustom extends Command {
   }
 
   @DefaultHandler
-  public void handle(int x, int y, int z, int displacement) {
+  public void handle(int x, int y, int z) {
     //SendChat.chat(String.valueOf(ids.mc.thePlayer.isRiding()));
     // NewSpinDrive.putAllTogether();
     // ArmadilloStates.offlineState = "online";
@@ -36,23 +27,9 @@ public class WalkToCustom extends Command {
     //SendChat.chat(currentServer);
     //getArea();
 
-    //SendChat.chat(GetAngleToBlock.calcAngle(new BlockPos(x, y, z)) + "!!!");
-    //SendChat.chat(curRotation() + "???");
-
-    SendChat.chat(String.valueOf(getYawNeededVec(new Vec3(x, y, z), displacement)));
-    /* Vec3 pos = adjustLook(
-      ids.mc.thePlayer.getPosition(),
-      new BlockPos(x, y, z),
-      new net.minecraft.block.Block[] { Blocks.air, Blocks.stone },
-      false
-    );
-
-    if (pos == null) {
-      SendChat.chat("NULL!!");
-    } else {
-      SendChat.chat("FOUND!");
-      RenderOneBlockMod.renderOneBlock(pos, true);
-    }*/
+    // SendChat.chat(String.valueOf(getYawNeededVec(new Vec3(x, y, z), displacement)));
+    ArmadilloStates.offlineState = "online";
+    smartTP(new BlockPos(x, y, z));
     //isStructureBetween(ids.mc.thePlayer.getPosition(), new BlockPos(x, y, z));
     /*RenderMultipleLines.renderMultipleLines(null, null, false);
 

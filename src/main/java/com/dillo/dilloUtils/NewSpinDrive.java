@@ -1,17 +1,15 @@
 package com.dillo.dilloUtils;
 
-import static com.dillo.dilloUtils.DilloDriveBlockDetection.detectBlocks;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
+import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getBestPath;
+import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.data.config;
-import com.dillo.dilloUtils.BlockUtils.BlockUtils;
 import com.dillo.dilloUtils.BlockUtils.FromBlockToHP;
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
+import com.dillo.dilloUtils.Utils.GetMostOptimalPath;
 import com.dillo.dilloUtils.Utils.LookYaw;
-import com.dillo.utils.GetAngleToBlock;
-import com.dillo.utils.degreeToRad;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
@@ -22,133 +20,30 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
 
 public class NewSpinDrive {
 
-  public static float angleTudaSuda = 0;
+  public static boolean isLeft = false;
   public static float angle = 0;
   public static java.util.Random random = new java.util.Random();
   private static final KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
   public static List<DilloDriveBlockDetection.BlockAngle> returnBlocks = new ArrayList<>();
-  public static float yPosition = 0;
   public static float lastBlockAngle = 0;
-  private static int blockTime = 0;
+  public static GetMostOptimalPath.OptimalPath path = null;
 
   public static void newSpinDrive() {
-    if (angle < lastBlockAngle + 50) {
-      angle += config.headMovement * 7 + random.nextFloat() * 10;
-
+    if (angle < config.headRotationMax) {
       KeyBinding.setKeyBindState(jump.getKeyCode(), true);
-      BlockPos block = returnBlocks.get((int) Math.floor(returnBlocks.size() / 2)).blockPos;
-      BlockUtils.alreadyBroken.add(block);
+      float add = config.headMovement * 7 + random.nextFloat() * 10;
 
-      float y = block.getY() + yPosition;
-
-      float anglePlayerToBlock = GetAnglePlayerToBlock.getAnglePlayerToBlock(block);
-      angleTudaSuda = angle;
-
-      angleTudaSuda += anglePlayerToBlock - 90;
-
-      float radians = (float) degreeToRad.degreeToRad(angleTudaSuda);
-      float dx = (float) (Math.cos(radians) * 5);
-      float dz = (float) (Math.sin(radians) * 5);
-
-      float x = (float) (block.getX() + dx + 0.5);
-      float z = (float) (block.getZ() + dz + 0.5);
-
-      int time = (int) (config.headMovement * 10);
-
-      //IBlockState blockUnder = ids.mc.theWorld.getBlockState(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY - 2, ids.mc.thePlayer.posZ));
-
-      LookAt.smoothLook(LookAt.getRotation(new Vec3(x, y, z)), time);
-    } else if (
-      (
-        getBlocksLayer(
-          new BlockPos(
-            currentRoute.curPlayerPos.getX(),
-            currentRoute.curPlayerPos.getY() + 2,
-            currentRoute.curPlayerPos.getZ()
-          )
-        )
-          .size() >
-        0 ||
-        getBlocksLayer(
-          new BlockPos(
-            currentRoute.curPlayerPos.getX(),
-            currentRoute.curPlayerPos.getY() + 1,
-            currentRoute.curPlayerPos.getZ()
-          )
-        )
-          .size() >
-        0 ||
-        getBlocksLayer(
-          new BlockPos(
-            currentRoute.curPlayerPos.getX(),
-            currentRoute.curPlayerPos.getY(),
-            currentRoute.curPlayerPos.getZ()
-          )
-        )
-          .size() >
-        0
-      ) &&
-      blockTime < 1000
-    ) {
-      List<BlockPos> blocks1 = getBlocksLayer(
-        new BlockPos(
-          currentRoute.curPlayerPos.getX(),
-          currentRoute.curPlayerPos.getY() + 2,
-          currentRoute.curPlayerPos.getZ()
-        )
-      );
-
-      List<BlockPos> blocks2 = getBlocksLayer(
-        new BlockPos(
-          currentRoute.curPlayerPos.getX(),
-          currentRoute.curPlayerPos.getY() + 1,
-          currentRoute.curPlayerPos.getZ()
-        )
-      );
-
-      List<BlockPos> blocks3 = getBlocksLayer(
-        new BlockPos(
-          currentRoute.curPlayerPos.getX(),
-          currentRoute.curPlayerPos.getY(),
-          currentRoute.curPlayerPos.getZ()
-        )
-      );
-
-      List<BlockPos> combined = new ArrayList<>();
-      combined.addAll(blocks1);
-      combined.addAll(blocks2);
-      combined.addAll(blocks3);
-
-      List<DilloDriveBlockDetection.BlockAngle> angles = new ArrayList<>();
-
-      for (BlockPos block : combined) {
-        float angle = GetAngleToBlock.calcAngle(block);
-
-        DilloDriveBlockDetection.BlockAngle blockAngle = new DilloDriveBlockDetection.BlockAngle(angle, block);
-        angles.add(blockAngle);
+      if (isLeft) {
+        LookYaw.lookToYaw(config.headMovement * 10L, -add);
+      } else {
+        LookYaw.lookToYaw(config.headMovement * 10L, add);
       }
 
-      angles.sort((a, b) -> {
-        return a.angle < b.angle ? -1 : 1;
-      });
-
-      if (angles.size() > 0) {
-        float angle = GetAngleToBlock.calcAngle(angles.get(angles.size() - 1).blockPos);
-
-        if (angle - 360 > 0) {
-          LookYaw.lookToYaw(config.headMovement * 10L, config.headMovement * 7 + random.nextFloat() * 10);
-        } else {
-          LookYaw.lookToYaw(config.headMovement * 10L, -config.headMovement * 7 + random.nextFloat() * 10);
-        }
-
-        blockTime++;
-      }
+      angle += add;
     } else {
-      blockTime = 0;
       KeyBinding.setKeyBindState(jump.getKeyCode(), false);
       angle = 0;
       lastBlockAngle = 0;
@@ -180,23 +75,32 @@ public class NewSpinDrive {
   }
 
   public static void putAllTogether() {
-    returnBlocks = detectBlocks();
+    float leftRightChoice = random.nextFloat();
 
-    if (returnBlocks != null) {
-      if (returnBlocks.size() < 1) {
-        ArmadilloStates.currentState = null;
-        ArmadilloStates.offlineState = "offline";
-        SendChat.chat("NO BLOCKS FOUND....");
-      } else {
-        DilloDriveBlockDetection.BlockAngle lastPos = returnBlocks.get(returnBlocks.size() - 1);
-        lastBlockAngle = lastPos.angle;
-        currentRoute.curPlayerPos = ids.mc.thePlayer.getPosition();
-      }
+    if (leftRightChoice < 0.5) {
+      isLeft = true;
     } else {
-      ArmadilloStates.currentState = null;
-      ArmadilloStates.offlineState = "offline";
-      SendChat.chat("NO BLOCKS FOUND....");
+      isLeft = false;
     }
+
+    BlockPos refrenceBlock2 = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ);
+    List<BlockPos> returnList = getBlocksLayer(refrenceBlock2);
+    refrenceBlock2 = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 0, ids.mc.thePlayer.posZ);
+    returnList.addAll(getBlocksLayer(refrenceBlock2));
+    refrenceBlock2 = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 1, ids.mc.thePlayer.posZ);
+    returnList.addAll(getBlocksLayer(refrenceBlock2));
+
+    float curYaw = curRotation();
+
+    if (curYaw < 0) {
+      curYaw = 360 + curYaw;
+    }
+
+    path = getBestPath(returnList, curYaw);
+
+    float displacement = path.displacement;
+
+    LookYaw.lookToYaw(config.rod_drill_switch_time + (config.headMovement * 10L), displacement);
   }
 
   private static BlockPos getBestBlock(List<BlockPos> blocks, BlockPos block) {

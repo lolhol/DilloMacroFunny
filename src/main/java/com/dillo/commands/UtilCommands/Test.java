@@ -4,20 +4,13 @@ import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
 import static com.dillo.dilloUtils.NewSpinDrive.random;
 import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getBestPath;
 import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
-import static com.dillo.utils.GetAngleToBlock.calcAngle;
 
 import com.dillo.data.config;
-import com.dillo.dilloUtils.GetAnglePlayerToBlock;
-import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.Utils.GetMostOptimalPath;
 import com.dillo.dilloUtils.Utils.LookYaw;
-import com.dillo.utils.GetAngleToBlock;
-import com.dillo.utils.degreeToRad;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import java.util.List;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -41,6 +34,10 @@ public class Test {
             ids.mc.thePlayer.posZ
           );
           List<BlockPos> returnList = getBlocksLayer(refrenceBlock2);
+          refrenceBlock2 = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 0, ids.mc.thePlayer.posZ);
+          returnList.addAll(getBlocksLayer(refrenceBlock2));
+          refrenceBlock2 = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 1, ids.mc.thePlayer.posZ);
+          returnList.addAll(getBlocksLayer(refrenceBlock2));
 
           float curYaw = curRotation();
 

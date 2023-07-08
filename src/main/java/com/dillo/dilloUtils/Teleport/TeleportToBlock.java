@@ -2,6 +2,7 @@ package com.dillo.dilloUtils.Teleport;
 
 import static com.dillo.data.config.forwardForTicks;
 import static com.dillo.data.config.walkOnTP;
+import static com.dillo.dilloUtils.BlockUtils.BlockCols.GetUnobstructedPos.getUnobstructedPos;
 import static com.dillo.dilloUtils.TpUtils.WalkForward.walkForward;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 
@@ -44,8 +45,11 @@ public class TeleportToBlock {
       );
 
       if (nextBlockPos == null) {
-        SendChat.chat(prefix.prefix + "Failed to teleport!");
-        return false;
+        nextBlockPos = getUnobstructedPos(nextBlock);
+        if (nextBlockPos == null) {
+          SendChat.chat(prefix.prefix + "Failed to teleport!");
+          return false;
+        }
       }
 
       LookAt.smoothLook(LookAt.getRotation(nextBlockPos), time);

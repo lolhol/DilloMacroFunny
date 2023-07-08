@@ -1,8 +1,5 @@
 package com.dillo.dilloUtils.Teleport;
 
-import static com.dillo.data.config.reTeleport;
-import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isTeleporting;
-
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
@@ -15,6 +12,10 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import static com.dillo.data.config.reTeleport;
+import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isTeleporting;
+import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isThrowRod;
 
 public class IsOnBlock {
 
@@ -43,6 +44,7 @@ public class IsOnBlock {
               Math.abs(ids.mc.thePlayer.posX - blockPos.getX() - 0.5) < 0.0001 &&
               Math.abs(ids.mc.thePlayer.posZ - blockPos.getZ() - 0.5) < 0.0001
             ) {
+              isThrowRod = true;
               startCheck = false;
               curReTps = 0;
 

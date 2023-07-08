@@ -4,6 +4,7 @@ import static com.dillo.dilloUtils.DilloDriveBlockDetection.detectBlocks;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
 import static com.dillo.dilloUtils.FailSafes.AnswerPPL.answerAccusation;
 import static com.dillo.dilloUtils.NewSpinDrive.random;
+import static com.dillo.dilloUtils.Teleport.SmartTP.TPToNext;
 import static com.dillo.dilloUtils.Teleport.TeleportToBlock.tpStageWalk;
 import static com.dillo.dilloUtils.Utils.CenterPlayer.centerStage2;
 
@@ -115,6 +116,10 @@ public class ArmadilloMain {
 
         if (Objects.equals(ArmadilloStates.currentState, "ANSWER_ACCUSATION")) {
           answerAccusation();
+        }
+
+        if (Objects.equals(ArmadilloStates.currentState, "SMARTTP")) {
+          TPToNext();
         }
       }
     }

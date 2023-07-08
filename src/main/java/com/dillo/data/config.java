@@ -33,7 +33,7 @@ public class config extends Vigilant {
     min = 1,
     max = 10
   )
-  public static int headMovement = 9;
+  public static int headMovement = 6;
 
   @Property(
     type = PropertyType.SLIDER,
@@ -43,7 +43,7 @@ public class config extends Vigilant {
     min = 100,
     max = 360
   )
-  public static int headRotationMax = 180;
+  public static int headRotationMax = 230;
 
   @Property(
     type = PropertyType.SLIDER,

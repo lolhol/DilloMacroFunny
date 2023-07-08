@@ -19,14 +19,13 @@ public class TeleportToNextBlock {
   public static BlockPos nextBlockInList = null;
   public static boolean isTeleporting = false;
   private static final KeyBinding forward = Minecraft.getMinecraft().gameSettings.keyBindForward;
+  public static boolean isThrowRod = true;
 
   public static void teleportToNextBlock() {
     if (!Objects.equals(ArmadilloStates.offlineState, "offline")) {
       BlockPos nextBlock = GetNextBlock.getNextBlock();
       nextBlockInList = nextBlock;
       isTeleporting = true;
-
-      if (actuallySwitchAOTV) swapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
 
       if (nextBlock == null) {
         SendChat.chat(prefix.prefix + "FAILED TO TELEPORT FOR SOME REASON! DM GODBRIGERO!");
@@ -36,8 +35,14 @@ public class TeleportToNextBlock {
         return;
       }
 
-      LookWhileGoingDown.lookUntilState("NextBlockStage2", nextBlock, config.tpHeadMoveSpeed);
-      ArmadilloStates.currentState = "startCheckDillo";
+      if (isThrowRod) {
+        LookWhileGoingDown.lookUntilState("NextBlockStage2", nextBlock, config.tpHeadMoveSpeed);
+        ArmadilloStates.currentState = "startCheckDillo";
+      } else {
+        ArmadilloStates.currentState = "NextBlockStage2";
+      }
+
+      if (actuallySwitchAOTV) swapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
     }
   }
 

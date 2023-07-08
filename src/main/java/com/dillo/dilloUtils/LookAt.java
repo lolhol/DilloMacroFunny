@@ -1,6 +1,8 @@
 package com.dillo.dilloUtils;
 
+import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.utils.previous.random.ids;
+import java.util.Objects;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -77,18 +79,22 @@ public class LookAt {
     endTime = 0;
   }
 
+  //if (Objects.equals(ArmadilloStates.offlineState, "online")) {
+
   @SubscribeEvent
   public void onRenderWorld(RenderWorldLastEvent event) {
-    if (rotationType != RotationType.NORMAL) return;
-    if (System.currentTimeMillis() <= endTime) {
-      ids.mc.thePlayer.rotationPitch = interpolate(startRot.pitch, endRot.pitch);
-      ids.mc.thePlayer.rotationYaw = interpolate(startRot.yaw, endRot.yaw);
-    } else {
-      if (!done) {
-        ids.mc.thePlayer.rotationYaw = endRot.yaw;
-        ids.mc.thePlayer.rotationPitch = endRot.pitch;
+    if (Objects.equals(ArmadilloStates.offlineState, "online")) {
+      if (rotationType != RotationType.NORMAL) return;
+      if (System.currentTimeMillis() <= endTime) {
+        ids.mc.thePlayer.rotationPitch = interpolate(startRot.pitch, endRot.pitch);
+        ids.mc.thePlayer.rotationYaw = interpolate(startRot.yaw, endRot.yaw);
+      } else {
+        if (!done) {
+          ids.mc.thePlayer.rotationYaw = endRot.yaw;
+          ids.mc.thePlayer.rotationPitch = endRot.pitch;
 
-        reset();
+          reset();
+        }
       }
     }
   }

@@ -2,11 +2,14 @@ package com.dillo.dilloUtils;
 
 import static com.dillo.data.config.fasterDillo;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
+import static com.dillo.dilloUtils.NewSpinDrive.isLeft;
+import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isThrowRod;
 import static com.dillo.utils.keyBindings.rightClick;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
+import com.dillo.dilloUtils.Utils.LookYaw;
 import com.dillo.utils.GetSBItems;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.swapToSlot;
@@ -28,6 +31,8 @@ public class StateDillo {
   public static int tickDilloCheckCount = 0;
   public static boolean isNoTp = false;
   public static int checkedNumber = 0;
+  private static boolean look = true;
+  public static boolean isSmartTP = false;
 
   public static void stateDilloNoGettingOn() {
     if (
@@ -50,7 +55,8 @@ public class StateDillo {
     if (
       getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)).size() >
       0 &&
-      Objects.equals(ArmadilloStates.offlineState, "online")
+      Objects.equals(ArmadilloStates.offlineState, "online") &&
+      !isSmartTP
     ) {
       throwRod.throwRodInv();
       ArmadilloStates.currentState = null;
@@ -58,6 +64,12 @@ public class StateDillo {
 
       new Thread(() -> {
         try {
+          if (isLeft) {
+            LookYaw.lookToYaw(config.rod_drill_switch_time + 150, 20);
+          } else {
+            LookYaw.lookToYaw(config.rod_drill_switch_time + 150, -20);
+          }
+
           Thread.sleep(config.rod_drill_switch_time);
 
           playerYBe4 = (float) ids.mc.thePlayer.posY;
@@ -66,6 +78,8 @@ public class StateDillo {
             ids.mc.theWorld,
             ids.mc.thePlayer.inventory.getStackInSlot(ids.mc.thePlayer.inventory.currentItem)
           );
+
+          NewSpinDrive.putAllTogether();
 
           if (Objects.equals(ArmadilloStates.offlineState, "online")) {
             canCheckIfOnDillo = true;
@@ -77,6 +91,7 @@ public class StateDillo {
         .start();
     } else {
       if (Objects.equals(ArmadilloStates.offlineState, "online")) {
+        isThrowRod = false;
         ArmadilloStates.currentState = null;
         TeleportToNextBlock.teleportToNextBlock();
       }
@@ -119,7 +134,7 @@ public class StateDillo {
 
             canCheckIfOnDillo = false;
 
-            NewSpinDrive.putAllTogether();
+            look = true;
 
             if (Objects.equals(ArmadilloStates.offlineState, "online")) {
               if (isNoTp) {
@@ -146,10 +161,13 @@ public class StateDillo {
           checkedNumber = 0;
           tickDilloCheckCount = 0;
           canCheckIfOnDillo = false;
+          look = true;
         } else {
           tickDilloCheckCount++;
           checkedNumber++;
         }
+
+        look = false;
       } else {
         checkedNumber = 0;
         tickDilloCheckCount = 0;
