@@ -36,12 +36,10 @@ public class SmartTP {
           Block blockAbove1 = ids.mc.theWorld.getBlockState(makeNewBlock(0, 1, 0, newBlock)).getBlock();
           Block blockAbove2 = ids.mc.theWorld.getBlockState(makeNewBlock(0, 2, 0, newBlock)).getBlock();
 
-          if (
-            ids.mc.theWorld.getBlockState(newBlock).getBlock() == Blocks.cobblestone &&
-            blockAbove1 == Blocks.air &&
-            blockAbove2 == Blocks.air
-          ) {
-            blocks.add(newBlock);
+          if (ids.mc.theWorld.getBlockState(newBlock).getBlock() == Blocks.cobblestone) {
+            if (blockAbove1 == Blocks.air && blockAbove2 == Blocks.air) {
+              blocks.add(newBlock);
+            }
           }
         }
       }

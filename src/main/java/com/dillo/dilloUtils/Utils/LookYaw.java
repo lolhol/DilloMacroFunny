@@ -27,4 +27,10 @@ public class LookYaw {
 
     LookAt.smoothLook(new LookAt.Rotation(ids.mc.thePlayer.rotationPitch + addPitch, rotation), time);
   }
+
+  public static void lookToYawPitch(long time, float addPitch, float addYaw) {
+    float rotationYaw = curRotation() + addYaw;
+
+    LookAt.smoothLook(new LookAt.Rotation(ids.mc.thePlayer.rotationPitch + addPitch, rotationYaw), time);
+  }
 }
