@@ -81,6 +81,14 @@ public class config extends Vigilant {
   )
   public static boolean fasterDillo = true;
 
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Anti-Spam",
+    description = "Will COMPLETELY disable everything that sends a chat notification. This includes everything.",
+    category = "Main"
+  )
+  public static boolean antiSpam = false;
+
   //Route Utils
   @Property(
     type = PropertyType.SWITCH,
