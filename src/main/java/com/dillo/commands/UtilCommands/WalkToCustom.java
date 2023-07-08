@@ -1,6 +1,7 @@
 package com.dillo.commands.UtilCommands;
 
 import static com.dillo.dilloUtils.Teleport.SmartTP.smartTP;
+import static com.dillo.dilloUtils.Utils.LookYaw.lookToPitch;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.utils.previous.random.ids;
@@ -27,9 +28,7 @@ public class WalkToCustom extends Command {
     //SendChat.chat(currentServer);
     //getArea();
 
-    // SendChat.chat(String.valueOf(getYawNeededVec(new Vec3(x, y, z), displacement)));
-    ArmadilloStates.offlineState = "online";
-    smartTP(new BlockPos(x, y, z));
+    // SendChat.chat(String.valueOf(getYawNeededVec(new Vec3(x, y, z), displacement)))
     //isStructureBetween(ids.mc.thePlayer.getPosition(), new BlockPos(x, y, z));
     /*RenderMultipleLines.renderMultipleLines(null, null, false);
 

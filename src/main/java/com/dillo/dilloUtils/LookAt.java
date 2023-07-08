@@ -83,18 +83,16 @@ public class LookAt {
 
   @SubscribeEvent
   public void onRenderWorld(RenderWorldLastEvent event) {
-    if (Objects.equals(ArmadilloStates.offlineState, "online")) {
-      if (rotationType != RotationType.NORMAL) return;
-      if (System.currentTimeMillis() <= endTime) {
-        ids.mc.thePlayer.rotationPitch = interpolate(startRot.pitch, endRot.pitch);
-        ids.mc.thePlayer.rotationYaw = interpolate(startRot.yaw, endRot.yaw);
-      } else {
-        if (!done) {
-          ids.mc.thePlayer.rotationYaw = endRot.yaw;
-          ids.mc.thePlayer.rotationPitch = endRot.pitch;
+    if (rotationType != RotationType.NORMAL) return;
+    if (System.currentTimeMillis() <= endTime) {
+      ids.mc.thePlayer.rotationPitch = interpolate(startRot.pitch, endRot.pitch);
+      ids.mc.thePlayer.rotationYaw = interpolate(startRot.yaw, endRot.yaw);
+    } else {
+      if (!done) {
+        ids.mc.thePlayer.rotationYaw = endRot.yaw;
+        ids.mc.thePlayer.rotationPitch = endRot.pitch;
 
-          reset();
-        }
+        reset();
       }
     }
   }

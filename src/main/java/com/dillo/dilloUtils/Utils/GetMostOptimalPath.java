@@ -6,6 +6,8 @@ import static com.dillo.dilloUtils.NewSpinDrive.isLeft;
 
 import com.dillo.data.config;
 import com.dillo.dilloUtils.LookAt;
+import com.dillo.dilloUtils.Teleport.GetNextBlock;
+import com.dillo.utils.BlockUtils;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +20,13 @@ public class GetMostOptimalPath {
 
   public static OptimalPath getBestPath(List<BlockPos> originBlocks, float currentLook) {
     float displacement = 0;
+    BlockPos nextBlock = GetNextBlock.getNextBlock();
     float bestDisplacement = 0;
     List<BlockPos> best = new ArrayList<BlockPos>();
+    float bestPoints = 0;
 
     while (displacement < 360) {
+      float points = 0;
       List<BlockPos> prevBest = new ArrayList<>();
 
       for (BlockPos block : originBlocks) {
@@ -39,7 +44,14 @@ public class GetMostOptimalPath {
         }
       }
 
-      if (best.size() < prevBest.size()) {
+      points += prevBest.size();
+      if (nextBlock != null) {
+        points +=
+          20 /
+          Math.abs(getYawNeededVec(BlockUtils.fromBlockPosToVec3(nextBlock), displacement + config.headRotationMax));
+      }
+
+      if (bestPoints < points) {
         bestDisplacement = displacement;
         best = new ArrayList<>(prevBest);
       }

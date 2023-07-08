@@ -26,17 +26,18 @@ public class SmartTP {
   public static void smartTP(BlockPos finalBlock) {
     BlockPos block = ids.mc.thePlayer.getPosition();
     List<BlockPos> blocks = new ArrayList<>();
+    SmartTp smartPositions = new SmartTp(null, null);
 
     for (int j = -10; j <= 10; j++) {
-      for (int i = -10; i <= 10; i++) {
-        for (int k = -10; k <= 10; k++) {
+      for (int i = -64; i <= 64; i++) {
+        for (int k = -64; k <= 64; k++) {
           BlockPos newBlock = makeNewBlock(i, j, k, block);
 
           Block blockAbove1 = ids.mc.theWorld.getBlockState(makeNewBlock(0, 1, 0, newBlock)).getBlock();
           Block blockAbove2 = ids.mc.theWorld.getBlockState(makeNewBlock(0, 2, 0, newBlock)).getBlock();
 
           if (
-            ids.mc.theWorld.getBlockState(newBlock).getBlock() != Blocks.air &&
+            ids.mc.theWorld.getBlockState(newBlock).getBlock() == Blocks.cobblestone &&
             blockAbove1 == Blocks.air &&
             blockAbove2 == Blocks.air
           ) {
@@ -46,77 +47,35 @@ public class SmartTP {
       }
     }
 
-    new Thread(() -> {
-      SmartTp bestSmartTp = new SmartTp(100000, null, null);
+    for (BlockPos blockPos : blocks) {
+      Vec3 blockTp = adjustLook(
+        ids.mc.thePlayer.getPosition(),
+        blockPos,
+        new net.minecraft.block.Block[] { Blocks.air },
+        false
+      );
 
-      for (BlockPos blockInList : blocks) {
-        SmartTp newSmart = new SmartTp(0, null, null);
-        Vec3 nextBlockPos = getUnobstructedPos(blockInList);
+      if (blockTp != null) {
+        Vec3 finalTp = adjustLook(
+          makeNewBlock(0, 1, 0, blockPos),
+          finalBlock,
+          new net.minecraft.block.Block[] { Blocks.air },
+          false
+        );
 
-        if (nextBlockPos == null) {
-          nextBlockPos =
-            adjustLook(
-              ids.mc.thePlayer.getPosition(),
-              blockInList,
-              new net.minecraft.block.Block[] { Blocks.air },
-              false
-            );
-
-          if (nextBlockPos != null) {
-            newSmart.points = (float) DistanceFromTo.distanceFromTo(blockInList, finalBlock);
-            newSmart.block1 = blockInList;
-
-            Vec3 finalBlockTP = adjustLook(
-              makeNewBlock(0.5, 2.6, 0.5, blockInList),
-              finalBlock,
-              new net.minecraft.block.Block[] { Blocks.air },
-              false
-            );
-
-            if (finalBlockTP != null) {
-              newSmart.block2 = finalBlock;
-            } else {
-              continue;
-            }
-          } else {
-            continue;
-          }
-        } else {
-          newSmart.points = (float) DistanceFromTo.distanceFromTo(blockInList, finalBlock);
-          newSmart.block1 = blockInList;
-
-          Vec3 finalBlockTP = adjustLook(
-            makeNewBlock(0.5, 2.6, 0.5, blockInList),
-            finalBlock,
-            new net.minecraft.block.Block[] { Blocks.air },
-            false
-          );
-
-          if (finalBlockTP != null) {
-            newSmart.block2 = finalBlock;
-          } else {
-            continue;
-          }
-        }
-
-        if (newSmart.points > 5 && newSmart.block1 != null) SendChat.chat(String.valueOf(newSmart.points));
-        if (newSmart.points < bestSmartTp.points && newSmart.block2 != null) {
-          bestSmartTp.block1 = newSmart.block1;
-          bestSmartTp.block2 = newSmart.block2;
-          bestSmartTp.points = newSmart.points;
+        if (finalTp != null) {
+          smartPositions.block1 = blockPos;
+          smartPositions.block2 = finalBlock;
         }
       }
+    }
 
-      if (bestSmartTp.block1 != null && bestSmartTp.block2 != null) {
-        TeleportToBlock.teleportToBlock(bestSmartTp.block1, config.tpHeadMoveSpeed, 0, "SMARTTP");
-
-        nextBlock = bestSmartTp.block2;
-      } else {
-        ArmadilloStates.offlineState = "offline";
-        SendChat.chat(prefix.prefix + "Didnt find a good path :/.");
-      }
-    })
-      .start();
+    if (smartPositions.block1 != null && smartPositions.block2 != null) {
+      nextBlock = smartPositions.block2;
+      TeleportToBlock.teleportToBlock(smartPositions.block1, config.tpHeadMoveSpeed, 0, "SMARTTP");
+    } else {
+      SendChat.chat(prefix.prefix + "Found no teleport locations using smart tp!");
+    }
   }
 
   public static void TPToNext() {
@@ -127,12 +86,10 @@ public class SmartTP {
   @AllArgsConstructor
   public static class SmartTp {
 
-    public float points = 0;
     public BlockPos block1 = null;
     public BlockPos block2 = null;
 
     public void SmartTp() {
-      points = 0;
       block1 = null;
       block2 = null;
     }

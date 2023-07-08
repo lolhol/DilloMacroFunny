@@ -3,6 +3,7 @@ package com.dillo.dilloUtils;
 import static com.dillo.data.config.fasterDillo;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
 import static com.dillo.dilloUtils.NewSpinDrive.isLeft;
+import static com.dillo.dilloUtils.NewSpinDrive.random;
 import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isThrowRod;
 import static com.dillo.utils.keyBindings.rightClick;
 
@@ -33,6 +34,7 @@ public class StateDillo {
   public static int checkedNumber = 0;
   private static boolean look = true;
   public static boolean isSmartTP = false;
+  private static float lastPitch = 0;
 
   public static void stateDilloNoGettingOn() {
     if (
@@ -62,14 +64,18 @@ public class StateDillo {
       ArmadilloStates.currentState = null;
       swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
 
+      lastPitch = random.nextFloat() * 20 + 10;
+
+      LookYaw.lookToPitch(20, lastPitch);
+
+      if (isLeft) {
+        LookYaw.lookToYaw(config.rod_drill_switch_time + 150, 20);
+      } else {
+        LookYaw.lookToYaw(config.rod_drill_switch_time + 150, -20);
+      }
+
       new Thread(() -> {
         try {
-          if (isLeft) {
-            LookYaw.lookToYaw(config.rod_drill_switch_time + 150, 20);
-          } else {
-            LookYaw.lookToYaw(config.rod_drill_switch_time + 150, -20);
-          }
-
           Thread.sleep(config.rod_drill_switch_time);
 
           playerYBe4 = (float) ids.mc.thePlayer.posY;
@@ -131,6 +137,8 @@ public class StateDillo {
           if (ids.mc.thePlayer.isRiding()) {
             checkedNumber = 0;
             tickDilloCheckCount = 0;
+
+            LookYaw.lookToPitch(20, -lastPitch);
 
             canCheckIfOnDillo = false;
 
