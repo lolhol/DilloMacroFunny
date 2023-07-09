@@ -20,7 +20,7 @@ public class RayTracingUtils {
   private static BlockPos destBlock2 = null;
 
   public static Vec3 adjustLook(BlockPos block1, BlockPos destBlock, Block[] blocksToIgnore, boolean isCheck) {
-    double playerHeight = 1.65;
+    double playerHeight = 1.54;
     RayTracingUtils.blocksToIgnore = blocksToIgnore;
     RayTracingUtils.destBlock1 = block1;
     RayTracingUtils.destBlock2 = destBlock;
@@ -33,9 +33,9 @@ public class RayTracingUtils {
     );
 
     CollisionResult collision = getCollisionBlock(
-      ids.mc.thePlayer.posX,
-      ids.mc.thePlayer.posY + playerHeight,
-      ids.mc.thePlayer.posZ,
+      block1.getX(),
+      block1.getY() + playerHeight,
+      block1.getZ(),
       destBlockCenter.xCoord,
       destBlockCenter.yCoord,
       destBlockCenter.zCoord,
@@ -53,7 +53,7 @@ public class RayTracingUtils {
       double angleStep = (radiusMax / radius) * 5;
       for (double angle = 0; angle < 360 + angleStep; angle += angleStep) {
         Vec3 vec = getCylinderBaseVec(
-          new double[] { ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + playerHeight, ids.mc.thePlayer.posZ },
+          new double[] { block1.getX(), block1.getY() + playerHeight, block1.getZ() },
           new double[] { destBlockCenter.xCoord, destBlockCenter.yCoord, destBlockCenter.zCoord },
           angle,
           radius
@@ -66,9 +66,9 @@ public class RayTracingUtils {
         );
 
         CollisionResult collisionPoint = getCollisionBlock(
-          ids.mc.thePlayer.posX,
-          ids.mc.thePlayer.posY + playerHeight,
-          ids.mc.thePlayer.posZ,
+          block1.getX(),
+          block1.getY() + playerHeight,
+          block1.getZ(),
           point.xCoord,
           point.yCoord,
           point.zCoord,

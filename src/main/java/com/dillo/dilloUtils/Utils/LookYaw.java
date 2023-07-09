@@ -33,4 +33,9 @@ public class LookYaw {
 
     LookAt.smoothLook(new LookAt.Rotation(ids.mc.thePlayer.rotationPitch + addPitch, rotationYaw), time);
   }
+
+  public static void addPitch(long time, float addPitch) {
+    float rotation = curRotation();
+    LookAt.smoothLook(new LookAt.Rotation(0, rotation), time);
+  }
 }

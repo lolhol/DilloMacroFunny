@@ -1,7 +1,5 @@
 package com.dillo.dilloUtils.Teleport;
 
-import static com.dillo.data.config.actuallySwitchAOTV;
-
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.TpUtils.LookWhileGoingDown;
@@ -9,10 +7,13 @@ import com.dillo.utils.GetSBItems;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.previous.random.swapToSlot;
-import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.BlockPos;
+
+import java.util.Objects;
+
+import static com.dillo.data.config.actuallySwitchAOTV;
 
 public class TeleportToNextBlock {
 
@@ -50,9 +51,14 @@ public class TeleportToNextBlock {
     boolean result = TeleportToBlock.teleportToBlock(nextBlockInList, 200, config.tpWait, "armadillo");
 
     if (!result) {
-      SendChat.chat(prefix.prefix + "Route is obstructed!");
-      ArmadilloStates.currentState = null;
-      ArmadilloStates.offlineState = "online";
+      if (config.smartTeleport) {
+        SendChat.chat(prefix.prefix + "Route is obstructed! Attempting to tp with smart teleport module!");
+        SmartTP.smartTP(nextBlockInList);
+      } else {
+        SendChat.chat(prefix.prefix + "Route is obstructed!");
+        ArmadilloStates.currentState = null;
+        ArmadilloStates.offlineState = "offline";
+      }
     }
   }
 }

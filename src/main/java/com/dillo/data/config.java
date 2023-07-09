@@ -192,6 +192,34 @@ public class config extends Vigilant {
 
   @Property(
     type = PropertyType.SLIDER,
+    name = "Smart Tp Range",
+    description = "The range of Smart Tp Module -> (eg: 32 = 32x20x32) | the more u set this to the lower the scan time will be",
+    category = "Teleportation Options",
+    min = 10,
+    max = 64
+  )
+  public static int smartTpRange = 32;
+
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Smart Tp",
+    description = "Actually finds a teleport 'path' to the next vein (through player placed cobblestones). WARNING! MAY TAKE A LONG TIME IN THE PREC AREA!",
+    category = "Teleportation Options"
+  )
+  public static boolean smartTeleport = false;
+
+  @Property(
+    type = PropertyType.SLIDER,
+    name = "Smart Tp depth",
+    description = "The depth that the smart tp works. Depending on ur route u may need to customise this.",
+    category = "Teleportation Options",
+    min = 10,
+    max = 64
+  )
+  public static int smartTpDepth = 10;
+
+  @Property(
+    type = PropertyType.SLIDER,
     name = "TP Wait Time",
     description = "Waits for ____ amount of ms.",
     category = "Teleportation Options",
@@ -204,7 +232,7 @@ public class config extends Vigilant {
     type = PropertyType.SLIDER,
     name = "Walk Forward when tping amount of time",
     description = "Customise for how many ticks u move forward (1 tick = 1/20 second)",
-    category = "Failsafes",
+    category = "Teleportation Options",
     min = 1,
     max = 20
   )
@@ -489,13 +517,6 @@ public class config extends Vigilant {
   public static int nukerFOV = 150;
 
   // TO DO:
-  @Property(
-    type = PropertyType.SWITCH,
-    name = "Smart Tp",
-    description = "Actually finds a teleport 'path' to the next vein.",
-    category = "Teleportation Options"
-  )
-  public static boolean smartTeleport = false;
 
   @Property(
     type = PropertyType.SLIDER,
