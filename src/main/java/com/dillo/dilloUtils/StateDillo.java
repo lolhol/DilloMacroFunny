@@ -1,5 +1,7 @@
 package com.dillo.dilloUtils;
 
+import static com.dillo.ArmadilloMain.CurrentState.ROUTEOBSTRUCTEDCLEAR;
+import static com.dillo.ArmadilloMain.CurrentState.SPINDRIVE;
 import static com.dillo.data.config.fasterDillo;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
 import static com.dillo.dilloUtils.NewSpinDrive.isLeft;
@@ -39,16 +41,12 @@ public class StateDillo {
   private static float lastPitch = 0;
 
   public static void stateDilloNoGettingOn() {
-    if (
-      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)).size() >
-      0 &&
-      Objects.equals(ArmadilloStates.offlineState, "online")
-    ) {
+    if (canDillo() && ArmadilloStates.isOnline()) {
       ArmadilloStates.currentState = null;
       swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
-      ArmadilloStates.currentState = "spinDrive";
+      ArmadilloStates.currentState = SPINDRIVE;
     } else {
-      if (Objects.equals(ArmadilloStates.offlineState, "online")) {
+      if (ArmadilloStates.isOnline()) {
         ArmadilloStates.currentState = null;
         TeleportToNextBlock.teleportToNextBlock();
       }
@@ -56,12 +54,7 @@ public class StateDillo {
   }
 
   public static void stateDillo() {
-    if (
-      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)).size() >
-      0 &&
-      Objects.equals(ArmadilloStates.offlineState, "online") &&
-      !isSmartTP
-    ) {
+    if (canDillo() && ArmadilloStates.isOnline() && !isSmartTP) {
       throwRod.throwRodInv();
       ArmadilloStates.currentState = null;
       swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
@@ -87,7 +80,7 @@ public class StateDillo {
             ids.mc.thePlayer.inventory.getStackInSlot(ids.mc.thePlayer.inventory.currentItem)
           );
 
-          if (Objects.equals(ArmadilloStates.offlineState, "online")) {
+          if (ArmadilloStates.isOnline()) {
             canCheckIfOnDillo = true;
           }
         } catch (InterruptedException e) {
@@ -96,7 +89,7 @@ public class StateDillo {
       })
         .start();
     } else {
-      if (Objects.equals(ArmadilloStates.offlineState, "online")) {
+      if (ArmadilloStates.isOnline()) {
         isThrowRod = false;
         ArmadilloStates.currentState = null;
         TeleportToNextBlock.teleportToNextBlock();
@@ -129,10 +122,21 @@ public class StateDillo {
     return false;
   }
 
+  public static boolean canDillo() {
+    return (
+      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)).size() >
+      0 ||
+      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 1, ids.mc.thePlayer.posZ)).size() >
+      0 ||
+      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ)).size() > 0 ||
+      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)).size() > 0
+    );
+  }
+
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
-      if (canCheckIfOnDillo && Objects.equals(ArmadilloStates.offlineState, "online")) {
+      if (canCheckIfOnDillo && ArmadilloStates.isOnline()) {
         if (tickDilloCheckCount >= 4) {
           if (ids.mc.thePlayer.isRiding()) {
             KeyBinding.setKeyBindState(jump.getKeyCode(), true);
@@ -145,12 +149,12 @@ public class StateDillo {
 
             look = true;
 
-            if (Objects.equals(ArmadilloStates.offlineState, "online")) {
+            if (ArmadilloStates.isOnline()) {
               if (isNoTp) {
-                ArmadilloStates.currentState = "routeObstructedClear";
+                ArmadilloStates.currentState = ROUTEOBSTRUCTEDCLEAR;
                 isNoTp = false;
               } else {
-                ArmadilloStates.currentState = "spinDrive";
+                ArmadilloStates.currentState = SPINDRIVE;
               }
             }
           } else {

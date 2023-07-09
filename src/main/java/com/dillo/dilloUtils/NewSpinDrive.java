@@ -85,12 +85,20 @@ public class NewSpinDrive {
       isLeft = false;
     }
 
-    BlockPos refrenceBlock2 = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ);
-    List<BlockPos> returnList = getBlocksLayer(refrenceBlock2);
-    refrenceBlock2 = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 0, ids.mc.thePlayer.posZ);
-    returnList.addAll(getBlocksLayer(refrenceBlock2));
-    refrenceBlock2 = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 1, ids.mc.thePlayer.posZ);
-    returnList.addAll(getBlocksLayer(refrenceBlock2));
+    List<BlockPos> returnList = new ArrayList<>();
+
+    returnList.addAll(
+      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ))
+    );
+    returnList.addAll(
+      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ))
+    );
+    returnList.addAll(
+      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 1, ids.mc.thePlayer.posZ))
+    );
+    returnList.addAll(
+      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 3, ids.mc.thePlayer.posZ))
+    );
 
     float curYaw = curRotation();
 

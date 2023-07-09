@@ -1,6 +1,9 @@
 package com.dillo.dilloUtils.FailSafes;
 
+import static com.dillo.ArmadilloMain.CurrentState.PLAYER_DETECTION;
+
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.CurrentState;
 import com.dillo.data.config;
 import com.dillo.utils.DistFromXPlayer;
 import com.dillo.utils.DistanceFromTo;
@@ -30,7 +33,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class PlayerFailsafe {
 
-  private static String prevState = "";
+  private static CurrentState prevState = null;
 
   @SubscribeEvent
   public void onClientTick(TickEvent.ClientTickEvent event) {
@@ -39,7 +42,7 @@ public class PlayerFailsafe {
       config.playerFailsafe &&
       !MinecraftServer.getServer().isSinglePlayer() &&
       isPlayerOnServer() &&
-      ArmadilloStates.offlineState == "online"
+      ArmadilloStates.isOnline()
     ) {
       if (ids.mc.theWorld != null) {
         List<BlockPos> playersClose = new ArrayList<>();
@@ -59,9 +62,9 @@ public class PlayerFailsafe {
           }
         }
 
-        if (ArmadilloStates.currentState != "PLAYER_DETECTION" && playersClose.size() > 0) {
+        if (ArmadilloStates.currentState != PLAYER_DETECTION && playersClose.size() > 0) {
           prevState = ArmadilloStates.currentState;
-        } else if (ArmadilloStates.currentState == "PLAYER_DETECTION" && playersClose.size() == 0) {
+        } else if (ArmadilloStates.currentState == PLAYER_DETECTION && playersClose.size() == 0) {
           ArmadilloStates.currentState = prevState;
         }
       }

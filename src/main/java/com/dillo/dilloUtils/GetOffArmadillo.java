@@ -2,6 +2,7 @@ package com.dillo.dilloUtils;
 
 import akka.io.Udp;
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.CurrentState;
 import com.dillo.data.config;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
@@ -15,7 +16,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class GetOffArmadillo {
 
-  private static String setNewState = null;
+  private static CurrentState setNewState = null;
   private static double blockYPos = -34;
   private static boolean startOff = false;
   private static int ammountOfCheckTicks = 0;
@@ -23,7 +24,7 @@ public class GetOffArmadillo {
   private static boolean sneak = false;
   private static final KeyBinding SNEAK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
 
-  public static void getOffArmadillo(String newState, double blockY, int amountOTicks, boolean turnOffSneak) {
+  public static void getOffArmadillo(CurrentState newState, double blockY, int amountOTicks, boolean turnOffSneak) {
     throwRod.throwRodInv();
     ArmadilloStates.currentState = null;
     sneak = turnOffSneak;
@@ -41,7 +42,7 @@ public class GetOffArmadillo {
     if (event.phase == TickEvent.Phase.END) {
       if (startOff) {
         if (currTicks <= ammountOfCheckTicks) {
-          if (Objects.equals(ArmadilloStates.offlineState, "online")) {
+          if (ArmadilloStates.isOnline()) {
             if (ids.mc.thePlayer.posY - blockYPos - 1 < 0.0001) {
               if (sneak) KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
               startOff = false;

@@ -1,6 +1,7 @@
 package com.dillo.dilloUtils.TpUtils;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.CurrentState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -12,9 +13,9 @@ public class WalkForward {
   private static int curTicks = 0;
   private static int totalTicks = 0;
   private static final KeyBinding forward = Minecraft.getMinecraft().gameSettings.keyBindForward;
-  private static String stateAfter = null;
+  private static CurrentState stateAfter = null;
 
-  public static void walkForward(int totalTime, String state) {
+  public static void walkForward(int totalTime, CurrentState state) {
     totalTicks = totalTime;
     start = true;
     stateAfter = state;

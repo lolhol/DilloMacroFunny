@@ -3,6 +3,7 @@ package com.dillo.dilloUtils.FailSafes;
 import static com.dillo.data.config.withinBlockRadiusChecks;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.random.ids;
@@ -29,7 +30,7 @@ public class TooFarAwayFailsafe {
 
           if (distance > 240) {
             ArmadilloStates.currentState = null;
-            ArmadilloStates.offlineState = "offline";
+            ArmadilloStates.offlineState = KillSwitch.OFFLINE;
           }
         } catch (NullPointerException e) {}
       }

@@ -1,6 +1,9 @@
 package com.dillo.RemoteControl;
 
+import static com.dillo.ArmadilloMain.CurrentState.ARMADILLO;
+
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.FailSafes.RestartMacroFailsafe;
 import com.dillo.dilloUtils.Teleport.TeleportToBlock;
@@ -30,7 +33,7 @@ public class RemoteControl {
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
-      if (/*Objects.equals(ArmadilloStates.offlineState, "online") && */config.remoteControl) {
+      if (/*ArmadilloStates.isOnline() && */config.remoteControl) {
         if (currentTime >= config.timeBetweenExcecutions * 20) {
           //SendChat.chat(String.valueOf(GetRemoteControl.remoteControlActions.size()));
           if (GetRemoteControl.remoteControlActions.size() > i) {
@@ -59,14 +62,14 @@ public class RemoteControl {
                   break;
                 case "RETP":
                   BlockPos nextBlockInList = TeleportToNextBlock.nextBlockInList;
-                  TeleportToBlock.teleportToBlock(nextBlockInList, config.tpHeadMoveSpeed, config.tpWait, "armadillo");
+                  TeleportToBlock.teleportToBlock(nextBlockInList, config.tpHeadMoveSpeed, config.tpWait, ARMADILLO);
                   break;
                 case "RESTART":
                   RestartMacroFailsafe.restartMacro();
                   break;
                 case "STOP":
                   ArmadilloStates.currentState = null;
-                  ArmadilloStates.offlineState = "offline";
+                  ArmadilloStates.offlineState = KillSwitch.OFFLINE;
                   break;
                 case "THROWR":
                   throwRod.throwRodInv();

@@ -1,10 +1,14 @@
 package com.dillo.dilloUtils.Teleport;
 
+import static com.dillo.ArmadilloMain.CurrentState.RETELEPORTING;
 import static com.dillo.data.config.reTeleport;
+import static com.dillo.dilloUtils.NewSpinDrive.random;
 import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isTeleporting;
 import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isThrowRod;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.CurrentState;
+import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.dilloUtils.FailSafes.RestartMacroFailsafe;
@@ -22,12 +26,12 @@ public class IsOnBlock {
   private static boolean startCheck = false;
   private static int checkTime = 0;
   private static BlockPos blockPos = null;
-  private static String nextState = null;
+  private static CurrentState nextState = null;
   private static int curTicks = 0;
   private static int curReTps = 0;
   private static final KeyBinding SNEAK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
 
-  public static void isOnBlock(int checkTimeTicks, BlockPos nextBlock, String newString) {
+  public static void isOnBlock(int checkTimeTicks, BlockPos nextBlock, CurrentState newString) {
     blockPos = nextBlock;
     nextState = newString;
     checkTime = checkTimeTicks;
@@ -49,11 +53,12 @@ public class IsOnBlock {
               curReTps = 0;
 
               SendChat.chat(prefix.prefix + "Teleported successfully!");
-              ids.mc.thePlayer.rotationPitch = 5;
+              ids.mc.thePlayer.rotationPitch =
+                5 + (random.nextFloat() < 0.5 ? random.nextFloat() * 2 : -(random.nextFloat() * 2));
               KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
 
               if (RestartMacroFailsafe.isRestart) {
-                ArmadilloStates.offlineState = "online";
+                ArmadilloStates.offlineState = KillSwitch.ONLINE;
                 RestartMacroFailsafe.isRestart = false;
               }
 
@@ -72,7 +77,7 @@ public class IsOnBlock {
           if (!config.smartTeleport) {
             if (reTeleport && curReTps <= config.reTpTimes) {
               curReTps++;
-              ArmadilloStates.currentState = "Re-Teleporting";
+              ArmadilloStates.currentState = RETELEPORTING;
               TeleportToNextBlock.teleportToNextBlock();
             }
           } else {

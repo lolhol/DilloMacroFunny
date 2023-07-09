@@ -1,9 +1,11 @@
 package com.dillo.dilloUtils.FailSafes;
 
+import static com.dillo.ArmadilloMain.CurrentState.ANSWER_ACCUSATION;
 import static com.dillo.data.config.hackAccusationAnswer;
 import static com.dillo.dilloUtils.BlockUtils.fileUtils.WriteFile.gson;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.CurrentState;
 import com.dillo.RemoteControl.GetRemoteControl;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.ReadFileContents;
 import com.dillo.dilloUtils.TpUtils.WaitThenCall;
@@ -29,12 +31,12 @@ public class AnswerPPL {
   public static File answersFile = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/chatAnswers.json");
   public static List<List<String>> returnList = new ArrayList<>();
   public static boolean answering = false;
-  public static String prevState = null;
+  public static CurrentState prevState = null;
   public static String messageThatTriggered = null;
 
   @SubscribeEvent
   public void onChatReceived(ClientChatReceivedEvent event) {
-    if (hackAccusationAnswer && !answering && Objects.equals(ArmadilloStates.offlineState, "online")) {
+    if (hackAccusationAnswer && !answering && ArmadilloStates.isOnline()) {
       String message = event.message.getUnformattedText();
       //SendChat.chat(message + "!!!");
 
@@ -53,7 +55,7 @@ public class AnswerPPL {
     prevState = ArmadilloStates.currentState;
     ArmadilloStates.currentState = null;
     messageThatTriggered = message;
-    WaitThenCall.waitThenCall(message.length() * 200L, "ANSWER_ACCUSATION");
+    WaitThenCall.waitThenCall(message.length() * 200L, ANSWER_ACCUSATION);
   }
 
   public static void answerAccusation() {

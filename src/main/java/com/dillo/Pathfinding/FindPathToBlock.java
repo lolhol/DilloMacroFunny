@@ -1,6 +1,7 @@
 package com.dillo.Pathfinding;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
@@ -280,7 +281,7 @@ public class FindPathToBlock {
   }
 
   public static void startPathFinder(BlockPos block) {
-    ArmadilloStates.offlineState = "offline";
+    ArmadilloStates.offlineState = KillSwitch.OFFLINE;
     RenderMultipleLines.renderMultipleLines(null, null, false);
 
     List<BlockPos> initList = new ArrayList<>();
@@ -296,7 +297,7 @@ public class FindPathToBlock {
 
       currentNewRoute.remove(0);
 
-      ArmadilloStates.offlineState = "online";
+      ArmadilloStates.offlineState = KillSwitch.ONLINE;
       WalkOnPath.walkOnPath(currentNewRoute);
     }
   }

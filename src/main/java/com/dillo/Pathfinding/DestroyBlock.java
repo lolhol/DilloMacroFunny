@@ -1,6 +1,7 @@
 package com.dillo.Pathfinding;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.CurrentState;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.packets.getBlockEnum;
 import com.dillo.utils.previous.packets.sendStart;
@@ -14,14 +15,14 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class DestroyBlock {
 
-  private static String newDilloState = null;
+  private static CurrentState newDilloState = null;
   private static List<BlockPos> blocks = null;
   private static BlockPos blockPosition = null;
   private static boolean state = false;
 
   private static boolean canSend = false;
 
-  public static void destroyBlock(List<BlockPos> blocksToBreak, String newState, boolean startStop) {
+  public static void destroyBlock(List<BlockPos> blocksToBreak, CurrentState newState, boolean startStop) {
     blocks = blocksToBreak;
     newDilloState = newState;
 

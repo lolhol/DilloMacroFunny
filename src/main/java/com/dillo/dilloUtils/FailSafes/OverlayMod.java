@@ -1,6 +1,8 @@
 package com.dillo.dilloUtils.FailSafes;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.CurrentState;
+import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.data.config;
 import com.dillo.utils.previous.SendChat;
 import java.util.Objects;
@@ -27,35 +29,35 @@ public class OverlayMod {
     }
 
     if (config.currentActionOverlay) {
-      String currState = ArmadilloStates.currentState;
-      String currOnOffState = ArmadilloStates.offlineState;
+      CurrentState currState = ArmadilloStates.currentState;
+      KillSwitch currOnOffState = ArmadilloStates.offlineState;
 
       if (currState != null) {
         switch (currState) {
-          case ("armadillo"):
+          case ARMADILLO:
             draw("Getting On Armadillo", config.overlayX, config.overlayY);
             return;
-          case ("spinDrive"):
+          case SPINDRIVE:
             draw("Spiny Spiny", config.overlayX, config.overlayY);
             return;
-          case ("tpStage2"):
-          case ("tpStage3"):
+          case TPSTAGE2:
+          case TPSTAGE3:
             draw("Teleporting!", config.overlayX, config.overlayY);
             return;
-          case ("startWalkingPath"):
-          case ("resumeWalking"):
+          case STARTWALKINGPATH:
+          case RESUMEWALKING:
             draw("Walking On Path...", config.overlayX, config.overlayY);
             return;
-          case ("restartPathfinder"):
+          case RESTARTPATHFINDER:
             draw("Restarting Pathfinding...", config.overlayX, config.overlayY);
             return;
-          case ("NextBlockStage2"):
+          case NEXTBLOCKSTAGE2:
             draw("Still Teleporting :/", config.overlayX, config.overlayY);
             return;
-          case ("startMacro"):
+          case STARTMACRO:
             draw("Starting Macro!", config.overlayX, config.overlayY);
             return;
-          case ("PLAYER_DETECTION"):
+          case PLAYER_DETECTION:
             draw("Detected Player!", config.overlayX, config.overlayY);
             return;
         }

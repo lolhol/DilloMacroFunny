@@ -1,5 +1,6 @@
 package com.dillo.ArmadilloMain;
 
+import static com.dillo.ArmadilloMain.CurrentState.*;
 import static com.dillo.dilloUtils.FailSafes.AnswerPPL.answerAccusation;
 import static com.dillo.dilloUtils.Teleport.SmartTP.TPToNext;
 import static com.dillo.dilloUtils.Teleport.TeleportToBlock.tpStageWalk;
@@ -27,57 +28,48 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 public class ArmadilloMain {
 
   public static int newDilloCounter = 0;
-  private static final KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
-  private static int blockTime = 0;
-  public static boolean test = false;
-  private static boolean testv1 = false;
-  private static boolean isDone = true;
-  private static float closest = 0;
-  private static List<DilloDriveBlockDetection.BlockAngle> angles = new ArrayList<>();
-  private static float lastBlockAngle = 0;
-  private static List<DilloDriveBlockDetection.BlockAngle> returnBlocks = new ArrayList<>();
 
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
-      if (Objects.equals(ArmadilloStates.offlineState, "online")) {
-        if (Objects.equals(ArmadilloStates.currentState, "tpStageWalk")) {
+      if (ArmadilloStates.isOnline()) {
+        if (ArmadilloStates.currentState == TPSTAGEWALK) {
           tpStageWalk();
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "routeObstructedClear")) {
+        if (ArmadilloStates.currentState == ROUTEOBSTRUCTEDCLEAR) {
           SpinDrive.onStateSpinDrive();
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "centerStage2")) {
+        if (ArmadilloStates.currentState == CENTERSTAGE2) {
           centerStage2();
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "armadillo")) {
+        if (ArmadilloStates.currentState == ARMADILLO) {
           StateDillo.stateDillo();
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "spinDrive")) {
+        if (ArmadilloStates.currentState == SPINDRIVE) {
           NewSpinDrive.newSpinDrive();
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "tpStage2")) {
+        if (ArmadilloStates.currentState == TPSTAGE2) {
           TeleportToBlock.teleportStage2();
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "tpStage3")) {
+        if (ArmadilloStates.currentState == TPSTAGE3) {
           TeleportToBlock.teleportStage3();
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "startWalkingPath")) {
+        if (ArmadilloStates.currentState == STARTWALKINGPATH) {
           WalkOnPath.startWalkingPath();
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "startCheckDillo")) {
-          GetOffArmadillo.getOffArmadillo("NextBlockStage2", currentRoute.currentBlock.getY(), 500, false);
+        if (ArmadilloStates.currentState == STARTCHECKDILLO) {
+          GetOffArmadillo.getOffArmadillo(NEXTBLOCKSTAGE2, currentRoute.currentBlock.getY(), 500, false);
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "restartPathfinder")) {
+        if (ArmadilloStates.currentState == RESTARTPATHFINDER) {
           ArmadilloStates.currentState = null;
           BlockPos playerPos = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ);
           PathFinderV2.restartFinder(
@@ -90,29 +82,29 @@ public class ArmadilloMain {
           );
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "resumeWalking")) {
+        if (ArmadilloStates.currentState == RESUMEWALKING) {
           ArmadilloStates.currentState = null;
           WalkOnPath.walkOnPath(WalkOnPath.blockRoute);
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "NextBlockStage2")) {
+        if (ArmadilloStates.currentState == NEXTBLOCKSTAGE2) {
           TeleportToNextBlock.teleportToNextBlockStage2();
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "startMacro")) {
+        if (ArmadilloStates.currentState == STARTMACRO) {
           StartMacro.startMacro();
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "startAgainDrive")) {
+        if (ArmadilloStates.currentState == STARTAGAINDRIVE) {
           DilloDriveBlockDetection.detectBlocks();
-          ArmadilloStates.currentState = "spinDrive";
+          ArmadilloStates.currentState = SPINDRIVE;
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "ANSWER_ACCUSATION")) {
+        if (ArmadilloStates.currentState == ANSWER_ACCUSATION) {
           answerAccusation();
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "SMARTTP")) {
+        if (ArmadilloStates.currentState == SMARTTP) {
           TPToNext();
         }
       }

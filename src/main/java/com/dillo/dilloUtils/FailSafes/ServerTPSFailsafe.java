@@ -1,6 +1,7 @@
 package com.dillo.dilloUtils.FailSafes;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.CurrentState;
 import com.dillo.data.config;
 import com.dillo.utils.previous.SendChat;
 import java.util.Objects;
@@ -16,7 +17,7 @@ public class ServerTPSFailsafe {
   private long lastPacketTime = 0;
   private double previousTPS = 0;
   private static double totalTPSCurrent = 0;
-  public static String previousState = null;
+  public static CurrentState previousState = null;
 
   @SubscribeEvent
   public void onClientConnected(FMLNetworkEvent.ClientConnectedToServerEvent event) {

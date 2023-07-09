@@ -42,7 +42,7 @@ public class Overlay {
       if (currTime > 0) {
         drawWithColor("Current Time/Vein: " + currTime + "ms", 10, 20, Color.GREEN);
       } else {
-        if (Objects.equals(ArmadilloStates.offlineState, "online")) {
+        if (ArmadilloStates.isOnline()) {
           drawWithColor("Current Time/Vein: NONE", 10, 20, Color.GREEN);
         }
       }

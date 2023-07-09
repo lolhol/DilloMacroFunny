@@ -31,12 +31,10 @@ public class CurTime {
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
-      if (ArmadilloStates.offlineState == "online") {
+      if (ArmadilloStates.isOnline()) {
         if (timeList.size() >= 10) {
           timeList.remove(0);
         }
-
-        // this code stops cas of a null pointer exception.
 
         if (Objects.equals(ArmadilloStates.currentState, "armadillo")) {
           start = System.currentTimeMillis();

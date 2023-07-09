@@ -3,6 +3,7 @@ package com.dillo.dilloUtils.Utils;
 import static com.dillo.utils.keyBindings.rightClick;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.CurrentState;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.throwRod;
 import java.util.ArrayList;
@@ -18,14 +19,14 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class GetOnArmadillo {
 
-  public static String newState = null;
+  public static CurrentState newState = null;
   public static boolean start = false;
   public static int stage = 0;
   public static int count = 40;
   private static int clickCount = 10;
   private static BlockPos prevBlock = null;
 
-  public static void getOnArmadillo(String newState) {
+  public static void getOnArmadillo(CurrentState newState) {
     if (!isOnDillo()) {
       GetOnArmadillo.newState = newState;
       prevBlock = ids.mc.thePlayer.getPosition();
@@ -39,7 +40,7 @@ public class GetOnArmadillo {
 
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
-    if (Objects.equals(ArmadilloStates.offlineState, "online")) {
+    if (ArmadilloStates.isOnline()) {
       if (start) {
         // Stage 1 checks if the armadillo is summoned.
 

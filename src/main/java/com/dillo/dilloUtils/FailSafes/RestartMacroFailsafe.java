@@ -1,7 +1,10 @@
 package com.dillo.dilloUtils.FailSafes;
 
+import static com.dillo.ArmadilloMain.CurrentState.ARMADILLO;
+
 import com.dillo.ArmadilloMain.ArmadilloMain;
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.Pathfinding.FindPathToBlock;
 import com.dillo.Pathfinding.WalkOnPath;
 import com.dillo.data.config;
@@ -39,7 +42,7 @@ public class RestartMacroFailsafe {
         List<BlockPos> bestVisibleBlocks = BestBlocks.bestBlocks(visibleBlocks);
         BlockPos bestBlock = bestVisibleBlocks.get(0);
 
-        TeleportToBlock.teleportToBlock(bestBlock, config.tpHeadMoveSpeed, config.tpWait, "armadillo");
+        TeleportToBlock.teleportToBlock(bestBlock, config.tpHeadMoveSpeed, config.tpWait, ARMADILLO);
       } else {
         if (IsAuthenticated.isAuthenticated()) {
           List<BlockPos> foundRoute = FindPathToBlock.pathfinderTest(TeleportToNextBlock.nextBlockInList);
@@ -54,7 +57,7 @@ public class RestartMacroFailsafe {
 
             foundRoute.remove(0);
 
-            ArmadilloStates.offlineState = "online";
+            ArmadilloStates.offlineState = KillSwitch.ONLINE;
             WalkOnPath.walkOnPath(foundRoute);
           } else {
             SendChat.chat(prefix.prefix + "Could not find path...");
@@ -71,7 +74,7 @@ public class RestartMacroFailsafe {
 
   @SubscribeEvent
   public void onClientTick(TickEvent.ClientTickEvent event) {
-    if (Objects.equals(ArmadilloStates.offlineState, "online") && config.restartMacro) {
+    if (ArmadilloStates.isOnline() && config.restartMacro) {
       if (ArmadilloStates.currentState == null) {
         ticks++;
       } else {
@@ -79,7 +82,7 @@ public class RestartMacroFailsafe {
       }
 
       if (ticks >= config.restartTrigerTime * 20) {
-        ArmadilloStates.offlineState = "offline";
+        ArmadilloStates.offlineState = KillSwitch.OFFLINE;
         ArmadilloStates.currentState = null;
         restartMacro();
       }

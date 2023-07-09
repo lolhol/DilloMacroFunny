@@ -1,9 +1,13 @@
 package com.dillo.utils;
 
 import static com.dillo.ArmadilloMain.ArmadilloStates.armadillo;
+import static com.dillo.ArmadilloMain.CurrentState.ARMADILLO;
+import static com.dillo.ArmadilloMain.KillSwitch.OFFLINE;
+import static com.dillo.ArmadilloMain.KillSwitch.ONLINE;
 import static com.dillo.dilloUtils.StateDillo.stateDilloNoGettingOn;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.BlockUtils.CheckIfOnBlock;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
@@ -27,8 +31,8 @@ public class StartMacro {
           armadillo = !armadillo;
 
           String str = armadillo ? "Starting macro..." : "Macro stopped!";
-          ArmadilloStates.offlineState = armadillo ? "online" : "offline";
-          ArmadilloStates.currentState = armadillo ? "armadillo" : null;
+          ArmadilloStates.offlineState = armadillo ? ONLINE : OFFLINE;
+          ArmadilloStates.currentState = armadillo ? ARMADILLO : null;
 
           SendChat.chat("§l§4[MIT+]§r " + str);
         }
@@ -38,7 +42,7 @@ public class StartMacro {
       }
     } else {
       SendChat.chat(prefix.prefix + "Please stand on a block on route!");
-      ArmadilloStates.offlineState = "offline";
+      ArmadilloStates.offlineState = OFFLINE;
       ArmadilloStates.currentState = null;
     }
   }

@@ -3,6 +3,7 @@ package com.dillo.Pathfinding;
 import static java.lang.Float.isInfinite;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
@@ -208,7 +209,7 @@ public class PathFinderV2 {
 
         foundPath.remove(0);
 
-        ArmadilloStates.offlineState = "online";
+        ArmadilloStates.offlineState = KillSwitch.ONLINE;
         SendChat.chat(String.valueOf(foundPath.size()));
         WalkOnPath.walkOnPath(foundPath);
       } else {

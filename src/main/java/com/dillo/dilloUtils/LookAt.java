@@ -79,11 +79,11 @@ public class LookAt {
     endTime = 0;
   }
 
-  //if (Objects.equals(ArmadilloStates.offlineState, "online")) {
+  //if (ArmadilloStates.isOnline()) {
 
   @SubscribeEvent
   public void onRenderWorld(RenderWorldLastEvent event) {
-    if (Objects.equals(ArmadilloStates.offlineState, "online")) {
+    if (ArmadilloStates.isOnline()) {
       if (rotationType != RotationType.NORMAL) return;
       if (System.currentTimeMillis() <= endTime) {
         ids.mc.thePlayer.rotationPitch = interpolate(startRot.pitch, endRot.pitch);

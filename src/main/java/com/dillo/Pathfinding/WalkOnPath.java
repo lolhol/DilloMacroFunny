@@ -1,5 +1,7 @@
 package com.dillo.Pathfinding;
 
+import static com.dillo.ArmadilloMain.CurrentState.*;
+
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.Events.DonePathEvent;
 import com.dillo.dilloUtils.LookAt;
@@ -57,7 +59,7 @@ public class WalkOnPath {
       }
 
       onOffLine = "online";
-      WaitThenCall.waitThenCall(200, "startWalkingPath");
+      WaitThenCall.waitThenCall(200, STARTWALKINGPATH);
     } else {
       onOffLine = "offline";
       SendChat.chat(prefix.prefix + "Path end!");
@@ -112,7 +114,7 @@ public class WalkOnPath {
               KeyBinding.setKeyBindState(FORWARD.getKeyCode(), false);
               timesTriggered = 0;
 
-              WaitThenCall.waitThenCall(1000, "restartPathfinder");
+              WaitThenCall.waitThenCall(1000, RESTARTPATHFINDER);
             }
 
             timesTriggered++;
@@ -227,7 +229,7 @@ public class WalkOnPath {
     blocks.add(new BlockPos(block.getX(), block.getY(), block.getZ() - 1));
     blocks.add(new BlockPos(block.getX(), block.getY() + 1, block.getZ() - 1));
 
-    DestroyBlock.destroyBlock(blocks, "resumeWalking", true);
+    DestroyBlock.destroyBlock(blocks, RESUMEWALKING, true);
   }
 
   public static boolean isOnBlock(BlockPos pos, double minDist) {

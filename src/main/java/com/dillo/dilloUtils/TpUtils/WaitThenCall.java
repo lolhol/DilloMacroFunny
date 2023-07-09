@@ -1,18 +1,19 @@
 package com.dillo.dilloUtils.TpUtils;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.CurrentState;
 import java.util.Objects;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class WaitThenCall {
 
-  private static String newSetState = null;
+  private static CurrentState newSetState = null;
   private static long waitTime = 0;
   private static long timePoint = 0;
   private static boolean startWait = false;
 
-  public static void waitThenCall(long time, String newState) {
+  public static void waitThenCall(long time, CurrentState newState) {
     newSetState = newState;
     waitTime = time;
     timePoint = System.currentTimeMillis();

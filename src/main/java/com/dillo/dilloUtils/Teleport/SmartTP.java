@@ -1,5 +1,7 @@
 package com.dillo.dilloUtils.Teleport;
 
+import static com.dillo.ArmadilloMain.CurrentState.ARMADILLO;
+import static com.dillo.ArmadilloMain.CurrentState.SMARTTP;
 import static com.dillo.data.config.smartTpDepth;
 import static com.dillo.data.config.smartTpRange;
 import static com.dillo.dilloUtils.BlockUtils.GetUnobstructedPosFromCustom.getUnobstructedPos;
@@ -7,6 +9,7 @@ import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.data.config;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
@@ -164,7 +167,7 @@ public class SmartTP {
 
         overide = false;
 
-        TeleportToBlock.teleportToBlock(smartPositions.block1, config.tpHeadMoveSpeed, 0, "SMARTTP");
+        TeleportToBlock.teleportToBlock(smartPositions.block1, config.tpHeadMoveSpeed, 0, SMARTTP);
       } else {
         if (triedAPull && !overide) {
           overide = true;
@@ -174,7 +177,7 @@ public class SmartTP {
           overide = false;
           SendChat.chat(prefix.prefix + "Found no teleport locations using smart tp!");
           ArmadilloStates.currentState = null;
-          ArmadilloStates.offlineState = "offline";
+          ArmadilloStates.offlineState = KillSwitch.OFFLINE;
         }
       }
     })
@@ -182,7 +185,7 @@ public class SmartTP {
   }
 
   public static void TPToNext() {
-    TeleportToBlock.teleportToBlock(nextBlock, config.tpHeadMoveSpeed, 0, "armadillo");
+    TeleportToBlock.teleportToBlock(nextBlock, config.tpHeadMoveSpeed, 0, ARMADILLO);
   }
 
   @Getter

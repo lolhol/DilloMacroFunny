@@ -1,5 +1,6 @@
 package com.dillo.dilloUtils.Teleport;
 
+import static com.dillo.ArmadilloMain.CurrentState.*;
 import static com.dillo.data.config.forwardForTicks;
 import static com.dillo.data.config.walkOnTP;
 import static com.dillo.dilloUtils.BlockUtils.BlockCols.GetUnobstructedPos.getUnobstructedPos;
@@ -7,6 +8,8 @@ import static com.dillo.dilloUtils.TpUtils.WalkForward.walkForward;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.CurrentState;
+import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.TpUtils.WaitThenCall;
 import com.dillo.utils.GetSBItems;
@@ -23,12 +26,12 @@ import net.minecraft.util.Vec3;
 public class TeleportToBlock {
 
   public static boolean newInputState;
-  public static String newStateType;
+  public static CurrentState newStateType;
   private static final KeyBinding SNEAK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
   private static BlockPos nextBlock = null;
   private static final KeyBinding forward = Minecraft.getMinecraft().gameSettings.keyBindForward;
 
-  public static boolean teleportToBlock(BlockPos block, long time, long waitTime, String newState) {
+  public static boolean teleportToBlock(BlockPos block, long time, long waitTime, CurrentState newState) {
     newStateType = newState;
     ArmadilloStates.currentState = null;
 
@@ -54,9 +57,9 @@ public class TeleportToBlock {
 
       LookAt.smoothLook(LookAt.getRotation(nextBlockPos), time);
 
-      WaitThenCall.waitThenCall(waitTime + time, "tpStage2");
+      WaitThenCall.waitThenCall(waitTime + time, TPSTAGE2);
     } else {
-      walkForward(forwardForTicks, "tpStageWalk");
+      walkForward(forwardForTicks, TPSTAGEWALK);
     }
 
     return true;
@@ -84,7 +87,7 @@ public class TeleportToBlock {
 
     KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
 
-    WaitThenCall.waitThenCall(20, "tpStage3");
+    WaitThenCall.waitThenCall(20, TPSTAGE3);
   }
 
   public static void tpStageWalk() {
@@ -99,13 +102,13 @@ public class TeleportToBlock {
     if (nextBlockPos == null) {
       SendChat.chat(prefix.prefix + "Failed to teleport!");
       ArmadilloStates.currentState = null;
-      ArmadilloStates.offlineState = "offline";
+      ArmadilloStates.offlineState = KillSwitch.OFFLINE;
       return;
     }
 
     LookAt.smoothLook(LookAt.getRotation(nextBlockPos), 100);
 
-    WaitThenCall.waitThenCall(300, "tpStage2");
+    WaitThenCall.waitThenCall(300, TPSTAGE2);
   }
 
   public static void teleportStage3() {

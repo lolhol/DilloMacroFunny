@@ -3,6 +3,7 @@ package com.dillo.commands.UtilCommands;
 import static com.dillo.dilloUtils.Teleport.SmartTP.smartTP;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import gg.essential.api.commands.Command;
@@ -28,7 +29,7 @@ public class WalkToCustom extends Command {
     //SendChat.chat(currentServer);
     //getArea();
 
-    ArmadilloStates.offlineState = "online";
+    ArmadilloStates.offlineState = KillSwitch.ONLINE;
     smartTP(new BlockPos(x, y, z));
     SendChat.chat("Teleporting!");
     // SendChat.chat(String.valueOf(getYawNeededVec(new Vec3(x, y, z), displacement)))

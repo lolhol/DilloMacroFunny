@@ -1,6 +1,9 @@
 package com.dillo.dilloUtils.Utils;
 
+import static com.dillo.ArmadilloMain.CurrentState.CENTERSTAGE2;
+
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.CurrentState;
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.Teleport.TeleportToBlock;
 import com.dillo.dilloUtils.TpUtils.WaitThenCall;
@@ -18,9 +21,9 @@ import net.minecraft.util.Vec3;
 public class CenterPlayer {
 
   private static final KeyBinding SNEAK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
-  private static String state = null;
+  private static CurrentState state = null;
 
-  public static void centerPlayerOnBlockUnder(String newState) {
+  public static void centerPlayerOnBlockUnder(CurrentState newState) {
     state = newState;
     BlockPos blockUnder = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY - 1, ids.mc.thePlayer.posZ);
 
@@ -29,7 +32,7 @@ public class CenterPlayer {
     }
 
     LookAt.smoothLook(LookAt.getRotation(blockUnder), 200);
-    WaitThenCall.waitThenCall(230, "centerStage2");
+    WaitThenCall.waitThenCall(230, CENTERSTAGE2);
   }
 
   public static void centerStage2() {

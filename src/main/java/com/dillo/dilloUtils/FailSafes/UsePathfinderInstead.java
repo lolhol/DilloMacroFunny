@@ -3,6 +3,7 @@ package com.dillo.dilloUtils.FailSafes;
 import static com.dillo.utils.keyBindings.rightClick;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.Events.DonePathEvent;
 import com.dillo.Pathfinding.BlockNode;
 import com.dillo.Pathfinding.FindPathToBlock;
@@ -72,7 +73,7 @@ public class UsePathfinderInstead {
         }
 
         foundRoute.remove(0);
-        ArmadilloStates.offlineState = "online";
+        ArmadilloStates.offlineState = KillSwitch.ONLINE;
         finderInitiated = true;
         WalkOnPath.pathEnd = false;
         alrCheckedWalk.add(walkBlock);
@@ -181,7 +182,7 @@ public class UsePathfinderInstead {
         }
       }
 
-      if (finderInitiated && Objects.equals(ArmadilloStates.offlineState, "online")) {
+      if (finderInitiated && ArmadilloStates.isOnline()) {
         if (WalkOnPath.pathEnd) {
           tpToBlock();
           finderInitiated = false;
