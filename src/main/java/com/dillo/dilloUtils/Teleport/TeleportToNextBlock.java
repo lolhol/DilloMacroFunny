@@ -1,5 +1,7 @@
 package com.dillo.dilloUtils.Teleport;
 
+import static com.dillo.data.config.actuallySwitchAOTV;
+
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.TpUtils.LookWhileGoingDown;
@@ -7,13 +9,10 @@ import com.dillo.utils.GetSBItems;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.previous.random.swapToSlot;
+import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.BlockPos;
-
-import java.util.Objects;
-
-import static com.dillo.data.config.actuallySwitchAOTV;
 
 public class TeleportToNextBlock {
 
@@ -36,14 +35,14 @@ public class TeleportToNextBlock {
         return;
       }
 
+      if (actuallySwitchAOTV) swapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
+
       if (isThrowRod) {
         LookWhileGoingDown.lookUntilState("NextBlockStage2", nextBlock, config.tpHeadMoveSpeed);
         ArmadilloStates.currentState = "startCheckDillo";
       } else {
         ArmadilloStates.currentState = "NextBlockStage2";
       }
-
-      if (actuallySwitchAOTV) swapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
     }
   }
 

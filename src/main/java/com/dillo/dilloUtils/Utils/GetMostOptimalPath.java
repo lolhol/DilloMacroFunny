@@ -34,11 +34,11 @@ public class GetMostOptimalPath {
 
         float yaw = getYawNeededVec(centeredBlock, displacement);
         if (isLeft) {
-          if (yaw > (float) -config.headRotationMax && yaw < 0) {
+          if (yaw > (float) -config.headRotationMax + 40 && yaw < 0) {
             prevBest.add(block);
           }
         } else {
-          if (yaw < (float) config.headRotationMax && yaw > 0) {
+          if (yaw < (float) config.headRotationMax - 40 && yaw > 0) {
             prevBest.add(block);
           }
         }
@@ -47,7 +47,7 @@ public class GetMostOptimalPath {
       points += prevBest.size();
       if (nextBlock != null) {
         points +=
-          20 /
+          10 /
           Math.abs(getYawNeededVec(BlockUtils.fromBlockPosToVec3(nextBlock), displacement + config.headRotationMax));
       }
 

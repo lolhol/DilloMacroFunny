@@ -34,11 +34,19 @@ public class SmartTP {
           for (int k = -smartTpRange; k <= smartTpRange; k++) {
             BlockPos newBlock = makeNewBlock(i, j, k, block);
 
+            Block blockUnderOne = ids.mc.theWorld.getBlockState(makeNewBlock(0, -1, 0, newBlock)).getBlock();
+            Block blockUnderTwo = ids.mc.theWorld.getBlockState(makeNewBlock(0, -2, 0, newBlock)).getBlock();
+
             Block blockAbove1 = ids.mc.theWorld.getBlockState(makeNewBlock(0, 1, 0, newBlock)).getBlock();
             Block blockAbove2 = ids.mc.theWorld.getBlockState(makeNewBlock(0, 2, 0, newBlock)).getBlock();
 
             if (ids.mc.theWorld.getBlockState(newBlock).getBlock() == Blocks.cobblestone) {
-              if (blockAbove1 == Blocks.air && blockAbove2 == Blocks.air) {
+              if (
+                blockAbove1 == Blocks.air &&
+                blockAbove2 == Blocks.air &&
+                blockUnderOne == Blocks.cobblestone &&
+                blockUnderTwo == Blocks.cobblestone
+              ) {
                 blocks.add(newBlock);
               }
             }

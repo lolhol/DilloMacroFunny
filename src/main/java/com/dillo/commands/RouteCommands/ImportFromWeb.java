@@ -3,9 +3,15 @@ package com.dillo.commands.RouteCommands;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
+import net.minecraft.util.BlockPos;
+import org.apache.commons.codec.binary.Base64;
+
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -13,8 +19,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import net.minecraft.util.BlockPos;
-import org.apache.commons.codec.binary.Base64;
+
+import static com.dillo.dilloUtils.BlockUtils.fileUtils.WriteFile.gson;
 
 public class ImportFromWeb extends Command {
 
@@ -68,17 +74,24 @@ public class ImportFromWeb extends Command {
   public static void writeFileList(List<BlockPos> list, File fileName) {
     switchFiles(fileName);
     currentRoute.currentRoute = list;
-    Gson gson = new Gson();
     JsonArray arr = new JsonArray();
 
     for (BlockPos routeBlock : currentRoute.currentRoute) {
-      arr.add(gson.toJsonTree(routeBlock));
+      JsonObject newJson = new JsonObject();
+      newJson.add("x", new JsonPrimitive(routeBlock.getX()));
+      newJson.add("y", new JsonPrimitive(routeBlock.getY()));
+      newJson.add("z", new JsonPrimitive(routeBlock.getX()));
+      arr.add(newJson);
     }
 
     JsonArray strucArr = new JsonArray();
     if (currentRoute.strucList.size() > 0) {
-      for (BlockPos routeBlock : currentRoute.strucList) {
-        strucArr.add(gson.toJsonTree(routeBlock));
+      for (BlockPos blockPos : currentRoute.strucList) {
+        JsonObject newJson = new JsonObject();
+        newJson.add("x", new JsonPrimitive(blockPos.getX()));
+        newJson.add("y", new JsonPrimitive(blockPos.getY()));
+        newJson.add("z", new JsonPrimitive(blockPos.getX()));
+        strucArr.add(newJson);
       }
     } else {
       strucArr.add(null);
@@ -94,7 +107,6 @@ public class ImportFromWeb extends Command {
       FileWriter writer = new FileWriter(currentRoute.currentRouteFile);
       writer.write(json);
       writer.close();
-      SendChat.chat(prefix.prefix + "SUCCESS! Route name -> " + fileName.getName().replace("..json", ""));
     } catch (Exception e) {
       System.out.println("HHHHHHHHt");
     }
