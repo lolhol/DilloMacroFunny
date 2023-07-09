@@ -1,6 +1,7 @@
 package com.dillo.dilloUtils.Teleport;
 
 import static com.dillo.ArmadilloMain.CurrentState.*;
+import static com.dillo.ArmadilloMain.KillSwitch.ONLINE;
 import static com.dillo.data.config.actuallySwitchAOTV;
 import static com.dillo.dilloUtils.BlockUtils.GetUnobstructedPosFromCustom.getUnobstructedPosUnlessNull;
 
@@ -30,7 +31,7 @@ public class TeleportToNextBlock {
   private static int clearAttempts = 0;
 
   public static void teleportToNextBlock() {
-    if (!Objects.equals(ArmadilloStates.offlineState, "offline")) {
+    if (ArmadilloStates.offlineState == ONLINE) {
       BlockPos nextBlock = GetNextBlock.getNextBlock();
       nextBlockInList = nextBlock;
       isTeleporting = true;
@@ -38,7 +39,7 @@ public class TeleportToNextBlock {
       if (nextBlock == null) {
         SendChat.chat(prefix.prefix + "FAILED TO TELEPORT FOR SOME REASON! DM GODBRIGERO!");
         ArmadilloStates.currentState = null;
-        ArmadilloStates.offlineState = KillSwitch.ONLINE;
+        ArmadilloStates.offlineState = ONLINE;
 
         return;
       }

@@ -2,6 +2,7 @@ package com.dillo.dilloUtils.TpUtils;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.CurrentState;
+import com.dillo.ArmadilloMain.KillSwitch;
 import java.util.Objects;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -24,7 +25,7 @@ public class WaitThenCall {
   public void onRenderWorld(RenderWorldLastEvent event) {
     if (startWait) {
       if (timePoint + waitTime <= System.currentTimeMillis()) {
-        if (Objects.equals(ArmadilloStates.offlineState, "offline")) {
+        if (ArmadilloStates.offlineState == KillSwitch.OFFLINE) {
           startWait = false;
           ArmadilloStates.currentState = null;
         } else {
@@ -32,7 +33,7 @@ public class WaitThenCall {
           ArmadilloStates.currentState = newSetState;
         }
       } else {
-        if (Objects.equals(ArmadilloStates.offlineState, "offline")) {
+        if (ArmadilloStates.offlineState == KillSwitch.OFFLINE) {
           startWait = false;
           ArmadilloStates.currentState = null;
         }

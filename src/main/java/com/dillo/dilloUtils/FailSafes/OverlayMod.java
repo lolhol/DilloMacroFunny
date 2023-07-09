@@ -63,10 +63,10 @@ public class OverlayMod {
         }
       }
 
-      if (currState == null && Objects.equals(currOnOffState, "offline")) {
+      if (currState == null && currOnOffState == KillSwitch.OFFLINE) {
         draw("Idle", config.overlayX, config.overlayY);
         return;
-      } else if (currState == null && Objects.equals(currOnOffState, "online")) {
+      } else if (currState == null && currOnOffState == KillSwitch.ONLINE) {
         draw("Idle or doing smh idk", config.overlayX, config.overlayY);
         return;
       }

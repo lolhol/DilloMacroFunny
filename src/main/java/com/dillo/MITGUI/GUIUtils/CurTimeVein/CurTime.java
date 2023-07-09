@@ -3,6 +3,7 @@ package com.dillo.MITGUI.GUIUtils.CurTimeVein;
 import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isTeleporting;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.CurrentState;
 import com.dillo.utils.previous.SendChat;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class CurTime {
           timeList.remove(0);
         }
 
-        if (Objects.equals(ArmadilloStates.currentState, "armadillo")) {
+        if (ArmadilloStates.currentState == CurrentState.ARMADILLO) {
           start = System.currentTimeMillis();
         }
 

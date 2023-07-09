@@ -1,5 +1,7 @@
 package com.dillo.dilloUtils.FailSafes;
 
+import static com.dillo.ArmadilloMain.KillSwitch.ONLINE;
+
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.CurrentState;
 import com.dillo.data.config;
@@ -40,7 +42,7 @@ public class ServerTPSFailsafe {
       if (previousTPS != 0 && tps != 0) {
         totalTPSCurrent = (tps + previousTPS) / 2;
 
-        if (config.tickFailsafe && Objects.equals(ArmadilloStates.offlineState, "online")) {
+        if (config.tickFailsafe && ArmadilloStates.offlineState == ONLINE) {
           if (totalTPSCurrent <= config.ticksFail) {
             previousState = ArmadilloStates.currentState;
             ArmadilloStates.currentState = null;
