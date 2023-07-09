@@ -37,6 +37,10 @@ public class GetBlocksForNuker {
 
         if (second < blocksOnRoute.size()) {
           BlockPos block = blocksOnRoute.get(i);
+          if (nukerDigUnder) {
+            blocks.addAll(digHoleUnder(block));
+          }
+
           blocks.addAll(
             findBlocks(
               new Vec3(block.getX() + 0.5, block.getY() + 1.64, block.getZ() + 0.5),
@@ -44,10 +48,6 @@ public class GetBlocksForNuker {
               1
             )
           );
-
-          if (nukerDigUnder) {
-            blocks.addAll(digHoleUnder(block));
-          }
         }
       }
 
