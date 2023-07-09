@@ -1,20 +1,19 @@
 package com.dillo.dilloUtils.RouteUtils.Utils;
 
-import static com.dillo.dilloUtils.RouteUtils.LegitRouteClear.LegitRouteClear.startLegit;
-import static com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain.nukerStart;
-
-import com.dillo.Events.DoneNukerBlocks;
-import com.dillo.Events.DonePathEvent;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.DistanceFromTo;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.common.MinecraftForge;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.dillo.data.config.nukerDigUnder;
+import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
+import static com.dillo.dilloUtils.RouteUtils.LegitRouteClear.LegitRouteClear.startLegit;
+import static com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain.nukerStart;
 
 public class GetBlocksForNuker {
 
@@ -40,11 +39,15 @@ public class GetBlocksForNuker {
           BlockPos block = blocksOnRoute.get(i);
           blocks.addAll(
             findBlocks(
-              new Vec3(block.getX(), block.getY() + 1.64, block.getZ()),
+              new Vec3(block.getX() + 0.5, block.getY() + 1.64, block.getZ() + 0.5),
               BlockUtils.fromBlockPosToVec3(blocksOnRoute.get(second)),
               1
             )
           );
+
+          if (nukerDigUnder) {
+            blocks.addAll(digHoleUnder(block));
+          }
         }
       }
 
@@ -53,6 +56,20 @@ public class GetBlocksForNuker {
       doneGettingBlocks();
     })
       .start();
+  }
+
+  private static List<BlockPos> digHoleUnder(BlockPos block) {
+    List<BlockPos> blocks = new ArrayList<>();
+
+    for (int x = -1; x <= 1; x++) {
+      for (int y = -3; y <= 0; y++) {
+        for (int z = -1; z <= 1; z++) {
+          blocks.add(makeNewBlock(x, y, z, block));
+        }
+      }
+    }
+
+    return blocks;
   }
 
   public static void doneGettingBlocks() {
@@ -65,6 +82,8 @@ public class GetBlocksForNuker {
 
   public static List<BlockPos> findBlocks(Vec3 pos1, Vec3 pos2, double cylRad) {
     List<BlockPos> finalBlockPos = new ArrayList<>();
+
+    pos2 = new Vec3(pos2.xCoord + 0.5, pos2.yCoord, pos2.zCoord + 0.5);
 
     double dx = pos2.xCoord - pos1.xCoord;
     double dy = pos2.yCoord - pos1.yCoord;

@@ -32,14 +32,16 @@ public class NewSpinDrive {
   public static GetMostOptimalPath.OptimalPath path = null;
 
   public static void newSpinDrive() {
-    if (angle < config.headRotationMax) {
+    if (angle < config.headRotationMax + 60) {
       KeyBinding.setKeyBindState(jump.getKeyCode(), true);
       float add = config.headMovement * 7 + random.nextFloat() * 10;
 
+      SendChat.chat(String.valueOf(add));
+
       if (isLeft) {
-        LookYaw.lookToYaw(config.headMovement * 10L, -add);
+        LookYaw.lookToYaw(config.headMovement * 5L, -add);
       } else {
-        LookYaw.lookToYaw(config.headMovement * 10L, add);
+        LookYaw.lookToYaw(config.headMovement * 5L, add);
       }
 
       angle += add;

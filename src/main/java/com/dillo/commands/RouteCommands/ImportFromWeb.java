@@ -1,5 +1,7 @@
 package com.dillo.commands.RouteCommands;
 
+import static com.dillo.dilloUtils.BlockUtils.fileUtils.WriteFile.gson;
+
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
@@ -9,9 +11,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
-import net.minecraft.util.BlockPos;
-import org.apache.commons.codec.binary.Base64;
-
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,8 +18,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-import static com.dillo.dilloUtils.BlockUtils.fileUtils.WriteFile.gson;
+import net.minecraft.util.BlockPos;
+import org.apache.commons.codec.binary.Base64;
 
 public class ImportFromWeb extends Command {
 
@@ -80,7 +79,7 @@ public class ImportFromWeb extends Command {
       JsonObject newJson = new JsonObject();
       newJson.add("x", new JsonPrimitive(routeBlock.getX()));
       newJson.add("y", new JsonPrimitive(routeBlock.getY()));
-      newJson.add("z", new JsonPrimitive(routeBlock.getX()));
+      newJson.add("z", new JsonPrimitive(routeBlock.getZ()));
       arr.add(newJson);
     }
 
@@ -90,7 +89,7 @@ public class ImportFromWeb extends Command {
         JsonObject newJson = new JsonObject();
         newJson.add("x", new JsonPrimitive(blockPos.getX()));
         newJson.add("y", new JsonPrimitive(blockPos.getY()));
-        newJson.add("z", new JsonPrimitive(blockPos.getX()));
+        newJson.add("z", new JsonPrimitive(blockPos.getZ()));
         strucArr.add(newJson);
       }
     } else {

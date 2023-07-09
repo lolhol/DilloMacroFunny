@@ -1,7 +1,6 @@
 package com.dillo.dilloUtils.BlockUtils.fileUtils;
 
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
-import com.dillo.utils.previous.SendChat;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -21,7 +20,7 @@ public class ReWriteFile {
       JsonObject newJson = new JsonObject();
       newJson.add("x", new JsonPrimitive(routeBlock.getX()));
       newJson.add("y", new JsonPrimitive(routeBlock.getY()));
-      newJson.add("z", new JsonPrimitive(routeBlock.getX()));
+      newJson.add("z", new JsonPrimitive(routeBlock.getZ()));
       arr.add(newJson);
     }
 
@@ -31,7 +30,7 @@ public class ReWriteFile {
         JsonObject newJson = new JsonObject();
         newJson.add("x", new JsonPrimitive(blockPos.getX()));
         newJson.add("y", new JsonPrimitive(blockPos.getY()));
-        newJson.add("z", new JsonPrimitive(blockPos.getX()));
+        newJson.add("z", new JsonPrimitive(blockPos.getZ()));
         strucArr.add(newJson);
       }
     } else {

@@ -3,7 +3,9 @@ package com.dillo.dilloUtils;
 import static com.dillo.data.config.fasterDillo;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
 import static com.dillo.dilloUtils.NewSpinDrive.isLeft;
+import static com.dillo.dilloUtils.SpinDrive.jump;
 import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isThrowRod;
+import static com.dillo.dilloUtils.Utils.LookYaw.lookToPitch;
 import static com.dillo.utils.keyBindings.rightClick;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
@@ -17,6 +19,7 @@ import com.dillo.utils.throwRod;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
@@ -63,6 +66,10 @@ public class StateDillo {
       ArmadilloStates.currentState = null;
       swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
 
+      lookToPitch(1, 10);
+
+      NewSpinDrive.putAllTogether();
+
       if (isLeft) {
         LookYaw.lookToYaw(config.rod_drill_switch_time + 150, 20);
       } else {
@@ -79,8 +86,6 @@ public class StateDillo {
             ids.mc.theWorld,
             ids.mc.thePlayer.inventory.getStackInSlot(ids.mc.thePlayer.inventory.currentItem)
           );
-
-          NewSpinDrive.putAllTogether();
 
           if (Objects.equals(ArmadilloStates.offlineState, "online")) {
             canCheckIfOnDillo = true;
@@ -130,10 +135,11 @@ public class StateDillo {
       if (canCheckIfOnDillo && Objects.equals(ArmadilloStates.offlineState, "online")) {
         if (tickDilloCheckCount >= 4) {
           if (ids.mc.thePlayer.isRiding()) {
+            KeyBinding.setKeyBindState(jump.getKeyCode(), true);
             checkedNumber = 0;
             tickDilloCheckCount = 0;
 
-            LookYaw.lookToPitch(20, -lastPitch);
+            lookToPitch(20, -lastPitch);
 
             canCheckIfOnDillo = false;
 

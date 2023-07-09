@@ -2,14 +2,12 @@ package com.dillo.dilloUtils;
 
 import com.dillo.ArmadilloMain.ArmadilloMain;
 import com.dillo.ArmadilloMain.ArmadilloStates;
-import com.dillo.armadillomacro;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.BlockUtils.BlockUtils;
 import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
 import com.dillo.utils.degreeToRad;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
-import java.util.Objects;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -21,7 +19,7 @@ public class SpinDrive {
   public static float angleTudaSuda = 0;
   public static float angle = 0;
   public static java.util.Random random = new java.util.Random();
-  private static final KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
+  public static final KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
 
   public static void onStateSpinDrive() {
     boolean lookUnder = true;

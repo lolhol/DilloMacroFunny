@@ -1,5 +1,9 @@
 package com.dillo.dilloUtils.Teleport;
 
+import static com.dillo.data.config.reTeleport;
+import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isTeleporting;
+import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isThrowRod;
+
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
@@ -12,10 +16,6 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
-import static com.dillo.data.config.reTeleport;
-import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isTeleporting;
-import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isThrowRod;
 
 public class IsOnBlock {
 
@@ -69,10 +69,14 @@ public class IsOnBlock {
           curTicks = 0;
           startCheck = false;
 
-          if (reTeleport && curReTps <= config.reTpTimes) {
-            curReTps++;
-            ArmadilloStates.currentState = "Re-Teleporting";
-            TeleportToNextBlock.teleportToNextBlock();
+          if (!config.smartTeleport) {
+            if (reTeleport && curReTps <= config.reTpTimes) {
+              curReTps++;
+              ArmadilloStates.currentState = "Re-Teleporting";
+              TeleportToNextBlock.teleportToNextBlock();
+            }
+          } else {
+            SmartTP.smartTP(blockPos);
           }
         }
       }

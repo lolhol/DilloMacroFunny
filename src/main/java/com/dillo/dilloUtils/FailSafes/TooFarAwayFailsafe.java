@@ -18,18 +18,20 @@ public class TooFarAwayFailsafe {
       if (currentRoute.currentRoute.size() > 0 && withinBlockRadiusChecks) {
         double distance = 100000000;
 
-        for (BlockPos point : currentRoute.currentRoute) {
-          double dist = DistanceFromTo.distanceFromTo(point, ids.mc.thePlayer.getPosition());
+        try {
+          for (BlockPos point : currentRoute.currentRoute) {
+            double dist = DistanceFromTo.distanceFromTo(point, ids.mc.thePlayer.getPosition());
 
-          if (dist < distance) {
-            distance = dist;
+            if (dist < distance) {
+              distance = dist;
+            }
           }
-        }
 
-        if (distance < 120) {
-          ArmadilloStates.currentState = null;
-          ArmadilloStates.offlineState = "offline";
-        }
+          if (distance > 240) {
+            ArmadilloStates.currentState = null;
+            ArmadilloStates.offlineState = "offline";
+          }
+        } catch (NullPointerException e) {}
       }
     }
   }

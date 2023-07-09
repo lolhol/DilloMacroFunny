@@ -20,10 +20,11 @@ public class RayTracingUtils {
   private static BlockPos destBlock2 = null;
 
   public static Vec3 adjustLook(BlockPos block1, BlockPos destBlock, Block[] blocksToIgnore, boolean isCheck) {
-    double playerHeight = 1.54;
+    double playerHeight = 1.64;
     RayTracingUtils.blocksToIgnore = blocksToIgnore;
     RayTracingUtils.destBlock1 = block1;
     RayTracingUtils.destBlock2 = destBlock;
+    block1 = new BlockPos(block1.getX() + 0.5, block1.getY(), block1.getZ() + 0.5);
 
     Vec3 destBlockCenter = new Vec3(destBlock.getX() + 0.5, destBlock.getY() + 0.5, destBlock.getZ() + 0.5);
 

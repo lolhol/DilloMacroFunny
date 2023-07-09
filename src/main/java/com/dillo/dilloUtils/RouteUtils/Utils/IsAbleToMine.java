@@ -11,14 +11,17 @@ public class IsAbleToMine {
     Block blockType = ids.mc.theWorld.getBlockState(block).getBlock();
 
     if (
-      blockType != Blocks.chest &&
-      blockType != Blocks.air &&
-      blockType != Blocks.obsidian &&
-      blockType != Blocks.bedrock &&
-      blockType != Blocks.stained_glass &&
-      blockType != Blocks.stained_glass_pane &&
-      blockType != Blocks.cobblestone &&
-      blockType != Blocks.prismarine
+      blockType == Blocks.coal_ore ||
+      blockType == Blocks.lapis_ore ||
+      blockType == Blocks.iron_ore ||
+      blockType == Blocks.gold_ore ||
+      blockType == Blocks.redstone_ore ||
+      blockType == Blocks.lit_redstone_ore ||
+      blockType == Blocks.diamond_ore ||
+      blockType == Blocks.emerald_ore ||
+      blockType == Blocks.quartz_ore ||
+      blockType == Blocks.stone ||
+      blockType == Blocks.cobblestone
     ) {
       return true;
     }

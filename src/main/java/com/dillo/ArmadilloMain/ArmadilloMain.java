@@ -1,9 +1,6 @@
 package com.dillo.ArmadilloMain;
 
-import static com.dillo.dilloUtils.DilloDriveBlockDetection.detectBlocks;
-import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
 import static com.dillo.dilloUtils.FailSafes.AnswerPPL.answerAccusation;
-import static com.dillo.dilloUtils.NewSpinDrive.random;
 import static com.dillo.dilloUtils.Teleport.SmartTP.TPToNext;
 import static com.dillo.dilloUtils.Teleport.TeleportToBlock.tpStageWalk;
 import static com.dillo.dilloUtils.Utils.CenterPlayer.centerStage2;
@@ -11,15 +8,12 @@ import static com.dillo.dilloUtils.Utils.CenterPlayer.centerStage2;
 import com.dillo.Pathfinding.BlockNode;
 import com.dillo.Pathfinding.PathFinderV2;
 import com.dillo.Pathfinding.WalkOnPath;
-import com.dillo.data.config;
 import com.dillo.dilloUtils.*;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.dilloUtils.Teleport.TeleportToBlock;
 import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
-import com.dillo.dilloUtils.Utils.LookYaw;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.StartMacro;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,85 +115,6 @@ public class ArmadilloMain {
         if (Objects.equals(ArmadilloStates.currentState, "SMARTTP")) {
           TPToNext();
         }
-      }
-    }
-
-    if (test) {
-      if (
-        (
-          getBlocksLayer(
-            new BlockPos(
-              currentRoute.curPlayerPos.getX(),
-              currentRoute.curPlayerPos.getY() + 2,
-              currentRoute.curPlayerPos.getZ()
-            )
-          )
-            .size() >
-          0 ||
-          getBlocksLayer(
-            new BlockPos(
-              currentRoute.curPlayerPos.getX(),
-              currentRoute.curPlayerPos.getY() + 1,
-              currentRoute.curPlayerPos.getZ()
-            )
-          )
-            .size() >
-          0 ||
-          getBlocksLayer(
-            new BlockPos(
-              currentRoute.curPlayerPos.getX(),
-              currentRoute.curPlayerPos.getY(),
-              currentRoute.curPlayerPos.getZ()
-            )
-          )
-            .size() >
-          0
-        ) &&
-        blockTime < 1000
-      ) {
-        if (isDone) {
-          returnBlocks = detectBlocks();
-
-          if (returnBlocks != null) {
-            if (returnBlocks.size() < 1) {
-              ArmadilloStates.currentState = null;
-              ArmadilloStates.offlineState = "offline";
-              com.dillo.utils.previous.chatUtils.SendChat.chat("NO BLOCKS FOUND....");
-            } else {
-              DilloDriveBlockDetection.BlockAngle lastPos = returnBlocks.get(returnBlocks.size() - 1);
-              lastBlockAngle = lastPos.angle;
-              closest = returnBlocks.get(0).angle;
-              currentRoute.curPlayerPos = ids.mc.thePlayer.getPosition();
-            }
-          }
-
-          isDone = false;
-        }
-
-        if (lastBlockAngle > 0) {
-          if (!testv1) {
-            float yaw = config.headMovement * 3 + random.nextFloat() * 10;
-
-            LookYaw.lookToYaw(config.headMovement * 10L, yaw);
-            lastBlockAngle -= yaw;
-          }
-        } else {
-          testv1 = true;
-        }
-
-        if (testv1) {
-          if (lastBlockAngle < closest) {
-            float yaw = config.headMovement * 3 + random.nextFloat() * 10;
-            LookYaw.lookToYaw(-config.headMovement * 10L, yaw);
-            SendChat.chat(String.valueOf(lastBlockAngle));
-            lastBlockAngle += yaw;
-          } else {
-            isDone = true;
-            testv1 = false;
-          }
-        }
-
-        blockTime++;
       }
     }
   }

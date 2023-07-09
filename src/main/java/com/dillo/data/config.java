@@ -79,7 +79,7 @@ public class config extends Vigilant {
     description = "More Blatant (spam-clicks) but hopefully makes the process faster.",
     category = "Main"
   )
-  public static boolean fasterDillo = true;
+  public static boolean fasterDillo = false;
 
   @Property(
     type = PropertyType.SWITCH,
@@ -497,6 +497,14 @@ public class config extends Vigilant {
     max = 4
   )
   public static int nukerRange = 3;
+
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Dig out under vein",
+    description = "Will also make a 'little' hole around and under the cord in order for bad mobs to go there instead of hitting u.",
+    category = "Nuker"
+  )
+  public static boolean nukerDigUnder = true;
 
   @Property(
     type = PropertyType.SWITCH,
