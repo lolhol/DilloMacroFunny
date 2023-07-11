@@ -36,8 +36,6 @@ public class NewSpinDrive {
       KeyBinding.setKeyBindState(jump.getKeyCode(), true);
       float add = config.headMovement * 7 + random.nextFloat() * 10;
 
-      SendChat.chat(String.valueOf(add));
-
       if (isLeft) {
         LookYaw.lookToYaw(config.headMovement * 5L, -add);
       } else {

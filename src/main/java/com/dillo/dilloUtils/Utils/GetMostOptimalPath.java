@@ -20,6 +20,8 @@ import net.minecraft.util.Vec3;
 
 public class GetMostOptimalPath {
 
+  public static boolean isClear = false;
+
   public static OptimalPath getBestPath(List<BlockPos> originBlocks, float currentLook) {
     float displacement = 0;
     BlockPos nextBlock = GetNextBlock.getNextBlock();
@@ -30,7 +32,7 @@ public class GetMostOptimalPath {
     boolean includeNext = false;
 
     boolean canBeBroken = canBeBroken(ids.mc.thePlayer.getPosition());
-    if (!canBeBroken) {
+    if (!canBeBroken || isClear) {
       includeNext = true;
     }
 
@@ -64,8 +66,18 @@ public class GetMostOptimalPath {
         Vec3 centeredBlock = centerBlock(block);
 
         float yaw = getYawNeededVec(centeredBlock, displacement);
+
+        float headMovementLeft = -config.headRotationMax + 40;
+        float headMovementRight = config.headRotationMax - 40;
+
+        if (isClear) {
+          headMovementLeft = -160;
+        } else {
+          headMovementRight = 160;
+        }
+
         if (isLeft) {
-          if (yaw > (float) -config.headRotationMax + 40 && yaw < 0) {
+          if (yaw > headMovementLeft && yaw < 0) {
             if (ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass) {
               points += 1.5;
             } else {
@@ -75,7 +87,7 @@ public class GetMostOptimalPath {
             prevBest.add(block);
           }
         } else {
-          if (yaw < (float) config.headRotationMax - 40 && yaw > 0) {
+          if (yaw < headMovementRight && yaw > 0) {
             if (ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass) {
               points += 1.5;
             } else {
@@ -94,6 +106,8 @@ public class GetMostOptimalPath {
 
       displacement += 5;
     }
+
+    isClear = false;
 
     return new OptimalPath(best, bestDisplacement);
   }

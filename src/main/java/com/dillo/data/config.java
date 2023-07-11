@@ -192,6 +192,16 @@ public class config extends Vigilant {
 
   @Property(
     type = PropertyType.SLIDER,
+    name = "Check If on block time",
+    description = "The time that the macro will check if ur on the next block, the lower this is the faster the macro can reroute / re-tp.",
+    category = "Teleportation Options",
+    min = 10,
+    max = 100
+  )
+  public static int checkOnBlockTime = 50;
+
+  @Property(
+    type = PropertyType.SLIDER,
     name = "Smart Tp Range",
     description = "The range of Smart Tp Module -> (eg: 32 = 32x20x32) | the more u set this to the lower the scan time will be",
     category = "Teleportation Options",

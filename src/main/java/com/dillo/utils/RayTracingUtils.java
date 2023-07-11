@@ -3,6 +3,7 @@ package com.dillo.utils;
 import static com.dillo.utils.previous.random.IsSameBlock.isSameBlock;
 
 import com.dillo.utils.previous.random.ids;
+import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -16,27 +17,33 @@ public class RayTracingUtils {
 
   public static Block[] blocksToIgnore = null;
   private static boolean isCheck = false;
-  private static BlockPos destBlock1 = null;
+  private static Vec3 destBlock1 = null;
   private static BlockPos destBlock2 = null;
 
-  public static Vec3 adjustLook(BlockPos block1, BlockPos destBlock, Block[] blocksToIgnore, boolean isCheck) {
-    double playerHeight = 1.64;
+  public static Vec3 adjustLook(Vec3 block1, BlockPos destBlock, Block[] blocksToIgnore, boolean isCheck) {
+    double playerHeight = 1.54;
+
+    RenderOneBlockMod.renderOneBlock(
+      new Vec3(block1.xCoord - 0.5, block1.yCoord + playerHeight, block1.zCoord - 0.5),
+      true
+    );
+
     RayTracingUtils.blocksToIgnore = blocksToIgnore;
     RayTracingUtils.destBlock1 = block1;
     RayTracingUtils.destBlock2 = destBlock;
-    block1 = new BlockPos(block1.getX() + 0.5, block1.getY(), block1.getZ() + 0.5);
+    block1 = new Vec3(block1.xCoord - 0.5, block1.yCoord, block1.zCoord - 0.5);
 
     Vec3 destBlockCenter = new Vec3(destBlock.getX() + 0.5, destBlock.getY() + 0.5, destBlock.getZ() + 0.5);
 
     double distToBlockCenter = getDistance(
-      new Vec3(block1.getX(), block1.getY() + playerHeight, block1.getZ()),
+      new Vec3(block1.xCoord, block1.yCoord + playerHeight, block1.zCoord),
       destBlockCenter
     );
 
     CollisionResult collision = getCollisionBlock(
-      block1.getX(),
-      block1.getY() + playerHeight,
-      block1.getZ(),
+      block1.xCoord,
+      block1.yCoord + playerHeight,
+      block1.zCoord,
       destBlockCenter.xCoord,
       destBlockCenter.yCoord,
       destBlockCenter.zCoord,
@@ -54,7 +61,7 @@ public class RayTracingUtils {
       double angleStep = (radiusMax / radius) * 5;
       for (double angle = 0; angle < 360 + angleStep; angle += angleStep) {
         Vec3 vec = getCylinderBaseVec(
-          new double[] { block1.getX(), block1.getY() + playerHeight, block1.getZ() },
+          new double[] { block1.xCoord, block1.yCoord + playerHeight, block1.zCoord },
           new double[] { destBlockCenter.xCoord, destBlockCenter.yCoord, destBlockCenter.zCoord },
           angle,
           radius
@@ -67,9 +74,9 @@ public class RayTracingUtils {
         );
 
         CollisionResult collisionPoint = getCollisionBlock(
-          block1.getX(),
-          block1.getY() + playerHeight,
-          block1.getZ(),
+          block1.xCoord,
+          block1.yCoord + playerHeight,
+          block1.zCoord,
           point.xCoord,
           point.yCoord,
           point.zCoord,
@@ -164,16 +171,17 @@ public class RayTracingUtils {
     return collidingBlocks.size() > 0 ? collidingBlocks.get(0) : null;
   }
 
-  private static boolean canCheck(BlockPos block, BlockPos routeBlock1, BlockPos routeBlock2) {
+  private static boolean canCheck(BlockPos block, Vec3 routeBlock1, BlockPos routeBlock2) {
     if (
       (
-        DistanceFromTo.distanceFromTo(block, routeBlock1) < 4 || DistanceFromTo.distanceFromTo(block, routeBlock2) < 4
+        DistanceFromTo.distanceFromTo(block, BlockUtils.fromVec3ToBlockPos(routeBlock1)) < 4 ||
+        DistanceFromTo.distanceFromTo(block, routeBlock2) < 4
       ) &&
       (
         ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass ||
         ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass_pane
       ) &&
-      block.getY() >= routeBlock1.getY() &&
+      block.getY() >= routeBlock1.yCoord &&
       block.getY() >= routeBlock2.getY()
     ) {
       return true;

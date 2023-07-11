@@ -1,22 +1,25 @@
 package com.dillo.dilloUtils;
 
+import static com.dillo.dilloUtils.BlockUtils.fileUtils.WriteFile.gson;
+
 import com.dillo.RemoteControl.GetRemoteControl;
+import com.dillo.data.config;
+import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.utils.GetConfigFolder;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import com.dillo.utils.previous.SendChat;
+import com.dillo.utils.previous.random.prefix;
+import com.google.gson.*;
+import java.io.*;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class CheckFile {
 
   private static List<List<String>> defaultAcusations = new ArrayList<List<String>>();
   public static File file = new File(GetConfigFolder.getMcDir() + "/MiningInTwo");
+  public static File configs = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs");
+  public static File configMain = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs/configsMain.json");
   public static File configFile = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/default-route.json");
   public static File answersFile = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/chatAnswers.json");
 
@@ -29,6 +32,32 @@ public class CheckFile {
       try {
         configFile.createNewFile();
       } catch (IOException e) {}
+    }
+
+    if (!configs.exists()) {
+      configs.mkdirs();
+    }
+
+    if (!configMain.exists()) {
+      try {
+        configMain.createNewFile();
+      } catch (IOException e) {}
+    }
+
+    StringBuilder content = null;
+    try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
+      String line;
+      while ((line = reader.readLine()) != null) {
+        content.append(line);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    String string;
+    if (content != null) {
+      string = content.toString();
+      selectRoute(string);
     }
 
     if (!answersFile.exists()) {
@@ -67,6 +96,60 @@ public class CheckFile {
         currAccusation.add(inside.get(1).getAsString());
 
         defaultAcusations.add(currAccusation);
+      }
+    }
+  }
+
+  private static void selectRoute(String name) {
+    File configFile;
+
+    if (name.contains(".json")) {
+      configFile = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs/" + name);
+    } else {
+      configFile = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs/" + name + ".json");
+    }
+
+    if (!configFile.exists()) {
+      SendChat.chat(prefix.prefix + "There is no config with that name!");
+      return;
+    }
+
+    currentRoute.curConfig = configFile;
+
+    StringBuilder content = new StringBuilder();
+
+    try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
+      String line;
+      while ((line = reader.readLine()) != null) {
+        content.append(line);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    JsonArray obj;
+    if (!content.toString().equals("null") && !content.toString().equals("") && !content.toString().equals(" ")) {
+      obj = gson.fromJson(content.toString(), JsonArray.class);
+
+      for (Field field : config.class.getFields()) {
+        for (JsonElement object : obj) {
+          JsonObject object1 = object.getAsJsonObject();
+          if (object1.has(field.getName())) {
+            String contents = object1.get(field.getName()).getAsString();
+
+            try {
+              boolean cont = Boolean.parseBoolean(contents);
+              field.set(null, cont);
+              continue;
+            } catch (NumberFormatException e) {} catch (IllegalAccessException e) {
+              throw new RuntimeException(e);
+            } catch (IllegalArgumentException e) {
+              try {
+                field.set(null, Integer.parseInt(contents));
+              } catch (Exception ev2) {}
+            }
+          }
+        }
       }
     }
   }

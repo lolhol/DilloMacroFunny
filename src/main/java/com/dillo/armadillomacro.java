@@ -14,6 +14,8 @@ import com.dillo.RemoteControl.*;
 import com.dillo.commands.*;
 import com.dillo.commands.AnswerCommands.AddAnswer;
 import com.dillo.commands.AnswerCommands.RemoveAccusation;
+import com.dillo.commands.ConfigCommands.AddConfig;
+import com.dillo.commands.ConfigCommands.SelectConfig;
 import com.dillo.commands.HelpCommands.HelpStructureCheck;
 import com.dillo.commands.HelpCommands.MainHelp;
 import com.dillo.commands.RouteCommands.*;
@@ -98,7 +100,9 @@ public class armadillomacro {
       new InsertInMiddle(),
       new RemoveBlockRoute(),
       new ReplaceBlockRoute(),
-      new ObstructedPoints()
+      new ObstructedPoints(),
+      new AddConfig(),
+      new SelectConfig()
     );
 
     registerEvents(

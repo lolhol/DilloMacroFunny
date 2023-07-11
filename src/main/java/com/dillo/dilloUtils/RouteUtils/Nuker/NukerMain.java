@@ -172,7 +172,7 @@ public class NukerMain {
 
   public static boolean canBeBroken(BlockPos block) {
     Vec3 blockHit = adjustLook(
-      ids.mc.thePlayer.getPosition(),
+      ids.mc.thePlayer.getPositionVector(),
       block,
       new net.minecraft.block.Block[] { Blocks.air },
       false

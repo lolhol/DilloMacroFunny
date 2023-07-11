@@ -93,7 +93,7 @@ public class CheckForStruc {
 
   public static boolean isStructurePreventingTP(BlockPos block1, BlockPos block2) {
     Vec3 pos = adjustLook(
-      makeNewBlock(0, 1, 0, block1),
+      new Vec3(block1.getX(), block1.getY() - 1, block1.getZ()),
       block2,
       new net.minecraft.block.Block[] {
         Blocks.stone,

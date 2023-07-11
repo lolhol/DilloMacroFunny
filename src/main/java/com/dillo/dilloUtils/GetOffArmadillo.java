@@ -1,14 +1,10 @@
 package com.dillo.dilloUtils;
 
-import akka.io.Udp;
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.CurrentState;
-import com.dillo.data.config;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.throwRod;
-import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -43,7 +39,8 @@ public class GetOffArmadillo {
       if (startOff) {
         if (currTicks <= ammountOfCheckTicks) {
           if (ArmadilloStates.isOnline()) {
-            if (ids.mc.thePlayer.posY - blockYPos - 1 < 0.0001) {
+            SendChat.chat(String.valueOf(blockYPos - ids.mc.thePlayer.posY + 1));
+            if (Math.abs(blockYPos - ids.mc.thePlayer.posY + 1) < 0.0001) {
               if (sneak) KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
               startOff = false;
               currTicks = 0;

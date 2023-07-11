@@ -1,8 +1,7 @@
 package com.dillo.dilloUtils.Teleport;
 
 import static com.dillo.ArmadilloMain.CurrentState.*;
-import static com.dillo.data.config.forwardForTicks;
-import static com.dillo.data.config.walkOnTP;
+import static com.dillo.data.config.*;
 import static com.dillo.dilloUtils.BlockUtils.BlockCols.GetUnobstructedPos.getUnobstructedPos;
 import static com.dillo.dilloUtils.TpUtils.WalkForward.walkForward;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
@@ -27,7 +26,7 @@ public class TeleportToBlock {
 
   public static boolean newInputState;
   public static CurrentState newStateType;
-  private static final KeyBinding SNEAK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
+  public static final KeyBinding SNEAK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
   private static BlockPos nextBlock = null;
   private static final KeyBinding forward = Minecraft.getMinecraft().gameSettings.keyBindForward;
 
@@ -41,16 +40,16 @@ public class TeleportToBlock {
 
     if (!walkOnTP) {
       Vec3 nextBlockPos = adjustLook(
-        ids.mc.thePlayer.getPosition(),
+        ids.mc.thePlayer.getPositionVector(),
         nextBlock,
         new net.minecraft.block.Block[] { Blocks.air },
         false
       );
 
       if (nextBlockPos == null) {
+        SendChat.chat("!!!");
         nextBlockPos = getUnobstructedPos(nextBlock);
         if (nextBlockPos == null) {
-          SendChat.chat(prefix.prefix + "Failed to teleport!");
           return false;
         }
       }
@@ -93,7 +92,7 @@ public class TeleportToBlock {
   public static void tpStageWalk() {
     ArmadilloStates.currentState = null;
     Vec3 nextBlockPos = adjustLook(
-      ids.mc.thePlayer.getPosition(),
+      ids.mc.thePlayer.getPositionVector(),
       nextBlock,
       new net.minecraft.block.Block[] { Blocks.air },
       false
@@ -113,6 +112,6 @@ public class TeleportToBlock {
 
   public static void teleportStage3() {
     ArmadilloStates.currentState = null;
-    IsOnBlock.isOnBlock(100, nextBlock, newStateType);
+    IsOnBlock.isOnBlock(checkOnBlockTime, nextBlock, newStateType);
   }
 }

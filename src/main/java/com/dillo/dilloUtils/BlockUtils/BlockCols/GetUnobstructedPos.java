@@ -16,7 +16,11 @@ public class GetUnobstructedPos {
 
   public static Vec3 getUnobstructedPos(BlockPos block) {
     EntityPlayer player = ids.mc.thePlayer; // Get the player object
-    Vec3 playerPos = player.getPositionEyes(0);
+    Vec3 playerPos = new Vec3(
+      player.getPosition().getX() - 1,
+      player.getPosition().getY() + 1.54,
+      player.getPosition().getZ() - 1
+    );
 
     World world = player.worldObj;
     Vec3 centerOfBlock = new Vec3(block.getX() + 0.5, block.getY() + 0.5, block.getZ() + 0.5);

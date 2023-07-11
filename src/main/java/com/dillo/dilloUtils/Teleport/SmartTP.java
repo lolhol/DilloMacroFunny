@@ -33,7 +33,7 @@ public class SmartTP {
   private static boolean triedAPull = false;
   private static boolean overide = false;
 
-  public static void smartTP(BlockPos finalBlock) {
+  public static void smartTP(BlockPos finalBlock, boolean reTpOnFail) {
     new Thread(() -> {
       JsonElement cord = reRoutes.get(String.valueOf(finalBlock));
       BlockPos block = ids.mc.thePlayer.getPosition();
@@ -70,7 +70,7 @@ public class SmartTP {
 
         for (BlockPos blockPos : blocks) {
           Vec3 blockTp = adjustLook(
-            ids.mc.thePlayer.getPosition(),
+            ids.mc.thePlayer.getPositionVector(),
             blockPos,
             new net.minecraft.block.Block[] { Blocks.air },
             false
@@ -78,7 +78,7 @@ public class SmartTP {
 
           if (blockTp != null) {
             Vec3 finalTp = adjustLook(
-              makeNewBlock(0, 1, 0, blockPos),
+              new Vec3(blockPos.getX(), blockPos.getY() - 1, blockPos.getZ()),
               finalBlock,
               new net.minecraft.block.Block[] { Blocks.air },
               false
@@ -90,7 +90,7 @@ public class SmartTP {
             }
           } else if (getUnobstructedPos(ids.mc.thePlayer.getPosition(), blockPos) != null) {
             Vec3 finalTp = adjustLook(
-              makeNewBlock(0, 1, 0, blockPos),
+              new Vec3(blockPos.getX(), blockPos.getY() - 1, blockPos.getZ()),
               finalBlock,
               new net.minecraft.block.Block[] { Blocks.air },
               false
@@ -117,7 +117,7 @@ public class SmartTP {
         );
 
         Vec3 blockTp = adjustLook(
-          ids.mc.thePlayer.getPosition(),
+          ids.mc.thePlayer.getPositionVector(),
           pos,
           new net.minecraft.block.Block[] { Blocks.air },
           false
@@ -125,7 +125,7 @@ public class SmartTP {
 
         if (blockTp != null) {
           Vec3 finalTp = adjustLook(
-            makeNewBlock(0, 1, 0, pos),
+            new Vec3(pos.getX(), pos.getY() - 1, pos.getZ()),
             finalBlock,
             new net.minecraft.block.Block[] { Blocks.air },
             false
@@ -137,7 +137,7 @@ public class SmartTP {
           }
         } else if (getUnobstructedPos(ids.mc.thePlayer.getPosition(), pos) != null) {
           Vec3 finalTp = adjustLook(
-            makeNewBlock(0, 1, 0, pos),
+            new Vec3(pos.getX(), pos.getY() - 1, pos.getZ()),
             finalBlock,
             new net.minecraft.block.Block[] { Blocks.air },
             false
@@ -171,13 +171,17 @@ public class SmartTP {
       } else {
         if (triedAPull && !overide) {
           overide = true;
-          smartTP(finalBlock);
+          smartTP(finalBlock, reTpOnFail);
         } else {
-          triedAPull = false;
-          overide = false;
-          SendChat.chat(prefix.prefix + "Found no teleport locations using smart tp!");
-          ArmadilloStates.currentState = null;
-          ArmadilloStates.offlineState = KillSwitch.OFFLINE;
+          if (reTpOnFail) {
+            TeleportToNextBlock.teleportToNextBlock();
+          } else {
+            triedAPull = false;
+            overide = false;
+            SendChat.chat(prefix.prefix + "Found no teleport locations using smart tp!");
+            ArmadilloStates.currentState = null;
+            ArmadilloStates.offlineState = KillSwitch.OFFLINE;
+          }
         }
       }
     })

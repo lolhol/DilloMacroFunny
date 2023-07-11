@@ -1,10 +1,15 @@
 package com.dillo.dilloUtils.Teleport;
 
+import static com.dillo.ArmadilloMain.CurrentState.ARMADILLO;
 import static com.dillo.ArmadilloMain.CurrentState.RETELEPORTING;
 import static com.dillo.data.config.reTeleport;
+import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
 import static com.dillo.dilloUtils.NewSpinDrive.random;
-import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isTeleporting;
-import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isThrowRod;
+import static com.dillo.dilloUtils.StateDillo.canDillo;
+import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.*;
+import static com.dillo.dilloUtils.TpUtils.LookWhileGoingDown.stopLook;
+import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.isClear;
+import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.CurrentState;
@@ -12,6 +17,7 @@ import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.dilloUtils.FailSafes.RestartMacroFailsafe;
+import com.dillo.dilloUtils.LookAt;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
@@ -51,11 +57,13 @@ public class IsOnBlock {
               isThrowRod = true;
               startCheck = false;
               curReTps = 0;
+              clearAttempts = 0;
 
               SendChat.chat(prefix.prefix + "Teleported successfully!");
-              ids.mc.thePlayer.rotationPitch =
-                5 + (random.nextFloat() < 0.5 ? random.nextFloat() * 2 : -(random.nextFloat() * 2));
               KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
+
+              float p = 5 + (random.nextFloat() < 0.5 ? random.nextFloat() * 10 : -(random.nextFloat() * 10));
+              LookAt.smoothLook(new LookAt.Rotation(p, curRotation()), 100);
 
               if (RestartMacroFailsafe.isRestart) {
                 ArmadilloStates.offlineState = KillSwitch.ONLINE;
@@ -69,19 +77,41 @@ public class IsOnBlock {
             }
           }
         } else {
-          SendChat.chat(prefix.prefix + "Failed to teleport! " + (reTeleport ? "Re-Teleporting!" : ""));
-
-          curTicks = 0;
+          SendChat.chat(prefix.prefix + "Failed to teleport!!" + (reTeleport ? "Re-Teleporting!" : ""));
           startCheck = false;
 
-          if (!config.smartTeleport) {
-            if (reTeleport && curReTps <= config.reTpTimes) {
-              curReTps++;
-              ArmadilloStates.currentState = RETELEPORTING;
-              TeleportToNextBlock.teleportToNextBlock();
-            }
+          stopLook();
+          if (
+            canDillo() &&
+            clearAttempts < 2 &&
+            currentRoute.currentRoute.contains(makeNewBlock(0, -1, 0, ids.mc.thePlayer.getPosition()))
+          ) {
+            KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
+            isClear = true;
+            ArmadilloStates.currentState = ARMADILLO;
+            clearAttempts++;
           } else {
-            SmartTP.smartTP(blockPos);
+            curTicks = 0;
+
+            if (!config.smartTeleport) {
+              if (reTeleport && curReTps <= config.reTpTimes) {
+                curReTps++;
+                ArmadilloStates.currentState = RETELEPORTING;
+                TeleportToNextBlock.teleportToNextBlock();
+              }
+            } else {
+              if (reTeleport) {
+                if (curReTps <= config.reTpTimes) {
+                  curReTps++;
+                  ArmadilloStates.currentState = RETELEPORTING;
+                  TeleportToNextBlock.teleportToNextBlock();
+                } else {
+                  SmartTP.smartTP(blockPos, false);
+                }
+              } else {
+                SmartTP.smartTP(blockPos, false);
+              }
+            }
           }
         }
       }

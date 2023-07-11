@@ -5,9 +5,7 @@ import static com.dillo.ArmadilloMain.CurrentState.ARMADILLO;
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.CurrentState;
 import com.dillo.dilloUtils.LookAt;
-import java.util.Objects;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -23,6 +21,13 @@ public class LookWhileGoingDown {
     blockPos = blockPosition;
     maxTimeTake = time;
     onOff = true;
+  }
+
+  public static void stopLook() {
+    onOff = false;
+    state = null;
+    blockPos = null;
+    maxTimeTake = 0;
   }
 
   @SubscribeEvent

@@ -19,7 +19,6 @@ import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.swapToSlot;
 import com.dillo.utils.throwRod;
 import java.util.List;
-import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
@@ -59,7 +58,7 @@ public class StateDillo {
       ArmadilloStates.currentState = null;
       swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
 
-      lookToPitch(1, 10);
+      //lookToPitch(1, 10);
 
       NewSpinDrive.putAllTogether();
 
