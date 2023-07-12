@@ -19,6 +19,8 @@ import com.dillo.commands.ConfigCommands.SelectConfig;
 import com.dillo.commands.HelpCommands.HelpStructureCheck;
 import com.dillo.commands.HelpCommands.MainHelp;
 import com.dillo.commands.RouteCommands.*;
+import com.dillo.commands.RouteMakerUtils.CalcRouteAvgGemPerc;
+import com.dillo.commands.RouteMakerUtils.CheckIfCanTpToEvery;
 import com.dillo.commands.UtilCommands.*;
 import com.dillo.dilloUtils.BlockESP.BlockOnRouteESP;
 import com.dillo.dilloUtils.BlockUtils.JumpLook;
@@ -102,7 +104,9 @@ public class armadillomacro {
       new ReplaceBlockRoute(),
       new ObstructedPoints(),
       new AddConfig(),
-      new SelectConfig()
+      new SelectConfig(),
+      new CalcRouteAvgGemPerc(),
+      new CheckIfCanTpToEvery()
     );
 
     registerEvents(

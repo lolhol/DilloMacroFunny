@@ -2,8 +2,10 @@ package com.dillo.utils;
 
 import static com.dillo.utils.previous.random.IsSameBlock.isSameBlock;
 
+import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
+import com.dillo.utils.renderUtils.renderModules.RenderPoints;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -23,22 +25,22 @@ public class RayTracingUtils {
   public static Vec3 adjustLook(Vec3 block1, BlockPos destBlock, Block[] blocksToIgnore, boolean isCheck) {
     double playerHeight = 1.54;
 
-    RenderOneBlockMod.renderOneBlock(
-      new Vec3(block1.xCoord - 0.5, block1.yCoord + playerHeight, block1.zCoord - 0.5),
-      true
-    );
-
     RayTracingUtils.blocksToIgnore = blocksToIgnore;
     RayTracingUtils.destBlock1 = block1;
     RayTracingUtils.destBlock2 = destBlock;
-    block1 = new Vec3(block1.xCoord - 0.5, block1.yCoord, block1.zCoord - 0.5);
+
+    RayTracingUtils.isCheck = isCheck;
 
     Vec3 destBlockCenter = new Vec3(destBlock.getX() + 0.5, destBlock.getY() + 0.5, destBlock.getZ() + 0.5);
+
+    //RenderOneBlockMod.renderOneBlock(destBlockCenter, true);
 
     double distToBlockCenter = getDistance(
       new Vec3(block1.xCoord, block1.yCoord + playerHeight, block1.zCoord),
       destBlockCenter
     );
+
+    //RenderPoints.renderPoint(new Vec3(block1.xCoord, block1.yCoord + playerHeight, block1.zCoord), 0.2, true);
 
     CollisionResult collision = getCollisionBlock(
       block1.xCoord,
@@ -138,7 +140,7 @@ public class RayTracingUtils {
               if (!isCheck) {
                 continue;
               } else {
-                if (canCheck(new BlockPos(x, y, z), destBlock1, destBlock2)) {
+                if (!canCheck(new BlockPos(x, y, z), destBlock1, destBlock2)) {
                   continue;
                 }
               }
@@ -174,18 +176,18 @@ public class RayTracingUtils {
   private static boolean canCheck(BlockPos block, Vec3 routeBlock1, BlockPos routeBlock2) {
     if (
       (
-        DistanceFromTo.distanceFromTo(block, BlockUtils.fromVec3ToBlockPos(routeBlock1)) < 4 ||
-        DistanceFromTo.distanceFromTo(block, routeBlock2) < 4
+        DistanceFromTo.distanceFromTo(block, BlockUtils.fromVec3ToBlockPos(routeBlock1)) < 4.61 ||
+        DistanceFromTo.distanceFromTo(block, routeBlock2) < 4.61
       ) &&
       (
         ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass ||
         ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass_pane
-      ) &&
-      block.getY() >= routeBlock1.yCoord &&
-      block.getY() >= routeBlock2.getY()
+      )
     ) {
       return true;
     }
+
+    SendChat.chat(String.valueOf(DistanceFromTo.distanceFromTo(block, BlockUtils.fromVec3ToBlockPos(routeBlock1))));
 
     return false;
   }

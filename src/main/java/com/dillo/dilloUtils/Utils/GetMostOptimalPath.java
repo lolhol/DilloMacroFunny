@@ -109,7 +109,11 @@ public class GetMostOptimalPath {
 
     isClear = false;
 
-    return new OptimalPath(best, bestDisplacement);
+    if (isLeft) {
+      return new OptimalPath(best, -bestDisplacement);
+    } else {
+      return new OptimalPath(best, bestDisplacement);
+    }
   }
 
   @Getter

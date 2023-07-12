@@ -11,10 +11,12 @@ import static com.dillo.dilloUtils.Utils.LookYaw.lookToPitch;
 import static com.dillo.utils.keyBindings.rightClick;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
 import com.dillo.dilloUtils.Utils.LookYaw;
 import com.dillo.utils.GetSBItems;
+import com.dillo.utils.previous.random.getItemInSlot;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.swapToSlot;
 import com.dillo.utils.throwRod;
@@ -23,6 +25,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -54,21 +58,47 @@ public class StateDillo {
 
   public static void stateDillo() {
     if (canDillo() && ArmadilloStates.isOnline() && !isSmartTP) {
-      throwRod.throwRodInv();
       ArmadilloStates.currentState = null;
-      swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
-
-      //lookToPitch(1, 10);
-
-      NewSpinDrive.putAllTogether();
-
-      if (isLeft) {
-        LookYaw.lookToYaw(config.rod_drill_switch_time + 150, 20);
-      } else {
-        LookYaw.lookToYaw(config.rod_drill_switch_time + 150, -20);
-      }
 
       new Thread(() -> {
+        int slot = getItemInSlot.getItemSlot(Items.fishing_rod);
+        if (slot != -1) {
+          ids.mc.thePlayer.inventory.currentItem = slot;
+        } else {
+          ArmadilloStates.currentState = null;
+          ArmadilloStates.offlineState = KillSwitch.OFFLINE;
+          return;
+        }
+
+        try {
+          Thread.sleep(50);
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+
+        ids.mc.thePlayer.sendQueue.addToSendQueue(
+          new C08PacketPlayerBlockPlacement(
+            new BlockPos(-1, -1, -1),
+            255,
+            ids.mc.thePlayer.inventory.getStackInSlot(slot),
+            0,
+            0,
+            0
+          )
+        );
+        //throwRod.throwRodInv();
+        swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
+
+        //lookToPitch(1, 10);
+
+        NewSpinDrive.putAllTogether();
+
+        /*if (isLeft) {
+          LookYaw.lookToYaw(config.rod_drill_switch_time + 150, 20);
+        } else {
+          LookYaw.lookToYaw(config.rod_drill_switch_time + 150, -20);
+        }*/
+
         try {
           Thread.sleep(config.rod_drill_switch_time);
 

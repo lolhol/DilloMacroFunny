@@ -47,11 +47,8 @@ public class TeleportToBlock {
       );
 
       if (nextBlockPos == null) {
-        SendChat.chat("!!!");
-        nextBlockPos = getUnobstructedPos(nextBlock);
-        if (nextBlockPos == null) {
-          return false;
-        }
+        // nextBlockPos = getUnobstructedPos(nextBlock);
+        return false;
       }
 
       LookAt.smoothLook(LookAt.getRotation(nextBlockPos), time);

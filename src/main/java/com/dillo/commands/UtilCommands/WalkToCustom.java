@@ -1,5 +1,7 @@
 package com.dillo.commands.UtilCommands;
 
+import static com.dillo.utils.RayTracingUtils.adjustLook;
+
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
@@ -8,8 +10,6 @@ import gg.essential.api.commands.DefaultHandler;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
-
-import static com.dillo.utils.RayTracingUtils.adjustLook;
 
 public class WalkToCustom extends Command {
 
@@ -37,11 +37,11 @@ public class WalkToCustom extends Command {
       false
     );
 
-    LookAt.smoothLook(LookAt.getRotation(nextBlockPos), 200);
-
     if (nextBlockPos == null) {
       SendChat.chat("NULL");
     }
+
+    LookAt.smoothLook(LookAt.getRotation(nextBlockPos), 200);
     // SendChat.chat(String.valueOf(getYawNeededVec(new Vec3(x, y, z), displacement)))
     //isStructureBetween(ids.mc.thePlayer.getPosition(), new BlockPos(x, y, z));
     /*RenderMultipleLines.renderMultipleLines(null, null, false);

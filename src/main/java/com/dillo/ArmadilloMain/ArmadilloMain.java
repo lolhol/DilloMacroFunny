@@ -29,79 +29,50 @@ public class ArmadilloMain {
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
       if (ArmadilloStates.isOnline()) {
-        if (ArmadilloStates.currentState == TPSTAGEWALK) {
-          tpStageWalk();
-        }
-
-        if (ArmadilloStates.currentState == ROUTEOBSTRUCTEDCLEAR) {
-          SpinDrive.onStateSpinDrive();
-        }
-
-        if (ArmadilloStates.currentState == CENTERSTAGE2) {
-          centerStage2();
-        }
-
-        if (ArmadilloStates.currentState == ARMADILLO) {
-          StateDillo.stateDillo();
-        }
-
-        if (ArmadilloStates.currentState == SPINDRIVE) {
-          NewSpinDrive.newSpinDrive();
-        }
-
-        if (ArmadilloStates.currentState == TPSTAGE2) {
-          TeleportToBlock.teleportStage2();
-        }
-
-        if (ArmadilloStates.currentState == TPSTAGE3) {
-          TeleportToBlock.teleportStage3();
-        }
-
-        if (ArmadilloStates.currentState == STARTWALKINGPATH) {
-          WalkOnPath.startWalkingPath();
-        }
-
-        if (ArmadilloStates.currentState == STARTCHECKDILLO) {
-          GetOffArmadillo.getOffArmadillo(NEXTBLOCKSTAGE2, currentRoute.currentBlock.getY(), 500, false);
-        }
-
-        if (ArmadilloStates.currentState == RESTARTPATHFINDER) {
-          ArmadilloStates.currentState = null;
-          BlockPos playerPos = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ);
-          PathFinderV2.restartFinder(
-            new BlockNode(
-              playerPos,
-              DistanceFromTo.distanceFromTo(PathFinderV2.lastFinalDestination.blockPos(), playerPos),
-              0.0,
-              null
-            )
-          );
-        }
-
-        if (ArmadilloStates.currentState == RESUMEWALKING) {
-          ArmadilloStates.currentState = null;
-          WalkOnPath.walkOnPath(WalkOnPath.blockRoute);
-        }
-
-        if (ArmadilloStates.currentState == NEXTBLOCKSTAGE2) {
-          TeleportToNextBlock.teleportToNextBlockStage2();
-        }
-
-        if (ArmadilloStates.currentState == STARTMACRO) {
-          StartMacro.startMacro();
-        }
-
-        if (ArmadilloStates.currentState == STARTAGAINDRIVE) {
-          DilloDriveBlockDetection.detectBlocks();
-          ArmadilloStates.currentState = SPINDRIVE;
-        }
-
-        if (ArmadilloStates.currentState == ANSWER_ACCUSATION) {
-          answerAccusation();
-        }
-
-        if (ArmadilloStates.currentState == SMARTTP) {
-          TPToNext();
+        switch (ArmadilloStates.currentState) {
+          case TPSTAGEWALK:
+            tpStageWalk();
+          case ROUTEOBSTRUCTEDCLEAR:
+            SpinDrive.onStateSpinDrive();
+          case CENTERSTAGE2:
+            centerStage2();
+          case ARMADILLO:
+            StateDillo.stateDillo();
+          case SPINDRIVE:
+            NewSpinDrive.newSpinDrive();
+          case TPSTAGE2:
+            TeleportToBlock.teleportStage2();
+          case TPSTAGE3:
+            TeleportToBlock.teleportStage3();
+          case STARTWALKINGPATH:
+            WalkOnPath.startWalkingPath();
+          case STARTCHECKDILLO:
+            GetOffArmadillo.getOffArmadillo(NEXTBLOCKSTAGE2, currentRoute.currentBlock.getY(), 500, false);
+          case RESTARTPATHFINDER:
+            ArmadilloStates.currentState = null;
+            BlockPos playerPos = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ);
+            PathFinderV2.restartFinder(
+              new BlockNode(
+                playerPos,
+                DistanceFromTo.distanceFromTo(PathFinderV2.lastFinalDestination.blockPos(), playerPos),
+                0.0,
+                null
+              )
+            );
+          case RESUMEWALKING:
+            ArmadilloStates.currentState = null;
+            WalkOnPath.walkOnPath(WalkOnPath.blockRoute);
+          case NEXTBLOCKSTAGE2:
+            TeleportToNextBlock.teleportToNextBlockStage2();
+          case STARTMACRO:
+            StartMacro.startMacro();
+          case STARTAGAINDRIVE:
+            DilloDriveBlockDetection.detectBlocks();
+            ArmadilloStates.currentState = SPINDRIVE;
+          case ANSWER_ACCUSATION:
+            answerAccusation();
+          case SMARTTP:
+            TPToNext();
         }
       }
     }
