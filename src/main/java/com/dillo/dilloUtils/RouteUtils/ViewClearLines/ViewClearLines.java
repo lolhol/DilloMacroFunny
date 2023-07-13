@@ -2,7 +2,6 @@ package com.dillo.dilloUtils.RouteUtils.ViewClearLines;
 
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.utils.previous.SendChat;
-import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.renderUtils.RenderLine;
 import java.awt.*;
@@ -50,8 +49,8 @@ public class ViewClearLines {
 
         if (block1 != null && block2 != null) {
           RenderLine.drawLine(
-            new Vec3(block1.getX() + 0.5, block1.getY() + 2.5 + ids.mc.thePlayer.getEyeHeight(), block1.getZ() + 0.5),
-            new Vec3(block2.getX() + 0.5, block2.getY() + 0.5 + ids.mc.thePlayer.getEyeHeight(), block2.getZ() + 0.5),
+            new Vec3(block1.getX() + 0.5, block1.getY() + 2.54, block1.getZ() + 0.5),
+            new Vec3(block2.getX() + 0.5, block2.getY() + 0.5, block2.getZ() + 0.5),
             1F,
             Color.white,
             event.partialTicks

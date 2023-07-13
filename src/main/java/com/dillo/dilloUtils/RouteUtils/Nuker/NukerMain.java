@@ -104,7 +104,7 @@ public class NukerMain {
       }
 
       if (curBlock != null) {
-        RenderBox.drawBox(curBlock.getX(), curBlock.getY(), curBlock.getZ(), Color.red, 0.2F, event.partialTicks);
+        RenderBox.drawBox(curBlock.getX(), curBlock.getY(), curBlock.getZ(), Color.red, 0.2F, event.partialTicks, true);
       }
     }
   }

@@ -147,6 +147,14 @@ public class config extends Vigilant {
   public static boolean timeVein = true;
 
   @Property(
+    type = PropertyType.SWITCH,
+    name = "Dillo Attempt to clear on the spot",
+    description = "Basically will attempt to clear the vein on the spot",
+    category = "Main"
+  )
+  public static boolean attemptToClearOnSpot = false;
+
+  @Property(
     type = PropertyType.SLIDER,
     name = "Width Of Rendered Lines",
     description = "The lower, the thinner the line gets.",

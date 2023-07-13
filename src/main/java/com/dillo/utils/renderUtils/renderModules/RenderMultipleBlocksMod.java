@@ -40,7 +40,8 @@ public class RenderMultipleBlocksMod {
             blocks1.get(i).zCoord,
             Color.GREEN,
             0.5F,
-            event.partialTicks
+            event.partialTicks,
+            false
           );
         } catch (Exception e) {}
       }

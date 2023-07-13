@@ -49,16 +49,20 @@ public class SelectRouteCommand extends Command {
             }
           }
 
-          JsonArray currentStrucArr = object.get("structures").getAsJsonArray();
-          currentRoute.strucList.clear();
-          if (currentStrucArr.size() > 0) {
-            for (JsonElement element : currentStrucArr) {
-              JsonObject curObj = element.getAsJsonObject();
-              currentRoute.strucList.add(
-                new BlockPos(curObj.get("x").getAsInt(), curObj.get("y").getAsInt(), curObj.get("z").getAsInt())
-              );
+          try {
+            JsonArray currentStrucArr = object.get("structures").getAsJsonArray();
+            currentRoute.strucList.clear();
+            if (currentStrucArr.get(0) != null) {
+              if (currentStrucArr.size() > 0) {
+                for (JsonElement element : currentStrucArr) {
+                  JsonObject curObj = element.getAsJsonObject();
+                  currentRoute.strucList.add(
+                    new BlockPos(curObj.get("x").getAsInt(), curObj.get("y").getAsInt(), curObj.get("z").getAsInt())
+                  );
+                }
+              }
             }
-          }
+          } catch (Exception e) {}
         } else {
           currentRoute.currentRoute.clear();
           currentRoute.strucList.clear();

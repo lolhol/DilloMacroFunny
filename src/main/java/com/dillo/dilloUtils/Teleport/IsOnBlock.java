@@ -58,6 +58,7 @@ public class IsOnBlock {
               startCheck = false;
               curReTps = 0;
               clearAttempts = 0;
+              curTicks = 0;
 
               SendChat.chat(prefix.prefix + "Teleported successfully!");
               KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
@@ -77,8 +78,10 @@ public class IsOnBlock {
             }
           }
         } else {
-          SendChat.chat(prefix.prefix + "Failed to teleport!!" + (reTeleport ? "Re-Teleporting!" : ""));
+          SendChat.chat(prefix.prefix + "Failed to teleport!! " + (reTeleport ? "Re-Teleporting!" : ""));
           startCheck = false;
+
+          curTicks = 0;
 
           stopLook();
           if (
@@ -86,14 +89,11 @@ public class IsOnBlock {
             clearAttempts < 2 &&
             currentRoute.currentRoute.contains(makeNewBlock(0, -1, 0, ids.mc.thePlayer.getPosition()))
           ) {
-            curTicks = 0;
             KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
             isClear = true;
             ArmadilloStates.currentState = ARMADILLO;
             clearAttempts++;
           } else {
-            curTicks = 0;
-
             if (!config.smartTeleport) {
               if (reTeleport && curReTps <= config.reTpTimes) {
                 curReTps++;

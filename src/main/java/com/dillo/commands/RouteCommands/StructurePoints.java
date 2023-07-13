@@ -42,7 +42,8 @@ public class StructurePoints extends Command {
             currentRoute.strucList.get(i).getZ(),
             Color.WHITE,
             0.5F,
-            event.partialTicks
+            event.partialTicks,
+            false
           );
           renderStr(
             String.valueOf(i + 1),

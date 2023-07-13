@@ -1,10 +1,10 @@
 package com.dillo.dilloUtils;
 
 import static com.dillo.ArmadilloMain.CurrentState.STATEDILLONOGETTINGON;
+import static com.dillo.data.config.attemptToClearOnSpot;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
 import static com.dillo.dilloUtils.StateDillo.canDilloOn;
 import static com.dillo.dilloUtils.Teleport.SmartTP.smartTpBlocks;
-import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.clearAttempts;
 import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getBestPath;
 import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.isClear;
 import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
@@ -36,6 +36,7 @@ public class NewSpinDrive {
   public static List<DilloDriveBlockDetection.BlockAngle> returnBlocks = new ArrayList<>();
   public static float lastBlockAngle = 0;
   public static GetMostOptimalPath.OptimalPath path = null;
+  public static int driveClearCount = 0;
 
   public static void newSpinDrive() {
     if (angle < config.headRotationMax + 60) {
@@ -54,10 +55,15 @@ public class NewSpinDrive {
       angle = 0;
       lastBlockAngle = 0;
 
-      if (canDilloOn() && clearAttempts < 2 && !smartTpBlocks.contains(currentRoute.currentBlock)) {
+      if (
+        canDilloOn() &&
+        driveClearCount < 2 &&
+        !smartTpBlocks.contains(currentRoute.currentBlock) &&
+        attemptToClearOnSpot
+      ) {
         isClear = true;
         ArmadilloStates.currentState = STATEDILLONOGETTINGON;
-        clearAttempts++;
+        driveClearCount++;
       } else {
         ArmadilloStates.currentState = null;
         SendChat.chat(prefix.prefix + "Done breaking! Moving to next vein!");

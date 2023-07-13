@@ -1,9 +1,6 @@
 package com.dillo.dilloUtils.RouteUtils.LegitRouteClear;
 
-import static com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker.Blockss;
-
 import com.dillo.Events.DoneNukerBlocks;
-import com.dillo.Events.DonePathEvent;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker;
 import com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine;
@@ -11,12 +8,15 @@ import com.dillo.keybinds.Keybinds;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.renderUtils.RenderBox;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker.Blockss;
 
 public class LegitRouteClear {
 
@@ -100,12 +100,28 @@ public class LegitRouteClear {
         BlockPos thirdBlock = null;
 
         firstBlock = neededClear.get(0);
-        RenderBox.drawBox(firstBlock.getX(), firstBlock.getY(), firstBlock.getZ(), Color.red, 0.2F, event.partialTicks);
+        RenderBox.drawBox(
+          firstBlock.getX(),
+          firstBlock.getY(),
+          firstBlock.getZ(),
+          Color.red,
+          0.2F,
+          event.partialTicks,
+          true
+        );
 
         if (neededClear.size() > 1) {
           secBlock = neededClear.get(1);
           if (secBlock != firstBlock) {
-            RenderBox.drawBox(secBlock.getX(), secBlock.getY(), secBlock.getZ(), Color.white, 0.2F, event.partialTicks);
+            RenderBox.drawBox(
+              secBlock.getX(),
+              secBlock.getY(),
+              secBlock.getZ(),
+              Color.white,
+              0.2F,
+              event.partialTicks,
+              false
+            );
           } else {
             neededClear.remove(1);
           }
@@ -120,7 +136,8 @@ public class LegitRouteClear {
               thirdBlock.getZ(),
               Color.white,
               0.2F,
-              event.partialTicks
+              event.partialTicks,
+              false
             );
           } else {
             neededClear.remove(2);
