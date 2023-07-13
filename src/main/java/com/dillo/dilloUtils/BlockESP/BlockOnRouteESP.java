@@ -21,7 +21,7 @@ public class BlockOnRouteESP {
           BlockPos block = currentRoute.currentRoute.get(i);
 
           if (DistFromXPlayer.distFromXPlayer(block.getX(), block.getY(), block.getZ()) <= config.routeDist) {
-            if (GetFailPointsList.failListPoints.size() > 0 && GetFailPointsList.failListPoints.contains(i + 1)) {
+            if (GetFailPointsList.failListPoints.size() > 0 && GetFailPointsList.failListPoints.contains(i - 1)) {
               BoxRenderer.drawBox(
                 block.getX(),
                 block.getY(),

@@ -23,15 +23,15 @@ public class WalkForward {
 
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
-    if (ArmadilloStates.offlineState.equals("online") && start) {
+    if (ArmadilloStates.isOnline() && start) {
       if (totalTicks > curTicks) {
         KeyBinding.setKeyBindState(forward.getKeyCode(), true);
-        ArmadilloStates.currentState = stateAfter;
         curTicks++;
       } else {
         curTicks = 0;
         totalTicks = 0;
         start = false;
+        ArmadilloStates.currentState = stateAfter;
         KeyBinding.setKeyBindState(forward.getKeyCode(), false);
       }
     }

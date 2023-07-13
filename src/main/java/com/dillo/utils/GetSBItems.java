@@ -42,6 +42,42 @@ public class GetSBItems {
     return -1;
   }
 
+  public static int getBarrelSlot() {
+    for (int i = 0; i < 8; i++) {
+      ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
+
+      String skyblockID = getSBAtr.getSkyBlockID(stack);
+
+      if (skyblockID != null) {
+        skyblockID = skyblockID.toLowerCase();
+
+        if (skyblockID.contains("barrel")) {
+          return i;
+        }
+      }
+    }
+
+    return -1;
+  }
+
+  public static int getPhoneSlot() {
+    for (int i = 0; i < 8; i++) {
+      ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
+
+      String skyblockID = getSBAtr.getSkyBlockID(stack);
+
+      if (skyblockID != null) {
+        skyblockID = skyblockID.toLowerCase();
+
+        if (skyblockID.contains("abiphone")) {
+          return i;
+        }
+      }
+    }
+
+    return -1;
+  }
+
   public static int getSack() {
     for (int i = 0; i < 8; i++) {
       ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];

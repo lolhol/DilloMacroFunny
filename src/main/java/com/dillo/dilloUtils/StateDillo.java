@@ -4,31 +4,33 @@ import static com.dillo.ArmadilloMain.CurrentState.ROUTEOBSTRUCTEDCLEAR;
 import static com.dillo.ArmadilloMain.CurrentState.SPINDRIVE;
 import static com.dillo.data.config.fasterDillo;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
-import static com.dillo.dilloUtils.NewSpinDrive.isLeft;
 import static com.dillo.dilloUtils.SpinDrive.jump;
 import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isThrowRod;
 import static com.dillo.dilloUtils.Utils.LookYaw.lookToPitch;
+import static com.dillo.utils.RayTracingUtils.adjustLook;
 import static com.dillo.utils.keyBindings.rightClick;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.data.config;
+import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.dilloUtils.Teleport.GetNextBlock;
 import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
-import com.dillo.dilloUtils.Utils.LookYaw;
 import com.dillo.utils.GetSBItems;
 import com.dillo.utils.previous.random.getItemInSlot;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.swapToSlot;
-import com.dillo.utils.throwRod;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -46,6 +48,7 @@ public class StateDillo {
   public static void stateDilloNoGettingOn() {
     if (canDillo() && ArmadilloStates.isOnline()) {
       ArmadilloStates.currentState = null;
+      NewSpinDrive.putAllTogether();
       swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
       ArmadilloStates.currentState = SPINDRIVE;
     } else {
@@ -71,7 +74,7 @@ public class StateDillo {
         }
 
         try {
-          Thread.sleep(50);
+          Thread.sleep(100);
         } catch (InterruptedException e) {
           throw new RuntimeException(e);
         }
@@ -86,6 +89,13 @@ public class StateDillo {
             0
           )
         );
+
+        try {
+          Thread.sleep(50);
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+
         //throwRod.throwRodInv();
         swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
 
@@ -157,8 +167,52 @@ public class StateDillo {
       0 ||
       getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 1, ids.mc.thePlayer.posZ)).size() >
       0 ||
-      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ)).size() > 0 ||
-      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)).size() > 0
+      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ)).size() > 0
+    );
+  }
+
+  public static boolean canDilloOn() {
+    return (
+      (
+        getBlocksLayer(
+          new BlockPos(
+            currentRoute.currentBlock.getX(),
+            currentRoute.currentBlock.getY() + 4,
+            currentRoute.currentBlock.getZ()
+          )
+        )
+          .size() >
+        0 ||
+        getBlocksLayer(
+          new BlockPos(
+            currentRoute.currentBlock.getX(),
+            currentRoute.currentBlock.getY() + 3,
+            currentRoute.currentBlock.getZ()
+          )
+        )
+          .size() >
+        0 ||
+        getBlocksLayer(
+          new BlockPos(
+            currentRoute.currentBlock.getX(),
+            currentRoute.currentBlock.getY() + 2,
+            currentRoute.currentBlock.getZ()
+          )
+        )
+          .size() >
+        0
+      ) &&
+      adjustLook(
+        new Vec3(
+          currentRoute.currentBlock.getX() + 0.5,
+          currentRoute.currentBlock.getY() + 2,
+          currentRoute.currentBlock.getZ() + 0.5
+        ),
+        GetNextBlock.getNextBlock(),
+        new net.minecraft.block.Block[] { Blocks.air },
+        false
+      ) ==
+      null
     );
   }
 
@@ -183,7 +237,22 @@ public class StateDillo {
                 ArmadilloStates.currentState = ROUTEOBSTRUCTEDCLEAR;
                 isNoTp = false;
               } else {
-                ArmadilloStates.currentState = SPINDRIVE;
+                new Thread(() -> {
+                  KeyBinding.setKeyBindState(jump.getKeyCode(), true);
+
+                  try {
+                    Thread.sleep(100);
+                  } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                  }
+
+                  if (ArmadilloStates.isOnline()) {
+                    ArmadilloStates.currentState = SPINDRIVE;
+                  } else {
+                    KeyBinding.setKeyBindState(jump.getKeyCode(), false);
+                  }
+                })
+                  .start();
               }
             }
           } else {

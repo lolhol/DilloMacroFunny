@@ -18,6 +18,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,8 +33,11 @@ public class SmartTP {
   private static JsonObject reRoutes = new JsonObject();
   private static boolean triedAPull = false;
   private static boolean overide = false;
+  public static HashSet<BlockPos> smartTpBlocks = new HashSet<>();
 
   public static void smartTP(BlockPos finalBlock, boolean reTpOnFail) {
+    smartTpBlocks.add(finalBlock);
+
     new Thread(() -> {
       JsonElement cord = reRoutes.get(String.valueOf(finalBlock));
       BlockPos block = ids.mc.thePlayer.getPosition();
@@ -78,7 +82,7 @@ public class SmartTP {
 
           if (blockTp != null) {
             Vec3 finalTp = adjustLook(
-              new Vec3(blockPos.getX(), blockPos.getY() - 1, blockPos.getZ()),
+              new Vec3(blockPos.getX() + 0.5, blockPos.getY() + 1, blockPos.getZ() + 0.5),
               finalBlock,
               new net.minecraft.block.Block[] { Blocks.air },
               false

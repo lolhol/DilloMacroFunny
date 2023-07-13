@@ -3,6 +3,7 @@ package com.dillo.keybinds;
 import static com.dillo.commands.RouteCommands.StructurePoints.render;
 
 import com.dillo.armadillomacro;
+import com.dillo.dilloUtils.ReFuelDrill.ReFuelDrill;
 import com.dillo.dilloUtils.RouteUtils.Nuker.StartNuker;
 import com.dillo.utils.StartMacro;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -38,6 +39,10 @@ public class Keybinds {
           render = false;
           wasDown = false;
         }
+      }
+
+      if (armadillomacro.keybinds.get(4).isKeyDown()) {
+        ReFuelDrill.reFuelDrill();
       }
     }
   }

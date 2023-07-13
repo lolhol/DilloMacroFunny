@@ -39,7 +39,6 @@ public class GetOffArmadillo {
       if (startOff) {
         if (currTicks <= ammountOfCheckTicks) {
           if (ArmadilloStates.isOnline()) {
-            SendChat.chat(String.valueOf(blockYPos - ids.mc.thePlayer.posY + 1));
             if (Math.abs(blockYPos - ids.mc.thePlayer.posY + 1) < 0.0001) {
               if (sneak) KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
               startOff = false;

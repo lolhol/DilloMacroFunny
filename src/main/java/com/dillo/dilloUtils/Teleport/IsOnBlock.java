@@ -86,6 +86,7 @@ public class IsOnBlock {
             clearAttempts < 2 &&
             currentRoute.currentRoute.contains(makeNewBlock(0, -1, 0, ids.mc.thePlayer.getPosition()))
           ) {
+            curTicks = 0;
             KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
             isClear = true;
             ArmadilloStates.currentState = ARMADILLO;

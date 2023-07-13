@@ -1,7 +1,5 @@
 package com.dillo;
 
-import static com.dillo.dilloUtils.FailSafes.AnswerPPL.makeAcusation;
-
 import com.dillo.ArmadilloMain.ArmadilloMain;
 import com.dillo.Events.DoneNukerBlocks;
 import com.dillo.MITGUI.GUIUtils.CurRatesUtils.GetCurGemPrice;
@@ -28,6 +26,9 @@ import com.dillo.dilloUtils.CheckFile;
 import com.dillo.dilloUtils.FailSafes.*;
 import com.dillo.dilloUtils.GetOffArmadillo;
 import com.dillo.dilloUtils.LookAt;
+import com.dillo.dilloUtils.ReFuelDrill.ReFuelDrill;
+import com.dillo.dilloUtils.ReFuelDrill.ReFuelDrillTriger;
+import com.dillo.dilloUtils.ReFuelDrill.ThrowAtEnd;
 import com.dillo.dilloUtils.RouteUtils.LegitRouteClear.LegitRouteClear;
 import com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain;
 import com.dillo.dilloUtils.RouteUtils.ViewClearLines.ViewClearLines;
@@ -42,8 +43,6 @@ import com.dillo.utils.GetConfigFolder;
 import com.dillo.utils.renderUtils.renderModules.*;
 import gg.essential.api.EssentialAPI;
 import gg.essential.api.commands.Command;
-import java.io.File;
-import java.util.ArrayList;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -55,7 +54,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
-@Mod(modid = "MITExtras", name = "MITExtras", version = "1.0.0", clientSideOnly = true)
+import java.io.File;
+import java.util.ArrayList;
+
+import static com.dillo.dilloUtils.FailSafes.AnswerPPL.makeAcusation;
+
+@Mod(modid = "autogg", name = "autogg", version = "1.0.0", clientSideOnly = true)
 @SideOnly(Side.CLIENT)
 public class armadillomacro {
 
@@ -71,6 +75,7 @@ public class armadillomacro {
     keybinds.add(new KeyBinding("Enable Nuker", Keyboard.KEY_NONE, "Mining In Two"));
     keybinds.add(new KeyBinding("Quick View Structures", Keyboard.KEY_NONE, "Mining In Two"));
     keybinds.add(new KeyBinding("Add Point", Keyboard.KEY_NONE, "Mining In Two"));
+    keybinds.add(new KeyBinding("Test Key", Keyboard.KEY_NONE, "Mining In Two"));
 
     // Comment
 
@@ -148,7 +153,10 @@ public class armadillomacro {
       new ViewClearLines(),
       new WalkForward(),
       new Test(),
-      new TooFarAwayFailsafe()
+      new TooFarAwayFailsafe(),
+      new ReFuelDrill(),
+      new ReFuelDrillTriger(),
+      new ThrowAtEnd()
     );
 
     registerKeybinds(keybinds);

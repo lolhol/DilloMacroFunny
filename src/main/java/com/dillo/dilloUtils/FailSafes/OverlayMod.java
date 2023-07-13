@@ -4,11 +4,8 @@ import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.CurrentState;
 import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.data.config;
-import com.dillo.utils.previous.SendChat;
-import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -59,6 +56,9 @@ public class OverlayMod {
             return;
           case PLAYER_DETECTION:
             draw("Detected Player!", config.overlayX, config.overlayY);
+            return;
+          case REFUELING:
+            draw("Refueling!", config.overlayX, config.overlayY);
             return;
         }
       }

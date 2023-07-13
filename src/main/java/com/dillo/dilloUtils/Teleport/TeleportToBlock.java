@@ -2,7 +2,6 @@ package com.dillo.dilloUtils.Teleport;
 
 import static com.dillo.ArmadilloMain.CurrentState.*;
 import static com.dillo.data.config.*;
-import static com.dillo.dilloUtils.BlockUtils.BlockCols.GetUnobstructedPos.getUnobstructedPos;
 import static com.dillo.dilloUtils.TpUtils.WalkForward.walkForward;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 
@@ -55,6 +54,16 @@ public class TeleportToBlock {
 
       WaitThenCall.waitThenCall(waitTime + time, TPSTAGE2);
     } else {
+      Vec3 nextBlockPos = adjustLook(
+        ids.mc.thePlayer.getPositionVector(),
+        nextBlock,
+        new net.minecraft.block.Block[] { Blocks.air },
+        false
+      );
+
+      if (nextBlockPos == null) {
+        return false;
+      }
       walkForward(forwardForTicks, TPSTAGEWALK);
     }
 

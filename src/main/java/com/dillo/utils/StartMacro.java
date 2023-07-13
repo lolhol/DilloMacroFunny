@@ -24,7 +24,9 @@ public class StartMacro {
         if (ids.mc.thePlayer.isRiding()) {
           stateDilloNoGettingOn();
         } else {
-          String str = ArmadilloStates.offlineState == OFFLINE ? prefix.prefix + "Starting macro!" : "Macro stopped!";
+          String str = ArmadilloStates.offlineState == OFFLINE
+            ? prefix.prefix + "Starting macro!"
+            : prefix.prefix + "Macro stopped!";
           ArmadilloStates.offlineState = ArmadilloStates.offlineState == OFFLINE ? ONLINE : OFFLINE;
           ArmadilloStates.currentState = ArmadilloStates.offlineState == ONLINE ? ARMADILLO : null;
 

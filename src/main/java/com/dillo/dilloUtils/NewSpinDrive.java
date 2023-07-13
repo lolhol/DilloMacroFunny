@@ -1,12 +1,18 @@
 package com.dillo.dilloUtils;
 
+import static com.dillo.ArmadilloMain.CurrentState.STATEDILLONOGETTINGON;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
+import static com.dillo.dilloUtils.StateDillo.canDilloOn;
+import static com.dillo.dilloUtils.Teleport.SmartTP.smartTpBlocks;
+import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.clearAttempts;
 import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getBestPath;
+import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.isClear;
 import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.BlockUtils.FromBlockToHP;
+import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
 import com.dillo.dilloUtils.Utils.GetMostOptimalPath;
 import com.dillo.dilloUtils.Utils.LookYaw;
@@ -47,9 +53,16 @@ public class NewSpinDrive {
       KeyBinding.setKeyBindState(jump.getKeyCode(), false);
       angle = 0;
       lastBlockAngle = 0;
-      ArmadilloStates.currentState = null;
-      SendChat.chat(prefix.prefix + "Done breaking! Moving to next vein!");
-      TeleportToNextBlock.teleportToNextBlock();
+
+      if (canDilloOn() && clearAttempts < 2 && !smartTpBlocks.contains(currentRoute.currentBlock)) {
+        isClear = true;
+        ArmadilloStates.currentState = STATEDILLONOGETTINGON;
+        clearAttempts++;
+      } else {
+        ArmadilloStates.currentState = null;
+        SendChat.chat(prefix.prefix + "Done breaking! Moving to next vein!");
+        TeleportToNextBlock.teleportToNextBlock();
+      }
     }
   }
 
@@ -68,8 +81,6 @@ public class NewSpinDrive {
         }
       }
     }
-
-    //SendChat.chat(String.valueOf(blocks.size()));
 
     return blocks;
   }

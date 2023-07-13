@@ -89,6 +89,9 @@ public class config extends Vigilant {
   )
   public static boolean antiSpam = false;
 
+  @Property(type = PropertyType.SWITCH, name = "Re-Fuel", description = "Will re-fuel drill", category = "Main")
+  public static boolean refuel = true;
+
   //Route Utils
   @Property(
     type = PropertyType.SWITCH,
