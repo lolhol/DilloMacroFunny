@@ -22,6 +22,8 @@ public class MainHelp extends Command {
     SendChat.chat("/createRoute <route name> -> will make a new route and select it.");
     SendChat.chat("/selectRoute <name> -> will select the route if the you provided exists in the folder.");
     SendChat.chat("/avgPercent -> give avg % of gems per route block.");
+    SendChat.chat("/addConfig <name> -> will create a config file with that name.");
+    SendChat.chat("/selectConfig <name> -> selects a config with that name.");
     SendChat.chat("----------------------------------");
     SendChat.chat("/insertInMiddle <number> -> will insert the block you are standing on to the route.");
     SendChat.chat("/removeBlock <number> -> removes the block from route that you specified.");
