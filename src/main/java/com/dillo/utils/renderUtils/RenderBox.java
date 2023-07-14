@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import org.lwjgl.opengl.GL11;
 
 public class RenderBox {
@@ -52,6 +53,17 @@ public class RenderBox {
     GlStateManager.enableLighting();
     GlStateManager.enableDepth();
     GlStateManager.enableCull();
+  }
+
+  public static void drawFilledInBlock(BlockPos block, Color color, float opas, float partialTicks) {
+    Entity viewer = Minecraft.getMinecraft().getRenderViewEntity();
+    double x1 = block.getX() - (viewer.lastTickPosX + (viewer.posX - viewer.lastTickPosX) * partialTicks);
+    double y1 = block.getY() - (viewer.lastTickPosY + (viewer.posY - viewer.lastTickPosY) * partialTicks);
+    double z1 = block.getZ() - (viewer.lastTickPosZ + (viewer.posZ - viewer.lastTickPosZ) * partialTicks);
+
+    AxisAlignedBB bb = new AxisAlignedBB(x1, y1, z1, x1 + 1, y1 + 1, z1 + 1);
+
+    drawFilledBoundingBox(bb, color.getRGB(), opas);
   }
 
   public static void drawFilledBoundingBox(AxisAlignedBB aabb, int color, float opacity) {

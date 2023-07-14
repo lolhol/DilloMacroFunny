@@ -1,5 +1,8 @@
 package com.dillo.dilloUtils.RouteUtils.LegitRouteClear;
 
+import static com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker.Blockss;
+import static com.dillo.utils.renderUtils.RenderBox.drawFilledInBlock;
+
 import com.dillo.Events.DoneNukerBlocks;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker;
@@ -8,15 +11,12 @@ import com.dillo.keybinds.Keybinds;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.renderUtils.RenderBox;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker.Blockss;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class LegitRouteClear {
 
@@ -100,19 +100,22 @@ public class LegitRouteClear {
         BlockPos thirdBlock = null;
 
         firstBlock = neededClear.get(0);
+
+        drawFilledInBlock(firstBlock, Color.red, 0.5F, event.partialTicks);
+
         RenderBox.drawBox(
           firstBlock.getX(),
           firstBlock.getY(),
           firstBlock.getZ(),
-          Color.red,
+          Color.CYAN,
           0.2F,
           event.partialTicks,
-          true
+          false
         );
 
         if (neededClear.size() > 1) {
           secBlock = neededClear.get(1);
-          if (secBlock != firstBlock) {
+          if (!secBlock.equals(firstBlock)) {
             RenderBox.drawBox(
               secBlock.getX(),
               secBlock.getY(),
@@ -129,7 +132,7 @@ public class LegitRouteClear {
 
         if (neededClear.size() > 2) {
           thirdBlock = neededClear.get(2);
-          if (thirdBlock != secBlock && firstBlock != thirdBlock) {
+          if (!thirdBlock.equals(firstBlock) && !thirdBlock.equals(secBlock)) {
             RenderBox.drawBox(
               thirdBlock.getX(),
               thirdBlock.getY(),
