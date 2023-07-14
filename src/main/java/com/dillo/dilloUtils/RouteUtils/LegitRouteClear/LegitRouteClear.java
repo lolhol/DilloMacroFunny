@@ -108,8 +108,8 @@ public class LegitRouteClear {
           firstBlock.getX(),
           firstBlock.getY(),
           firstBlock.getZ(),
-          Color.CYAN,
-          0.2F,
+          Color.red,
+          0.5F,
           event.partialTicks,
           false
         );

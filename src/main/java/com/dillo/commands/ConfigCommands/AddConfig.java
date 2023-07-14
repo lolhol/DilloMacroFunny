@@ -63,6 +63,16 @@ public class AddConfig extends Command {
       SendChat.chat(prefix.prefix + "Failed backing up into file!");
     }
 
+    File mainConfig = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs/configsMain.json");
+
+    try {
+      FileWriter writer = new FileWriter(mainConfig);
+      writer.write(name);
+      writer.close();
+    } catch (Exception e) {
+      SendChat.chat(prefix.prefix + "Failed backing up into file!");
+    }
+
     SendChat.chat(prefix.prefix + "Created successfully!");
   }
 }

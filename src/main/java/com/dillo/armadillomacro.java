@@ -155,7 +155,8 @@ public class armadillomacro {
       new TooFarAwayFailsafe(),
       new ReFuelDrill(),
       new ReFuelDrillTriger(),
-      new ThrowAtEnd()
+      new ThrowAtEnd(),
+      new CheckFile()
     );
 
     registerKeybinds(keybinds);

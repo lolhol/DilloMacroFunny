@@ -1,7 +1,5 @@
 package com.dillo.dilloUtils;
 
-import static com.dillo.dilloUtils.BlockUtils.fileUtils.WriteFile.gson;
-
 import com.dillo.RemoteControl.GetRemoteControl;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
@@ -9,10 +7,13 @@ import com.dillo.utils.GetConfigFolder;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
 import com.google.gson.*;
+
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.dillo.dilloUtils.BlockUtils.fileUtils.WriteFile.gson;
 
 public class CheckFile {
 
@@ -22,6 +23,8 @@ public class CheckFile {
   public static File configMain = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs/configsMain.json");
   public static File configFile = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/default-route.json");
   public static File answersFile = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/chatAnswers.json");
+  private static boolean startCheck = false;
+  private static String name = "";
 
   public static void checkFiles() {
     if (!file.exists()) {

@@ -82,11 +82,11 @@ public class SelectConfig extends Command {
       SendChat.chat(prefix.prefix + "Selected " + name + "!");
     }
 
-    String mainJsonString = name;
+    File mainConfig = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs/configsMain.json");
 
     try {
-      FileWriter writer = new FileWriter(configFile);
-      writer.write(mainJsonString);
+      FileWriter writer = new FileWriter(mainConfig);
+      writer.write(name);
       writer.close();
     } catch (Exception e) {
       SendChat.chat(prefix.prefix + "Failed backing up into file!");

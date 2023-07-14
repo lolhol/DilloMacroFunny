@@ -3,6 +3,7 @@ package com.dillo.dilloUtils.RouteUtils.Nuker;
 import static com.dillo.data.config.nukerRange;
 import static com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker.Blockss;
 import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isAbleToMine;
+import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isBlockInRoute;
 import static com.dillo.dilloUtils.Utils.GetOnArmadillo.isSummoned;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 
@@ -52,7 +53,7 @@ public class NukerMain {
         while (broken.size() > 0) {
           BlockPos block = broken.get(0);
 
-          if (isAbleToMine(block)) {
+          if (isAbleToMine(block) && !isBlockInRoute(block)) {
             nuking.add(0, block);
           }
 
@@ -76,7 +77,7 @@ public class NukerMain {
           BlockPos block = nuking.get(0);
           curBlock = block;
 
-          if (!isAbleToMine(block)) {
+          if (!isAbleToMine(block) || isBlockInRoute(block)) {
             nuking.remove(block);
             broken.add(block);
           } else {
