@@ -114,6 +114,20 @@ public class NukerMain {
       if (curBlock != null) {
         RenderBox.drawBox(curBlock.getX(), curBlock.getY(), curBlock.getZ(), Color.red, 0.2F, event.partialTicks, true);
       }
+
+      if (nuking.size() > 1) {
+        if (!nuking.get(1).equals(curBlock)) {
+          RenderBox.drawBox(
+            nuking.get(1).getX(),
+            nuking.get(1).getY(),
+            nuking.get(1).getZ(),
+            Color.white,
+            0.2F,
+            event.partialTicks,
+            false
+          );
+        }
+      }
     }
   }
 
@@ -150,8 +164,6 @@ public class NukerMain {
     Float fovBlock = Math.abs(
       getYawNeededVec(BlockUtils.fromBlockPosToVec3(blockPos).addVector(0.5, 0.5, 0.5), curRotation())
     );
-
-    SendChat.chat(String.valueOf(fovBlock));
 
     return fovBlock < fov;
   }
