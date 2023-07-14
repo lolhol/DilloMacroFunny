@@ -1,5 +1,6 @@
 package com.dillo.dilloUtils.RouteUtils.Utils;
 
+import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.utils.previous.random.ids;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -27,5 +28,9 @@ public class IsAbleToMine {
     }
 
     return false;
+  }
+
+  public static boolean isBlockInRoute(BlockPos block) {
+    return currentRoute.currentRoute.contains(block);
   }
 }

@@ -1,6 +1,7 @@
 package com.dillo.dilloUtils.RouteUtils.LegitRouteClear;
 
 import static com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker.Blockss;
+import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isBlockInRoute;
 import static com.dillo.utils.renderUtils.RenderBox.drawFilledInBlock;
 
 import com.dillo.Events.DoneNukerBlocks;
@@ -147,15 +148,15 @@ public class LegitRouteClear {
           }
         }
 
-        if (!IsAbleToMine.isAbleToMine(firstBlock)) {
+        if (!IsAbleToMine.isAbleToMine(firstBlock) || isBlockInRoute(firstBlock)) {
           neededClear.remove(firstBlock);
         }
 
-        if (secBlock != null && !IsAbleToMine.isAbleToMine(secBlock)) {
+        if (secBlock != null && (!IsAbleToMine.isAbleToMine(secBlock) || isBlockInRoute(secBlock))) {
           neededClear.remove(secBlock);
         }
 
-        if (thirdBlock != null && !IsAbleToMine.isAbleToMine(thirdBlock)) {
+        if (thirdBlock != null && (!IsAbleToMine.isAbleToMine(thirdBlock) || isBlockInRoute(thirdBlock))) {
           neededClear.remove(thirdBlock);
         }
       } else {
