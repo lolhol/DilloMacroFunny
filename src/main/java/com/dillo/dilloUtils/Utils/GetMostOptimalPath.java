@@ -1,22 +1,23 @@
 package com.dillo.dilloUtils.Utils;
 
-import static com.dillo.dilloUtils.LookAt.getNeededChange;
-import static com.dillo.dilloUtils.LookAt.getRotation;
-import static com.dillo.dilloUtils.NewSpinDrive.isLeft;
-import static com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain.canBeBroken;
-
 import com.dillo.data.config;
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.Teleport.GetNextBlock;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.previous.random.ids;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.dillo.dilloUtils.LookAt.getNeededChange;
+import static com.dillo.dilloUtils.LookAt.getRotation;
+import static com.dillo.dilloUtils.NewSpinDrive.isLeft;
+import static com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain.canBeBroken;
 
 public class GetMostOptimalPath {
 
@@ -36,7 +37,7 @@ public class GetMostOptimalPath {
       includeNext = true;
     }
 
-    while (displacement < 360) {
+    while (displacement <= 360) {
       float points = 0;
       List<BlockPos> prevBest = new ArrayList<>();
       double neededRotation = 0;
@@ -46,19 +47,17 @@ public class GetMostOptimalPath {
           getYawNeededVec(BlockUtils.fromBlockPosToVec3(nextBlock), displacement + config.headRotationMax);
       }
 
-      if (includeNext) {
-        if (isLeft) {
-          if (neededRotation > (float) -config.headRotationMax + 40 && neededRotation < 0) {
-            points += 5;
-          } else {
-            points -= 1;
-          }
+      if (isLeft) {
+        if (neededRotation > (float) -config.headRotationMax + 40 && neededRotation < 0) {
+          points += 5;
         } else {
-          if (neededRotation < (float) config.headRotationMax - 40 && neededRotation > 0) {
-            points += 5;
-          } else {
-            points -= 1;
-          }
+          points -= 1;
+        }
+      } else {
+        if (neededRotation < (float) config.headRotationMax - 40 && neededRotation > 0) {
+          points += 5;
+        } else {
+          points -= 1;
         }
       }
 

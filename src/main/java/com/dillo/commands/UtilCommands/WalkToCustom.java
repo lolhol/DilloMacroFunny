@@ -1,7 +1,8 @@
 package com.dillo.commands.UtilCommands;
 
-import static com.dillo.dilloUtils.ReFuelDrill.ReFuelDrill.reFuelDrill;
+import static com.dillo.dilloUtils.NewSpinDrive.putAllTogether;
 
+import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.utils.previous.random.ids;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
@@ -27,7 +28,9 @@ public class WalkToCustom extends Command {
     //getArea();
 
     //clickSlotShift(1, 0);
-    reFuelDrill();
+
+    currentRoute.currentBlock = new BlockPos(x, y, z);
+    putAllTogether();
     // SendChat.chat(String.valueOf(getYawNeededVec(new Vec3(x, y, z), displacement)))
     //isStructureBetween(ids.mc.thePlayer.getPosition(), new BlockPos(x, y, z));
     /*RenderMultipleLines.renderMultipleLines(null, null, false);
