@@ -515,9 +515,9 @@ public class config extends Vigilant {
     description = "The block range of the nuker",
     category = "Nuker",
     min = 1,
-    max = 4
+    max = 5
   )
-  public static int nukerRange = 3;
+  public static int nukerRange = 4;
 
   @Property(
     type = PropertyType.SWITCH,

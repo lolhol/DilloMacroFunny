@@ -1,18 +1,20 @@
 package com.dillo.dilloUtils.RouteUtils.Utils;
 
+import com.dillo.utils.BlockUtils;
+import com.dillo.utils.DistanceFromTo;
+import com.dillo.utils.previous.random.ids;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.Vec3;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.dillo.data.config.nukerDigUnder;
 import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
 import static com.dillo.dilloUtils.RouteUtils.LegitRouteClear.LegitRouteClear.startLegit;
 import static com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain.nukerStart;
-
-import com.dillo.utils.BlockUtils;
-import com.dillo.utils.DistanceFromTo;
-import com.dillo.utils.previous.random.ids;
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
+import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isAbleToMine;
 
 public class GetBlocksForNuker {
 
@@ -63,10 +65,18 @@ public class GetBlocksForNuker {
     for (int x = -1; x <= 1; x++) {
       for (int y = -3; y <= 0; y++) {
         for (int z = -1; z <= 1; z++) {
-          blocks.add(makeNewBlock(x, y, z, block));
+          BlockPos curBlock = makeNewBlock(x, y, z, block);
+
+          if (isAbleToMine(curBlock)) {
+            blocks.add(curBlock);
+          }
         }
       }
     }
+
+    blocks.sort((a, b) -> {
+      return DistanceFromTo.distanceFromTo(block, a) < DistanceFromTo.distanceFromTo(block, b) ? -1 : 1;
+    });
 
     return blocks;
   }

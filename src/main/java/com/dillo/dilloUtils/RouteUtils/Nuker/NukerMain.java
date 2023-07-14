@@ -4,10 +4,14 @@ import static com.dillo.data.config.nukerRange;
 import static com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker.Blockss;
 import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isAbleToMine;
 import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isBlockInRoute;
+import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getYawNeededVec;
 import static com.dillo.dilloUtils.Utils.GetOnArmadillo.isSummoned;
+import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
+import static com.dillo.keybinds.Keybinds.isNuking;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 
 import com.dillo.data.config;
+import com.dillo.utils.BlockUtils;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.packets.sendStart;
@@ -101,6 +105,9 @@ public class NukerMain {
         }
       } else {
         startNuking = false;
+        NukerMain.broken.clear();
+        isNuking = false;
+        NukerMain.nuking.clear();
         SendChat.chat(prefix.prefix + "The route is clear!");
       }
 
@@ -140,35 +147,13 @@ public class NukerMain {
   }
 
   public static boolean isInFOV(BlockPos blockPos, int fov) {
-    Float result = getYawBlock(blockPos);
-    return result < fov / 2 || result > 360 - fov / 2;
-  }
+    Float fovBlock = Math.abs(
+      getYawNeededVec(BlockUtils.fromBlockPosToVec3(blockPos).addVector(0.5, 0.5, 0.5), curRotation())
+    );
 
-  public static Float getYawBlock(BlockPos block) {
-    double dX = block.getX() + 0.5 - ids.mc.thePlayer.posX;
-    double dZ = block.getZ() + 0.5 - ids.mc.thePlayer.posZ;
+    SendChat.chat(String.valueOf(fovBlock));
 
-    double angle = Math.atan2(dZ, dX);
-    float rotationYaw = (float) Math.toDegrees(angle) - 90.0f;
-
-    if (rotationYaw < 0.0f) {
-      rotationYaw += 360.0f;
-    }
-
-    float playerYaw = ids.mc.thePlayer.rotationYaw;
-
-    if (ids.mc.thePlayer.rotationYaw > 360) {
-      playerYaw =
-        (float) (((ids.mc.thePlayer.rotationYaw / 360) - (Math.floor(ids.mc.thePlayer.rotationYaw / 360))) * 360);
-    }
-
-    rotationYaw = Math.abs(playerYaw - rotationYaw);
-
-    if (rotationYaw > 360) {
-      rotationYaw = (float) (((playerYaw / 360) - (Math.floor(playerYaw / 360))) * 360);
-    }
-
-    return Math.abs(rotationYaw);
+    return fovBlock < fov;
   }
 
   public static boolean canBeBroken(BlockPos block) {
@@ -179,25 +164,5 @@ public class NukerMain {
       false
     );
     return blockHit != null;
-  }
-
-  public static Float getYawBlockAround(BlockPos block, float curRotationYaw) {
-    double dX = block.getX() + 0.5 - ids.mc.thePlayer.posX;
-    double dZ = block.getZ() + 0.5 - ids.mc.thePlayer.posZ;
-
-    double angle = Math.atan2(dZ, dX);
-    float rotationYaw = (float) Math.toDegrees(angle) - 90.0f;
-
-    if (rotationYaw < 0.0f) {
-      rotationYaw += 360.0f;
-    }
-
-    rotationYaw = Math.abs(curRotationYaw - rotationYaw);
-
-    if (rotationYaw > 360) {
-      rotationYaw = (float) (((curRotationYaw / 360) - (Math.floor(curRotationYaw / 360))) * 360);
-    }
-
-    return Math.abs(rotationYaw);
   }
 }

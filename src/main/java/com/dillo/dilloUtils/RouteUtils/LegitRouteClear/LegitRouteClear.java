@@ -71,6 +71,7 @@ public class LegitRouteClear {
       GetBlocksForNuker.getBlocks(currentRoute.currentRoute, "legit");
     } else {
       Keybinds.isNuking = false;
+      isClearing = false;
       SendChat.chat(prefix.prefix + "No route selected! :L ");
     }
   }
@@ -89,6 +90,7 @@ public class LegitRouteClear {
   public static void stopClearLegit() {
     isClearing = false;
     neededClear.clear();
+    isClearing = false;
     SendChat.chat(prefix.prefix + "Stopped Clearing.");
   }
 

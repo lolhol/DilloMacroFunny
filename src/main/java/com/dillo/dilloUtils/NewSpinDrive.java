@@ -11,7 +11,6 @@ import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.data.config;
-import com.dillo.dilloUtils.BlockUtils.FromBlockToHP;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
 import com.dillo.dilloUtils.Utils.GetMostOptimalPath;
@@ -72,25 +71,6 @@ public class NewSpinDrive {
     }
   }
 
-  public static List<BlockPos> getBlocksAround(double yPos) {
-    BlockPos referencePoint = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + yPos, ids.mc.thePlayer.posZ);
-    List<BlockPos> blocks = new ArrayList<>();
-
-    for (int i = -1; i <= 1; i++) {
-      for (int j = -1; j <= 1; j++) {
-        BlockPos newBlock = new BlockPos(referencePoint.getX() + i, referencePoint.getY(), referencePoint.getZ() + j);
-
-        if (!newBlock.equals(referencePoint)) {
-          if (canAdd(newBlock)) {
-            blocks.add(newBlock);
-          }
-        }
-      }
-    }
-
-    return blocks;
-  }
-
   public static void putAllTogether() {
     float leftRightChoice = random.nextFloat();
 
@@ -128,44 +108,9 @@ public class NewSpinDrive {
     LookYaw.lookToYaw(config.rod_drill_switch_time + (config.headMovement * 10L), displacement);
   }
 
-  private static BlockPos getBestBlock(List<BlockPos> blocks, BlockPos block) {
-    BlockPos currentBestBlock = blocks.get(0);
-    float currentBestAngle = GetAnglePlayerToBlock.getAngleFromOneBlockToAnother(currentBestBlock, block);
-
-    for (BlockPos bl : blocks) {
-      float currAngle = GetAnglePlayerToBlock.getAngleFromOneBlockToAnother(currentBestBlock, bl);
-
-      if (currentBestAngle > currAngle) {
-        currentBestBlock = bl;
-        currentBestAngle = currAngle;
-      }
-    }
-
-    return currentBestBlock;
-  }
-
-  public static boolean canAddIgnorePanes(BlockPos block) {
-    Block blockType = ids.mc.theWorld.getBlockState(block).getBlock();
-
-    return blockType == Blocks.stained_glass;
-  }
-
   public static boolean canAdd(BlockPos block) {
     Block blockType = ids.mc.theWorld.getBlockState(block).getBlock();
 
     return blockType == Blocks.stained_glass || blockType == Blocks.stained_glass_pane;
-  }
-
-  private static void maxAngle(List<BlockPos> blocks) {
-    BlockPos block = blocks.get(0);
-    lastBlockAngle = FromBlockToHP.getYaw(block.getX(), block.getY(), block.getZ());
-
-    for (BlockPos blockPos : blocks) {
-      float blockAngle = FromBlockToHP.getYaw(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-
-      if (blockAngle > lastBlockAngle) {
-        lastBlockAngle = blockAngle;
-      }
-    }
   }
 }

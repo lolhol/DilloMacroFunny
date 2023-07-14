@@ -1,5 +1,7 @@
 package com.dillo.dilloUtils;
 
+import static com.dillo.dilloUtils.BlockUtils.fileUtils.WriteFile.gson;
+
 import com.dillo.RemoteControl.GetRemoteControl;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
@@ -7,13 +9,10 @@ import com.dillo.utils.GetConfigFolder;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
 import com.google.gson.*;
-
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.dillo.dilloUtils.BlockUtils.fileUtils.WriteFile.gson;
 
 public class CheckFile {
 

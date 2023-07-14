@@ -1,12 +1,11 @@
 package com.dillo.dilloUtils.RouteUtils.Nuker;
 
+import static com.dillo.keybinds.Keybinds.isNuking;
+
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker;
-import com.dillo.keybinds.Keybinds;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
-import java.util.List;
-import net.minecraft.util.BlockPos;
 
 public class StartNuker {
 
@@ -15,7 +14,7 @@ public class StartNuker {
       SendChat.chat(prefix.prefix + "Started Nuker!");
       GetBlocksForNuker.getBlocks(currentRoute.currentRoute, "nuker");
     } else {
-      Keybinds.isNuking = false;
+      isNuking = false;
       SendChat.chat(prefix.prefix + "No route selected! :L ");
     }
   }
@@ -23,6 +22,7 @@ public class StartNuker {
   public static void stopNuker() {
     NukerMain.startNuking = false;
     NukerMain.broken.clear();
+    isNuking = false;
     NukerMain.nuking.clear();
     SendChat.chat(prefix.prefix + "Stopped nuker!");
   }

@@ -42,7 +42,7 @@ public class RenderBox {
     RenderGlobal.drawOutlinedBoundingBox(bb, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
     if (isFill) {
-      drawFilledBoundingBox(bb, color.getRGB(), 1);
+      drawFilledBoundingBox(bb, color.getRGB(), 0.8F);
     }
 
     GlStateManager.disableBlend();
