@@ -1,12 +1,15 @@
 package com.dillo.commands.UtilCommands;
 
-import static com.dillo.dilloUtils.NewSpinDrive.putAllTogether;
+import static com.dillo.dilloUtils.LookAt.serverSmoothLook;
+import static com.dillo.dilloUtils.LookAt.updateServerLook;
+import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
 
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
-import com.dillo.utils.previous.random.ids;
+import com.dillo.Events.PlayerMoveEvent;
+import com.dillo.dilloUtils.LookAt;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
-import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class WalkToCustom extends Command {
 
@@ -29,8 +32,12 @@ public class WalkToCustom extends Command {
 
     //clickSlotShift(1, 0);
 
-    currentRoute.currentBlock = new BlockPos(x, y, z);
-    putAllTogether();
+    //smoothLook2(new YawLook.RotationYaw(40, 0), 1000);
+
+    serverSmoothLook(new LookAt.Rotation(40, curRotation() + 20), 100);
+    startRender = !startRender;
+    //currentRoute.currentBlock = new BlockPos(x, y, z);
+    //putAllTogether();
     // SendChat.chat(String.valueOf(getYawNeededVec(new Vec3(x, y, z), displacement)))
     //isStructureBetween(ids.mc.thePlayer.getPosition(), new BlockPos(x, y, z));
     /*RenderMultipleLines.renderMultipleLines(null, null, false);
@@ -54,31 +61,10 @@ public class WalkToCustom extends Command {
     //TeleportToBlock.teleportToBlock(new BlockPos(x, y, z), 500, 500, null);
   }
 
-  private static float getYawBlock(BlockPos block) {
-    double dX = block.getX() + 0.5 - ids.mc.thePlayer.posX;
-    double dZ = block.getZ() + 0.5 - ids.mc.thePlayer.posZ;
-
-    double angle = Math.atan2(dZ, dX);
-    float rotationYaw = (float) Math.toDegrees(angle) - 90.0f;
-
-    if (rotationYaw < 0.0f) {
-      rotationYaw += 360.0f;
-    }
-
-    float playerYaw = ids.mc.thePlayer.rotationYaw;
-
-    if (ids.mc.thePlayer.rotationYaw > 360) {
-      playerYaw = (float) (ids.mc.thePlayer.rotationYaw - (Math.floor(ids.mc.thePlayer.rotationYaw / 360)) * 360);
-    }
-
-    // SendChat.chat(" !!! " + playerYaw + " !!! ");
-
-    if (playerYaw > 180) {
-      playerYaw -= 360;
-    }
-
-    rotationYaw = rotationYaw - playerYaw;
-
-    return Math.abs(rotationYaw);
+  @SubscribeEvent(priority = EventPriority.NORMAL)
+  public void onUpdatePre(PlayerMoveEvent.Pre pre) {
+    if (!startRender) return;
+    //look(LookAt.getRotation(new Vec3(1, 1, 1)));
+    updateServerLook();
   }
 }

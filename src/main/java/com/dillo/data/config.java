@@ -11,6 +11,14 @@ public class config extends Vigilant {
 
   @Property(
     type = PropertyType.SWITCH,
+    name = "Randomise Everything (Human-like behavior)",
+    description = "Will randomise everything that has a time it takes (very good)",
+    category = "Main"
+  )
+  public static boolean randomise = true;
+
+  @Property(
+    type = PropertyType.SWITCH,
     name = "Render Route",
     description = "Basically renders the blocks you have on the route",
     category = "Main"

@@ -6,7 +6,9 @@
   "mixins": [
   ],
   "client": [
-    "MixinGuiMainMenu"
+    "MixinGuiMainMenu",
+    "EntityPlayerSPMixin",
+    "MixinRendererLivingEntity"
   ],
   "mixins": [
     "RenderManagerAccessor"

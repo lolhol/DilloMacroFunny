@@ -22,19 +22,16 @@ import com.dillo.commands.RouteCommands.*;
 import com.dillo.commands.RouteMakerUtils.CalcRouteAvgGemPerc;
 import com.dillo.commands.RouteMakerUtils.CheckIfCanTpToEvery;
 import com.dillo.commands.UtilCommands.*;
+import com.dillo.dilloUtils.*;
 import com.dillo.dilloUtils.BlockESP.BlockOnRouteESP;
 import com.dillo.dilloUtils.BlockUtils.JumpLook;
-import com.dillo.dilloUtils.CheckFile;
 import com.dillo.dilloUtils.FailSafes.*;
-import com.dillo.dilloUtils.GetOffArmadillo;
-import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.ReFuelDrill.ReFuelDrill;
 import com.dillo.dilloUtils.ReFuelDrill.ReFuelDrillTriger;
 import com.dillo.dilloUtils.ReFuelDrill.ThrowAtEnd;
 import com.dillo.dilloUtils.RouteUtils.LegitRouteClear.LegitRouteClear;
 import com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain;
 import com.dillo.dilloUtils.RouteUtils.ViewClearLines.ViewClearLines;
-import com.dillo.dilloUtils.StateDillo;
 import com.dillo.dilloUtils.Teleport.IsOnBlock;
 import com.dillo.dilloUtils.TpUtils.LookWhileGoingDown;
 import com.dillo.dilloUtils.TpUtils.WaitThenCall;
@@ -156,7 +153,9 @@ public class armadillomacro {
       new ReFuelDrill(),
       new ReFuelDrillTriger(),
       new ThrowAtEnd(),
-      new CheckFile()
+      new CheckFile(),
+      new WalkToCustom(),
+      new YawLook()
     );
 
     registerKeybinds(keybinds);
