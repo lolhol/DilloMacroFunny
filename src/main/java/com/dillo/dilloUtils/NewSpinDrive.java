@@ -1,15 +1,5 @@
 package com.dillo.dilloUtils;
 
-import static com.dillo.ArmadilloMain.CurrentState.RESTARTDRIVEWAIT;
-import static com.dillo.ArmadilloMain.CurrentState.STATEDILLONOGETTINGON;
-import static com.dillo.data.config.attemptToClearOnSpot;
-import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
-import static com.dillo.dilloUtils.StateDillo.canDilloOn;
-import static com.dillo.dilloUtils.Teleport.SmartTP.smartTpBlocks;
-import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getBestPath;
-import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.isClear;
-import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
-
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
@@ -20,13 +10,24 @@ import com.dillo.dilloUtils.Utils.LookYaw;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.dillo.ArmadilloMain.CurrentState.RESTARTDRIVEWAIT;
+import static com.dillo.ArmadilloMain.CurrentState.STATEDILLONOGETTINGON;
+import static com.dillo.data.config.attemptToClearOnSpot;
+import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
+import static com.dillo.dilloUtils.StateDillo.canDilloOn;
+import static com.dillo.dilloUtils.Teleport.SmartTP.smartTpBlocks;
+import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getBestPath;
+import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.isClear;
+import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
 
 public class NewSpinDrive {
 
@@ -36,19 +37,21 @@ public class NewSpinDrive {
   private static final KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
   public static List<DilloDriveBlockDetection.BlockAngle> returnBlocks = new ArrayList<>();
   public static float lastBlockAngle = 0;
-  public static GetMostOptimalPath.OptimalPathRotation path = null;
+  public static GetMostOptimalPath.OptimalPath path = null;
   public static int driveClearCount = 0;
-  public static float maxRot = config.headRotationMax;
 
   public static void newSpinDrive() {
-    if (angle < maxRot + 60) {
+    long pastTime = 0;
+
+    if (angle < config.headRotationMax + 60) {
       KeyBinding.setKeyBindState(jump.getKeyCode(), true);
+      pastTime = config.headMovement * 5L;
       float add = config.headMovement * 7 + random.nextFloat() * 10;
 
       if (isLeft) {
-        LookYaw.lookToYaw(config.headMovement * 5L, -add);
+        LookYaw.lookToYaw(pastTime, -add);
       } else {
-        LookYaw.lookToYaw(config.headMovement * 5L, add);
+        LookYaw.lookToYaw(pastTime, add);
       }
 
       angle += add;
@@ -57,7 +60,7 @@ public class NewSpinDrive {
       angle = 0;
       lastBlockAngle = 0;
 
-      WaitThenCall.waitThenCall(config.headMovement * 5L + 4, RESTARTDRIVEWAIT);
+      WaitThenCall.waitThenCall(pastTime - 10, RESTARTDRIVEWAIT);
     }
   }
 
@@ -110,7 +113,6 @@ public class NewSpinDrive {
     }
 
     path = getBestPath(returnList, curYaw);
-    maxRot = path.rotation;
 
     float displacement = path.displacement;
 

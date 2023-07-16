@@ -1,12 +1,12 @@
 package com.dillo.commands.UtilCommands;
 
+import static com.dillo.dilloUtils.LookAt.updateServerLook;
+
 import com.dillo.Events.PlayerMoveEvent;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import static com.dillo.dilloUtils.LookAt.updateServerLook;
 
 public class WalkToCustom extends Command {
 

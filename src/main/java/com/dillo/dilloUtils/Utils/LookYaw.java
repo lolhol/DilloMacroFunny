@@ -1,5 +1,7 @@
 package com.dillo.dilloUtils.Utils;
 
+import static com.dillo.dilloUtils.Teleport.IsOnBlock.yaw;
+
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.utils.previous.random.ids;
 
@@ -8,7 +10,7 @@ public class LookYaw {
   public static void lookToYaw(long time, float addYaw) {
     float rotation = curRotation() + addYaw;
 
-    LookAt.smoothLook(new LookAt.Rotation(0, rotation), time);
+    LookAt.smoothLook(new LookAt.Rotation(yaw, rotation), time);
   }
 
   public static float curRotation() {

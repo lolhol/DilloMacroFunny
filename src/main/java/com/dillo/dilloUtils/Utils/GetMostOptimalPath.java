@@ -20,63 +20,47 @@ public class GetMostOptimalPath {
 
   public static boolean isClear = false;
 
-  public static OptimalPathRotation getBestPath(List<BlockPos> originBlocks, float currentLook) {
+  public static OptimalPath getBestPath(List<BlockPos> originBlocks, float currentLook) {
     BlockPos nextBlock = GetNextBlock.getNextBlock();
     float bestRot = 0;
 
     OptimalPathRotation bestPath = new OptimalPathRotation(new ArrayList<>(), 0, 0);
-    float bestPointsRot = 10000000;
+    float bestPoints = 0;
+    OptimalPath optimalPath = new OptimalPath(new ArrayList<>(), 0);
+    float currRotPoints = 0;
 
-    //SendChat.chat(String.valueOf(originBlocks.size()) + "!!!!!!!!!!!!!!!!!!!!!");
+    for (int displacement = 0; displacement < 360; displacement += 5) {
+      List<BlockPos> blocks = new ArrayList<>();
+      float points = 0;
 
-    for (int i = 90; i < config.headRotationMax; i += 10) {
-      float bestPoints = 0;
-      OptimalPath optimalPath = new OptimalPath(new ArrayList<>(), 0);
-      float currRotPoints = 0;
+      for (BlockPos block : originBlocks) {
+        Vec3 centered = centerBlock(block);
+        float neededYaw = getYawNeededVec(centered, displacement);
 
-      for (int displacement = 0; displacement < 360; displacement += 5) {
-        List<BlockPos> blocks = new ArrayList<>();
-        float points = 0;
-
-        for (BlockPos block : originBlocks) {
-          Vec3 centered = centerBlock(block);
-          float neededYaw = getYawNeededVec(centered, displacement);
-
-          if (!isLeft) {
-            if (neededYaw > 0 && neededYaw < i) {
-              if (ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass) {
-                points += 1.5;
-              } else {
-                points += 1;
-              }
-              blocks.add(block);
-            }
-          } else if (neededYaw < 0 && neededYaw > -i) {
+        if (!isLeft) {
+          if (neededYaw > 0 && neededYaw < config.headRotationMax) {
             if (ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass) {
               points += 1.5;
             } else {
               points += 1;
             }
-
             blocks.add(block);
           }
-        }
+        } else if (neededYaw < 0 && neededYaw > -config.headRotationMax) {
+          if (ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass) {
+            points += 1.5;
+          } else {
+            points += 1;
+          }
 
-        if (bestPoints < points) {
-          optimalPath.path = blocks;
-          optimalPath.displacement = displacement;
-          bestPoints = points;
+          blocks.add(block);
         }
       }
 
-      currRotPoints = i / bestPoints;
-
-      if (currRotPoints < bestPointsRot || (bestPointsRot - 10 < bestPointsRot && optimalPath.path.size() > bestRot)) {
-        bestPointsRot = currRotPoints;
-        bestRot = bestPoints;
-        bestPath.path = optimalPath.path;
-        bestPath.displacement = optimalPath.displacement;
-        bestPath.rotation = i;
+      if (bestPoints < points) {
+        optimalPath.path = blocks;
+        optimalPath.displacement = displacement;
+        bestPoints = points;
       }
     }
 
@@ -84,7 +68,7 @@ public class GetMostOptimalPath {
 
     isClear = false;
 
-    return bestPath;
+    return optimalPath;
   }
 
   @Getter
