@@ -1,8 +1,10 @@
 package com.dillo.dilloUtils.Utils;
 
 import static com.dillo.dilloUtils.Teleport.IsOnBlock.yaw;
+import static com.dillo.dilloUtils.YawLook.smoothLook2;
 
 import com.dillo.dilloUtils.LookAt;
+import com.dillo.dilloUtils.YawLook;
 import com.dillo.utils.previous.random.ids;
 
 public class LookYaw {
@@ -39,5 +41,9 @@ public class LookYaw {
   public static void addPitch(long time, float addPitch) {
     float rotation = curRotation();
     LookAt.smoothLook(new LookAt.Rotation(0, rotation), time);
+  }
+
+  public static void addPitchTwo(long time, float addPitch) {
+    smoothLook2(new YawLook.RotationYaw(ids.mc.thePlayer.rotationPitch + addPitch, 0), time);
   }
 }
