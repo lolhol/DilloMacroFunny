@@ -3,13 +3,10 @@ package com.dillo.dilloUtils.Utils;
 import static com.dillo.dilloUtils.LookAt.getNeededChange;
 import static com.dillo.dilloUtils.LookAt.getRotation;
 import static com.dillo.dilloUtils.NewSpinDrive.isLeft;
-import static com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain.canBeBroken;
-import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
 
 import com.dillo.data.config;
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.Teleport.GetNextBlock;
-import com.dillo.utils.BlockUtils;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
@@ -78,7 +75,6 @@ public class GetMostOptimalPath {
       currRotPoints = i / bestPoints;
 
       if (currRotPoints < bestPointsRot || (bestPointsRot - 10 < bestPointsRot && optimalPath.path.size() > bestRot)) {
-        SendChat.chat(currRotPoints + " || " + bestPoints);
         bestPointsRot = currRotPoints;
         bestRot = bestPoints;
         bestPath.path = optimalPath.path;
@@ -122,7 +118,6 @@ public class GetMostOptimalPath {
       ids.mc.thePlayer.rotationYaw + addCurYaw
     );
     LookAt.Rotation neededChange = getNeededChange(startRot, rotation);
-    LookAt.Rotation endRot = new LookAt.Rotation(startRot.pitch + neededChange.pitch, startRot.yaw + neededChange.yaw);
 
     return neededChange.yaw;
   }
