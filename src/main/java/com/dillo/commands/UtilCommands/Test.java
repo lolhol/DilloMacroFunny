@@ -45,7 +45,7 @@ public class Test {
             curYaw = 360 + curYaw;
           }
 
-          Test.path = getBestPath(returnList, curYaw);
+          //Test.path = getBestPath(returnList, curYaw);
 
           float displacement = path.displacement;
 

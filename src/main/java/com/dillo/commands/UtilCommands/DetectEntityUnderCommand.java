@@ -30,7 +30,7 @@ public class DetectEntityUnderCommand extends Command {
     }
 
     SendChat.chat(String.valueOf(getBestPath(returnList, curYaw).displacement));
-    Test.path = getBestPath(returnList, curYaw);
+    //Test.path = getBestPath(returnList, curYaw);
     Test.startRender = !Test.startRender;
     //SendChat.chat("Testing");
     //currentRoute.curPlayerPos = ids.mc.thePlayer.getPosition();

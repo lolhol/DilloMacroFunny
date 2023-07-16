@@ -2,9 +2,11 @@ package com.dillo.commands.UtilCommands;
 
 import static com.dillo.dilloUtils.LookAt.serverSmoothLook;
 import static com.dillo.dilloUtils.LookAt.updateServerLook;
+import static com.dillo.dilloUtils.NewSpinDrive.putAllTogether;
 import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
 
 import com.dillo.Events.PlayerMoveEvent;
+import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.dilloUtils.LookAt;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
@@ -34,10 +36,11 @@ public class WalkToCustom extends Command {
 
     //smoothLook2(new YawLook.RotationYaw(40, 0), 1000);
 
-    serverSmoothLook(new LookAt.Rotation(40, curRotation() + 20), 100);
-    startRender = !startRender;
+    // serverSmoothLook(new LookAt.Rotation(40, curRotation() + 20), 100);
+    // startRender = !startRender;
     //currentRoute.currentBlock = new BlockPos(x, y, z);
-    //putAllTogether();
+    currentRoute.currentBlock = currentRoute.currentRoute.get(0);
+    putAllTogether();
     // SendChat.chat(String.valueOf(getYawNeededVec(new Vec3(x, y, z), displacement)))
     //isStructureBetween(ids.mc.thePlayer.getPosition(), new BlockPos(x, y, z));
     /*RenderMultipleLines.renderMultipleLines(null, null, false);

@@ -4,11 +4,13 @@ import static com.dillo.dilloUtils.LookAt.getNeededChange;
 import static com.dillo.dilloUtils.LookAt.getRotation;
 import static com.dillo.dilloUtils.NewSpinDrive.isLeft;
 import static com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain.canBeBroken;
+import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
 
 import com.dillo.data.config;
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.Teleport.GetNextBlock;
 import com.dillo.utils.BlockUtils;
+import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,96 +24,74 @@ public class GetMostOptimalPath {
 
   public static boolean isClear = false;
 
-  public static OptimalPath getBestPath(List<BlockPos> originBlocks, float currentLook) {
-    float displacement = 0;
+  public static OptimalPathRotation getBestPath(List<BlockPos> originBlocks, float currentLook) {
     BlockPos nextBlock = GetNextBlock.getNextBlock();
-    float bestDisplacement = 0;
-    List<BlockPos> best = new ArrayList<BlockPos>();
-    float bestPoints = 0;
+    float bestRot = 0;
 
-    boolean includeNext = false;
+    OptimalPathRotation bestPath = new OptimalPathRotation(new ArrayList<>(), 0, 0);
+    float bestPointsRot = 10000000;
 
-    boolean canBeBroken = canBeBroken(ids.mc.thePlayer.getPosition());
-    if (!canBeBroken || isClear) {
-      includeNext = true;
-    }
+    //SendChat.chat(String.valueOf(originBlocks.size()) + "!!!!!!!!!!!!!!!!!!!!!");
 
-    while (displacement <= 360) {
-      float points = 0;
-      List<BlockPos> prevBest = new ArrayList<>();
-      double neededRotation = 0;
+    SendChat.chat(isLeft ? "Left" : "Right");
 
-      if (nextBlock != null) {
-        neededRotation =
-          getYawNeededVec(BlockUtils.fromBlockPosToVec3(nextBlock), displacement + config.headRotationMax);
-      }
+    for (int i = 90; i < config.headRotationMax; i += 10) {
+      float bestPoints = 0;
+      OptimalPath optimalPath = new OptimalPath(new ArrayList<>(), 0);
+      float currRotPoints = 0;
 
-      if (isLeft) {
-        if (neededRotation > (float) -config.headRotationMax + 40 && neededRotation < 0) {
-          points += 5;
-        } else {
-          points -= 1;
-        }
-      } else {
-        if (neededRotation < (float) config.headRotationMax - 40 && neededRotation > 0) {
-          points += 5;
-        } else {
-          points -= 1;
-        }
-      }
+      for (int displacement = 0; displacement < 360; displacement += 5) {
+        List<BlockPos> blocks = new ArrayList<>();
+        float points = 0;
 
-      for (BlockPos block : originBlocks) {
-        Vec3 centeredBlock = centerBlock(block);
+        for (BlockPos block : originBlocks) {
+          Vec3 centered = centerBlock(block);
+          float neededYaw = getYawNeededVec(centered, displacement);
 
-        float yaw = getYawNeededVec(centeredBlock, displacement);
-
-        float headMovementLeft = -config.headRotationMax + 40;
-        float headMovementRight = config.headRotationMax - 40;
-
-        if (isClear) {
-          headMovementLeft = -160;
-        } else {
-          headMovementRight = 160;
-        }
-
-        if (isLeft) {
-          if (yaw > headMovementLeft && yaw < 0) {
+          if (!isLeft) {
+            if (neededYaw > 0 && neededYaw < i) {
+              if (ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass) {
+                points += 1.5;
+              } else {
+                points += 1;
+              }
+              blocks.add(block);
+            }
+          } else if (neededYaw < 0 && neededYaw > -i) {
             if (ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass) {
               points += 1.5;
             } else {
               points += 1;
             }
 
-            prevBest.add(block);
+            blocks.add(block);
           }
-        } else {
-          if (yaw < headMovementRight && yaw > 0) {
-            if (ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass) {
-              points += 1.5;
-            } else {
-              points += 1;
-            }
+        }
 
-            prevBest.add(block);
-          }
+        if (bestPoints < points) {
+          optimalPath.path = blocks;
+          optimalPath.displacement = displacement;
+          bestPoints = points;
         }
       }
 
-      if (bestPoints < points) {
-        bestDisplacement = displacement;
-        best = new ArrayList<>(prevBest);
-      }
+      currRotPoints = i / bestPoints;
 
-      displacement += 5;
+      if (currRotPoints < bestPointsRot || (bestPointsRot - 10 < bestPointsRot && optimalPath.path.size() > bestRot)) {
+        SendChat.chat(currRotPoints + " || " + bestPoints);
+        bestPointsRot = currRotPoints;
+        bestRot = bestPoints;
+        bestPath.path = optimalPath.path;
+        bestPath.displacement = optimalPath.displacement;
+        bestPath.rotation = i;
+      }
     }
+
+    SendChat.chat("Best Rotation is " + bestPath.rotation);
 
     isClear = false;
 
-    if (isLeft) {
-      return new OptimalPath(best, -bestDisplacement);
-    } else {
-      return new OptimalPath(best, bestDisplacement);
-    }
+    return bestPath;
   }
 
   @Getter
@@ -120,6 +100,15 @@ public class GetMostOptimalPath {
 
     public List<BlockPos> path = null;
     public float displacement = 0;
+  }
+
+  @Getter
+  @AllArgsConstructor
+  public static class OptimalPathRotation {
+
+    public List<BlockPos> path = null;
+    public float displacement = 0;
+    public float rotation = 0;
   }
 
   public static Vec3 centerBlock(BlockPos block) {

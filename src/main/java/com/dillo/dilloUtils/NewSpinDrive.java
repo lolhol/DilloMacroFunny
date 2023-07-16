@@ -34,7 +34,7 @@ public class NewSpinDrive {
   private static final KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
   public static List<DilloDriveBlockDetection.BlockAngle> returnBlocks = new ArrayList<>();
   public static float lastBlockAngle = 0;
-  public static GetMostOptimalPath.OptimalPath path = null;
+  public static GetMostOptimalPath.OptimalPathRotation path = null;
   public static int driveClearCount = 0;
 
   public static void newSpinDrive() {
@@ -79,6 +79,8 @@ public class NewSpinDrive {
     } else {
       isLeft = false;
     }
+
+    //com.dillo.utils.previous.SendChat.chat(isLeft ? "left" : "right");
 
     List<BlockPos> returnList = new ArrayList<>();
 
