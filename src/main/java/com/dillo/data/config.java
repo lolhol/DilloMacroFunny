@@ -252,7 +252,7 @@ public class config extends Vigilant {
     name = "TP Wait Time",
     description = "Waits for ____ amount of ms.",
     category = "Teleportation Options",
-    min = 0,
+    min = 30,
     max = 2000
   )
   public static int tpWait = 200;

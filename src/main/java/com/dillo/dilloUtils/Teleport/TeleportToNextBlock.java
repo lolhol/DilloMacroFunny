@@ -13,6 +13,7 @@ import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.TpUtils.LookWhileGoingDown;
 import com.dillo.utils.GetSBItems;
+import com.dillo.utils.RandomisationUtils;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.previous.random.swapToSlot;
@@ -47,7 +48,11 @@ public class TeleportToNextBlock {
       if (actuallySwitchAOTV) swapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
 
       if (isThrowRod) {
-        LookWhileGoingDown.lookUntilState(NEXTBLOCKSTAGE2, nextBlock, config.tpHeadMoveSpeed);
+        LookWhileGoingDown.lookUntilState(
+          NEXTBLOCKSTAGE2,
+          nextBlock,
+          config.tpHeadMoveSpeed + RandomisationUtils.getRandomAdd(config.tpHeadMoveSpeed)
+        );
         ArmadilloStates.currentState = STARTCHECKDILLO;
       } else {
         ArmadilloStates.currentState = NEXTBLOCKSTAGE2;
@@ -57,7 +62,12 @@ public class TeleportToNextBlock {
 
   public static void teleportToNextBlockStage2() {
     stopLook();
-    boolean result = TeleportToBlock.teleportToBlock(nextBlockInList, 200, config.tpWait, ARMADILLO);
+    boolean result = TeleportToBlock.teleportToBlock(
+      nextBlockInList,
+      200 + RandomisationUtils.getRandomAdd(200),
+      config.tpWait + RandomisationUtils.getRandomAdd(config.tpWait),
+      ARMADILLO
+    );
 
     if (!result) {
       stopLook();

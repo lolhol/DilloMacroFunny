@@ -1,5 +1,15 @@
 package com.dillo.dilloUtils;
 
+import static com.dillo.ArmadilloMain.CurrentState.RESTARTDRIVEWAIT;
+import static com.dillo.ArmadilloMain.CurrentState.STATEDILLONOGETTINGON;
+import static com.dillo.data.config.attemptToClearOnSpot;
+import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
+import static com.dillo.dilloUtils.StateDillo.canDilloOn;
+import static com.dillo.dilloUtils.Teleport.SmartTP.smartTpBlocks;
+import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getBestPath;
+import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.isClear;
+import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
+
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
@@ -10,24 +20,13 @@ import com.dillo.dilloUtils.Utils.LookYaw;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.dillo.ArmadilloMain.CurrentState.RESTARTDRIVEWAIT;
-import static com.dillo.ArmadilloMain.CurrentState.STATEDILLONOGETTINGON;
-import static com.dillo.data.config.attemptToClearOnSpot;
-import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
-import static com.dillo.dilloUtils.StateDillo.canDilloOn;
-import static com.dillo.dilloUtils.Teleport.SmartTP.smartTpBlocks;
-import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getBestPath;
-import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.isClear;
-import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
 
 public class NewSpinDrive {
 

@@ -7,7 +7,6 @@ import static com.dillo.dilloUtils.NewSpinDrive.isLeft;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.Teleport.GetNextBlock;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +28,6 @@ public class GetMostOptimalPath {
     float bestPointsRot = 10000000;
 
     //SendChat.chat(String.valueOf(originBlocks.size()) + "!!!!!!!!!!!!!!!!!!!!!");
-
-    SendChat.chat(isLeft ? "Left" : "Right");
 
     for (int i = 90; i < config.headRotationMax; i += 10) {
       float bestPoints = 0;
@@ -83,7 +80,7 @@ public class GetMostOptimalPath {
       }
     }
 
-    SendChat.chat("Best Rotation is " + bestPath.rotation);
+    //SendChat.chat("Best Rotation is " + bestPath.rotation);
 
     isClear = false;
 
