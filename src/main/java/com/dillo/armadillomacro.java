@@ -1,7 +1,5 @@
 package com.dillo;
 
-import static com.dillo.dilloUtils.FailSafes.AnswerPPL.makeAcusation;
-
 import com.dillo.ArmadilloMain.ArmadilloMain;
 import com.dillo.Events.DoneNukerBlocks;
 import com.dillo.MITGUI.GUIUtils.CurRatesUtils.GetCurGemPrice;
@@ -23,9 +21,9 @@ import com.dillo.commands.RouteMakerUtils.CalcRouteAvgGemPerc;
 import com.dillo.commands.RouteMakerUtils.CheckIfCanTpToEvery;
 import com.dillo.commands.RouteMakerUtils.GemESP;
 import com.dillo.commands.UtilCommands.*;
-import com.dillo.dilloUtils.*;
 import com.dillo.dilloUtils.BlockESP.BlockOnRouteESP;
 import com.dillo.dilloUtils.BlockUtils.JumpLook;
+import com.dillo.dilloUtils.*;
 import com.dillo.dilloUtils.FailSafes.*;
 import com.dillo.dilloUtils.ReFuelDrill.ReFuelDrill;
 import com.dillo.dilloUtils.ReFuelDrill.ReFuelDrillTriger;
@@ -43,8 +41,6 @@ import com.dillo.utils.GetConfigFolder;
 import com.dillo.utils.renderUtils.renderModules.*;
 import gg.essential.api.EssentialAPI;
 import gg.essential.api.commands.Command;
-import java.io.File;
-import java.util.ArrayList;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -55,6 +51,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
+
+import java.io.File;
+import java.util.ArrayList;
+
+import static com.dillo.dilloUtils.FailSafes.AnswerPPL.makeAcusation;
 
 @Mod(modid = "autogg", name = "autogg", version = "1.0.0", clientSideOnly = true)
 @SideOnly(Side.CLIENT)
@@ -157,7 +158,8 @@ public class armadillomacro {
       new ThrowAtEnd(),
       new CheckFile(),
       new WalkToCustom(),
-      new YawLook()
+      new YawLook(),
+      new PassReNew()
     );
 
     registerKeybinds(keybinds);

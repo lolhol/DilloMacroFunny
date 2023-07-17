@@ -36,6 +36,7 @@ public class IsOnBlock {
   private static int curTicks = 0;
   private static int curReTps = 0;
   private static final KeyBinding SNEAK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
+  public static float yaw = 0;
 
   public static void isOnBlock(int checkTimeTicks, BlockPos nextBlock, CurrentState newString) {
     blockPos = nextBlock;
@@ -64,6 +65,7 @@ public class IsOnBlock {
               KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
 
               float p = 5 + (random.nextFloat() < 0.5 ? random.nextFloat() * 10 : -(random.nextFloat() * 10));
+              yaw = p;
               LookAt.smoothLook(new LookAt.Rotation(p, curRotation()), 100);
 
               if (RestartMacroFailsafe.isRestart) {

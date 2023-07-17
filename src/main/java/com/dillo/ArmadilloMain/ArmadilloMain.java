@@ -3,6 +3,7 @@ package com.dillo.ArmadilloMain;
 import static com.dillo.ArmadilloMain.CurrentState.NEXTBLOCKSTAGE2;
 import static com.dillo.ArmadilloMain.CurrentState.SPINDRIVE;
 import static com.dillo.dilloUtils.FailSafes.AnswerPPL.answerAccusation;
+import static com.dillo.dilloUtils.NewSpinDrive.startAgain;
 import static com.dillo.dilloUtils.Teleport.SmartTP.TPToNext;
 import static com.dillo.dilloUtils.Teleport.TeleportToBlock.tpStageWalk;
 import static com.dillo.dilloUtils.Utils.CenterPlayer.centerStage2;
@@ -95,6 +96,9 @@ public class ArmadilloMain {
                 return;
               case STATEDILLONOGETTINGON:
                 StateDillo.stateDilloNoGettingOn();
+                return;
+              case RESTARTDRIVEWAIT:
+                startAgain();
                 return;
             }
           }

@@ -1,5 +1,6 @@
 package com.dillo.dilloUtils;
 
+import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.utils.previous.random.ids;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
@@ -21,6 +22,7 @@ public class YawLook {
   public static RotationYaw endRot;
   private static long startTime;
   private static long endTime;
+  private static boolean isStart = true;
 
   public static class RotationYaw {
 
@@ -75,20 +77,25 @@ public class YawLook {
 
   @SubscribeEvent
   public void onRenderWorld(RenderWorldLastEvent event) {
-    //if (ArmadilloStates.isOnline()) {
-    if (rotationType != RotationTypeYaw.NORMAL) return;
-    if (System.currentTimeMillis() <= endTime) {
-      ids.mc.thePlayer.rotationPitch = interpolate(startRot.pitch, endRot.pitch);
-      //ids.mc.thePlayer.rotationYaw = interpolate(startRot.yaw, endRot.yaw);
-    } else {
-      if (!done) {
-        //ids.mc.thePlayer.rotationYaw = endRot.yaw;
-        ids.mc.thePlayer.rotationPitch = endRot.pitch;
-
+    if (ArmadilloStates.isOnline()) {
+      if (!isStart) {
         reset();
+        return;
+      }
+
+      if (rotationType != RotationTypeYaw.NORMAL) return;
+      if (System.currentTimeMillis() <= endTime) {
+        ids.mc.thePlayer.rotationPitch = interpolate(startRot.pitch, endRot.pitch);
+        //ids.mc.thePlayer.rotationYaw = interpolate(startRot.yaw, endRot.yaw);
+      } else {
+        if (!done) {
+          //ids.mc.thePlayer.rotationYaw = endRot.yaw;
+          ids.mc.thePlayer.rotationPitch = endRot.pitch;
+
+          reset();
+        }
       }
     }
-    //}
   }
 
   private static float interpolate(float start, float end) {

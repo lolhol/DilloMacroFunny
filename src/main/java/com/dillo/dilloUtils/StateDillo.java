@@ -237,22 +237,13 @@ public class StateDillo {
                 ArmadilloStates.currentState = ROUTEOBSTRUCTEDCLEAR;
                 isNoTp = false;
               } else {
-                new Thread(() -> {
-                  KeyBinding.setKeyBindState(jump.getKeyCode(), true);
+                KeyBinding.setKeyBindState(jump.getKeyCode(), true);
 
-                  try {
-                    Thread.sleep(100);
-                  } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                  }
-
-                  if (ArmadilloStates.isOnline()) {
-                    ArmadilloStates.currentState = SPINDRIVE;
-                  } else {
-                    KeyBinding.setKeyBindState(jump.getKeyCode(), false);
-                  }
-                })
-                  .start();
+                if (ArmadilloStates.isOnline()) {
+                  ArmadilloStates.currentState = SPINDRIVE;
+                } else {
+                  KeyBinding.setKeyBindState(jump.getKeyCode(), false);
+                }
               }
             }
           } else {
