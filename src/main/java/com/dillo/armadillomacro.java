@@ -21,6 +21,7 @@ import com.dillo.commands.HelpCommands.MainHelp;
 import com.dillo.commands.RouteCommands.*;
 import com.dillo.commands.RouteMakerUtils.CalcRouteAvgGemPerc;
 import com.dillo.commands.RouteMakerUtils.CheckIfCanTpToEvery;
+import com.dillo.commands.RouteMakerUtils.GemESP;
 import com.dillo.commands.UtilCommands.*;
 import com.dillo.dilloUtils.*;
 import com.dillo.dilloUtils.BlockESP.BlockOnRouteESP;
@@ -107,7 +108,8 @@ public class armadillomacro {
       new AddConfig(),
       new SelectConfig(),
       new CalcRouteAvgGemPerc(),
-      new CheckIfCanTpToEvery()
+      new CheckIfCanTpToEvery(),
+      new GemESP()
     );
 
     registerEvents(
