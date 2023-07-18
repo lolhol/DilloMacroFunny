@@ -1,5 +1,9 @@
 package com.dillo.dilloUtils.FailSafes;
 
+import static com.dillo.utils.RayTracingUtils.getCollisionVecs;
+import static com.dillo.utils.RayTracingUtils.getDistance;
+import static com.dillo.utils.keyBindings.rightClick;
+
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.Events.DonePathEvent;
@@ -16,6 +20,8 @@ import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleLines;
 import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
+import java.util.HashSet;
+import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -26,13 +32,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
-import java.util.HashSet;
-import java.util.List;
-
-import static com.dillo.utils.RayTracingUtils.getCollisionVecs;
-import static com.dillo.utils.RayTracingUtils.getDistance;
-import static com.dillo.utils.keyBindings.rightClick;
 
 public class UsePathfinderInstead {
 

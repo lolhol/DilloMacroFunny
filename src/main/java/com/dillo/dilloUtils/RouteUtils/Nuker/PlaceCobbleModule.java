@@ -45,7 +45,7 @@ public class PlaceCobbleModule {
     if (DistanceFromTo.distanceFromTo(closestBlock, ids.mc.thePlayer.getPosition()) < 5) {
       grain = getAdj(closestBlock);
 
-      //LIE
+      // Cobble Placer
 
       if (grain != null) {
         isStart = true;
