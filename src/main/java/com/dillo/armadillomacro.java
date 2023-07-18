@@ -33,6 +33,7 @@ import com.dillo.dilloUtils.ReFuelDrill.ReFuelDrillTriger;
 import com.dillo.dilloUtils.ReFuelDrill.ThrowAtEnd;
 import com.dillo.dilloUtils.RouteUtils.LegitRouteClear.LegitRouteClear;
 import com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain;
+import com.dillo.dilloUtils.RouteUtils.Nuker.PlaceCobbleModule;
 import com.dillo.dilloUtils.RouteUtils.ViewClearLines.ViewClearLines;
 import com.dillo.dilloUtils.Teleport.IsOnBlock;
 import com.dillo.dilloUtils.Teleport.TeleportToBlock;
@@ -168,7 +169,8 @@ public class armadillomacro {
       new YawLook(),
       new PassReNew(),
       new DriveLook(),
-      new TeleportToBlock()
+      new TeleportToBlock(),
+      new PlaceCobbleModule()
     );
 
     registerKeybinds(keybinds);

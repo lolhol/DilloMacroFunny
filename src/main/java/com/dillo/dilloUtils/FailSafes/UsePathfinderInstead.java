@@ -1,42 +1,38 @@
 package com.dillo.dilloUtils.FailSafes;
 
-import static com.dillo.utils.keyBindings.rightClick;
-
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.Events.DonePathEvent;
 import com.dillo.Pathfinding.BlockNode;
-import com.dillo.Pathfinding.FindPathToBlock;
 import com.dillo.Pathfinding.PathFinderV2;
 import com.dillo.Pathfinding.WalkOnPath;
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
-import com.dillo.dilloUtils.TpUtils.WaitThenCall;
 import com.dillo.utils.DistanceFromTo;
+import com.dillo.utils.RayTracingUtils;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.packets.getBlockEnum;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
-import com.dillo.utils.previous.random.swapToSlot;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleLines;
 import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import java.util.HashSet;
+import java.util.List;
+
+import static com.dillo.utils.RayTracingUtils.getCollisionVecs;
+import static com.dillo.utils.RayTracingUtils.getDistance;
+import static com.dillo.utils.keyBindings.rightClick;
 
 public class UsePathfinderInstead {
 
@@ -118,9 +114,26 @@ public class UsePathfinderInstead {
 
         if (newBlockType != Blocks.air) {
           Vec3 addedVec = newVec.add(blockCent);
-
           Vec3 grain = new Vec3(addedVec.xCoord / 2, addedVec.yCoord / 2 + 0.5, addedVec.zCoord / 2);
-          return grain;
+
+          Vec3 player = ids.mc.thePlayer.getPositionVector();
+
+          double distToBlockCenter = getDistance(new Vec3(player.xCoord, player.yCoord + 1.54, player.zCoord), grain);
+
+          RayTracingUtils.CollisionResult result = getCollisionVecs(
+            player.xCoord,
+            player.yCoord + 1.54,
+            player.zCoord,
+            grain.xCoord,
+            grain.yCoord,
+            grain.zCoord,
+            distToBlockCenter,
+            new Block[] { Blocks.air }
+          );
+
+          if (result != null) {
+            return grain;
+          }
         }
       }
     }

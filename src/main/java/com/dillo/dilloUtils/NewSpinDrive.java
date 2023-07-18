@@ -3,8 +3,10 @@ package com.dillo.dilloUtils;
 import static com.dillo.ArmadilloMain.CurrentState.STATEDILLONOGETTINGON;
 import static com.dillo.data.config.attemptToClearOnSpot;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
+import static com.dillo.dilloUtils.DriveLook.addPitch;
 import static com.dillo.dilloUtils.DriveLook.addYaw;
 import static com.dillo.dilloUtils.StateDillo.canDilloOn;
+import static com.dillo.dilloUtils.Teleport.IsOnBlock.yaw;
 import static com.dillo.dilloUtils.Teleport.SmartTP.smartTpBlocks;
 import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getBestPath;
 import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.isClear;
@@ -47,6 +49,8 @@ public class NewSpinDrive {
       addYaw(config.headMovement * 100L, config.headRotationMax);
     }
 
+    upDownMovement(config.headMovement * 100L, 30, 200, 100);
+
     new Thread(() -> {
       try {
         Thread.sleep(config.headMovement * 100L);
@@ -62,6 +66,21 @@ public class NewSpinDrive {
       .start();
   }
 
+  private static void upDownMovement(long totalTime, float amount, float totalAngl, float fallOffAngle) {
+    addPitch(totalTime / 3, -amount);
+
+    new Thread(() -> {
+      try {
+        Thread.sleep(totalTime / 3);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+
+      addPitch((totalTime / 3) * 2, yaw);
+    })
+      .start();
+  }
+
   public static void startAgain() {
     if (
       canDilloOn() && driveClearCount < 2 && !smartTpBlocks.contains(currentRoute.currentBlock) && attemptToClearOnSpot
@@ -73,6 +92,7 @@ public class NewSpinDrive {
       ArmadilloStates.currentState = null;
       SendChat.chat(prefix.prefix + "Done breaking! Moving to next vein!");
       TeleportToNextBlock.teleportToNextBlock();
+      // ADD A FASTER TP TO NEXT BLOCK MODULE VIA MAKING IT DISMOUNT A BIT EARLY
     }
   }
 

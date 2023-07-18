@@ -3,7 +3,6 @@ package com.dillo.dilloUtils;
 import static com.dillo.utils.previous.random.ids.mc;
 
 import com.dillo.Events.MillisecondEvent;
-import com.dillo.utils.previous.SendChat;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class DriveLook {
@@ -11,7 +10,10 @@ public class DriveLook {
   public static LookAt.Rotation startRot;
   public static LookAt.Rotation endRot;
   private static long endTime;
+  private static long endTimeP;
+  private static boolean isDoneP = true;
   private static double addAm = 0;
+  private static double addPi = 0;
   private static boolean isDoneRotate = true;
   private static double add = 0;
 
@@ -19,9 +21,18 @@ public class DriveLook {
     addAm = addYaw / totalTime;
     endTime = System.currentTimeMillis() + totalTime;
 
-    SendChat.chat(String.valueOf(addAm));
-
     isDoneRotate = false;
+  }
+
+  public static void addPitch(long totalTime, float addPitch) {
+    addPi = addPitch / totalTime;
+    endTimeP = System.currentTimeMillis() + totalTime;
+
+    isDoneP = false;
+  }
+
+  public static void reset() {
+    isDoneRotate = true;
   }
 
   @SubscribeEvent
@@ -32,6 +43,14 @@ public class DriveLook {
         add += addAm;
       } else {
         isDoneRotate = true;
+      }
+    }
+
+    if (!isDoneP) {
+      if (System.currentTimeMillis() <= endTimeP) {
+        mc.thePlayer.rotationPitch += addPi;
+      } else {
+        isDoneP = true;
       }
     }
   }

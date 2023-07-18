@@ -1,5 +1,7 @@
 package com.dillo.mixin;
 
+import static com.dillo.data.config.isShowServerLook;
+
 import com.dillo.utils.previous.random.ids;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
@@ -10,8 +12,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import static com.dillo.data.config.isShowServerLook;
 
 @Mixin(ModelBiped.class)
 public class MixinModelBiped {

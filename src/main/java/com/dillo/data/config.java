@@ -525,6 +525,9 @@ public class config extends Vigilant {
   )
   public static int nukerBPS = 20;
 
+  @Property(type = PropertyType.SWITCH, name = "Place Cobble", description = ":O", category = "Fun")
+  public static boolean isNukerPlaceCobble = false;
+
   @Property(
     type = PropertyType.SWITCH,
     name = "Nuker Server Rotations",

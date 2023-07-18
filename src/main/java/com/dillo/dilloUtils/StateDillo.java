@@ -4,6 +4,10 @@ import static com.dillo.ArmadilloMain.CurrentState.ROUTEOBSTRUCTEDCLEAR;
 import static com.dillo.ArmadilloMain.CurrentState.SPINDRIVE;
 import static com.dillo.data.config.fasterDillo;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
+import static com.dillo.dilloUtils.DriveLook.addYaw;
+import static com.dillo.dilloUtils.DriveLook.reset;
+import static com.dillo.dilloUtils.NewSpinDrive.isLeft;
+import static com.dillo.dilloUtils.NewSpinDrive.newSpinDrive;
 import static com.dillo.dilloUtils.SpinDrive.jump;
 import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isThrowRod;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
@@ -95,18 +99,15 @@ public class StateDillo {
           throw new RuntimeException(e);
         }
 
-        //throwRod.throwRodInv();
         swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
-
-        //lookToPitch(1, 10);
 
         NewSpinDrive.putAllTogether();
 
-        /*if (isLeft) {
-          LookYaw.lookToYaw(config.rod_drill_switch_time + 150, 20);
+        if (isLeft) {
+          addYaw(100, -20);
         } else {
-          LookYaw.lookToYaw(config.rod_drill_switch_time + 150, -20);
-        }*/
+          addYaw(100, 20);
+        }
 
         try {
           Thread.sleep(config.rod_drill_switch_time);
@@ -135,7 +136,7 @@ public class StateDillo {
     }
   }
 
-  public boolean isDilloSummoned() {
+  public static boolean isDilloSummoned() {
     Minecraft mc = Minecraft.getMinecraft();
     EntityPlayer player = mc.thePlayer;
 
@@ -221,6 +222,7 @@ public class StateDillo {
       if (canCheckIfOnDillo && ArmadilloStates.isOnline()) {
         if (tickDilloCheckCount >= 4) {
           if (playerYBe4 - ids.mc.thePlayer.posY + 0.01 < 0) {
+            reset();
             checkedNumber = 0;
             tickDilloCheckCount = 0;
 
@@ -234,9 +236,9 @@ public class StateDillo {
                 isNoTp = false;
               } else {
                 KeyBinding.setKeyBindState(jump.getKeyCode(), true);
-
                 if (ArmadilloStates.isOnline()) {
-                  ArmadilloStates.currentState = SPINDRIVE;
+                  newSpinDrive();
+                  //ArmadilloStates.currentState = SPINDRIVE;
                 } else {
                   KeyBinding.setKeyBindState(jump.getKeyCode(), false);
                 }

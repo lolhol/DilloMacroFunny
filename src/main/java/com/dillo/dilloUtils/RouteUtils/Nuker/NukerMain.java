@@ -2,6 +2,7 @@ package com.dillo.dilloUtils.RouteUtils.Nuker;
 
 import static com.dillo.data.config.nukerRange;
 import static com.dillo.data.config.nukerServerRotations;
+import static com.dillo.dilloUtils.LookAt.reset;
 import static com.dillo.dilloUtils.LookAt.updateServerLook;
 import static com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker.Blockss;
 import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isAbleToMine;
@@ -45,6 +46,7 @@ public class NukerMain {
   public static BlockPos curBlock = null;
   private static int currTicks = 0;
   public static boolean isStartLook = false;
+  private static boolean isAlrLooked = false;
   private static long lastTime = System.currentTimeMillis();
 
   public static void nukeBlocks(List<BlockPos> blocksToNuke, boolean nuke) {
@@ -104,7 +106,15 @@ public class NukerMain {
                 return;
               }
 
-              if (nukerServerRotations) {}
+              if (isAlrLooked) {
+                isAlrLooked = false;
+                reset();
+              }
+
+              if (nukerServerRotations) {
+                isAlrLooked = true;
+                startLook(block);
+              }
 
               sendStart.sendStartPacket(block, EnumFacing.fromAngle(ids.mc.thePlayer.rotationYaw));
               nuking.remove(block);
@@ -141,7 +151,7 @@ public class NukerMain {
   }
 
   public static void startLook(BlockPos block) {
-    LookAt.serverSmoothLook(LookAt.getRotation(centerBlock(block)), (long) 1000 / config.nukerBPS);
+    LookAt.serverSmoothLook(LookAt.getRotation(centerBlock(block)), (long) (1000 / config.nukerBPS) - 10);
     isStartLook = true;
   }
 
