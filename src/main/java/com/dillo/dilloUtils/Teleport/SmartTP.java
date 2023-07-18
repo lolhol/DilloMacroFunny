@@ -33,6 +33,7 @@ public class SmartTP {
   private static JsonObject reRoutes = new JsonObject();
   private static boolean triedAPull = false;
   private static boolean overide = false;
+  public static boolean prevFail = false;
   public static HashSet<BlockPos> smartTpBlocks = new HashSet<>();
 
   public static void smartTP(BlockPos finalBlock, boolean reTpOnFail) {

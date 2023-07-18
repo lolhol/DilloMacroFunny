@@ -4,8 +4,6 @@ import static com.dillo.utils.previous.random.IsSameBlock.isSameBlock;
 
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
-import com.dillo.utils.renderUtils.renderModules.RenderPoints;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -21,6 +19,7 @@ public class RayTracingUtils {
   private static boolean isCheck = false;
   private static Vec3 destBlock1 = null;
   private static BlockPos destBlock2 = null;
+  public static List<BlockPos> foundCollisions = new ArrayList<>();
 
   public static Vec3 adjustLook(Vec3 block1, BlockPos destBlock, Block[] blocksToIgnore, boolean isCheck) {
     double playerHeight = 1.54;
@@ -137,6 +136,8 @@ public class RayTracingUtils {
             Block block = blockState.getBlock();
 
             if (isContains(blocksToIgnore, block)) {
+              if (!foundCollisions.contains(new BlockPos(x, y, z))) foundCollisions.add(new BlockPos(x, y, z));
+
               if (!isCheck) {
                 continue;
               } else {

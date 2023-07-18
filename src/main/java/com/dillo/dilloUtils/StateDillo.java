@@ -6,7 +6,6 @@ import static com.dillo.data.config.fasterDillo;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
 import static com.dillo.dilloUtils.SpinDrive.jump;
 import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isThrowRod;
-import static com.dillo.dilloUtils.Utils.LookYaw.lookToPitch;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 import static com.dillo.utils.keyBindings.rightClick;
 
@@ -36,14 +35,14 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class StateDillo {
 
-  public static float playerYBe4;
+  public static float playerYBe4 = 0;
   public static boolean canCheckIfOnDillo = false;
   public static int tickDilloCheckCount = 0;
   public static boolean isNoTp = false;
   public static int checkedNumber = 0;
   private static boolean look = true;
   public static boolean isSmartTP = false;
-  private static float lastPitch = 0;
+  private static float player = 0;
 
   public static void stateDilloNoGettingOn() {
     if (canDillo() && ArmadilloStates.isOnline()) {
@@ -221,12 +220,9 @@ public class StateDillo {
     if (event.phase == TickEvent.Phase.END) {
       if (canCheckIfOnDillo && ArmadilloStates.isOnline()) {
         if (tickDilloCheckCount >= 4) {
-          if (ids.mc.thePlayer.isRiding()) {
-            KeyBinding.setKeyBindState(jump.getKeyCode(), true);
+          if (playerYBe4 - ids.mc.thePlayer.posY + 0.01 < 0) {
             checkedNumber = 0;
             tickDilloCheckCount = 0;
-
-            lookToPitch(20, -lastPitch);
 
             canCheckIfOnDillo = false;
 

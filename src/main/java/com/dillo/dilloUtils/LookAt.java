@@ -16,6 +16,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class LookAt {
 
+  public static boolean isDoneRotate = false;
+
   public static Rotation startRot;
   public static Rotation endRot;
   private static long startTime;
@@ -177,7 +179,9 @@ public class LookAt {
   }
 
   public static void smoothLook(Rotation rotation, long time) {
+    reset();
     rotationType = RotationType.NORMAL;
+    isDoneRotate = false;
     done = false;
     startRot = new Rotation(mc.thePlayer.rotationPitch, mc.thePlayer.rotationYaw);
 
@@ -291,9 +295,9 @@ public class LookAt {
       if (!done) {
         mc.thePlayer.rotationYaw = endRot.yaw;
         mc.thePlayer.rotationPitch = endRot.pitch;
-
-        reset();
       }
+
+      reset();
     }
   }
 

@@ -2,12 +2,15 @@ package com.dillo.dilloUtils.Teleport;
 
 import static com.dillo.ArmadilloMain.CurrentState.*;
 import static com.dillo.data.config.*;
+import static com.dillo.dilloUtils.LookAt.serverSmoothLook;
+import static com.dillo.dilloUtils.LookAt.updateServerLook;
 import static com.dillo.dilloUtils.TpUtils.WalkForward.walkForward;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.CurrentState;
 import com.dillo.ArmadilloMain.KillSwitch;
+import com.dillo.Events.PlayerMoveEvent;
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.TpUtils.WaitThenCall;
 import com.dillo.utils.GetSBItems;
@@ -20,10 +23,12 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class TeleportToBlock {
 
-  public static boolean newInputState;
+  public static boolean isStartLooking = false;
   public static CurrentState newStateType;
   public static final KeyBinding SNEAK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
   private static BlockPos nextBlock = null;
@@ -50,7 +55,12 @@ public class TeleportToBlock {
         return false;
       }
 
-      LookAt.smoothLook(LookAt.getRotation(nextBlockPos), time);
+      if (!serverRotations) {
+        LookAt.smoothLook(LookAt.getRotation(nextBlockPos), time);
+      } else {
+        serverSmoothLook(LookAt.getRotation(nextBlockPos), time);
+        isStartLooking = true;
+      }
 
       WaitThenCall.waitThenCall(waitTime + time, TPSTAGE2);
     } else {
@@ -111,7 +121,12 @@ public class TeleportToBlock {
       return;
     }
 
-    LookAt.smoothLook(LookAt.getRotation(nextBlockPos), 100);
+    if (!serverRotations) {
+      LookAt.smoothLook(LookAt.getRotation(nextBlockPos), 100);
+    } else {
+      serverSmoothLook(LookAt.getRotation(nextBlockPos), 100);
+      isStartLooking = true;
+    }
 
     WaitThenCall.waitThenCall(300, TPSTAGE2);
   }
@@ -119,5 +134,11 @@ public class TeleportToBlock {
   public static void teleportStage3() {
     ArmadilloStates.currentState = null;
     IsOnBlock.isOnBlock(checkOnBlockTime, nextBlock, newStateType);
+  }
+
+  @SubscribeEvent(priority = EventPriority.NORMAL)
+  public void onUpdatePre(PlayerMoveEvent.Pre pre) {
+    if (!isStartLooking) return;
+    updateServerLook();
   }
 }

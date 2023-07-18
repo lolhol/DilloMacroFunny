@@ -1,6 +1,7 @@
 package com.dillo.keybinds;
 
 import static com.dillo.commands.RouteCommands.StructurePoints.render;
+import static com.dillo.dilloUtils.LookAt.reset;
 
 import com.dillo.armadillomacro;
 import com.dillo.dilloUtils.ReFuelDrill.ReFuelDrill;
@@ -18,6 +19,7 @@ public class Keybinds {
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
       if (armadillomacro.keybinds.get(0).isPressed()) {
+        reset();
         StartMacro.startMacro();
       }
 

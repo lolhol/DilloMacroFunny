@@ -5,14 +5,13 @@ import static com.dillo.dilloUtils.YawLook.smoothLook2;
 
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.YawLook;
+import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 
 public class LookYaw {
 
   public static void lookToYaw(long time, float addYaw) {
-    float rotation = curRotation() + addYaw;
-
-    LookAt.smoothLook(new LookAt.Rotation(yaw, rotation), time);
+    LookAt.smoothLook(new LookAt.Rotation(yaw, curRotation() + addYaw), time);
   }
 
   public static float curRotation() {
@@ -24,6 +23,18 @@ public class LookYaw {
     }
 
     return rotationYaw;
+  }
+
+  public static double curRotationDispl() {
+    float rotationYaw = ids.mc.thePlayer.rotationYaw;
+    SendChat.chat(String.valueOf(rotationYaw / 360));
+    double returnVal = Math.abs(rotationYaw / 360);
+
+    if (returnVal < 1) {
+      returnVal = 1;
+    }
+
+    return returnVal;
   }
 
   public static void lookToPitch(long time, float addPitch) {

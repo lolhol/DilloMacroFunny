@@ -11,11 +11,11 @@ public class config extends Vigilant {
 
   @Property(
     type = PropertyType.SWITCH,
-    name = "Randomise Everything (Human-like behavior)",
-    description = "Will randomise everything that has a time it takes (very good)",
+    name = "Server Rotations",
+    description = "Will server rotate instead of legit rotating. (doesnt rly do anything jst looks cool aka QOL)",
     category = "Main"
   )
-  public static boolean randomise = true;
+  public static boolean serverRotations = false;
 
   @Property(
     type = PropertyType.SWITCH,
@@ -516,6 +516,14 @@ public class config extends Vigilant {
     max = 80
   )
   public static int nukerBPS = 20;
+
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Nuker Server Rotations",
+    description = "As far as ik this is purely QOL and will not flag. BUT that is prob just me idk SO BE CAREFULL!",
+    category = "Nuker"
+  )
+  public static boolean nukerServerRotations = false;
 
   @Property(
     type = PropertyType.SLIDER,

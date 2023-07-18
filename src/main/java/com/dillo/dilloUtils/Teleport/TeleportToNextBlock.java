@@ -17,7 +17,6 @@ import com.dillo.utils.RandomisationUtils;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.previous.random.swapToSlot;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.BlockPos;
 
@@ -25,11 +24,8 @@ public class TeleportToNextBlock {
 
   public static BlockPos nextBlockInList = null;
   public static boolean isTeleporting = false;
-  private static final KeyBinding forward = Minecraft.getMinecraft().gameSettings.keyBindForward;
   public static boolean isThrowRod = true;
-  public static int isReTp = 0;
   public static int clearAttempts = 0;
-  public static boolean isTP = true;
 
   public static void teleportToNextBlock() {
     if (ArmadilloStates.offlineState == ONLINE) {

@@ -1,16 +1,8 @@
 package com.dillo.dilloUtils.RouteUtils.Nuker;
 
-import static com.dillo.data.config.nukerRange;
-import static com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker.Blockss;
-import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isAbleToMine;
-import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isBlockInRoute;
-import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getYawNeededVec;
-import static com.dillo.dilloUtils.Utils.GetOnArmadillo.isSummoned;
-import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
-import static com.dillo.keybinds.Keybinds.isNuking;
-import static com.dillo.utils.RayTracingUtils.adjustLook;
-
+import com.dillo.Events.PlayerMoveEvent;
 import com.dillo.data.config;
+import com.dillo.dilloUtils.LookAt;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.SendChat;
@@ -18,9 +10,6 @@ import com.dillo.utils.previous.packets.sendStart;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.renderUtils.RenderBox;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -28,8 +17,26 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.dillo.data.config.nukerRange;
+import static com.dillo.data.config.nukerServerRotations;
+import static com.dillo.dilloUtils.LookAt.updateServerLook;
+import static com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker.Blockss;
+import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isAbleToMine;
+import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isBlockInRoute;
+import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.centerBlock;
+import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getYawNeededVec;
+import static com.dillo.dilloUtils.Utils.GetOnArmadillo.isSummoned;
+import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
+import static com.dillo.keybinds.Keybinds.isNuking;
+import static com.dillo.utils.RayTracingUtils.adjustLook;
 
 public class NukerMain {
 
@@ -38,6 +45,7 @@ public class NukerMain {
   public static boolean startNuking = false;
   public static BlockPos curBlock = null;
   private static int currTicks = 0;
+  public static boolean isStartLook = false;
   private static long lastTime = System.currentTimeMillis();
 
   public static void nukeBlocks(List<BlockPos> blocksToNuke, boolean nuke) {
@@ -97,6 +105,8 @@ public class NukerMain {
                 return;
               }
 
+              if (nukerServerRotations) {}
+
               sendStart.sendStartPacket(block, EnumFacing.fromAngle(ids.mc.thePlayer.rotationYaw));
               nuking.remove(block);
               broken.add(block);
@@ -129,6 +139,11 @@ public class NukerMain {
         }
       }
     }
+  }
+
+  public static void startLook(BlockPos block) {
+    LookAt.serverSmoothLook(LookAt.getRotation(centerBlock(block)), (long) 1000 / config.nukerBPS);
+    isStartLook = true;
   }
 
   public static boolean isInDillo() {
@@ -176,5 +191,11 @@ public class NukerMain {
       false
     );
     return blockHit != null;
+  }
+
+  @SubscribeEvent(priority = EventPriority.NORMAL)
+  public void onUpdatePre(PlayerMoveEvent.Pre pre) {
+    if (!isStartLook || !startNuking) return;
+    updateServerLook();
   }
 }

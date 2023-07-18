@@ -1,8 +1,9 @@
 package com.dillo.commands.UtilCommands;
 
-import static com.dillo.dilloUtils.LookAt.updateServerLook;
+import static com.dillo.dilloUtils.LookAt.*;
 
 import com.dillo.Events.PlayerMoveEvent;
+import com.dillo.dilloUtils.LookAt;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -31,8 +32,18 @@ public class WalkToCustom extends Command {
 
     //smoothLook2(new YawLook.RotationYaw(40, 0), 1000);
 
-    // serverSmoothLook(new LookAt.Rotation(40, curRotation() + 20), 100);
-    // startRender = !startRender;
+    //serverSmoothLook(new LookAt.Rotation(0.0F, curRotation() + 100), 1000);
+    //startRender = !startRender;
+    //curRotation();
+
+    serverSmoothLook(new LookAt.Rotation(0.0F, 221), 1000);
+    startRender = !startRender;
+
+    if (!startRender) {
+      reset();
+    }
+    //addYaw(config.headMovement * 100L, config.headRotationMax);
+    //LookYaw.lookToYaw(config.headMovement * 100L, config.headRotationMax);
     //currentRoute.currentBlock = new BlockPos(x, y, z);
     //currentRoute.currentBlock = currentRoute.currentRoute.get(0);
     //putAllTogether();
@@ -62,7 +73,6 @@ public class WalkToCustom extends Command {
   @SubscribeEvent(priority = EventPriority.NORMAL)
   public void onUpdatePre(PlayerMoveEvent.Pre pre) {
     if (!startRender) return;
-    //look(LookAt.getRotation(new Vec3(1, 1, 1)));
     updateServerLook();
   }
 }

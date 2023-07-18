@@ -9,7 +9,10 @@
     "MixinGuiMainMenu",
     "EntityPlayerSPMixin",
     "MixinRendererLivingEntity",
-    "MixinGemESP"
+    "MixinGemESP",
+    "EntityPlayerSPAccessor",
+    "MinecraftAccessor",
+    "MixinModelBiped"
   ],
   "mixins": [
     "RenderManagerAccessor"

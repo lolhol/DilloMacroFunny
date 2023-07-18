@@ -1,33 +1,31 @@
 package com.dillo.dilloUtils;
 
-import com.dillo.ArmadilloMain.ArmadilloStates;
-import com.dillo.data.config;
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
-import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
-import com.dillo.dilloUtils.TpUtils.WaitThenCall;
-import com.dillo.dilloUtils.Utils.GetMostOptimalPath;
-import com.dillo.dilloUtils.Utils.LookYaw;
-import com.dillo.utils.previous.chatUtils.SendChat;
-import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.previous.random.prefix;
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.dillo.ArmadilloMain.CurrentState.RESTARTDRIVEWAIT;
 import static com.dillo.ArmadilloMain.CurrentState.STATEDILLONOGETTINGON;
 import static com.dillo.data.config.attemptToClearOnSpot;
 import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
+import static com.dillo.dilloUtils.DriveLook.addYaw;
 import static com.dillo.dilloUtils.StateDillo.canDilloOn;
 import static com.dillo.dilloUtils.Teleport.SmartTP.smartTpBlocks;
 import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getBestPath;
 import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.isClear;
 import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
+
+import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.data.config;
+import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
+import com.dillo.dilloUtils.Utils.GetMostOptimalPath;
+import com.dillo.dilloUtils.Utils.LookYaw;
+import com.dillo.utils.previous.chatUtils.SendChat;
+import com.dillo.utils.previous.random.ids;
+import com.dillo.utils.previous.random.prefix;
+import java.util.ArrayList;
+import java.util.List;
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 
 public class NewSpinDrive {
 
@@ -35,38 +33,36 @@ public class NewSpinDrive {
   public static float angle = 0;
   public static java.util.Random random = new java.util.Random();
   private static final KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
-  public static List<DilloDriveBlockDetection.BlockAngle> returnBlocks = new ArrayList<>();
-  public static float lastBlockAngle = 0;
   public static GetMostOptimalPath.OptimalPath path = null;
   public static int driveClearCount = 0;
 
   public static void newSpinDrive() {
-    long pastTime = 0;
+    ArmadilloStates.currentState = null;
 
-    if (angle < config.headRotationMax + 60) {
-      KeyBinding.setKeyBindState(jump.getKeyCode(), true);
-      pastTime = config.headMovement * 5L;
-      float add = config.headMovement * 7 + random.nextFloat() * 10;
+    KeyBinding.setKeyBindState(jump.getKeyCode(), true);
 
-      if (isLeft) {
-        LookYaw.lookToYaw(pastTime, -add);
-      } else {
-        LookYaw.lookToYaw(pastTime, add);
-      }
-
-      angle += add;
+    if (isLeft) {
+      addYaw(config.headMovement * 100L, -config.headRotationMax);
     } else {
-      KeyBinding.setKeyBindState(jump.getKeyCode(), false);
-      angle = 0;
-      lastBlockAngle = 0;
-
-      WaitThenCall.waitThenCall(pastTime - 10, RESTARTDRIVEWAIT);
+      addYaw(config.headMovement * 100L, config.headRotationMax);
     }
+
+    new Thread(() -> {
+      try {
+        Thread.sleep(config.headMovement * 100L);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+      KeyBinding.setKeyBindState(jump.getKeyCode(), false);
+
+      if (ArmadilloStates.isOnline()) {
+        startAgain();
+      }
+    })
+      .start();
   }
 
   public static void startAgain() {
-    ArmadilloStates.currentState = null;
-
     if (
       canDilloOn() && driveClearCount < 2 && !smartTpBlocks.contains(currentRoute.currentBlock) && attemptToClearOnSpot
     ) {
@@ -115,8 +111,7 @@ public class NewSpinDrive {
     path = getBestPath(returnList, curYaw);
 
     float displacement = path.displacement;
-
-    LookYaw.lookToYaw(config.rod_drill_switch_time + (config.headMovement * 10L), displacement);
+    LookYaw.lookToYaw(config.rod_drill_switch_time, displacement);
   }
 
   public static boolean canAdd(BlockPos block) {
