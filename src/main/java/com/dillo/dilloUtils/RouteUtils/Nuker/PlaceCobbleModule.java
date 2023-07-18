@@ -1,17 +1,11 @@
 package com.dillo.dilloUtils.RouteUtils.Nuker;
 
-import static com.dillo.data.config.isNukerPlaceCobble;
-import static com.dillo.dilloUtils.FailSafes.UsePathfinderInstead.getAdj;
-import static com.dillo.dilloUtils.StateDillo.isDilloSummoned;
-
 import com.dillo.Events.MillisecondEvent;
 import com.dillo.Events.PlayerMoveEvent;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.random.ids;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -19,6 +13,13 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.dillo.data.config.isNukerPlaceCobble;
+import static com.dillo.dilloUtils.FailSafes.UsePathfinderInstead.getAdj;
+import static com.dillo.dilloUtils.StateDillo.isDilloSummoned;
 
 public class PlaceCobbleModule {
 
@@ -43,6 +44,8 @@ public class PlaceCobbleModule {
 
     if (DistanceFromTo.distanceFromTo(closestBlock, ids.mc.thePlayer.getPosition()) < 5) {
       grain = getAdj(closestBlock);
+
+      //LIE
 
       if (grain != null) {
         isStart = true;
