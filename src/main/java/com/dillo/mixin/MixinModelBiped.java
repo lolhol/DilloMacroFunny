@@ -11,6 +11,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static com.dillo.data.config.isShowServerLook;
+
 @Mixin(ModelBiped.class)
 public class MixinModelBiped {
 
@@ -31,6 +33,7 @@ public class MixinModelBiped {
     Entity entityIn,
     CallbackInfo ci
   ) {
+    if (!isShowServerLook) return;
     if ((int) ageInTicks == ageInTicks) return;
     if (entityIn != null && entityIn == ids.mc.thePlayer) {
       bipedHead.rotateAngleX = ((EntityPlayerSPAccessor) entityIn).getLastReportedPitch() / 57.295776f;

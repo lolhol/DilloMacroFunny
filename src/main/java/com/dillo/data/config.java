@@ -156,6 +156,14 @@ public class config extends Vigilant {
 
   @Property(
     type = PropertyType.SWITCH,
+    name = "Show Server Look",
+    description = "Will show how ur head rotates with server look.",
+    category = "Fun"
+  )
+  public static boolean isShowServerLook = true;
+
+  @Property(
+    type = PropertyType.SWITCH,
     name = "Dillo Attempt to clear on the spot",
     description = "Basically will attempt to clear the vein on the spot",
     category = "Main"

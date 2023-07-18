@@ -1,30 +1,5 @@
 package com.dillo.dilloUtils.RouteUtils.Nuker;
 
-import com.dillo.Events.PlayerMoveEvent;
-import com.dillo.data.config;
-import com.dillo.dilloUtils.LookAt;
-import com.dillo.utils.BlockUtils;
-import com.dillo.utils.DistanceFromTo;
-import com.dillo.utils.previous.SendChat;
-import com.dillo.utils.previous.packets.sendStart;
-import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.previous.random.prefix;
-import com.dillo.utils.renderUtils.RenderBox;
-import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.dillo.data.config.nukerRange;
 import static com.dillo.data.config.nukerServerRotations;
 import static com.dillo.dilloUtils.LookAt.updateServerLook;
@@ -37,6 +12,30 @@ import static com.dillo.dilloUtils.Utils.GetOnArmadillo.isSummoned;
 import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
 import static com.dillo.keybinds.Keybinds.isNuking;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
+
+import com.dillo.Events.PlayerMoveEvent;
+import com.dillo.data.config;
+import com.dillo.dilloUtils.LookAt;
+import com.dillo.utils.BlockUtils;
+import com.dillo.utils.DistanceFromTo;
+import com.dillo.utils.previous.SendChat;
+import com.dillo.utils.previous.packets.sendStart;
+import com.dillo.utils.previous.random.ids;
+import com.dillo.utils.previous.random.prefix;
+import com.dillo.utils.renderUtils.RenderBox;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class NukerMain {
 
