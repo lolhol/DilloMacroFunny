@@ -4,6 +4,7 @@ import static com.dillo.data.config.nukerRange;
 import static com.dillo.data.config.nukerServerRotations;
 import static com.dillo.dilloUtils.LookAt.reset;
 import static com.dillo.dilloUtils.LookAt.updateServerLook;
+import static com.dillo.dilloUtils.RouteUtils.AutoSetup.SetupMain.isAutoSetupOn;
 import static com.dillo.dilloUtils.RouteUtils.Utils.GetBlocksForNuker.Blockss;
 import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isAbleToMine;
 import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isBlockInRoute;
@@ -222,7 +223,11 @@ public class NukerMain {
       getYawNeededVec(BlockUtils.fromBlockPosToVec3(blockPos).addVector(0.5, 0.5, 0.5), curRotation())
     );
 
-    return fovBlock < fov;
+    if (!isAutoSetupOn) {
+      return fovBlock < fov;
+    } else {
+      return true;
+    }
   }
 
   public static boolean canBeBroken(BlockPos block) {
@@ -232,7 +237,12 @@ public class NukerMain {
       new net.minecraft.block.Block[] { Blocks.air },
       false
     );
-    return blockHit != null;
+
+    if (!isAutoSetupOn) {
+      return blockHit != null;
+    } else {
+      return true;
+    }
   }
 
   @SubscribeEvent(priority = EventPriority.NORMAL)

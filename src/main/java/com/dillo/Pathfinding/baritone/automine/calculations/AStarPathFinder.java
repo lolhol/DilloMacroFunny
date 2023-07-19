@@ -7,6 +7,7 @@ import com.dillo.Pathfinding.baritone.automine.calculations.exceptions.NoPathExc
 import com.dillo.Pathfinding.baritone.automine.handlers.MacroHandler;
 import com.dillo.Pathfinding.baritone.automine.logging.Logger;
 import com.dillo.Pathfinding.baritone.automine.structures.BlockNode;
+import com.dillo.Pathfinding.baritone.automine.structures.BlockType;
 import com.dillo.Pathfinding.baritone.automine.structures.Path;
 import com.dillo.Pathfinding.baritone.automine.structures.SemiPath;
 import com.dillo.Pathfinding.baritone.automine.utils.AngleUtils;
@@ -56,7 +57,24 @@ public class AStarPathFinder {
     LinkedList<LinkedList<BlockNode>> possiblePaths = new LinkedList<>();
     List<BlockPos> foundBlocks = new ArrayList<>();
 
-    if (withPreference) { // loop for EACH block type
+    foundBlocks.add(new BlockPos(207, 75, 187));
+
+    possiblePaths = getPossiblePaths(foundBlocks);
+
+    if (!possiblePaths.isEmpty()) {
+      Logger.playerLog(
+        "Total time | Time per path : " +
+        (System.currentTimeMillis() - pastTime) +
+        " ms | " +
+        ((System.currentTimeMillis() - pastTime) * 1.0D / possiblePaths.size()) +
+        " ms"
+      );
+      possiblePaths.sort(Comparator.comparingDouble(this::calculatePathCost));
+      setLastTarget(possiblePaths.getFirst());
+      return new Path(possiblePaths.getFirst(), mode);
+    }
+
+    /*if (withPreference) { // loop for EACH block type
       for (ArrayList<BlockData<?>> block : blockType) {
         foundBlocks =
           BlockUtils.findBlockInCube(
@@ -66,20 +84,6 @@ public class AStarPathFinder {
             pathFinderBehaviour.getMaxY(),
             block
           );
-        possiblePaths = getPossiblePaths(foundBlocks);
-
-        if (!possiblePaths.isEmpty()) {
-          Logger.playerLog(
-            "Total time | Time per path : " +
-            (System.currentTimeMillis() - pastTime) +
-            " ms | " +
-            ((System.currentTimeMillis() - pastTime) * 1.0D / possiblePaths.size()) +
-            " ms"
-          );
-          possiblePaths.sort(Comparator.comparingDouble(this::calculatePathCost));
-          setLastTarget(possiblePaths.getFirst());
-          return new Path(possiblePaths.getFirst(), mode);
-        }
       }
     } else { // 1 loop for ALL block types
       for (ArrayList<BlockData<?>> block : blockType) {
@@ -88,7 +92,7 @@ public class AStarPathFinder {
         );
       }
       possiblePaths.addAll(getPossiblePaths(foundBlocks));
-    }
+    }*/
 
     if (foundBlocks.isEmpty()) throw new NoBlockException();
 
@@ -153,21 +157,20 @@ public class AStarPathFinder {
 
   private double calculatePathCost(List<BlockNode> nodes) {
     double cost = 0.0D;
-    /*if (MacroHandler.macros.get(0).isEnabled()) {
-      if (nodes.size() <= 2) {
-        for (BlockNode node : nodes) cost +=
-          (
-            Math.abs(
-              AngleUtils.getActualRotationYaw(mc.thePlayer.rotationYaw) - AngleUtils.getRequiredYawSide(node.getPos())
-            ) +
-            Math.abs(mc.thePlayer.rotationPitch - AngleUtils.getRequiredPitchSide(node.getPos()))
-          ) /
-          540.0d;
-      } else {
-        for (BlockNode node : nodes) cost += (node.getType() == BlockType.WALK) ? 1D : 1.5D;
-      }
-    } else {*/
-    for (BlockNode node : nodes) {
+    //if (MacroHandler.macros.get(0).isEnabled()) {
+    if (nodes.size() <= 2) {
+      for (BlockNode node : nodes) cost +=
+        (
+          Math.abs(
+            AngleUtils.getActualRotationYaw(mc.thePlayer.rotationYaw) - AngleUtils.getRequiredYawSide(node.getPos())
+          ) +
+          Math.abs(mc.thePlayer.rotationPitch - AngleUtils.getRequiredPitchSide(node.getPos()))
+        ) /
+        540.0d;
+    } else {
+      for (BlockNode node : nodes) cost += (node.getType() == BlockType.WALK) ? 1D : 1.5D;
+    }
+    /*for (BlockNode node : nodes) {
       if (
         MineUtils
           .getMithrilColorBasedOnPriority(4)
@@ -212,8 +215,8 @@ public class AStarPathFinder {
             ) +
             Math.abs(mc.thePlayer.rotationPitch - AngleUtils.getRequiredPitchSide(node.getPos()))
           ) /
-          540.0d;
-        /*} else {
+          540.0d;*/
+    /*} else {
             cost +=
               (
                 Math.abs(
@@ -224,7 +227,7 @@ public class AStarPathFinder {
               ) /
               540.0d;
           }*/
-      } else {
+    /*} else {
         if (
           MineUtils
             .getMithrilColorBasedOnPriority(2)
@@ -281,7 +284,7 @@ public class AStarPathFinder {
             540.0d;
         }
       }
-    }
+    }*/
     //}
     return cost;
   }

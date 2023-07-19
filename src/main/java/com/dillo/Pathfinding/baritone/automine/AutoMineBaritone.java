@@ -1,6 +1,7 @@
 package com.dillo.Pathfinding.baritone.automine;
 
 import static com.dillo.commands.baritone.StartAutoSetupWithBaritone.main;
+import static com.dillo.dilloUtils.RouteUtils.AutoSetup.SetupMain.baritoneFailed;
 import static com.dillo.dilloUtils.RouteUtils.AutoSetup.SetupMain.reEnable;
 
 import com.dillo.Pathfinding.baritone.automine.calculations.AStarPathFinder;
@@ -20,6 +21,7 @@ import com.dillo.Pathfinding.baritone.automine.structures.SemiPath;
 import com.dillo.Pathfinding.baritone.automine.utils.BlockUtils.BlockData;
 import com.dillo.Pathfinding.baritone.automine.utils.BlockUtils.BlockUtils;
 import com.dillo.dilloUtils.RouteUtils.AutoSetup.SetupMain;
+import com.dillo.utils.previous.SendChat;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -64,13 +66,14 @@ public class AutoMineBaritone {
     pathFinder = new AStarPathFinder(getPathBehaviour());
   }
 
-  public void mineFor(ArrayList<ArrayList<BlockData<?>>> blockTypes) {
+  public void mineFor(BlockPos block) {
     Logger.playerLog("Starting to mine");
     registerEventListener();
-    pathSetting = new PathFindSetting(config.isMineWithPreference(), PathMode.MINE, false);
+    targetBlockPos = block;
+    pathSetting = new PathFindSetting(true/*config.isMineWithPreference()*/, PathMode.MINE, true);
     path = null;
 
-    targetBlockType = blockTypes;
+    //targetBlockType = blockTypes;
     startPathFinding();
   }
 
@@ -79,7 +82,6 @@ public class AutoMineBaritone {
     registerEventListener();
     pathSetting = new PathFindSetting(config.isMineWithPreference(), PathMode.GOTO, true);
     path = null;
-
     targetBlockPos = blockPos;
     startPathFinding();
   }
@@ -145,6 +147,7 @@ public class AutoMineBaritone {
           Logger.log("Executor has finished");
           // TODO: Fix this
           if (path instanceof SemiPath) {
+            SendChat.chat("!!!!!");
             startSemiPathFinding();
           } else {
             disableBaritone();
@@ -185,31 +188,32 @@ public class AutoMineBaritone {
   }
 
   private void pathFind() {
-    if (!config.isMineFloor()) {
+    /*if (!config.isMineFloor()) {
       if (playerFloorPos != null) {
         pathFinder.removeFromBlackList(playerFloorPos);
       }
 
       playerFloorPos = BlockUtils.getPlayerLoc().down();
       pathFinder.addToBlackList(playerFloorPos);
-    }
+    }*/
 
     try {
       switch (pathSetting.getPathMode()) {
         case MINE:
-          if (pathSetting.isFindWithBlockPos()) {
-            path = pathFinder.getPath(PathMode.MINE, targetBlockPos);
-          } else {
-            path = pathFinder.getPath(PathMode.MINE, pathSetting.isMineWithPreference(), targetBlockType);
-          }
+          //if (pathSetting.isFindWithBlockPos()) {
+          path = pathFinder.getPath(PathMode.MINE, targetBlockPos);
+          //} else {
+          //path = pathFinder.getPath(PathMode.MINE, pathSetting.isMineWithPreference(), targetBlockType);
+          //}
           break;
         case GOTO: // can add more options later
           path = pathFinder.getPath(PathMode.GOTO, targetBlockPos);
           break;
       }
       state = BaritoneState.EXECUTING;
-    } catch (NoBlockException | NoPathException e) {
+    } catch (NoPathException e) {
       Logger.playerLog("Pathfind failed: " + e);
+      baritoneFailed();
       failBaritone(true);
     }
   }

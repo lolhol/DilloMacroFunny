@@ -1,6 +1,7 @@
 package com.dillo.Pathfinding.Brigeros;
 
 import static com.dillo.ArmadilloMain.CurrentState.*;
+import static com.dillo.dilloUtils.RouteUtils.AutoSetup.SetupMain.reEnable;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.Events.DonePathEvent;
@@ -62,6 +63,7 @@ public class WalkOnPath {
       WaitThenCall.waitThenCall(200, STARTWALKINGPATH);
     } else {
       onOffLine = "offline";
+      reEnable();
       SendChat.chat(prefix.prefix + "Path end!");
       KeyBinding.setKeyBindState(JUMP.getKeyCode(), false);
       KeyBinding.setKeyBindState(FORWARD.getKeyCode(), false);

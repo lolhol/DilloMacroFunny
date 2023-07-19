@@ -4,6 +4,7 @@ import static com.dillo.dilloUtils.LookAt.*;
 
 import com.dillo.Events.PlayerMoveEvent;
 import com.dillo.dilloUtils.LookAt;
+import com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -18,7 +19,7 @@ public class WalkToCustom extends Command {
   }
 
   @DefaultHandler
-  public void handle(int x, int y, int z) {
+  public void handle(boolean t) {
     //SendChat.chat(String.valueOf(ids.mc.thePlayer.isRiding()));
     // NewSpinDrive.putAllTogether();
     // ArmadilloStates.offlineState = "online";
@@ -36,12 +37,17 @@ public class WalkToCustom extends Command {
     //startRender = !startRender;
     //curRotation();
 
-    serverSmoothLook(new LookAt.Rotation(0.0F, 221), 1000);
-    startRender = !startRender;
-
-    if (!startRender) {
-      reset();
+    if (t) {
+      NukerMain.pauseNuker();
+    } else {
+      NukerMain.unpauseNuker();
     }
+    //serverSmoothLook(new LookAt.Rotation(0.0F, 221), 1000);
+    //startRender = !startRender;
+
+    //if (!startRender) {
+    //reset();
+    //}
     //addYaw(config.headMovement * 100L, config.headRotationMax);
     //LookYaw.lookToYaw(config.headMovement * 100L, config.headRotationMax);
     //currentRoute.currentBlock = new BlockPos(x, y, z);
@@ -49,23 +55,6 @@ public class WalkToCustom extends Command {
     //putAllTogether();
     // SendChat.chat(String.valueOf(getYawNeededVec(new Vec3(x, y, z), displacement)))
     //isStructureBetween(ids.mc.thePlayer.getPosition(), new BlockPos(x, y, z));
-    /*RenderMultipleLines.renderMultipleLines(null, null, false);
-
-        List<BlockPos> foundRoute = FindPathToBlock.pathfinderTest(new BlockPos(x, y, z));
-
-        if (foundRoute != null) {
-            for (int i = 0; i < foundRoute.size(); i++) {
-                if (i != foundRoute.size() - 1) {
-                    RenderMultipleLines.renderMultipleLines(foundRoute.get(i), foundRoute.get(i + 1), true);
-                }
-            }
-
-            foundRoute.remove(0);
-
-            ArmadilloStates.offlineState = "online";
-            SendChat.chat(String.valueOf(foundRoute.size()));
-            WalkOnPath.walkOnPath(foundRoute);
-        }*/
 
     //TeleportToBlock.teleportToBlock(new BlockPos(x, y, z), 500, 500, null);
   }

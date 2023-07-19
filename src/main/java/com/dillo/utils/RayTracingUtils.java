@@ -136,7 +136,7 @@ public class RayTracingUtils {
             IBlockState blockState = ids.mc.theWorld.getBlockState(new BlockPos(x, y, z));
             Block block = blockState.getBlock();
 
-            /*if (isContains(blocksToIgnore, block)) {
+            if (isContains(blocksToIgnore, block)) {
               if (!foundCollisions.contains(new BlockPos(x, y, z))) foundCollisions.add(new BlockPos(x, y, z));
 
               if (!isCheck) {
@@ -146,9 +146,7 @@ public class RayTracingUtils {
                   continue;
                 }
               }
-            }*/
-
-            if (block != Blocks.air) continue;
+            }
 
             double[] ro = new double[] { x1, y1, z1 };
             double[] rd = new double[] { stepX, stepY, stepZ };
