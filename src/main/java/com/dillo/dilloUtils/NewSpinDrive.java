@@ -67,8 +67,6 @@ public class NewSpinDrive {
   }
 
   private static void upDownMovement(long totalTime, float amount, float totalAngl, float fallOffAngle) {
-    addPitch(totalTime / 3, -amount);
-
     new Thread(() -> {
       try {
         Thread.sleep(totalTime / 3);
@@ -76,7 +74,15 @@ public class NewSpinDrive {
         throw new RuntimeException(e);
       }
 
-      addPitch((totalTime / 3) * 2, yaw);
+      addPitch(totalTime / 3, -amount);
+
+      try {
+        Thread.sleep(totalTime / 3);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+
+      addPitch(totalTime / 3, amount);
     })
       .start();
   }

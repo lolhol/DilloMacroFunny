@@ -51,8 +51,8 @@ public class NukerMain {
   private static boolean isAlrLooked = false;
   private static long lastTime = System.currentTimeMillis();
   private static boolean isAutoSetup = false;
-  private static float nukesPerSecond = 0;
-  int prev = 0;
+  private static int nukesPerSecond = 0;
+  public static int prev = 100;
 
   public static void nukeBlocks(List<BlockPos> blocksToNuke, boolean nuke) {
     nuking = blocksToNuke;
@@ -140,7 +140,6 @@ public class NukerMain {
               nuking.remove(block);
               broken.add(block);
 
-              if (!isAutoSetup) return;
               nukesPerSecond++;
             }
           }
@@ -174,13 +173,13 @@ public class NukerMain {
   }
 
   @SubscribeEvent
-  public void onMillisecond(SecondEvent event) {
+  public void onSecond(SecondEvent event) {
     if (!isAutoSetup || !startNuking) return;
-    prev = (int) nukesPerSecond;
+    prev = nukesPerSecond;
     nukesPerSecond = 0;
   }
 
-  public float getNukesPerSecond() {
+  public int getNukesPerSecond() {
     return prev;
   }
 

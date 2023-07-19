@@ -25,6 +25,7 @@ import com.dillo.commands.RouteMakerUtils.CalcRouteAvgGemPerc;
 import com.dillo.commands.RouteMakerUtils.CheckIfCanTpToEvery;
 import com.dillo.commands.RouteMakerUtils.GemESP;
 import com.dillo.commands.UtilCommands.*;
+import com.dillo.commands.baritone.StartAutoSetupWithBaritone;
 import com.dillo.commands.baritone.WalkToBlockWithBaritone;
 import com.dillo.dilloUtils.*;
 import com.dillo.dilloUtils.BlockESP.BlockOnRouteESP;
@@ -33,6 +34,7 @@ import com.dillo.dilloUtils.FailSafes.*;
 import com.dillo.dilloUtils.ReFuelDrill.ReFuelDrill;
 import com.dillo.dilloUtils.ReFuelDrill.ReFuelDrillTriger;
 import com.dillo.dilloUtils.ReFuelDrill.ThrowAtEnd;
+import com.dillo.dilloUtils.RouteUtils.AutoSetup.SetupMain;
 import com.dillo.dilloUtils.RouteUtils.LegitRouteClear.LegitRouteClear;
 import com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain;
 import com.dillo.dilloUtils.RouteUtils.PlaceBlocks.PlaceCobbleModule;
@@ -121,7 +123,8 @@ public class armadillomacro {
       new CalcRouteAvgGemPerc(),
       new CheckIfCanTpToEvery(),
       new GemESP(),
-      new WalkToBlockWithBaritone()
+      new WalkToBlockWithBaritone(),
+      new StartAutoSetupWithBaritone()
     );
 
     registerEvents(
@@ -173,7 +176,8 @@ public class armadillomacro {
       new PassReNew(),
       new DriveLook(),
       new TeleportToBlock(),
-      new PlaceCobbleModule()
+      new PlaceCobbleModule(),
+      new SetupMain()
     );
 
     registerKeybinds(keybinds);

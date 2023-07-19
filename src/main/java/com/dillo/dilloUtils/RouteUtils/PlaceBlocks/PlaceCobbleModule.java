@@ -1,6 +1,7 @@
 package com.dillo.dilloUtils.RouteUtils.PlaceBlocks;
 
 import static com.dillo.data.config.isNukerPlaceCobble;
+import static com.dillo.dilloUtils.FailSafes.UsePathfinderInstead.canBlockBeSeen;
 import static com.dillo.dilloUtils.FailSafes.UsePathfinderInstead.getAdj;
 import static com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain.*;
 import static com.dillo.dilloUtils.StateDillo.isDilloSummoned;
@@ -71,16 +72,20 @@ public class PlaceCobbleModule {
               throw new RuntimeException(e);
             }
 
-            ids.mc.playerController.onPlayerRightClick(
-              ids.mc.thePlayer,
-              ids.mc.theWorld,
-              ids.mc.thePlayer.inventory.getCurrentItem(),
-              closestBlock,
-              EnumFacing.UP,
-              grain
-            );
+            if (
+              canBlockBeSeen(ids.mc.thePlayer.getPositionVector().addVector(0, 1.54, 0), grain, new BlockPos(0, 0, 0))
+            ) {
+              ids.mc.playerController.onPlayerRightClick(
+                ids.mc.thePlayer,
+                ids.mc.theWorld,
+                ids.mc.thePlayer.inventory.getCurrentItem(),
+                closestBlock,
+                EnumFacing.UP,
+                grain
+              );
 
-            unpauseNuker();
+              unpauseNuker();
+            }
           })
             .start();
         }

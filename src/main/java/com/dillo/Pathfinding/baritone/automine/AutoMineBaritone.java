@@ -1,5 +1,8 @@
 package com.dillo.Pathfinding.baritone.automine;
 
+import static com.dillo.commands.baritone.StartAutoSetupWithBaritone.main;
+import static com.dillo.dilloUtils.RouteUtils.AutoSetup.SetupMain.reEnable;
+
 import com.dillo.Pathfinding.baritone.automine.calculations.AStarPathFinder;
 import com.dillo.Pathfinding.baritone.automine.calculations.behaviour.PathFinderBehaviour;
 import com.dillo.Pathfinding.baritone.automine.calculations.behaviour.PathMode;
@@ -16,6 +19,7 @@ import com.dillo.Pathfinding.baritone.automine.structures.Path;
 import com.dillo.Pathfinding.baritone.automine.structures.SemiPath;
 import com.dillo.Pathfinding.baritone.automine.utils.BlockUtils.BlockData;
 import com.dillo.Pathfinding.baritone.automine.utils.BlockUtils.BlockUtils;
+import com.dillo.dilloUtils.RouteUtils.AutoSetup.SetupMain;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -97,6 +101,7 @@ public class AutoMineBaritone {
   }
 
   public void disableBaritone() {
+    reEnable();
     Logger.playerLog("Disabled baritone");
     state = BaritoneState.IDLE;
     executor.reset();
