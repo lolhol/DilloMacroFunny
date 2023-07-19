@@ -525,7 +525,12 @@ public class config extends Vigilant {
   )
   public static int nukerBPS = 20;
 
-  @Property(type = PropertyType.SWITCH, name = "Place Cobble", description = ":O", category = "Fun")
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Place Cobble",
+    description = "This HOPEFULLY does not ban but idk use at ur own risk.",
+    category = "Nuker"
+  )
   public static boolean isNukerPlaceCobble = false;
 
   @Property(

@@ -1,11 +1,20 @@
-package com.dillo.dilloUtils.RouteUtils.Nuker;
+package com.dillo.dilloUtils.RouteUtils.PlaceBlocks;
+
+import static com.dillo.data.config.isNukerPlaceCobble;
+import static com.dillo.dilloUtils.FailSafes.UsePathfinderInstead.getAdj;
+import static com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain.*;
+import static com.dillo.dilloUtils.StateDillo.isDilloSummoned;
 
 import com.dillo.Events.MillisecondEvent;
 import com.dillo.Events.PlayerMoveEvent;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.utils.DistanceFromTo;
+import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
+import com.dillo.utils.renderUtils.renderModules.RenderPoints;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -13,13 +22,6 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.dillo.data.config.isNukerPlaceCobble;
-import static com.dillo.dilloUtils.FailSafes.UsePathfinderInstead.getAdj;
-import static com.dillo.dilloUtils.StateDillo.isDilloSummoned;
 
 public class PlaceCobbleModule {
 
@@ -32,7 +34,10 @@ public class PlaceCobbleModule {
 
   @SubscribeEvent
   public void onMillisecond(MillisecondEvent event) {
-    if (!isNukerPlaceCobble) return;
+    if (!isNukerPlaceCobble || currentRoute.currentRoute.size() < 1/*|| !startNuking*/) {
+      return;
+    }
+
     if (msCount < 50) {
       msCount++;
       return;
@@ -42,10 +47,16 @@ public class PlaceCobbleModule {
 
     BlockPos closestBlock = closestBlockRoute();
 
-    if (DistanceFromTo.distanceFromTo(closestBlock, ids.mc.thePlayer.getPosition()) < 5) {
-      grain = getAdj(closestBlock);
+    if (
+      DistanceFromTo.distanceFromTo(closestBlock, ids.mc.thePlayer.getPosition()) < 5 &&
+      ids.mc.theWorld.getBlockState(closestBlock).getBlock() == Blocks.air
+    ) {
+      if (startNuking) {
+        pauseNuker();
+      }
 
-      // Cobble Placer
+      RenderPoints.renderPoint(null, 0.1, false);
+      grain = getAdj(closestBlock);
 
       if (grain != null) {
         isStart = true;
@@ -68,6 +79,8 @@ public class PlaceCobbleModule {
               EnumFacing.UP,
               grain
             );
+
+            unpauseNuker();
           })
             .start();
         }
