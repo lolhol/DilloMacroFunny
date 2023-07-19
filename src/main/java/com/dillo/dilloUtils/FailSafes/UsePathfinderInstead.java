@@ -1,27 +1,29 @@
 package com.dillo.dilloUtils.FailSafes;
 
-import static com.dillo.utils.RayTracingUtils.getCollisionVecs;
-import static com.dillo.utils.RayTracingUtils.getDistance;
+import static com.dillo.utils.RayTracingUtils.*;
 import static com.dillo.utils.keyBindings.rightClick;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.Events.DonePathEvent;
-import com.dillo.Pathfinding.BlockNode;
-import com.dillo.Pathfinding.PathFinderV2;
-import com.dillo.Pathfinding.WalkOnPath;
+import com.dillo.Pathfinding.Brigeros.BlockNode;
+import com.dillo.Pathfinding.Brigeros.PathFinderV2;
+import com.dillo.Pathfinding.Brigeros.WalkOnPath;
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
+import com.dillo.utils.BlockUtils;
 import com.dillo.utils.DistanceFromTo;
-import com.dillo.utils.RayTracingUtils;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.packets.getBlockEnum;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleLines;
 import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
+import com.dillo.utils.renderUtils.renderModules.RenderPoint;
+import com.dillo.utils.renderUtils.renderModules.RenderPoints;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Predicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -29,6 +31,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -115,22 +118,9 @@ public class UsePathfinderInstead {
           Vec3 addedVec = newVec.add(blockCent);
           Vec3 grain = new Vec3(addedVec.xCoord / 2, addedVec.yCoord / 2 + 0.5, addedVec.zCoord / 2);
 
-          Vec3 player = ids.mc.thePlayer.getPositionVector();
+          //RenderPoints.renderPoint(grain, 0.1, true);
 
-          double distToBlockCenter = getDistance(new Vec3(player.xCoord, player.yCoord + 1.54, player.zCoord), grain);
-
-          RayTracingUtils.CollisionResult result = getCollisionVecs(
-            player.xCoord,
-            player.yCoord + 1.54,
-            player.zCoord,
-            grain.xCoord,
-            grain.yCoord,
-            grain.zCoord,
-            distToBlockCenter,
-            new Block[] { Blocks.air }
-          );
-
-          if (result != null) {
+          if (canBlockBeSeen(ids.mc.thePlayer.getPositionVector().addVector(0, 1.54, 0), grain, newBlockPos)) {
             return grain;
           }
         }
@@ -138,6 +128,15 @@ public class UsePathfinderInstead {
     }
 
     return null;
+  }
+
+  public static boolean canBlockBeSeen(Vec3 start, Vec3 end, BlockPos centeredBlock) {
+    MovingObjectPosition movingObjectPosition = ids.mc.theWorld.rayTraceBlocks(start, end);
+
+    if (movingObjectPosition == null) {
+      return true;
+    }
+    return (movingObjectPosition.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK);
   }
 
   public static void placeBlockFromVec3(

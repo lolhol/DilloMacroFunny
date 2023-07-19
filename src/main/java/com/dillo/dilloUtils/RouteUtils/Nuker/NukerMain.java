@@ -14,7 +14,9 @@ import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
 import static com.dillo.keybinds.Keybinds.isNuking;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 
+import com.dillo.Events.MillisecondEvent;
 import com.dillo.Events.PlayerMoveEvent;
+import com.dillo.Events.SecondEvent;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.utils.BlockUtils;
@@ -48,6 +50,9 @@ public class NukerMain {
   public static boolean isStartLook = false;
   private static boolean isAlrLooked = false;
   private static long lastTime = System.currentTimeMillis();
+  private static boolean isAutoSetup = false;
+  private static float nukesPerSecond = 0;
+  int prev = 0;
 
   public static void nukeBlocks(List<BlockPos> blocksToNuke, boolean nuke) {
     nuking = blocksToNuke;
@@ -55,8 +60,23 @@ public class NukerMain {
     lastTime = System.currentTimeMillis();
   }
 
+  public static void startAutoSetupNuker(List<BlockPos> blocksToNuke, boolean nuke) {
+    nuking = blocksToNuke;
+    startNuking = nuke;
+    lastTime = System.currentTimeMillis();
+    isAutoSetup = true;
+  }
+
   public static void nukerStart() {
     nukeBlocks(Blockss, true);
+  }
+
+  public static void pauseNuker() {
+    startNuking = false;
+  }
+
+  public static void unpauseNuker() {
+    startNuking = true;
   }
 
   @SubscribeEvent
@@ -119,6 +139,9 @@ public class NukerMain {
               sendStart.sendStartPacket(block, EnumFacing.fromAngle(ids.mc.thePlayer.rotationYaw));
               nuking.remove(block);
               broken.add(block);
+
+              if (!isAutoSetup) return;
+              nukesPerSecond++;
             }
           }
         }
@@ -148,6 +171,17 @@ public class NukerMain {
         }
       }
     }
+  }
+
+  @SubscribeEvent
+  public void onMillisecond(SecondEvent event) {
+    if (!isAutoSetup || !startNuking) return;
+    prev = (int) nukesPerSecond;
+    nukesPerSecond = 0;
+  }
+
+  public float getNukesPerSecond() {
+    return prev;
   }
 
   public static void startLook(BlockPos block) {

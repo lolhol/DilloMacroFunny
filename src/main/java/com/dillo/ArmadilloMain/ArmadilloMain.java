@@ -8,9 +8,9 @@ import static com.dillo.dilloUtils.Teleport.SmartTP.TPToNext;
 import static com.dillo.dilloUtils.Teleport.TeleportToBlock.tpStageWalk;
 import static com.dillo.dilloUtils.Utils.CenterPlayer.centerStage2;
 
-import com.dillo.Pathfinding.BlockNode;
-import com.dillo.Pathfinding.PathFinderV2;
-import com.dillo.Pathfinding.WalkOnPath;
+import com.dillo.Pathfinding.Brigeros.BlockNode;
+import com.dillo.Pathfinding.Brigeros.PathFinderV2;
+import com.dillo.Pathfinding.Brigeros.WalkOnPath;
 import com.dillo.dilloUtils.*;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.dilloUtils.Teleport.TeleportToBlock;

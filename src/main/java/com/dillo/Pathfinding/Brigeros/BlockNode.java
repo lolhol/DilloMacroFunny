@@ -1,4 +1,4 @@
-package com.dillo.Pathfinding;
+package com.dillo.Pathfinding.Brigeros;
 
 import net.minecraft.util.BlockPos;
 

@@ -5,12 +5,13 @@ import static com.dillo.dilloUtils.FailSafes.AnswerPPL.makeAcusation;
 import com.dillo.ArmadilloMain.ArmadilloMain;
 import com.dillo.Events.DoneNukerBlocks;
 import com.dillo.Events.MillisecondEvent;
+import com.dillo.Events.SecondEvent;
 import com.dillo.MITGUI.GUIUtils.CurRatesUtils.GetCurGemPrice;
 import com.dillo.MITGUI.GUIUtils.CurRatesUtils.ItemsPickedUp;
 import com.dillo.MITGUI.GUIUtils.CurTimeVein.CurTime;
 import com.dillo.MITGUI.Overlay;
-import com.dillo.Pathfinding.DestroyBlock;
-import com.dillo.Pathfinding.WalkOnPath;
+import com.dillo.Pathfinding.Brigeros.DestroyBlock;
+import com.dillo.Pathfinding.Brigeros.WalkOnPath;
 import com.dillo.RemoteControl.*;
 import com.dillo.commands.*;
 import com.dillo.commands.AnswerCommands.AddAnswer;
@@ -24,6 +25,7 @@ import com.dillo.commands.RouteMakerUtils.CalcRouteAvgGemPerc;
 import com.dillo.commands.RouteMakerUtils.CheckIfCanTpToEvery;
 import com.dillo.commands.RouteMakerUtils.GemESP;
 import com.dillo.commands.UtilCommands.*;
+import com.dillo.commands.baritone.WalkToBlockWithBaritone;
 import com.dillo.dilloUtils.*;
 import com.dillo.dilloUtils.BlockESP.BlockOnRouteESP;
 import com.dillo.dilloUtils.BlockUtils.JumpLook;
@@ -33,7 +35,7 @@ import com.dillo.dilloUtils.ReFuelDrill.ReFuelDrillTriger;
 import com.dillo.dilloUtils.ReFuelDrill.ThrowAtEnd;
 import com.dillo.dilloUtils.RouteUtils.LegitRouteClear.LegitRouteClear;
 import com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain;
-import com.dillo.dilloUtils.RouteUtils.Nuker.PlaceCobbleModule;
+import com.dillo.dilloUtils.RouteUtils.PlaceBlocks.PlaceCobbleModule;
 import com.dillo.dilloUtils.RouteUtils.ViewClearLines.ViewClearLines;
 import com.dillo.dilloUtils.Teleport.IsOnBlock;
 import com.dillo.dilloUtils.Teleport.TeleportToBlock;
@@ -118,7 +120,8 @@ public class armadillomacro {
       new SelectConfig(),
       new CalcRouteAvgGemPerc(),
       new CheckIfCanTpToEvery(),
-      new GemESP()
+      new GemESP(),
+      new WalkToBlockWithBaritone()
     );
 
     registerEvents(
@@ -186,6 +189,12 @@ public class armadillomacro {
     long initialDelaySeconds = initialDelay.getSeconds();
 
     ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(1);
+    threadPool.scheduleAtFixedRate(
+      () -> MinecraftForge.EVENT_BUS.post(new SecondEvent()),
+      initialDelaySeconds,
+      1,
+      TimeUnit.SECONDS
+    );
     threadPool.scheduleAtFixedRate(
       () -> MinecraftForge.EVENT_BUS.post(new MillisecondEvent()),
       initialDelaySeconds,

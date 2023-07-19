@@ -2,6 +2,7 @@ package com.dillo.dilloUtils.RouteUtils.Utils;
 
 import static com.dillo.data.config.nukerDigUnder;
 import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
+import static com.dillo.dilloUtils.RouteUtils.AutoSetup.SetupMain.updateVariablesAutoSetup;
 import static com.dillo.dilloUtils.RouteUtils.LegitRouteClear.LegitRouteClear.startLegit;
 import static com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain.nukerStart;
 import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isAbleToMine;
@@ -85,6 +86,8 @@ public class GetBlocksForNuker {
       nukerStart();
     } else if (call == "legit") {
       startLegit();
+    } else if (call == "AUTOSETUP") {
+      updateVariablesAutoSetup(Blockss);
     }
   }
 

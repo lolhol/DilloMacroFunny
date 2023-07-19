@@ -2,11 +2,10 @@ package com.dillo.dilloUtils.FailSafes;
 
 import static com.dillo.ArmadilloMain.CurrentState.ARMADILLO;
 
-import com.dillo.ArmadilloMain.ArmadilloMain;
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.KillSwitch;
-import com.dillo.Pathfinding.FindPathToBlock;
-import com.dillo.Pathfinding.WalkOnPath;
+import com.dillo.Pathfinding.Brigeros.FindPathToBlock;
+import com.dillo.Pathfinding.Brigeros.WalkOnPath;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.dilloUtils.FailSafes.RestartMacroUtils.BestBlocks;
@@ -17,12 +16,8 @@ import com.dillo.dilloUtils.Teleport.TeleportToBlock;
 import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
-import com.dillo.utils.renderUtils.renderModules.RenderMultipleLines;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 

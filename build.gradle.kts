@@ -89,9 +89,12 @@ dependencies {
 
     shadowImpl("gg.essential:loader-launchwrapper:1.1.3")
 
+    include("org.joml:joml:1.10.5")
+
     implementation("gg.essential:essential-1.8.9-forge:11092+gecb85a783")
 
     compileOnly("org.projectlombok:lombok:1.18.26")
+    include("org.apache.commons:commons-collections4:4.4")
     annotationProcessor("org.projectlombok:lombok:1.18.26")
     testCompileOnly("org.projectlombok:lombok:1.18.26")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.26")

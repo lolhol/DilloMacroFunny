@@ -1,4 +1,4 @@
-package com.dillo.Pathfinding;
+package com.dillo.Pathfinding.Brigeros;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.KillSwitch;

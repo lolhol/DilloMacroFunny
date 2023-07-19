@@ -1,4 +1,4 @@
-package com.dillo.Pathfinding;
+package com.dillo.Pathfinding.Brigeros;
 
 import static java.lang.Float.isInfinite;
 
@@ -13,14 +13,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 
 public class PathFinderV2 {
 
