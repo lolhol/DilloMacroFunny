@@ -17,6 +17,7 @@ import com.dillo.utils.RandomisationUtils;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.previous.random.swapToSlot;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.BlockPos;
 
@@ -26,9 +27,12 @@ public class TeleportToNextBlock {
   public static boolean isTeleporting = false;
   public static boolean isThrowRod = true;
   public static int clearAttempts = 0;
+  public static final KeyBinding SNEEK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
 
   public static void teleportToNextBlock() {
     if (ArmadilloStates.offlineState == ONLINE) {
+      KeyBinding.setKeyBindState(SNEEK.getKeyCode(), false);
+
       BlockPos nextBlock = GetNextBlock.getNextBlock();
       nextBlockInList = nextBlock;
       isTeleporting = true;
@@ -37,7 +41,6 @@ public class TeleportToNextBlock {
         SendChat.chat(prefix.prefix + "FAILED TO TELEPORT FOR SOME REASON! DM GODBRIGERO!");
         ArmadilloStates.currentState = null;
         ArmadilloStates.offlineState = ONLINE;
-
         return;
       }
 
@@ -52,6 +55,7 @@ public class TeleportToNextBlock {
         ArmadilloStates.currentState = STARTCHECKDILLO;
       } else {
         ArmadilloStates.currentState = NEXTBLOCKSTAGE2;
+        isThrowRod = true;
       }
     }
   }
@@ -60,7 +64,7 @@ public class TeleportToNextBlock {
     stopLook();
     boolean result = TeleportToBlock.teleportToBlock(
       nextBlockInList,
-      200 + RandomisationUtils.getRandomAdd(200),
+      20 + RandomisationUtils.getRandomAdd(50),
       config.tpWait + RandomisationUtils.getRandomAdd(config.tpWait),
       ARMADILLO
     );

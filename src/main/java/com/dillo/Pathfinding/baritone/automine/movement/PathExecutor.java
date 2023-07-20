@@ -313,6 +313,7 @@ public class PathExecutor {
       currentState = PlayerState.WALKING;
       return;
     }
+
     if (finishedPath.isEmpty()) {
       currentState = blocksInPath.getLast().getType().equals(BlockType.MINE) ? PlayerState.MINING : PlayerState.WALKING;
       return;

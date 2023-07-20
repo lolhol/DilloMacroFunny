@@ -220,31 +220,31 @@ public class StateDillo {
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
       if (canCheckIfOnDillo && ArmadilloStates.isOnline()) {
-        if (tickDilloCheckCount >= 4) {
-          if (playerYBe4 - ids.mc.thePlayer.posY + 0.01 < 0) {
-            reset();
-            checkedNumber = 0;
-            tickDilloCheckCount = 0;
+        if (playerYBe4 - ids.mc.thePlayer.posY + 0.01 < 0) {
+          reset();
+          checkedNumber = 0;
+          tickDilloCheckCount = 0;
 
-            canCheckIfOnDillo = false;
+          canCheckIfOnDillo = false;
 
-            look = true;
+          look = true;
 
-            if (ArmadilloStates.isOnline()) {
-              if (isNoTp) {
-                ArmadilloStates.currentState = ROUTEOBSTRUCTEDCLEAR;
-                isNoTp = false;
+          if (ArmadilloStates.isOnline()) {
+            if (isNoTp) {
+              ArmadilloStates.currentState = ROUTEOBSTRUCTEDCLEAR;
+              isNoTp = false;
+            } else {
+              KeyBinding.setKeyBindState(jump.getKeyCode(), true);
+              if (ArmadilloStates.isOnline()) {
+                newSpinDrive();
+                //ArmadilloStates.currentState = SPINDRIVE;
               } else {
-                KeyBinding.setKeyBindState(jump.getKeyCode(), true);
-                if (ArmadilloStates.isOnline()) {
-                  newSpinDrive();
-                  //ArmadilloStates.currentState = SPINDRIVE;
-                } else {
-                  KeyBinding.setKeyBindState(jump.getKeyCode(), false);
-                }
+                KeyBinding.setKeyBindState(jump.getKeyCode(), false);
               }
             }
-          } else {
+          }
+        } else {
+          if (tickDilloCheckCount >= 4) {
             if (!fasterDillo) {
               if (isDilloSummoned()) {
                 rightClick();
@@ -252,9 +252,11 @@ public class StateDillo {
             } else {
               rightClick();
             }
-          }
 
-          tickDilloCheckCount = 0;
+            tickDilloCheckCount = 0;
+          } else {
+            tickDilloCheckCount++;
+          }
         }
 
         if (checkedNumber > 300) {

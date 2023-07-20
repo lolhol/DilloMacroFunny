@@ -29,8 +29,6 @@ public class GetOffArmadillo {
     blockYPos = blockY;
     startOff = true;
     ammountOfCheckTicks = amountOTicks;
-
-    KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
   }
 
   @SubscribeEvent
