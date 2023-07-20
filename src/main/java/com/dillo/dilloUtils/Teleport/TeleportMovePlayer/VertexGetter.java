@@ -14,12 +14,13 @@ import net.minecraft.util.Vec3;
 
 public class VertexGetter {
 
-  public Vec3 getVertex(VertexGetterConfig config) {
+  public VertexGetterClass getVertex(VertexGetterConfig config) {
     Vec3 playerVec = ids.mc.thePlayer.getPositionVector().addVector(0, config.playerHeight, 0);
+    List<VertexGetterClass> list = fromPlayerPosToListOVertexes(playerVec);
 
-    for (Vec3 vec : fromPlayerPosToListOVertexes(playerVec)) {
-      if (canSee(vec, config.nextBlock)) {
-        return vec;
+    for (VertexGetterClass vertex : list) {
+      if (canSee(vertex.vec, config.nextBlock)) {
+        return vertex;
       }
     }
 
@@ -31,13 +32,41 @@ public class VertexGetter {
     return resultORayTrace != null;
   }
 
-  List<Vec3> fromPlayerPosToListOVertexes(Vec3 playerHeightVec) {
-    List<Vec3> returnList = new ArrayList<>();
-    returnList.add(playerHeightVec.addVector(PositionsMoves.RIGHT.dx, 0, PositionsMoves.RIGHT.dz));
-    returnList.add(playerHeightVec.addVector(PositionsMoves.LEFT.dx, 0, PositionsMoves.LEFT.dz));
-    returnList.add(playerHeightVec.addVector(PositionsMoves.BACKRIGHT.dx, 0, PositionsMoves.BACKRIGHT.dz));
-    returnList.add(playerHeightVec.addVector(PositionsMoves.BACKLEFT.dx, 0, PositionsMoves.BACKLEFT.dz));
+  List<VertexGetterClass> fromPlayerPosToListOVertexes(Vec3 playerHeightVec) {
+    List<VertexGetterClass> returnList = new ArrayList<>();
+    returnList.add(
+      new VertexGetterClass(
+        playerHeightVec.addVector(PositionsMoves.RIGHT.dx, 0, PositionsMoves.RIGHT.dz),
+        PositionsMoves.RIGHT
+      )
+    );
+    returnList.add(
+      new VertexGetterClass(
+        playerHeightVec.addVector(PositionsMoves.LEFT.dx, 0, PositionsMoves.LEFT.dz),
+        PositionsMoves.LEFT
+      )
+    );
+    returnList.add(
+      new VertexGetterClass(
+        playerHeightVec.addVector(PositionsMoves.BACKRIGHT.dx, 0, PositionsMoves.BACKRIGHT.dz),
+        PositionsMoves.BACKRIGHT
+      )
+    );
+    returnList.add(
+      new VertexGetterClass(
+        playerHeightVec.addVector(PositionsMoves.BACKLEFT.dx, 0, PositionsMoves.BACKLEFT.dz),
+        PositionsMoves.BACKLEFT
+      )
+    );
 
     return returnList;
+  }
+
+  @Getter
+  @AllArgsConstructor
+  public class VertexGetterClass {
+
+    public Vec3 vec;
+    public PositionsMoves move;
   }
 }

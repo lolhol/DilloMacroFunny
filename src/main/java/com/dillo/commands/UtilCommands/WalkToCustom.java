@@ -44,6 +44,7 @@ public class WalkToCustom extends Command {
     MinecraftForge.EVENT_BUS.register(moveToV);
 
     moveToV.moveToVertex(vertexGetter.getVertex(config), null);
+    //SendChat.chat(String.valueOf(ids.mc.thePlayer.getHorizontalFacing()));
     //clickSlotShift(1, 0);
 
     //smoothLook2(new YawLook.RotationYaw(40, 0), 1000);

@@ -57,6 +57,17 @@ public class GetMostOptimalPath {
         }
       }
 
+      if (nextBlock != null) {
+        float next = displacement + config.headRotationMax;
+        if (next > 360) {
+          next %= 360;
+        }
+
+        if (Math.abs(getYawNeededVec(centerBlock(nextBlock), displacement + config.headRotationMax)) < 20) {
+          points += 4;
+        }
+      }
+
       if (bestPoints < points) {
         optimalPath.path = blocks;
         optimalPath.displacement = displacement;
