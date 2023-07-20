@@ -5,6 +5,10 @@ import static com.dillo.dilloUtils.LookAt.*;
 import com.dillo.Events.PlayerMoveEvent;
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain;
+import com.dillo.dilloUtils.RouteUtils.RouteDeletr.RouteDeletrConfig;
+import com.dillo.dilloUtils.RouteUtils.RouteDeletr.RouteDeletrMain;
+import com.dillo.utils.previous.SendChat;
+import com.dillo.utils.previous.random.ids;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -13,6 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class WalkToCustom extends Command {
 
   public static boolean startRender = false;
+  public static RouteDeletrMain deletr = new RouteDeletrMain();
 
   public WalkToCustom() {
     super("walkToCustom");
@@ -37,11 +42,18 @@ public class WalkToCustom extends Command {
     //startRender = !startRender;
     //curRotation();
 
-    if (t) {
-      NukerMain.pauseNuker();
-    } else {
-      NukerMain.unpauseNuker();
-    }
+    SendChat.chat(String.valueOf(t));
+
+    RouteDeletrConfig config = new RouteDeletrConfig(
+      true,
+      true,
+      true,
+      ids.mc.playerController.getBlockReachDistance(),
+      20,
+      30,
+      100
+    );
+    deletr.main(config, t);
     //serverSmoothLook(new LookAt.Rotation(0.0F, 221), 1000);
     //startRender = !startRender;
 

@@ -24,7 +24,7 @@ public class WalkToBlockWithBaritone extends Command {
   }
 
   @DefaultHandler
-  public void handle() {
+  public void handle(int x, int y, int z) {
     /*SendChat.chat(prefix.prefix + "Walking!");
     BlockPos blockToWalk = new BlockPos(x, y, z);
     autoMineBaritone.goTo(blockToWalk);*/
@@ -32,7 +32,7 @@ public class WalkToBlockWithBaritone extends Command {
     SendChat.chat("SSS");
 
     AutoMineBaritone autoMineBaritone = new AutoMineBaritone(getMineBehaviour());
-    autoMineBaritone.mineFor(new BlockPos(1, 2, 3));
+    autoMineBaritone.mineFor(new BlockPos(x, y, z));
   }
 
   final List<Block> blocksAllowedToMine = new ArrayList<Block>() {

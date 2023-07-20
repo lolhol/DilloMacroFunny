@@ -1,7 +1,9 @@
 package com.dillo.dilloUtils.RouteUtils.AutoSetup;
 
+import static com.dillo.commands.baritone.StartAutoSetupWithBaritone.main;
 import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
 import static com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain.*;
+import static com.dillo.dilloUtils.RouteUtils.Nuker.StartNuker.stopNuker;
 
 import com.dillo.Events.MillisecondEvent;
 import com.dillo.Pathfinding.baritone.automine.AutoMineBaritone;
@@ -33,6 +35,8 @@ public class SetupMain {
   public static boolean usingBaritone = false;
   NukerMain nuker = new NukerMain();
   AutoMineBaritone autoMineBaritone;
+  List<BlockPos> baritoneFailBlocks = new ArrayList<BlockPos>();
+  int baritoneWait = 0;
 
   public void reset() {
     prev = 2;
@@ -40,7 +44,10 @@ public class SetupMain {
     isFirstDone = false;
     alrNuking = false;
     usingBaritone = false;
-    autoMineBaritone.disableBaritone();
+    if (autoMineBaritone != null) {
+      autoMineBaritone.disableBaritone();
+    }
+    stopNuker();
   }
 
   final List<Block> blocksAllowedToMine = new ArrayList<Block>() {
@@ -54,6 +61,10 @@ public class SetupMain {
       add(Blocks.stained_glass_pane);
       add(Blocks.stained_glass);
       add(Blocks.air);
+
+      // Remove this for skyblock
+      add(Blocks.dirt);
+      add(Blocks.grass);
     }
   };
 
@@ -74,20 +85,39 @@ public class SetupMain {
           startAutoSetupNuker(neededToMineBlocks, true);
         }
 
-        if (nuker.getNukesPerSecond() < 1) {
+        if (nuker.isDone()) {
+          usingBaritone = true;
           pauseNuker();
 
           BlockPos block = getBaritoneWalkBlock(nuking, ids.mc.thePlayer.getPosition());
 
           if (block != null) {
-            usingBaritone = true;
+            SendChat.chat(String.valueOf(block));
 
-            autoMineBaritone =
-              new AutoMineBaritone(
-                new BaritoneConfig(MiningType.DYNAMIC, false, true, false, 200, 8, null, blocksAllowedToMine, 256, 256)
-              );
-            autoMineBaritone.mineFor(block);
+            if (!main.baritoneFailBlocks.contains(block)) {
+              autoMineBaritone =
+                new AutoMineBaritone(
+                  new BaritoneConfig(
+                    MiningType.DYNAMIC,
+                    false,
+                    true,
+                    false,
+                    200,
+                    8,
+                    null,
+                    blocksAllowedToMine,
+                    256,
+                    256
+                  )
+                );
+              autoMineBaritone.mineFor(block);
+            } else {
+              SendChat.chat("RESET");
+              usingBaritone = false;
+              //reset();
+            }
           } else {
+            SendChat.chat("RESET!!!");
             reset();
           }
         }
@@ -95,6 +125,15 @@ public class SetupMain {
     } else {
       isAutoSetupOn = false;
     }
+  }
+
+  public boolean isAutoSetupOnline() {
+    return isAutoSetupOn;
+  }
+
+  public void addBlockToBaritoneFailList(BlockPos block) {
+    usingBaritone = false;
+    main.baritoneFailBlocks.add(block);
   }
 
   public static void baritoneFailed() {
@@ -111,9 +150,16 @@ public class SetupMain {
     unpauseNuker();
   }
 
-  public static void reEnable() {
+  public void reEnable() {
     usingBaritone = false;
-    prev = 2;
+    prev = 100;
+    unpauseNuker();
+  }
+
+  public void reStart() {
+    main.baritoneFailBlocks.clear();
+    usingBaritone = false;
+    prev = 100;
     unpauseNuker();
   }
 
@@ -144,19 +190,25 @@ public class SetupMain {
 
       if (
         (
-          ids.mc.theWorld.getBlockState(makeNewBlock(0, 1, 0, cur)).getBlock() == Blocks.air &&
-          ids.mc.theWorld.getBlockState(cur).getBlock() == Blocks.air &&
-          ids.mc.theWorld.getBlockState(makeNewBlock(0, -1, 0, cur)).getBlock() != Blocks.air
-        ) ||
-        (
-          ids.mc.theWorld.getBlockState(cur).getBlock() != Blocks.air &&
-          ids.mc.theWorld.getBlockState(makeNewBlock(0, 1, 0, cur)).getBlock() == Blocks.air &&
-          ids.mc.theWorld.getBlockState(makeNewBlock(0, 2, 0, cur)).getBlock() == Blocks.air
+          (
+            ids.mc.theWorld.getBlockState(makeNewBlock(0, 1, 0, cur)).getBlock() == Blocks.air &&
+            ids.mc.theWorld.getBlockState(cur).getBlock() == Blocks.air &&
+            ids.mc.theWorld.getBlockState(makeNewBlock(0, -1, 0, cur)).getBlock() != Blocks.air
+          ) ||
+          (
+            ids.mc.theWorld.getBlockState(cur).getBlock() != Blocks.air &&
+            ids.mc.theWorld.getBlockState(makeNewBlock(0, 1, 0, cur)).getBlock() == Blocks.air &&
+            ids.mc.theWorld.getBlockState(makeNewBlock(0, 2, 0, cur)).getBlock() == Blocks.air
+          )
         )
       ) {
         if (i > highestI) {
           highestI = i;
-          furthestPos = cur;
+
+          if (!main.baritoneFailBlocks.contains(cur) && !main.baritoneFailBlocks.contains(makeNewBlock(0, 1, 0, cur))) {
+            if (ids.mc.theWorld.getBlockState(cur).getBlock() == Blocks.air) furthestPos = cur; else furthestPos =
+              makeNewBlock(0, 1, 0, cur);
+          }
         }
       }
     }

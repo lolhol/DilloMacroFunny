@@ -54,6 +54,8 @@ public class NukerMain {
   private static boolean isAutoSetup = false;
   private static int nukesPerSecond = 0;
   public static int prev = 100;
+  boolean earlyCheck = false;
+  int secondCount = 0;
 
   public static void nukeBlocks(List<BlockPos> blocksToNuke, boolean nuke) {
     nuking = blocksToNuke;
@@ -83,7 +85,7 @@ public class NukerMain {
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
     if (startNuking) {
-      if (currTicks >= 30) {
+      if (currTicks >= 30 || earlyCheck) {
         while (broken.size() > 0) {
           BlockPos block = broken.get(0);
 
@@ -94,6 +96,7 @@ public class NukerMain {
           broken.remove(0);
         }
 
+        earlyCheck = false;
         currTicks = 0;
       } else {
         currTicks++;
@@ -116,13 +119,13 @@ public class NukerMain {
             broken.add(block);
           } else {
             if (
-              isInFOV(block, config.nukerFOV) &&
-              isHoldingDrill() &&
-              DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), block) < nukerRange + 0.1 &&
-              isOnGround() &&
-              isAbleToMine(block) &&
-              isInDillo()
+              isInFOV(block, config.nukerFOV) && isHoldingDrill() && isOnGround() && isAbleToMine(block) && isInDillo()
             ) {
+              if (DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), block) > nukerRange) {
+                earlyCheck = true;
+                return;
+              }
+
               if (config.nukerUnObstructedChecks && !canBeBroken(block)) {
                 return;
               }
@@ -175,13 +178,28 @@ public class NukerMain {
 
   @SubscribeEvent
   public void onSecond(SecondEvent event) {
-    if (!isAutoSetup || !startNuking) return;
+    if (!isAutoSetup || !startNuking) {
+      return;
+    }
+
+    if (secondCount <= 2) {
+      secondCount++;
+      return;
+    }
+
     prev = nukesPerSecond;
     nukesPerSecond = 0;
+    secondCount = 0;
   }
 
   public int getNukesPerSecond() {
     return prev;
+  }
+
+  public boolean isDone() {
+    return (
+      DistanceFromTo.distanceFromTo(nuking.get(0), ids.mc.thePlayer.getPosition()) > nukerRange && broken.size() < 1
+    );
   }
 
   public static void startLook(BlockPos block) {

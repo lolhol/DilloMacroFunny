@@ -6,6 +6,16 @@ import net.minecraft.item.ItemStack;
 
 public class GetSBItems {
 
+  public static String getSbItemName(ItemStack stack) {
+    String skyblockID = getSBAtr.getSkyBlockID(stack);
+
+    if (skyblockID != null) {
+      skyblockID = skyblockID.toLowerCase();
+    }
+
+    return skyblockID;
+  }
+
   public static int getDrillSlot() {
     for (int i = 0; i < 8; i++) {
       ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
@@ -92,6 +102,24 @@ public class GetSBItems {
           SendChat.chat("!!!");
           getSBAtr.getSBData(stack);
           //SendChat.chat(skyblock);
+          return i;
+        }
+      }
+    }
+
+    return -1;
+  }
+
+  public static int getBoomSlot() {
+    for (int i = 0; i < 8; i++) {
+      ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
+
+      String skyblockID = getSBAtr.getSkyBlockID(stack);
+
+      if (skyblockID != null) {
+        skyblockID = skyblockID.toLowerCase();
+
+        if (skyblockID.contains("bob") && skyblockID.contains("omb")) {
           return i;
         }
       }

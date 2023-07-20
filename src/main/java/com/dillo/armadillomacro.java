@@ -38,6 +38,7 @@ import com.dillo.dilloUtils.RouteUtils.AutoSetup.SetupMain;
 import com.dillo.dilloUtils.RouteUtils.LegitRouteClear.LegitRouteClear;
 import com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain;
 import com.dillo.dilloUtils.RouteUtils.PlaceBlocks.PlaceCobbleModule;
+import com.dillo.dilloUtils.RouteUtils.RouteDeletr.RouteDeletrMain;
 import com.dillo.dilloUtils.RouteUtils.ViewClearLines.ViewClearLines;
 import com.dillo.dilloUtils.Teleport.IsOnBlock;
 import com.dillo.dilloUtils.Teleport.TeleportToBlock;
@@ -177,7 +178,8 @@ public class armadillomacro {
       new DriveLook(),
       new TeleportToBlock(),
       new PlaceCobbleModule(),
-      new SetupMain()
+      new SetupMain(),
+      new RouteDeletrMain()
     );
 
     registerKeybinds(keybinds);

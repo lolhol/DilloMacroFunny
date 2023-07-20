@@ -14,6 +14,7 @@ import com.dillo.Pathfinding.baritone.automine.utils.AngleUtils;
 import com.dillo.Pathfinding.baritone.automine.utils.BlockUtils.BlockData;
 import com.dillo.Pathfinding.baritone.automine.utils.BlockUtils.BlockUtils;
 import com.dillo.Pathfinding.baritone.automine.utils.HypixelUtils.MineUtils;
+import com.dillo.utils.previous.SendChat;
 import java.util.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -48,7 +49,7 @@ public class AStarPathFinder {
     blackListedPos.clear();
   }
 
-  public Path getPath(PathMode mode, boolean withPreference, ArrayList<ArrayList<BlockData<?>>> blockType)
+  public Path getPath(PathMode mode, boolean withPreference, List<BlockPos> blocks)
     throws NoBlockException, NoPathException {
     initialize(mode);
 
@@ -74,8 +75,8 @@ public class AStarPathFinder {
       return new Path(possiblePaths.getFirst(), mode);
     }
 
-    /*if (withPreference) { // loop for EACH block type
-      for (ArrayList<BlockData<?>> block : blockType) {
+    if (withPreference) { // loop for EACH block type
+      /*for (ArrayList<BlockData<?>> block : blockType) {
         foundBlocks =
           BlockUtils.findBlockInCube(
             pathFinderBehaviour.getSearchRadius() * 2,
@@ -90,9 +91,9 @@ public class AStarPathFinder {
         foundBlocks.addAll(
           BlockUtils.findBlockInCube(pathFinderBehaviour.getSearchRadius(), blackListedPos, 0, 256, block)
         );
-      }
-      possiblePaths.addAll(getPossiblePaths(foundBlocks));
-    }*/
+      }*/
+      possiblePaths.addAll(getPossiblePaths(blocks));
+    }
 
     if (foundBlocks.isEmpty()) throw new NoBlockException();
 
@@ -123,6 +124,11 @@ public class AStarPathFinder {
     if (path.isEmpty()) throw new NoPathException();
 
     Logger.log("Path size: " + path.size());
+
+    for (BlockNode block : path) {
+      SendChat.chat(String.valueOf(block.getPos()));
+    }
+
     setLastTarget(path);
 
     return Objects.requireNonNull(path.pollLast()).isFullPath() ? new Path(path, mode) : new SemiPath(path, mode);

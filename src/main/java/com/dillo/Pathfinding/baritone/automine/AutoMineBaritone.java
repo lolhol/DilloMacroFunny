@@ -2,7 +2,7 @@ package com.dillo.Pathfinding.baritone.automine;
 
 import static com.dillo.commands.baritone.StartAutoSetupWithBaritone.main;
 import static com.dillo.dilloUtils.RouteUtils.AutoSetup.SetupMain.baritoneFailed;
-import static com.dillo.dilloUtils.RouteUtils.AutoSetup.SetupMain.reEnable;
+import static com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain.nuking;
 
 import com.dillo.Pathfinding.baritone.automine.calculations.AStarPathFinder;
 import com.dillo.Pathfinding.baritone.automine.calculations.behaviour.PathFinderBehaviour;
@@ -70,7 +70,7 @@ public class AutoMineBaritone {
     Logger.playerLog("Starting to mine");
     registerEventListener();
     targetBlockPos = block;
-    pathSetting = new PathFindSetting(true/*config.isMineWithPreference()*/, PathMode.MINE, true);
+    pathSetting = new PathFindSetting(config.isMineWithPreference(), PathMode.MINE, true);
     path = null;
 
     //targetBlockType = blockTypes;
@@ -103,7 +103,7 @@ public class AutoMineBaritone {
   }
 
   public void disableBaritone() {
-    reEnable();
+    main.reEnable();
     Logger.playerLog("Disabled baritone");
     state = BaritoneState.IDLE;
     executor.reset();
@@ -146,14 +146,21 @@ public class AutoMineBaritone {
         if (executor.hasSuccessfullyFinished()) {
           Logger.log("Executor has finished");
           // TODO: Fix this
+          main.reStart();
           if (path instanceof SemiPath) {
-            SendChat.chat("!!!!!");
             startSemiPathFinding();
           } else {
             disableBaritone();
           }
         } else if (executor.hasFailed()) {
           Logger.log("Executor has failed");
+
+          if (main.isAutoSetupOnline()) {
+            main.addBlockToBaritoneFailList(targetBlockPos);
+            main.reEnable();
+          }
+          // add a function here to handle fail.
+
           failBaritone(true);
         } else if (!executor.isExecuting()) {
           Logger.log("Executor is starting to execute a path");
@@ -203,7 +210,7 @@ public class AutoMineBaritone {
           //if (pathSetting.isFindWithBlockPos()) {
           path = pathFinder.getPath(PathMode.MINE, targetBlockPos);
           //} else {
-          //path = pathFinder.getPath(PathMode.MINE, pathSetting.isMineWithPreference(), targetBlockType);
+          //path = pathFinder.getPath(PathMode.MINE, true, nuking);
           //}
           break;
         case GOTO: // can add more options later
