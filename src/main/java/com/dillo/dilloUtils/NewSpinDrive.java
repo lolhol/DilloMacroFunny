@@ -49,7 +49,7 @@ public class NewSpinDrive {
       addYaw(config.headMovement * 100L, config.headRotationMax);
     }
 
-    upDownMovement(config.headMovement * 100L, 30, 200, 100);
+    upDownMovement(config.headMovement * 100L, 20, 200, 100);
 
     new Thread(() -> {
       try {
