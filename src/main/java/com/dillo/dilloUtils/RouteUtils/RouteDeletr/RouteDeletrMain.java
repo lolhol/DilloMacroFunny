@@ -1,6 +1,5 @@
 package com.dillo.dilloUtils.RouteUtils.RouteDeletr;
 
-import static com.dillo.commands.UtilCommands.WalkToCustom.deletr;
 import static com.dillo.dilloUtils.LookAt.reset;
 import static com.dillo.dilloUtils.LookAt.updateServerLook;
 import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
@@ -42,20 +41,35 @@ public class RouteDeletrMain {
 
   public long timePoint_nextNuke = System.currentTimeMillis();
 
-  public void main(RouteDeletrConfig config, boolean isStart) {
-    isEnabled = isStart;
-    curConf = config;
+  public void startStop(RouteDeletrConfig config, boolean isStart) {
+    if (isStart) {
+      curConf = config;
+      isEnabled = true;
+    } else {
+      reset();
+    }
+  }
+
+  void reset() {
+    isEnabled = false;
+    curConf = null;
+    broken.clear();
+    currTicks = 0;
+    resetServerBroken = 0;
+    isServerLook = false;
+    brokenWithBoom.clear();
+    timePoint_nextNuke = System.currentTimeMillis();
   }
 
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
-    if (deletr.isEnabled && resetServerBroken < 600) {
+    if (isEnabled && resetServerBroken < 600) {
       brokenWithBoom.clear();
     } else {
       resetServerBroken++;
     }
 
-    if (!deletr.isEnabled || currTicks <= deletr.curConf.totalCheckTicks) {
+    if (!isEnabled || currTicks <= curConf.totalCheckTicks) {
       currTicks++;
       return;
     }
@@ -64,19 +78,19 @@ public class RouteDeletrMain {
 
   @SubscribeEvent(priority = EventPriority.NORMAL)
   public void onUpdatePre(PlayerMoveEvent.Pre pre) {
-    if (!deletr.isEnabled || !isServerLook) return;
+    if (!isEnabled || !isServerLook) return;
     updateServerLook();
   }
 
   @SubscribeEvent
   public void onMillisecond(MillisecondEvent event) {
-    if (!deletr.isEnabled || System.currentTimeMillis() < timePoint_nextNuke) return;
-    timePoint_nextNuke = System.currentTimeMillis() + (1000 / deletr.curConf.nukerBPS);
+    if (!isEnabled || System.currentTimeMillis() < timePoint_nextNuke) return;
+    timePoint_nextNuke = System.currentTimeMillis() + (1000 / curConf.nukerBPS);
 
-    List<BlockPos> cobbleBlocksAround = getCobbleBlocks(ids.mc.thePlayer.getPosition(), deletr.curConf.range);
+    List<BlockPos> cobbleBlocksAround = getCobbleBlocks(ids.mc.thePlayer.getPosition(), curConf.range);
 
     BlockPos currentBlock;
-    if (deletr.curConf.onlyOnRoute) {
+    if (curConf.onlyOnRoute) {
       currentBlock = getBlockOnRoute(cobbleBlocksAround, currentRoute.currentRoute);
     } else {
       currentBlock = cobbleBlocksAround.size() > 0 ? cobbleBlocksAround.get(0) : null;
@@ -84,7 +98,7 @@ public class RouteDeletrMain {
 
     if (
       currentBlock == null ||
-      DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), currentBlock) > deletr.curConf.range ||
+      DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), currentBlock) > curConf.range ||
       broken.contains(currentBlock)
     ) {
       return;
@@ -92,7 +106,7 @@ public class RouteDeletrMain {
 
     int drillSlot = getDrillSlot();
 
-    if (deletr.curConf.isBreakCobble && !isServerLook && drillSlot != -1) {
+    if (curConf.isBreakCobble && !isServerLook && drillSlot != -1) {
       if (isEquippedDrill()) {
         sendStart.sendStartPacket(currentBlock, EnumFacing.fromAngle(ids.mc.thePlayer.rotationYaw));
         broken.add(currentBlock);
@@ -102,12 +116,12 @@ public class RouteDeletrMain {
     }
 
     if (
-      deletr.curConf.boomBox &&
+      curConf.boomBox &&
       ids.mc.theWorld.getBlockState(currentBlock).getBlock() != Blocks.air &&
       !brokenWithBoom.contains(currentBlock)
     ) {
       if (!isServerLook) {
-        LookAt.serverSmoothLook(LookAt.getRotation(currentBlock), deletr.curConf.msServerLookTime);
+        LookAt.serverSmoothLook(LookAt.getRotation(currentBlock), curConf.msServerLookTime);
         isServerLook = true;
 
         int boomSlot = getBoomSlot();
@@ -121,7 +135,7 @@ public class RouteDeletrMain {
 
         new Thread(() -> {
           try {
-            Thread.sleep(deletr.curConf.msServerLookTime + 200);
+            Thread.sleep(curConf.msServerLookTime + 200);
           } catch (InterruptedException e) {
             throw new RuntimeException(e);
           }

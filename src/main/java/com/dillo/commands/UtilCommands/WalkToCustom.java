@@ -7,24 +7,28 @@ import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain;
 import com.dillo.dilloUtils.RouteUtils.RouteDeletr.RouteDeletrConfig;
 import com.dillo.dilloUtils.RouteUtils.RouteDeletr.RouteDeletrMain;
+import com.dillo.dilloUtils.Teleport.TeleportMovePlayer.MoveToVertex;
+import com.dillo.dilloUtils.Teleport.TeleportMovePlayer.VertexGetter;
+import com.dillo.dilloUtils.Teleport.TeleportMovePlayer.VertexGetterConfig;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class WalkToCustom extends Command {
 
   public static boolean startRender = false;
-  public static RouteDeletrMain deletr = new RouteDeletrMain();
 
   public WalkToCustom() {
     super("walkToCustom");
   }
 
   @DefaultHandler
-  public void handle(boolean t) {
+  public void handle(int x, int y, int z) {
     //SendChat.chat(String.valueOf(ids.mc.thePlayer.isRiding()));
     // NewSpinDrive.putAllTogether();
     // ArmadilloStates.offlineState = "online";
@@ -34,6 +38,12 @@ public class WalkToCustom extends Command {
     //SendChat.chat(currentServer);
     //getArea();
 
+    MoveToVertex moveToV = new MoveToVertex();
+    VertexGetter vertexGetter = new VertexGetter();
+    VertexGetterConfig config = new VertexGetterConfig(ids.mc.thePlayer.getPosition(), new BlockPos(x, y, z), 1.54F);
+    MinecraftForge.EVENT_BUS.register(moveToV);
+
+    moveToV.moveToVertex(vertexGetter.getVertex(config), null);
     //clickSlotShift(1, 0);
 
     //smoothLook2(new YawLook.RotationYaw(40, 0), 1000);
@@ -41,19 +51,6 @@ public class WalkToCustom extends Command {
     //serverSmoothLook(new LookAt.Rotation(0.0F, curRotation() + 100), 1000);
     //startRender = !startRender;
     //curRotation();
-
-    SendChat.chat(String.valueOf(t));
-
-    RouteDeletrConfig config = new RouteDeletrConfig(
-      true,
-      true,
-      true,
-      ids.mc.playerController.getBlockReachDistance(),
-      20,
-      30,
-      100
-    );
-    deletr.main(config, t);
     //serverSmoothLook(new LookAt.Rotation(0.0F, 221), 1000);
     //startRender = !startRender;
 

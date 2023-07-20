@@ -41,6 +41,7 @@ import com.dillo.dilloUtils.RouteUtils.PlaceBlocks.PlaceCobbleModule;
 import com.dillo.dilloUtils.RouteUtils.RouteDeletr.RouteDeletrMain;
 import com.dillo.dilloUtils.RouteUtils.ViewClearLines.ViewClearLines;
 import com.dillo.dilloUtils.Teleport.IsOnBlock;
+import com.dillo.dilloUtils.Teleport.TeleportMovePlayer.MoveToVertex;
 import com.dillo.dilloUtils.Teleport.TeleportToBlock;
 import com.dillo.dilloUtils.TpUtils.LookWhileGoingDown;
 import com.dillo.dilloUtils.TpUtils.WaitThenCall;
@@ -88,6 +89,8 @@ public class armadillomacro {
     keybinds.add(new KeyBinding("Add Point", Keyboard.KEY_NONE, "Mining In Two"));
     keybinds.add(new KeyBinding("Test Key", Keyboard.KEY_NONE, "Mining In Two"));
 
+    RouteDeletrMain destroyer = new RouteDeletrMain();
+
     // Comment
 
     registerCommands(
@@ -125,7 +128,8 @@ public class armadillomacro {
       new CheckIfCanTpToEvery(),
       new GemESP(),
       new WalkToBlockWithBaritone(),
-      new StartAutoSetupWithBaritone()
+      new StartAutoSetupWithBaritone(),
+      new RouteDestroyr(destroyer)
     );
 
     registerEvents(
@@ -179,7 +183,7 @@ public class armadillomacro {
       new TeleportToBlock(),
       new PlaceCobbleModule(),
       new SetupMain(),
-      new RouteDeletrMain()
+      destroyer
     );
 
     registerKeybinds(keybinds);
