@@ -2,7 +2,10 @@ package com.dillo.dilloUtils.Teleport.TeleportMovePlayer;
 
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 
+import com.dillo.utils.BlockUtils;
 import com.dillo.utils.previous.random.ids;
+import com.dillo.utils.renderUtils.renderModules.RenderPoint;
+import com.dillo.utils.renderUtils.renderModules.RenderPoints;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -15,11 +18,11 @@ import net.minecraft.util.Vec3;
 public class VertexGetter {
 
   public VertexGetterClass getVertex(VertexGetterConfig config) {
-    Vec3 playerVec = ids.mc.thePlayer.getPositionVector().addVector(0, config.playerHeight, 0);
+    Vec3 playerVec = ids.mc.thePlayer.getPositionVector();
     List<VertexGetterClass> list = fromPlayerPosToListOVertexes(playerVec);
 
     for (VertexGetterClass vertex : list) {
-      if (canSee(vertex.vec, config.nextBlock)) {
+      if (canSee(vertex.vec, config.nextBlock) && isUnObstructed(vertex.vec)) {
         return vertex;
       }
     }
@@ -28,8 +31,16 @@ public class VertexGetter {
   }
 
   boolean canSee(Vec3 startVec, BlockPos destBlock) {
-    Vec3 resultORayTrace = adjustLook(startVec, destBlock, new Block[] { Blocks.air }, false);
+    RenderPoints.renderPoint(startVec, 0.1, true);
+    Vec3 resultORayTrace = adjustLook(startVec, destBlock, new net.minecraft.block.Block[] { Blocks.air }, false);
     return resultORayTrace != null;
+  }
+
+  boolean isUnObstructed(Vec3 vec) {
+    return (
+      ids.mc.theWorld.getBlockState(BlockUtils.fromVec3ToBlockPos(vec.addVector(0, 1, 0))).getBlock() == Blocks.air &&
+      ids.mc.theWorld.getBlockState(BlockUtils.fromVec3ToBlockPos(vec.addVector(0, 2, 0))).getBlock() == Blocks.air
+    );
   }
 
   List<VertexGetterClass> fromPlayerPosToListOVertexes(Vec3 playerHeightVec) {

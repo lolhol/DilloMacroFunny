@@ -40,7 +40,11 @@ public class WalkToCustom extends Command {
 
     MoveToVertex moveToV = new MoveToVertex();
     VertexGetter vertexGetter = new VertexGetter();
-    VertexGetterConfig config = new VertexGetterConfig(ids.mc.thePlayer.getPosition(), new BlockPos(x, y, z), 1.54F);
+    VertexGetterConfig config = new VertexGetterConfig(
+      ids.mc.thePlayer.getPositionVector(),
+      new BlockPos(x, y, z),
+      1.54F
+    );
     MinecraftForge.EVENT_BUS.register(moveToV);
 
     moveToV.moveToVertex(vertexGetter.getVertex(config), null);

@@ -7,8 +7,7 @@ import static com.dillo.dilloUtils.LookAt.reset;
 import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
 import static com.dillo.dilloUtils.NewSpinDrive.random;
 import static com.dillo.dilloUtils.StateDillo.canDillo;
-import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.clearAttempts;
-import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isTeleporting;
+import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.*;
 import static com.dillo.dilloUtils.TpUtils.LookWhileGoingDown.stopLook;
 import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.isClear;
 import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
@@ -64,7 +63,7 @@ public class IsOnBlock {
             ) {
               reset();
               RayTracingUtils.foundCollisions.clear();
-              TeleportToNextBlock.isThrowRod = true;
+              isThrowRod = true;
               startCheck = false;
               curReTps = 0;
               clearAttempts = 0;
@@ -120,6 +119,7 @@ public class IsOnBlock {
                 if (curReTps <= config.reTpTimes) {
                   curReTps++;
                   ArmadilloStates.currentState = RETELEPORTING;
+                  isThrowRod = false;
                   TeleportToNextBlock.teleportToNextBlock();
                 } else {
                   SmartTP.smartTP(blockPos, false);

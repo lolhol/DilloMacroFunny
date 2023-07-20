@@ -63,8 +63,8 @@ public class GetMostOptimalPath {
           next %= 360;
         }
 
-        if (Math.abs(getYawNeededVec(centerBlock(nextBlock), displacement + config.headRotationMax)) < 20) {
-          points += 4;
+        if (Math.abs(getYawNeededVec(centerBlock(nextBlock), next)) < 20) {
+          points += 6;
         }
       }
 

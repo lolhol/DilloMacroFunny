@@ -527,8 +527,8 @@ public class config extends Vigilant {
 
   @Property(
     type = PropertyType.SWITCH,
-    name = "Place Cobble",
-    description = "This HOPEFULLY does not ban but idk use at ur own risk.",
+    name = "Place Cobble | DONT USE!",
+    description = "WARNING DID NOT TEST!! DO NOT USE! (hypothetically should work BUT I DID NOT TEST CAS NO ALTS)",
     category = "Nuker"
   )
   public static boolean isNukerPlaceCobble = false;

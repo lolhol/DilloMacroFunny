@@ -72,10 +72,10 @@ public class MoveToVertex {
     Vec3 playerVec = ids.mc.thePlayer.getPositionVector();
 
     if (
-      Math.abs(Math.abs(playerVec.xCoord) - Math.abs(vertexVector.vec.xCoord)) > 0.1 ||
-      Math.abs(Math.abs(playerVec.zCoord) - Math.abs(vertexVector.vec.zCoord)) > 0.1 ||
-      Math.abs(Math.abs(vertexVector.vec.xCoord) - Math.abs(playerVec.xCoord)) > 0.1 ||
-      Math.abs(Math.abs(vertexVector.vec.zCoord) - Math.abs(playerVec.zCoord)) > 0.1
+      Math.abs(Math.abs(playerVec.xCoord) - Math.abs(vertexVector.vec.xCoord)) > 0.3 ||
+      Math.abs(Math.abs(playerVec.zCoord) - Math.abs(vertexVector.vec.zCoord)) > 0.3 ||
+      Math.abs(Math.abs(vertexVector.vec.xCoord) - Math.abs(playerVec.xCoord)) > 0.3 ||
+      Math.abs(Math.abs(vertexVector.vec.zCoord) - Math.abs(playerVec.zCoord)) > 0.3
     ) {
       KeybindHandler.updateKeys(combo.w, combo.s, combo.a, combo.d, false, false, true, false);
     } else {
@@ -84,7 +84,7 @@ public class MoveToVertex {
 
       new Thread(() -> {
         try {
-          Thread.sleep(100);
+          Thread.sleep(500);
         } catch (InterruptedException e) {
           throw new RuntimeException(e);
         }
@@ -103,9 +103,9 @@ public class MoveToVertex {
           case RIGHT:
             return new BindCombination(true, false, false, true);
           case LEFT:
-            return new BindCombination(false, true, false, true);
-          case BACKRIGHT:
             return new BindCombination(true, false, true, false);
+          case BACKRIGHT:
+            return new BindCombination(false, true, false, true);
           case BACKLEFT:
             return new BindCombination(false, true, true, false);
         }
@@ -114,9 +114,9 @@ public class MoveToVertex {
           case RIGHT:
             return new BindCombination(false, true, false, true);
           case LEFT:
-            return new BindCombination(false, true, true, false);
-          case BACKRIGHT:
             return new BindCombination(true, false, false, true);
+          case BACKRIGHT:
+            return new BindCombination(false, true, true, false);
           case BACKLEFT:
             return new BindCombination(true, false, true, false);
         }
@@ -136,11 +136,11 @@ public class MoveToVertex {
           case RIGHT:
             return new BindCombination(true, false, true, false);
           case LEFT:
-            return new BindCombination(true, false, false, true);
-          case BACKLEFT:
             return new BindCombination(false, true, true, false);
-          case BACKRIGHT:
+          case BACKLEFT:
             return new BindCombination(false, true, false, true);
+          case BACKRIGHT:
+            return new BindCombination(true, false, false, true);
         }
     }
 
