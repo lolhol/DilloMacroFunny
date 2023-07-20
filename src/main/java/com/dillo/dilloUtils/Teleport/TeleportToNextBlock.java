@@ -3,6 +3,7 @@ package com.dillo.dilloUtils.Teleport;
 import static com.dillo.ArmadilloMain.CurrentState.*;
 import static com.dillo.ArmadilloMain.KillSwitch.ONLINE;
 import static com.dillo.data.config.actuallySwitchAOTV;
+import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
 import static com.dillo.dilloUtils.StateDillo.canDillo;
 import static com.dillo.dilloUtils.Teleport.TeleportToBlock.SNEAK;
 import static com.dillo.dilloUtils.TpUtils.LookWhileGoingDown.stopLook;
@@ -11,14 +12,17 @@ import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.isClear;
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.KillSwitch;
 import com.dillo.data.config;
+import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.TpUtils.LookWhileGoingDown;
 import com.dillo.utils.GetSBItems;
 import com.dillo.utils.RandomisationUtils;
 import com.dillo.utils.previous.SendChat;
+import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.previous.random.swapToSlot;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 
 public class TeleportToNextBlock {
@@ -47,12 +51,33 @@ public class TeleportToNextBlock {
       if (actuallySwitchAOTV) swapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
 
       if (isThrowRod) {
-        LookWhileGoingDown.lookUntilState(
-          NEXTBLOCKSTAGE2,
-          nextBlock,
-          config.tpHeadMoveSpeed + RandomisationUtils.getRandomAdd(config.tpHeadMoveSpeed)
-        );
-        ArmadilloStates.currentState = STARTCHECKDILLO;
+        if (
+          ids.mc.theWorld.getBlockState(makeNewBlock(0, -1, 0, ids.mc.thePlayer.getPosition())).getBlock() != Blocks.air
+        ) {
+          new Thread(() -> {
+            float time = config.tpHeadMoveSpeed + RandomisationUtils.getRandomAdd(config.tpHeadMoveSpeed);
+
+            LookAt.smoothLook(LookAt.getRotation(nextBlock), (long) time);
+
+            try {
+              Thread.sleep((long) time);
+            } catch (InterruptedException e) {
+              throw new RuntimeException(e);
+            }
+
+            if (ArmadilloStates.isOnline()) {
+              ArmadilloStates.currentState = NEXTBLOCKSTAGE2;
+            }
+          })
+            .start();
+        } else {
+          LookWhileGoingDown.lookUntilState(
+            NEXTBLOCKSTAGE2,
+            nextBlock,
+            config.tpHeadMoveSpeed + RandomisationUtils.getRandomAdd(config.tpHeadMoveSpeed)
+          );
+          ArmadilloStates.currentState = STARTCHECKDILLO;
+        }
       } else {
         ArmadilloStates.currentState = NEXTBLOCKSTAGE2;
         isThrowRod = true;
