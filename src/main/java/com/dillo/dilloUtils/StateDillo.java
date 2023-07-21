@@ -19,6 +19,7 @@ import com.dillo.data.config;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import com.dillo.dilloUtils.Teleport.GetNextBlock;
 import com.dillo.dilloUtils.Teleport.TeleportToNextBlock;
+import com.dillo.dilloUtils.Utils.LookYaw;
 import com.dillo.utils.GetSBItems;
 import com.dillo.utils.previous.random.getItemInSlot;
 import com.dillo.utils.previous.random.ids;
@@ -47,6 +48,7 @@ public class StateDillo {
   private static boolean look = true;
   public static boolean isSmartTP = false;
   private static float player = 0;
+  boolean looking = false;
 
   public static void stateDilloNoGettingOn() {
     if (canDillo() && ArmadilloStates.isOnline()) {
@@ -102,12 +104,6 @@ public class StateDillo {
         swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
 
         NewSpinDrive.putAllTogether();
-
-        if (isLeft) {
-          addYaw(100, -20);
-        } else {
-          addYaw(100, 20);
-        }
 
         try {
           Thread.sleep(config.rod_drill_switch_time);
@@ -244,6 +240,15 @@ public class StateDillo {
             }
           }
         } else {
+          if (!looking) {
+            looking = true;
+            if (isLeft) {
+              addYaw(200, -20);
+            } else {
+              addYaw(200, 20);
+            }
+          }
+
           if (tickDilloCheckCount >= 4) {
             if (!fasterDillo) {
               if (isDilloSummoned()) {
@@ -253,6 +258,7 @@ public class StateDillo {
               rightClick();
             }
 
+            looking = false;
             tickDilloCheckCount = 0;
           } else {
             tickDilloCheckCount++;

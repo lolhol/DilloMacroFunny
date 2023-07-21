@@ -10,8 +10,13 @@ import static com.dillo.utils.RayTracingUtils.adjustLook;
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.CurrentState;
 import com.dillo.ArmadilloMain.KillSwitch;
+import com.dillo.Events.DoneNukerBlocks;
 import com.dillo.Events.PlayerMoveEvent;
+import com.dillo.data.config;
 import com.dillo.dilloUtils.LookAt;
+import com.dillo.dilloUtils.Teleport.TeleportMovePlayer.MoveToVertex;
+import com.dillo.dilloUtils.Teleport.TeleportMovePlayer.VertexGetter;
+import com.dillo.dilloUtils.Teleport.TeleportMovePlayer.VertexGetterConfig;
 import com.dillo.dilloUtils.TpUtils.WaitThenCall;
 import com.dillo.utils.GetSBItems;
 import com.dillo.utils.previous.chatUtils.SendChat;
@@ -23,6 +28,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -33,10 +39,14 @@ public class TeleportToBlock {
   public static final KeyBinding SNEAK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
   private static BlockPos nextBlock = null;
   private static final KeyBinding forward = Minecraft.getMinecraft().gameSettings.keyBindForward;
+  private static long headMoveTime;
+  private static long waitTime;
 
   public static boolean teleportToBlock(BlockPos block, long time, long waitTime, CurrentState newState) {
     newStateType = newState;
     ArmadilloStates.currentState = null;
+    headMoveTime = time;
+    TeleportToBlock.waitTime = waitTime;
 
     KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
 
@@ -71,10 +81,30 @@ public class TeleportToBlock {
         false
       );
 
-      if (nextBlockPos == null) {
-        return false;
+      MoveToVertex vertexMover = new MoveToVertex();
+      VertexGetter getVertex = new VertexGetter();
+      VertexGetterConfig config = new VertexGetterConfig(ids.mc.thePlayer.getPositionVector(), nextBlock, 1.54F);
+
+      MinecraftForge.EVENT_BUS.register(vertexMover);
+
+      VertexGetter.VertexGetterClass vertex = getVertex.getVertex(config);
+
+      if (vertex != null) {
+        vertexMover.moveToVertex(vertex, TPSTAGEWALK);
+      } else {
+        if (nextBlockPos == null) {
+          return false;
+        }
+
+        if (!serverRotations) {
+          LookAt.smoothLook(LookAt.getRotation(nextBlockPos), time);
+        } else {
+          serverSmoothLook(LookAt.getRotation(nextBlockPos), time);
+          isStartLooking = true;
+        }
+
+        WaitThenCall.waitThenCall(waitTime + time, TPSTAGE2);
       }
-      walkForward(forwardForTicks, TPSTAGEWALK);
     }
 
     return true;
@@ -121,14 +151,8 @@ public class TeleportToBlock {
       return;
     }
 
-    if (!serverRotations) {
-      LookAt.smoothLook(LookAt.getRotation(nextBlockPos), 100);
-    } else {
-      serverSmoothLook(LookAt.getRotation(nextBlockPos), 100);
-      isStartLooking = true;
-    }
-
-    WaitThenCall.waitThenCall(300, TPSTAGE2);
+    LookAt.smoothLook(LookAt.getRotation(nextBlockPos), headMoveTime);
+    WaitThenCall.waitThenCall(headMoveTime + waitTime, TPSTAGE2);
   }
 
   public static void teleportStage3() {

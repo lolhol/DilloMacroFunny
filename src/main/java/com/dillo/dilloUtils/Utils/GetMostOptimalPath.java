@@ -7,6 +7,7 @@ import static com.dillo.dilloUtils.NewSpinDrive.isLeft;
 import com.dillo.data.config;
 import com.dillo.dilloUtils.LookAt;
 import com.dillo.dilloUtils.Teleport.GetNextBlock;
+import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,13 +59,19 @@ public class GetMostOptimalPath {
       }
 
       if (nextBlock != null) {
-        float next = displacement + config.headRotationMax;
+        float next;
+        if (!isLeft) {
+          next = displacement + config.headRotationMax;
+        } else {
+          next = Math.abs(displacement - config.headRotationMax);
+        }
+
         if (next > 360) {
           next %= 360;
         }
 
         if (Math.abs(getYawNeededVec(centerBlock(nextBlock), next)) < 20) {
-          points += 6;
+          points += 80 / Math.abs(getYawNeededVec(centerBlock(nextBlock), next));
         }
       }
 
@@ -74,8 +81,6 @@ public class GetMostOptimalPath {
         bestPoints = points;
       }
     }
-
-    //SendChat.chat("Best Rotation is " + bestPath.rotation);
 
     isClear = false;
 

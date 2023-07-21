@@ -1,9 +1,12 @@
 package com.dillo.commands.UtilCommands;
 
+import static com.dillo.dilloUtils.NewSpinDrive.putAllTogether;
+
 import com.dillo.Pathfinding.stevebot.core.StevebotApi;
 import com.dillo.Pathfinding.stevebot.core.data.blockpos.BaseBlockPos;
 import com.dillo.Pathfinding.stevebot.core.data.blockpos.FastBlockPos;
 import com.dillo.Pathfinding.stevebot.core.player.PlayerUtils;
+import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
 
@@ -14,7 +17,7 @@ public class WalkToCustom extends Command {
 
   public WalkToCustom(StevebotApi api) {
     super("walkToCustom");
-    this.api = api;
+    //this.api = api;
   }
 
   @DefaultHandler
@@ -38,12 +41,15 @@ public class WalkToCustom extends Command {
     MinecraftForge.EVENT_BUS.register(moveToV);
 
     moveToV.moveToVertex(vertexGetter.getVertex(config), null);*/
-    api.path(
+    /*api.path(
       new BaseBlockPos(PlayerUtils.getPlayerBlockPos()),
       new BaseBlockPos(new FastBlockPos(x, y, z)),
       false,
       false
-    );
+    );*/
+
+    currentRoute.currentBlock = currentRoute.currentRoute.get(0);
+    putAllTogether();
     //SendChat.chat(String.valueOf(ids.mc.thePlayer.getHorizontalFacing()));
     //clickSlotShift(1, 0);
 

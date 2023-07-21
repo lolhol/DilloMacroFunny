@@ -42,8 +42,6 @@ public class LookWhileGoingDown {
         if (ArmadilloStates.currentState != ARMADILLO) {
           if (!config.serverRotations) {
             LookAt.smoothLook(LookAt.getRotation(blockPos), maxTimeTake);
-          } else {
-            isStartServerLook = true;
           }
         } else {
           isStartServerLook = false;

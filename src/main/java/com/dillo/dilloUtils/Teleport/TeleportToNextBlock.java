@@ -51,33 +51,12 @@ public class TeleportToNextBlock {
       if (actuallySwitchAOTV) swapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
 
       if (isThrowRod) {
-        if (
-          ids.mc.theWorld.getBlockState(makeNewBlock(0, -1, 0, ids.mc.thePlayer.getPosition())).getBlock() != Blocks.air
-        ) {
-          new Thread(() -> {
-            float time = config.tpHeadMoveSpeed + RandomisationUtils.getRandomAdd(config.tpHeadMoveSpeed);
-
-            LookAt.smoothLook(LookAt.getRotation(nextBlock), (long) time);
-
-            try {
-              Thread.sleep((long) time);
-            } catch (InterruptedException e) {
-              throw new RuntimeException(e);
-            }
-
-            if (ArmadilloStates.isOnline()) {
-              ArmadilloStates.currentState = NEXTBLOCKSTAGE2;
-            }
-          })
-            .start();
-        } else {
-          LookWhileGoingDown.lookUntilState(
-            NEXTBLOCKSTAGE2,
-            nextBlock,
-            config.tpHeadMoveSpeed + RandomisationUtils.getRandomAdd(config.tpHeadMoveSpeed)
-          );
-          ArmadilloStates.currentState = STARTCHECKDILLO;
-        }
+        /*LookWhileGoingDown.lookUntilState(
+          NEXTBLOCKSTAGE2,
+          nextBlock,
+          config.tpHeadMoveSpeed + RandomisationUtils.getRandomAdd(config.tpHeadMoveSpeed)
+        );*/
+        ArmadilloStates.currentState = STARTCHECKDILLO;
       } else {
         ArmadilloStates.currentState = NEXTBLOCKSTAGE2;
         isThrowRod = true;
@@ -89,7 +68,7 @@ public class TeleportToNextBlock {
     stopLook();
     boolean result = TeleportToBlock.teleportToBlock(
       nextBlockInList,
-      20 + RandomisationUtils.getRandomAdd(50),
+      config.tpHeadMoveSpeed + RandomisationUtils.getRandomAdd(config.tpHeadMoveSpeed),
       config.tpWait + RandomisationUtils.getRandomAdd(config.tpWait),
       ARMADILLO
     );

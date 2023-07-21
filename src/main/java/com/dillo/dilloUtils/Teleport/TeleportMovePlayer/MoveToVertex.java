@@ -25,25 +25,21 @@ public class MoveToVertex {
 
     EnumFacing facing = ids.mc.thePlayer.getHorizontalFacing();
 
-    float pitch = 0.0F;
+    float pitch = ids.mc.thePlayer.rotationPitch;
     float yaw = 0.0F;
 
     switch (facing) {
       case SOUTH:
         yaw = SidePitchYaws.SOUTH.yaw;
-        pitch = SidePitchYaws.SOUTH.pitch;
         break;
       case WEST:
         yaw = SidePitchYaws.WEST.yaw;
-        pitch = SidePitchYaws.WEST.pitch;
         break;
       case NORTH:
         yaw = SidePitchYaws.NORTH.yaw;
-        pitch = SidePitchYaws.NORTH.pitch;
         break;
       case EAST:
         yaw = SidePitchYaws.EAST.yaw;
-        pitch = SidePitchYaws.EAST.pitch;
         break;
     }
 
@@ -58,16 +54,16 @@ public class MoveToVertex {
         throw new RuntimeException(e);
       }
 
-      //if (ArmadilloStates.isOnline()) {
-      isStart = true;
-      //}
+      if (ArmadilloStates.isOnline()) {
+        isStart = true;
+      }
     })
       .start();
   }
 
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
-    if (!isStart/* || !ArmadilloStates.isOnline()*/) return;
+    if (!isStart || !ArmadilloStates.isOnline()) return;
 
     Vec3 playerVec = ids.mc.thePlayer.getPositionVector();
 
