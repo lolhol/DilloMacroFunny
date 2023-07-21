@@ -8,6 +8,7 @@ import static com.dillo.dilloUtils.DriveLook.addYaw;
 import static com.dillo.dilloUtils.StateDillo.canDilloOn;
 import static com.dillo.dilloUtils.Teleport.IsOnBlock.yaw;
 import static com.dillo.dilloUtils.Teleport.SmartTP.smartTpBlocks;
+import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isClearing;
 import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getBestPath;
 import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.isClear;
 import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
@@ -37,6 +38,7 @@ public class NewSpinDrive {
   private static final KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
   public static GetMostOptimalPath.OptimalPath path = null;
   public static int driveClearCount = 0;
+  public static boolean isFirst = true;
 
   public static void newSpinDrive() {
     ArmadilloStates.currentState = null;
@@ -44,16 +46,19 @@ public class NewSpinDrive {
     KeyBinding.setKeyBindState(jump.getKeyCode(), true);
 
     if (isLeft) {
-      addYaw(config.headMovement * 100L, -config.headRotationMax);
+      addYaw(config.headMovement, -config.headRotationMax);
     } else {
-      addYaw(config.headMovement * 100L, config.headRotationMax);
+      addYaw(config.headMovement, config.headRotationMax);
     }
 
-    upDownMovement(config.headMovement * 100L, 30, 200, 100);
+    if (!isClearing) {
+      upDownMovement(config.headMovement, 30, 200, 100);
+      isClearing = false;
+    }
 
     new Thread(() -> {
       try {
-        Thread.sleep(config.headMovement * 100L);
+        Thread.sleep(config.headMovement);
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }

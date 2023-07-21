@@ -1,5 +1,6 @@
 package com.dillo.dilloUtils.Teleport.TeleportMovePlayer;
 
+import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 
 import com.dillo.utils.BlockUtils;
@@ -10,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
@@ -22,12 +22,35 @@ public class VertexGetter {
     List<VertexGetterClass> list = fromPlayerPosToListOVertexes(playerVec);
 
     for (VertexGetterClass vertex : list) {
-      if (canSee(vertex.vec, config.nextBlock) && isUnObstructed(vertex.vec)) {
+      if (
+        canSee(vertex.vec, config.nextBlock) &&
+        isUnObstructed(vertex.vec) &&
+        !isBlocksRightLeft(vertex, ids.mc.thePlayer.getPositionVector())
+      ) {
         return vertex;
       }
     }
 
     return null;
+  }
+
+  boolean isBlocksRightLeft(VertexGetterClass vertex, Vec3 centerblock) {
+    Vec3 direction = centerblock.subtract(vertex.vec).normalize();
+
+    final double gap = 0.5;
+
+    for (float rot = -90; rot <= 90; rot += 180) {
+      for (int y = 0; y <= 1; y++) {
+        Vec3 narmal = direction.rotateYaw(rot);
+        BlockPos block = BlockUtils.fromVec3ToBlockPos(
+          new Vec3(narmal.xCoord * gap, narmal.yCoord + y, narmal.zCoord * gap)
+        );
+
+        if (ids.mc.theWorld.getBlockState(block).getBlock() != Blocks.air) return true;
+      }
+    }
+
+    return false;
   }
 
   boolean canSee(Vec3 startVec, BlockPos destBlock) {
@@ -38,6 +61,7 @@ public class VertexGetter {
 
   boolean isUnObstructed(Vec3 vec) {
     return (
+      ids.mc.theWorld.getBlockState(BlockUtils.fromVec3ToBlockPos(vec)).getBlock() == Blocks.air &&
       ids.mc.theWorld.getBlockState(BlockUtils.fromVec3ToBlockPos(vec.addVector(0, 1, 0))).getBlock() == Blocks.air &&
       ids.mc.theWorld.getBlockState(BlockUtils.fromVec3ToBlockPos(vec.addVector(0, 2, 0))).getBlock() == Blocks.air
     );

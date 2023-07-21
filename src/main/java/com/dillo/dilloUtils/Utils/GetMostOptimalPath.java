@@ -3,6 +3,7 @@ package com.dillo.dilloUtils.Utils;
 import static com.dillo.dilloUtils.LookAt.getNeededChange;
 import static com.dillo.dilloUtils.LookAt.getRotation;
 import static com.dillo.dilloUtils.NewSpinDrive.isLeft;
+import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.isClearing;
 
 import com.dillo.data.config;
 import com.dillo.dilloUtils.LookAt;
@@ -30,6 +31,12 @@ public class GetMostOptimalPath {
     OptimalPath optimalPath = new OptimalPath(new ArrayList<>(), 0);
     float currRotPoints = 0;
 
+    float maxRot = config.headRotationMax;
+
+    if (isClearing) {
+      maxRot = 100;
+    }
+
     for (int displacement = 0; displacement < 360; displacement += 5) {
       List<BlockPos> blocks = new ArrayList<>();
       float points = 0;
@@ -39,7 +46,7 @@ public class GetMostOptimalPath {
         float neededYaw = getYawNeededVec(centered, displacement);
 
         if (!isLeft) {
-          if (neededYaw > 0 && neededYaw < config.headRotationMax) {
+          if (neededYaw > 0 && neededYaw < maxRot) {
             if (ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass) {
               points += 1.5;
             } else {
@@ -47,7 +54,7 @@ public class GetMostOptimalPath {
             }
             blocks.add(block);
           }
-        } else if (neededYaw < 0 && neededYaw > -config.headRotationMax) {
+        } else if (neededYaw < 0 && neededYaw > -maxRot) {
           if (ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass) {
             points += 1.5;
           } else {
@@ -58,7 +65,7 @@ public class GetMostOptimalPath {
         }
       }
 
-      if (nextBlock != null) {
+      if (nextBlock != null && !isClearing) {
         float next;
         if (!isLeft) {
           next = displacement + config.headRotationMax;
@@ -70,8 +77,8 @@ public class GetMostOptimalPath {
           next %= 360;
         }
 
-        if (Math.abs(getYawNeededVec(centerBlock(nextBlock), next)) < 20) {
-          points += 80 / Math.abs(getYawNeededVec(centerBlock(nextBlock), next));
+        if (Math.abs(getYawNeededVec(centerBlock(nextBlock), next)) < 30) {
+          points += 6;
         }
       }
 

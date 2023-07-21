@@ -90,7 +90,7 @@ public class TeleportToBlock {
       VertexGetter.VertexGetterClass vertex = getVertex.getVertex(config);
 
       if (vertex != null) {
-        vertexMover.moveToVertex(vertex, TPSTAGEWALK);
+        vertexMover.moveToVertex(vertex, TPSTAGEWALK, true);
       } else {
         if (nextBlockPos == null) {
           return false;
@@ -136,6 +136,8 @@ public class TeleportToBlock {
   }
 
   public static void tpStageWalk() {
+    KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
+
     ArmadilloStates.currentState = null;
     Vec3 nextBlockPos = adjustLook(
       ids.mc.thePlayer.getPositionVector(),

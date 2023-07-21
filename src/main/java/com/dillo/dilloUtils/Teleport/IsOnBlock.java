@@ -72,9 +72,11 @@ public class IsOnBlock {
               SendChat.chat(prefix.prefix + "Teleported successfully!");
               KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
 
-              float p = 10 + (random.nextFloat() < 0.5 ? random.nextFloat() * 5 : -(random.nextFloat() * 5));
-              yaw = p;
-              LookAt.smoothLook(new LookAt.Rotation(p, curRotation()), 100);
+              yaw = 0.0F;
+              alrMoved = false;
+              LookAt.smoothLook(new LookAt.Rotation(yaw, curRotation()), 100);
+
+              isClearing = false;
 
               if (RestartMacroFailsafe.isRestart) {
                 ArmadilloStates.offlineState = KillSwitch.ONLINE;

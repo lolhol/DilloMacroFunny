@@ -7,8 +7,13 @@ import com.dillo.Pathfinding.stevebot.core.data.blockpos.BaseBlockPos;
 import com.dillo.Pathfinding.stevebot.core.data.blockpos.FastBlockPos;
 import com.dillo.Pathfinding.stevebot.core.player.PlayerUtils;
 import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.utils.BlockUtils;
+import com.dillo.utils.previous.SendChat;
+import com.dillo.utils.previous.random.ids;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.Vec3;
 
 public class WalkToCustom extends Command {
 
@@ -21,7 +26,7 @@ public class WalkToCustom extends Command {
   }
 
   @DefaultHandler
-  public void handle(int x, int y, int z) {
+  public void handle(float x, float y, float z) {
     //SendChat.chat(String.valueOf(ids.mc.thePlayer.isRiding()));
     // NewSpinDrive.putAllTogether();
     // ArmadilloStates.offlineState = "online";
@@ -48,8 +53,7 @@ public class WalkToCustom extends Command {
       false
     );*/
 
-    currentRoute.currentBlock = currentRoute.currentRoute.get(0);
-    putAllTogether();
+    SendChat.chat(String.valueOf(isUnObstructed(new Vec3(x, y, z))));
     //SendChat.chat(String.valueOf(ids.mc.thePlayer.getHorizontalFacing()));
     //clickSlotShift(1, 0);
 
@@ -73,5 +77,13 @@ public class WalkToCustom extends Command {
     //isStructureBetween(ids.mc.thePlayer.getPosition(), new BlockPos(x, y, z));
 
     //TeleportToBlock.teleportToBlock(new BlockPos(x, y, z), 500, 500, null);
+  }
+
+  boolean isUnObstructed(Vec3 vec) {
+    return (
+      ids.mc.theWorld.getBlockState(BlockUtils.fromVec3ToBlockPos(vec)).getBlock() == Blocks.air &&
+      ids.mc.theWorld.getBlockState(BlockUtils.fromVec3ToBlockPos(vec.addVector(0, 1, 0))).getBlock() == Blocks.air &&
+      ids.mc.theWorld.getBlockState(BlockUtils.fromVec3ToBlockPos(vec.addVector(0, 2, 0))).getBlock() == Blocks.air
+    );
   }
 }

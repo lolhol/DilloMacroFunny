@@ -85,7 +85,7 @@ public class NukerMain {
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
     if (startNuking) {
-      if (currTicks >= 30 || earlyCheck) {
+      if (currTicks >= 30) {
         while (broken.size() > 0) {
           BlockPos block = broken.get(0);
 
@@ -96,7 +96,6 @@ public class NukerMain {
           broken.remove(0);
         }
 
-        earlyCheck = false;
         currTicks = 0;
       } else {
         currTicks++;

@@ -7,11 +7,11 @@ import static com.dillo.dilloUtils.RouteUtils.LegitRouteClear.LegitRouteClear.st
 import static com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain.nukerStart;
 import static com.dillo.dilloUtils.RouteUtils.Utils.IsAbleToMine.isAbleToMine;
 
+import com.dillo.data.config;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.random.ids;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
@@ -37,18 +37,34 @@ public class GetBlocksForNuker {
         }
 
         if (second < blocksOnRoute.size()) {
-          BlockPos block = blocksOnRoute.get(i);
-          if (nukerDigUnder) {
-            blocks.addAll(digHoleUnder(block));
-          }
+          if (!config.polarBlockDetection) {
+            BlockPos block = blocksOnRoute.get(i);
+            if (nukerDigUnder) {
+              blocks.addAll(digHoleUnder(block));
+            }
 
-          blocks.addAll(
-            findBlocks(
-              new Vec3(block.getX() + 0.5, block.getY() + 1.64, block.getZ() + 0.5),
-              BlockUtils.fromBlockPosToVec3(blocksOnRoute.get(second)),
-              1
-            )
-          );
+            blocks.addAll(
+              findBlocks(
+                new Vec3(block.getX() + 0.5, block.getY() + 1.64, block.getZ() + 0.5),
+                BlockUtils.fromBlockPosToVec3(blocksOnRoute.get(second)),
+                1
+              )
+            );
+          } else {
+            BlockPos block = blocksOnRoute.get(i);
+            BlockPos secondBlock = blocksOnRoute.get(second);
+
+            blocks.addAll(
+              polarGetBlocks(
+                block.getX(),
+                block.getY(),
+                block.getZ(),
+                secondBlock.getX(),
+                secondBlock.getY(),
+                secondBlock.getZ()
+              )
+            );
+          }
         }
       }
 
@@ -230,5 +246,137 @@ public class GetBlocksForNuker {
     }
 
     return finalBlockPos;
+  }
+
+  public static List<BlockPos> polarGetBlocks(double x1, double y1, double z1, double x2, double y2, double z2) {
+    List<Integer> mineX = new ArrayList<>();
+    List<Integer> mineY = new ArrayList<>();
+    List<Integer> mineZ = new ArrayList<>();
+
+    y1 = y1; // dumb 18 fucked up coordinates
+    y2 = y2;
+    mineX.add((int) Math.floor(x1));
+    mineY.add((int) Math.floor(y1));
+    mineZ.add((int) Math.floor(z1));
+    mineX.add((int) Math.floor(x1));
+    mineY.add((int) Math.floor(y1) + 1);
+    mineZ.add((int) Math.floor(z1));
+    mineX.add((int) Math.floor(x1));
+    mineY.add((int) Math.floor(y1) + 2);
+    mineZ.add((int) Math.floor(z1));
+    x1 = x1 + 0.5;
+    y1 = y1 + 2.62 - 3.0 / 32.0; // shifting apparently lowers eye level by 3/32 block, needs testing. **should be fixed need more tests
+    z1 = z1 + 0.5;
+    x2 = x2 + 0.5;
+    y2 = y2 + 0.5; // either Y or Y + 0.5 depending on what 18's macro looks at. currently his macro looks at Y
+    z2 = z2 + 0.5;
+    double changeX = (x2 - x1) / 100.0; // if someone can find a better number based on math than this im all ears. I was just too lazy, 10k should be fine
+    double changeY = (y2 - y1) / 100.0;
+    double changeZ = (z2 - z1) / 100.0;
+    double curX = x1;
+    double curY = y1;
+    double curZ = z1;
+    int blockX;
+    int blockY;
+    int blockZ;
+
+    for (int counter = 1; counter <= 100; counter++) {
+      blockX = (int) Math.floor(curX);
+      blockY = (int) Math.floor(curY);
+      blockZ = (int) Math.floor(curZ);
+      curX += changeX;
+      curY += changeY;
+      curZ += changeZ;
+
+      if (blockX != (int) Math.floor(curX) || blockY != (int) Math.floor(curY) || blockZ != (int) Math.floor(curZ)) {
+        mineX.add(blockX);
+        mineY.add(blockY);
+        mineZ.add(blockZ);
+        mineX.add(blockX);
+        mineY.add(blockY + 1);
+        mineZ.add(blockZ);
+
+        if (blockX != (int) Math.floor(curX - 0.1)) {
+          mineX.add(blockX - 1);
+          mineY.add(blockY);
+          mineZ.add(blockZ);
+          mineX.add(blockX - 1);
+          mineY.add(blockY + 1);
+          mineZ.add(blockZ);
+        }
+        if (blockX != (int) Math.floor(curX + 0.1)) {
+          mineX.add(blockX + 1);
+          mineY.add(blockY);
+          mineZ.add(blockZ);
+          mineX.add(blockX + 1);
+          mineY.add(blockY + 1);
+          mineZ.add(blockZ);
+        }
+        if (blockY != (int) Math.floor(curY - 0.1)) {
+          mineX.add(blockX);
+          mineY.add(blockY - 1);
+          mineZ.add(blockZ);
+          mineX.add(blockX);
+          mineY.add(blockY);
+          mineZ.add(blockZ);
+        }
+        if (blockY != (int) Math.floor(curY + 0.1)) {
+          mineX.add(blockX);
+          mineY.add(blockY + 1);
+          mineZ.add(blockZ);
+          mineX.add(blockX);
+          mineY.add(blockY + 2);
+          mineZ.add(blockZ);
+        }
+        if (blockZ != (int) Math.floor(curZ - 0.1)) {
+          mineX.add(blockX);
+          mineY.add(blockY);
+          mineZ.add(blockZ - 1);
+          mineX.add(blockX);
+          mineY.add(blockY + 1);
+          mineZ.add(blockZ - 1);
+        }
+        if (blockZ != (int) Math.floor(curZ + 0.1)) {
+          mineX.add(blockX);
+          mineY.add(blockY);
+          mineZ.add(blockZ + 1);
+          mineX.add(blockX);
+          mineY.add(blockY + 1);
+          mineZ.add(blockZ + 1);
+        }
+      }
+    }
+
+    mineX = removeDupe(mineX);
+    mineY = removeDupe(mineY);
+    mineZ = removeDupe(mineZ);
+
+    return interpreterPolars(mineX, mineY, mineZ);
+  }
+
+  public static List<Integer> removeDupe(List<Integer> ints) {
+    HashSet<Integer> alrChecked = new HashSet<>();
+    List<Integer> newSet = new ArrayList<>();
+
+    for (Integer i : ints) {
+      if (!alrChecked.contains(i)) {
+        newSet.add(i);
+        alrChecked.add(i);
+      }
+    }
+
+    return newSet;
+  }
+
+  public static List<BlockPos> interpreterPolars(List<Integer> mineX, List<Integer> mineY, List<Integer> mineZ) {
+    List<BlockPos> returnList = new ArrayList<>();
+
+    if (mineX.size() == mineY.size() && mineY.size() == mineZ.size()) {
+      for (int i = 0; i < mineX.size(); i++) {
+        returnList.add(new BlockPos(mineX.get(i), mineY.get(i), mineZ.get(i)));
+      }
+    }
+
+    return returnList;
   }
 }

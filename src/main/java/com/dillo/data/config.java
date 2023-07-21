@@ -39,9 +39,9 @@ public class config extends Vigilant {
     description = "Basically the speed of head movement of macro. (1 is fastest 10 is slowest)",
     category = "Main",
     min = 1,
-    max = 10
+    max = 1000
   )
-  public static int headMovement = 6;
+  public static int headMovement = 400;
 
   @Property(
     type = PropertyType.SLIDER,
@@ -532,6 +532,14 @@ public class config extends Vigilant {
     category = "Nuker"
   )
   public static boolean isNukerPlaceCobble = false;
+
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Polar Nuker Detection",
+    description = "Basically detects blocks like polar faster setup time but more obv that ur macroin. (also does not dig out under vein cas i dont want u to use this :D)",
+    category = "Nuker"
+  )
+  public static boolean polarBlockDetection = false;
 
   @Property(
     type = PropertyType.SWITCH,

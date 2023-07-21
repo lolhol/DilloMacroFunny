@@ -240,8 +240,9 @@ public class StateDillo {
             }
           }
         } else {
-          if (!looking) {
+          if (!looking && playerYBe4 - ids.mc.thePlayer.posY < 0.5) {
             looking = true;
+
             if (isLeft) {
               addYaw(200, -20);
             } else {

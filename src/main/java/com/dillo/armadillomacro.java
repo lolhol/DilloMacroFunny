@@ -104,6 +104,8 @@ public class armadillomacro {
   private static Renderer renderer;
   private static PathHandler pathHandler;
 
+  public static MoveToVertex vertexMover = new MoveToVertex();
+
   public static File modFile = null;
 
   public static ArrayList<KeyBinding> keybinds = new ArrayList<>();
@@ -210,7 +212,8 @@ public class armadillomacro {
       new TeleportToBlock(),
       new PlaceCobbleModule(),
       new SetupMain(),
-      destroyer
+      destroyer,
+      vertexMover
     );
 
     registerKeybinds(keybinds);

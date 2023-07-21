@@ -6,6 +6,7 @@ import static com.dillo.data.config.smartTpDepth;
 import static com.dillo.data.config.smartTpRange;
 import static com.dillo.dilloUtils.BlockUtils.GetUnobstructedPosFromCustom.getUnobstructedPos;
 import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
+import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.attemptedToSmartTP;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 
 import com.dillo.ArmadilloMain.ArmadilloStates;
@@ -184,6 +185,7 @@ public class SmartTP {
             triedAPull = false;
             overide = false;
             SendChat.chat(prefix.prefix + "Found no teleport locations using smart tp!");
+            attemptedToSmartTP = true;
             ArmadilloStates.currentState = null;
             ArmadilloStates.offlineState = KillSwitch.OFFLINE;
           }

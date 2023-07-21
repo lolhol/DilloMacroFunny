@@ -2,7 +2,10 @@ package com.dillo.keybinds;
 
 import static com.dillo.commands.RouteCommands.StructurePoints.render;
 import static com.dillo.dilloUtils.LookAt.reset;
+import static com.dillo.dilloUtils.ReFuelDrill.ReFuelDrill.isStart;
+import static com.dillo.dilloUtils.Teleport.TeleportToNextBlock.alrMoved;
 
+import com.dillo.Pathfinding.baritone.automine.handlers.KeybindHandler;
 import com.dillo.armadillomacro;
 import com.dillo.dilloUtils.ReFuelDrill.ReFuelDrill;
 import com.dillo.dilloUtils.RouteUtils.Nuker.StartNuker;
@@ -20,6 +23,9 @@ public class Keybinds {
     if (event.phase == TickEvent.Phase.END) {
       if (armadillomacro.keybinds.get(0).isPressed()) {
         reset();
+        alrMoved = false;
+        isStart = false;
+        KeybindHandler.updateKeys(false, false, false, false, false, false, false, false);
         StartMacro.startMacro();
       }
 

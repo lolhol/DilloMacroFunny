@@ -1,5 +1,7 @@
 package com.dillo.dilloUtils.Teleport.TeleportMovePlayer;
 
+import static com.dillo.dilloUtils.Teleport.TeleportToBlock.SNEAK;
+
 import com.dillo.ArmadilloMain.ArmadilloStates;
 import com.dillo.ArmadilloMain.CurrentState;
 import com.dillo.Pathfinding.baritone.automine.handlers.KeybindHandler;
@@ -7,6 +9,7 @@ import com.dillo.dilloUtils.LookAt;
 import com.dillo.utils.previous.random.ids;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -18,10 +21,12 @@ public class MoveToVertex {
   VertexGetter.VertexGetterClass vertexVector;
   CurrentState newState;
   BindCombination combo;
+  boolean isTp = false;
 
-  public void moveToVertex(VertexGetter.VertexGetterClass vertexVector, CurrentState newState) {
+  public void moveToVertex(VertexGetter.VertexGetterClass vertexVector, CurrentState newState, boolean isTp) {
     this.vertexVector = vertexVector;
     this.newState = newState;
+    this.isTp = isTp;
 
     EnumFacing facing = ids.mc.thePlayer.getHorizontalFacing();
 
@@ -68,27 +73,41 @@ public class MoveToVertex {
     Vec3 playerVec = ids.mc.thePlayer.getPositionVector();
 
     if (
-      Math.abs(Math.abs(playerVec.xCoord) - Math.abs(vertexVector.vec.xCoord)) > 0.3 ||
-      Math.abs(Math.abs(playerVec.zCoord) - Math.abs(vertexVector.vec.zCoord)) > 0.3 ||
-      Math.abs(Math.abs(vertexVector.vec.xCoord) - Math.abs(playerVec.xCoord)) > 0.3 ||
-      Math.abs(Math.abs(vertexVector.vec.zCoord) - Math.abs(playerVec.zCoord)) > 0.3
+      Math.abs(Math.abs(playerVec.xCoord) - Math.abs(vertexVector.vec.xCoord)) > 0.5 ||
+      Math.abs(Math.abs(playerVec.zCoord) - Math.abs(vertexVector.vec.zCoord)) > 0.5 ||
+      Math.abs(Math.abs(vertexVector.vec.xCoord) - Math.abs(playerVec.xCoord)) > 0.5 ||
+      Math.abs(Math.abs(vertexVector.vec.zCoord) - Math.abs(playerVec.zCoord)) > 0.5
     ) {
       KeybindHandler.updateKeys(combo.w, combo.s, combo.a, combo.d, false, false, true, false);
     } else {
+      if (isTp) KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
       isStart = false;
-      KeybindHandler.updateKeys(false, false, false, false, false, false, true, false);
+      KeybindHandler.updateKeys(false, false, false, false, false, false, !isTp, false);
 
-      new Thread(() -> {
-        try {
-          Thread.sleep(500);
-        } catch (InterruptedException e) {
-          throw new RuntimeException(e);
-        }
+      if (!isTp) {
+        new Thread(() -> {
+          try {
+            Thread.sleep(250);
+          } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+          }
 
-        KeybindHandler.updateKeys(false, false, false, false, false, false, false, false);
-        if (ArmadilloStates.isOnline()) ArmadilloStates.currentState = newState;
-      })
-        .start();
+          KeybindHandler.updateKeys(false, false, false, false, false, false, false, false);
+          if (ArmadilloStates.isOnline()) ArmadilloStates.currentState = newState;
+        })
+          .start();
+      } else {
+        new Thread(() -> {
+          try {
+            Thread.sleep(20);
+          } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+          }
+
+          if (ArmadilloStates.isOnline()) ArmadilloStates.currentState = newState;
+        })
+          .start();
+      }
     }
   }
 
