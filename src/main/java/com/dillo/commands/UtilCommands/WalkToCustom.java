@@ -1,30 +1,20 @@
 package com.dillo.commands.UtilCommands;
 
-import static com.dillo.dilloUtils.LookAt.*;
-
-import com.dillo.Events.PlayerMoveEvent;
-import com.dillo.dilloUtils.LookAt;
-import com.dillo.dilloUtils.RouteUtils.Nuker.NukerMain;
-import com.dillo.dilloUtils.RouteUtils.RouteDeletr.RouteDeletrConfig;
-import com.dillo.dilloUtils.RouteUtils.RouteDeletr.RouteDeletrMain;
-import com.dillo.dilloUtils.Teleport.TeleportMovePlayer.MoveToVertex;
-import com.dillo.dilloUtils.Teleport.TeleportMovePlayer.VertexGetter;
-import com.dillo.dilloUtils.Teleport.TeleportMovePlayer.VertexGetterConfig;
-import com.dillo.utils.previous.SendChat;
-import com.dillo.utils.previous.random.ids;
+import com.dillo.Pathfinding.stevebot.core.StevebotApi;
+import com.dillo.Pathfinding.stevebot.core.data.blockpos.BaseBlockPos;
+import com.dillo.Pathfinding.stevebot.core.data.blockpos.FastBlockPos;
+import com.dillo.Pathfinding.stevebot.core.player.PlayerUtils;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class WalkToCustom extends Command {
 
   public static boolean startRender = false;
+  StevebotApi api;
 
-  public WalkToCustom() {
+  public WalkToCustom(StevebotApi api) {
     super("walkToCustom");
+    this.api = api;
   }
 
   @DefaultHandler
@@ -38,7 +28,7 @@ public class WalkToCustom extends Command {
     //SendChat.chat(currentServer);
     //getArea();
 
-    MoveToVertex moveToV = new MoveToVertex();
+    /*MoveToVertex moveToV = new MoveToVertex();
     VertexGetter vertexGetter = new VertexGetter();
     VertexGetterConfig config = new VertexGetterConfig(
       ids.mc.thePlayer.getPositionVector(),
@@ -47,7 +37,13 @@ public class WalkToCustom extends Command {
     );
     MinecraftForge.EVENT_BUS.register(moveToV);
 
-    moveToV.moveToVertex(vertexGetter.getVertex(config), null);
+    moveToV.moveToVertex(vertexGetter.getVertex(config), null);*/
+    api.path(
+      new BaseBlockPos(PlayerUtils.getPlayerBlockPos()),
+      new BaseBlockPos(new FastBlockPos(x, y, z)),
+      false,
+      false
+    );
     //SendChat.chat(String.valueOf(ids.mc.thePlayer.getHorizontalFacing()));
     //clickSlotShift(1, 0);
 
@@ -71,11 +67,5 @@ public class WalkToCustom extends Command {
     //isStructureBetween(ids.mc.thePlayer.getPosition(), new BlockPos(x, y, z));
 
     //TeleportToBlock.teleportToBlock(new BlockPos(x, y, z), 500, 500, null);
-  }
-
-  @SubscribeEvent(priority = EventPriority.NORMAL)
-  public void onUpdatePre(PlayerMoveEvent.Pre pre) {
-    if (!startRender) return;
-    updateServerLook();
   }
 }
