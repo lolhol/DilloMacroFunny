@@ -52,6 +52,11 @@ public class MobKillerMain {
           start = true;
 
           for (int i = 0; i < allEntities.size(); i++) {
+            if (!ArmadilloStates.isOnline()) {
+              ArmadilloStates.currentState = newState;
+              return;
+            }
+
             serverSmoothLook(LookAt.getRotation(allEntities.get(i).getPosition().add(0, 1, 0)), 200);
 
             sleep(200);
@@ -78,6 +83,11 @@ public class MobKillerMain {
           RenderMultipleBlocksMod.renderMultipleBlocks(null, false);
 
           for (Entity allEntity : allEntities) {
+            if (!ArmadilloStates.isOnline()) {
+              ArmadilloStates.currentState = newState;
+              return;
+            }
+
             RenderMultipleBlocksMod.renderMultipleBlocks(allEntity.getPositionVector(), true);
 
             serverSmoothLook(LookAt.getRotation(allEntity.getPosition().add(0, 1, 0)), 200);

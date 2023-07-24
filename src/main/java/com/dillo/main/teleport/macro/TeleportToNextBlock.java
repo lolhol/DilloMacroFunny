@@ -4,6 +4,7 @@ import static com.dillo.armadillomacro.vertexMover;
 import static com.dillo.calls.CurrentState.*;
 import static com.dillo.calls.KillSwitch.ONLINE;
 import static com.dillo.config.config.actuallySwitchAOTV;
+import static com.dillo.config.config.earlyLook;
 import static com.dillo.main.macro.main.StateDillo.canDillo;
 import static com.dillo.main.teleport.utils.LookWhileGoingDown.stopLook;
 import static com.dillo.main.utils.GetMostOptimalPath.isClear;
@@ -17,6 +18,7 @@ import com.dillo.calls.KillSwitch;
 import com.dillo.config.config;
 import com.dillo.main.teleport.TeleportMovePlayer.VertexGetter;
 import com.dillo.main.teleport.TeleportMovePlayer.VertexGetterConfig;
+import com.dillo.main.teleport.utils.LookWhileGoingDown;
 import com.dillo.main.teleport.utils.TeleportToBlock;
 import com.dillo.main.utils.looks.LookAt;
 import com.dillo.utils.GetSBItems;
@@ -58,11 +60,12 @@ public class TeleportToNextBlock {
       if (actuallySwitchAOTV) swapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
 
       if (isThrowRod) {
-        /*LookWhileGoingDown.lookUntilState(
+        if (earlyLook) LookWhileGoingDown.lookUntilState(
           NEXTBLOCKSTAGE2,
           nextBlock,
           config.tpHeadMoveSpeed + RandomisationUtils.getRandomAdd(config.tpHeadMoveSpeed)
-        );*/
+        );
+
         ArmadilloStates.currentState = STARTCHECKDILLO;
       } else {
         ArmadilloStates.currentState = NEXTBLOCKSTAGE2;

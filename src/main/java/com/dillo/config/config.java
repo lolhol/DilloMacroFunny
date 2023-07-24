@@ -173,6 +173,14 @@ public class config extends Vigilant {
 
   @Property(
     type = PropertyType.SWITCH,
+    name = "Early next block look",
+    description = "Kinda QOL will just look at the next block while getting off dillo.",
+    category = "Fun"
+  )
+  public static boolean earlyLook = false;
+
+  @Property(
+    type = PropertyType.SWITCH,
     name = "Show Server Look",
     description = "Will show how ur head rotates with server look.",
     category = "Fun"

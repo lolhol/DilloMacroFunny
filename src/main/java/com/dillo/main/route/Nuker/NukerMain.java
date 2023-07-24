@@ -14,6 +14,7 @@ import static com.dillo.main.utils.looks.LookAt.updateServerLook;
 import static com.dillo.main.utils.looks.LookYaw.curRotation;
 import static com.dillo.utils.EntityUtils.isSummoned;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
+import static com.dillo.utils.renderUtils.RenderBox.drawFilledInBlock;
 
 import com.dillo.config.config;
 import com.dillo.events.PlayerMoveEvent;
@@ -55,6 +56,7 @@ public class NukerMain {
   public static int prev = 100;
   boolean earlyCheck = false;
   int secondCount = 0;
+  boolean renderGreen = false;
 
   public static void nukeBlocks(List<BlockPos> blocksToNuke, boolean nuke) {
     nuking = blocksToNuke;
@@ -105,6 +107,35 @@ public class NukerMain {
   @SubscribeEvent
   public void onRenderWorld(RenderWorldLastEvent event) {
     if (startNuking) {
+      if (curBlock != null) {
+        //RenderBox.drawBox(curBlock.getX(), curBlock.getY(), curBlock.getZ(), Color.red, 0.2F, event.partialTicks, true);
+
+        if (!renderGreen) {
+          drawFilledInBlock(curBlock, Color.red, 0.7F, event.partialTicks);
+        } else {
+          drawFilledInBlock(curBlock, Color.green, 0.5F, event.partialTicks);
+        }
+
+        if (nuking.size() > 1) {
+          if (!nuking.get(1).equals(curBlock)) {
+            if (isAbleToMine(nuking.get(1))) {
+              RenderBox.drawBox(
+                nuking.get(1).getX(),
+                nuking.get(1).getY(),
+                nuking.get(1).getZ(),
+                Color.white,
+                0.2F,
+                event.partialTicks,
+                false
+              );
+            } else {
+              nuking.remove(1);
+              broken.add(nuking.get(1));
+            }
+          }
+        }
+      }
+
       if (nuking.size() > 0) {
         if (System.currentTimeMillis() >= lastTime + (1000 / config.nukerBPS)) {
           lastTime = System.currentTimeMillis();
@@ -121,12 +152,16 @@ public class NukerMain {
             ) {
               if (DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), block) > nukerRange) {
                 earlyCheck = true;
+                renderGreen = false;
                 return;
               }
 
               if (config.nukerUnObstructedChecks && !canBeBroken(block)) {
+                renderGreen = false;
                 return;
               }
+
+              renderGreen = true;
 
               if (isAlrLooked) {
                 isAlrLooked = false;
@@ -143,6 +178,8 @@ public class NukerMain {
               broken.add(block);
 
               nukesPerSecond++;
+            } else {
+              renderGreen = false;
             }
           }
         }
@@ -152,24 +189,6 @@ public class NukerMain {
         isNuking = false;
         NukerMain.nuking.clear();
         SendChat.chat(prefix.prefix + "The route is clear!");
-      }
-
-      if (curBlock != null) {
-        RenderBox.drawBox(curBlock.getX(), curBlock.getY(), curBlock.getZ(), Color.red, 0.2F, event.partialTicks, true);
-      }
-
-      if (nuking.size() > 1) {
-        if (!nuking.get(1).equals(curBlock)) {
-          RenderBox.drawBox(
-            nuking.get(1).getX(),
-            nuking.get(1).getY(),
-            nuking.get(1).getZ(),
-            Color.white,
-            0.2F,
-            event.partialTicks,
-            false
-          );
-        }
       }
     }
   }

@@ -37,8 +37,9 @@ public class GetBlocksForNuker {
         }
 
         if (second < blocksOnRoute.size()) {
+          BlockPos block = blocksOnRoute.get(i);
+
           if (!config.polarBlockDetection) {
-            BlockPos block = blocksOnRoute.get(i);
             if (nukerDigUnder) {
               blocks.addAll(digHoleUnder(block));
             }
@@ -51,7 +52,6 @@ public class GetBlocksForNuker {
               )
             );
           } else {
-            BlockPos block = blocksOnRoute.get(i);
             BlockPos secondBlock = blocksOnRoute.get(second);
 
             blocks.addAll(
@@ -347,18 +347,15 @@ public class GetBlocksForNuker {
       }
     }
 
-    mineX = removeDupe(mineX);
-    mineY = removeDupe(mineY);
-    mineZ = removeDupe(mineZ);
-
-    return interpreterPolars(mineX, mineY, mineZ);
+    List<BlockPos> blocks = interpreterPolars(mineX, mineY, mineZ);
+    return removeDupe(blocks);
   }
 
-  public static List<Integer> removeDupe(List<Integer> ints) {
-    HashSet<Integer> alrChecked = new HashSet<>();
-    List<Integer> newSet = new ArrayList<>();
+  public static List<BlockPos> removeDupe(List<BlockPos> blocks) {
+    HashSet<BlockPos> alrChecked = new HashSet<>();
+    List<BlockPos> newSet = new ArrayList<>();
 
-    for (Integer i : ints) {
+    for (BlockPos i : blocks) {
       if (!alrChecked.contains(i)) {
         newSet.add(i);
         alrChecked.add(i);
