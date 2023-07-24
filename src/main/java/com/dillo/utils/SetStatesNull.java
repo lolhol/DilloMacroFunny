@@ -1,6 +1,6 @@
 package com.dillo.utils;
 
-import com.dillo.ArmadilloMain.ArmadilloStates;
+import com.dillo.calls.ArmadilloStates;
 
 public class SetStatesNull {
 

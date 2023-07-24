@@ -1,8 +1,8 @@
 package com.dillo.commands.UtilCommands;
 
-import static com.dillo.dilloUtils.DilloDriveBlockDetection.getBlocksLayer;
-import static com.dillo.dilloUtils.Utils.GetMostOptimalPath.getBestPath;
-import static com.dillo.dilloUtils.Utils.LookYaw.curRotation;
+import static com.dillo.main.utils.GetMostOptimalPath.getBestPath;
+import static com.dillo.main.utils.looks.LookYaw.curRotation;
+import static com.dillo.utils.BlockUtils.getBlocksLayer;
 
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;

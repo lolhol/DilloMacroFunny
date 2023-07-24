@@ -1,8 +1,8 @@
 package com.dillo.commands.RouteMakerUtils;
 
-import static com.dillo.dilloUtils.MoreLegitSpinDrive.makeNewBlock;
+import static com.dillo.utils.BlockUtils.makeNewBlock;
 
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;

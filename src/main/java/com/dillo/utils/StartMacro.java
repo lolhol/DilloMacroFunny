@@ -1,13 +1,13 @@
 package com.dillo.utils;
 
-import static com.dillo.ArmadilloMain.CurrentState.ARMADILLO;
-import static com.dillo.ArmadilloMain.KillSwitch.OFFLINE;
-import static com.dillo.ArmadilloMain.KillSwitch.ONLINE;
-import static com.dillo.dilloUtils.StateDillo.stateDilloNoGettingOn;
+import static com.dillo.calls.CurrentState.ARMADILLO;
+import static com.dillo.calls.KillSwitch.OFFLINE;
+import static com.dillo.calls.KillSwitch.ONLINE;
+import static com.dillo.main.macro.main.StateDillo.stateDilloNoGettingOn;
+import static com.dillo.utils.BlockUtils.checkIfOnBlock;
 
-import com.dillo.ArmadilloMain.ArmadilloStates;
-import com.dillo.dilloUtils.BlockUtils.CheckIfOnBlock;
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.calls.ArmadilloStates;
+import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
@@ -16,7 +16,7 @@ import net.minecraft.util.BlockPos;
 public class StartMacro {
 
   public static void startMacro() {
-    BlockPos blockUnder = CheckIfOnBlock.checkIfOnBlock();
+    BlockPos blockUnder = checkIfOnBlock();
 
     if (blockUnder != null) {
       currentRoute.currentBlock = blockUnder;

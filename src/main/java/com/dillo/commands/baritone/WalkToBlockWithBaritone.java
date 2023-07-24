@@ -1,14 +1,9 @@
 package com.dillo.commands.baritone;
 
-import static com.dillo.Pathfinding.baritone.automine.utils.HypixelUtils.MineUtils.gemPriority;
-
-import com.dillo.Pathfinding.baritone.automine.AutoMineBaritone;
-import com.dillo.Pathfinding.baritone.automine.config.BaritoneConfig;
-import com.dillo.Pathfinding.baritone.automine.config.MiningType;
-import com.dillo.Pathfinding.baritone.automine.config.WalkBaritoneConfig;
-import com.dillo.Pathfinding.baritone.automine.utils.BlockUtils.BlockData;
+import com.dillo.pathfinding.baritone.automine.AutoMineBaritone;
+import com.dillo.pathfinding.baritone.automine.config.BaritoneConfig;
+import com.dillo.pathfinding.baritone.automine.config.MiningType;
 import com.dillo.utils.previous.SendChat;
-import com.dillo.utils.previous.random.prefix;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
 import java.util.ArrayList;

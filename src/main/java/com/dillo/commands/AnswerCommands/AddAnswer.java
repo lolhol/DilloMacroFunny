@@ -1,10 +1,10 @@
 package com.dillo.commands.AnswerCommands;
 
-import static com.dillo.dilloUtils.BlockUtils.fileUtils.ReWriteFile.gson;
-import static com.dillo.dilloUtils.CheckFile.answersFile;
-import static com.dillo.dilloUtils.CheckFile.writeStringFile;
+import static com.dillo.main.files.init.CheckFile.answersFile;
+import static com.dillo.main.files.init.CheckFile.writeStringFile;
+import static com.dillo.main.files.readwrite.ReWriteFile.gson;
 
-import com.dillo.dilloUtils.FailSafes.AnswerPPL;
+import com.dillo.main.failsafes.AnswerPPL;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
 import gg.essential.api.commands.Command;

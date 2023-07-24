@@ -1,9 +1,9 @@
 package com.dillo.commands.ConfigCommands;
 
-import static com.dillo.dilloUtils.BlockUtils.fileUtils.WriteFile.gson;
+import static com.dillo.main.files.readwrite.WriteFile.gson;
 
-import com.dillo.data.config;
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.config.config;
+import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.utils.GetConfigFolder;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;

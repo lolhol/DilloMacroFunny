@@ -1,7 +1,7 @@
 package com.dillo.commands;
 
-import com.dillo.dilloUtils.BlockUtils.fileUtils.ReWriteFile;
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.main.files.localizedData.currentRoute;
+import com.dillo.main.files.readwrite.ReWriteFile;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;

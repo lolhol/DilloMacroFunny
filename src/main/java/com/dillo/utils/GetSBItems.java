@@ -127,4 +127,40 @@ public class GetSBItems {
 
     return -1;
   }
+
+  public static int getFireVeilSlot() {
+    for (int i = 0; i < 8; i++) {
+      ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
+
+      String skyblockID = getSBAtr.getSkyBlockID(stack);
+
+      if (skyblockID != null) {
+        skyblockID = skyblockID.toLowerCase();
+
+        if (skyblockID.contains("fire") && skyblockID.contains("veil")) {
+          return i;
+        }
+      }
+    }
+
+    return -1;
+  }
+
+  public static int getCustomSlot(String name) {
+    for (int i = 0; i < 8; i++) {
+      ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
+
+      String skyblockID = getSBAtr.getSkyBlockID(stack);
+
+      if (skyblockID != null) {
+        skyblockID = skyblockID.toLowerCase();
+
+        if (skyblockID.contains(name)) {
+          return i;
+        }
+      }
+    }
+
+    return -1;
+  }
 }

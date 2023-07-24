@@ -1,6 +1,6 @@
 package com.dillo.adapter;
 
-import com.dillo.Pathfinding.stevebot.core.minecraft.InputBinding;
+import com.dillo.pathfinding.stevebot.core.minecraft.InputBinding;
 import net.minecraft.client.settings.KeyBinding;
 
 class McInputBinding implements InputBinding {

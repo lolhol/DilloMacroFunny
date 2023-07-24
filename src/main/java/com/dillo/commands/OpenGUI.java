@@ -1,6 +1,6 @@
 package com.dillo.commands;
 
-import com.dillo.data.config;
+import com.dillo.config.config;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
 import gg.essential.api.utils.GuiUtil;

@@ -24,3 +24,4 @@ pluginManagement {
 }
 
 rootProject.name = "ArmadilloMacro"
+include("ArmadilloMacro.main")

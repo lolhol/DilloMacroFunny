@@ -1,7 +1,7 @@
 package com.dillo.commands.RouteCommands;
 
-import com.dillo.dilloUtils.RouteUtils.RouteDeletr.RouteDeletrConfig;
-import com.dillo.dilloUtils.RouteUtils.RouteDeletr.RouteDeletrMain;
+import com.dillo.main.route.RouteDeletr.RouteDeletrConfig;
+import com.dillo.main.route.RouteDeletr.RouteDeletrMain;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;

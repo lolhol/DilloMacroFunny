@@ -1,8 +1,8 @@
 package com.dillo.commands.RouteCommands;
 
-import static com.dillo.dilloUtils.BlockUtils.fileUtils.WriteFile.gson;
+import static com.dillo.main.files.readwrite.WriteFile.gson;
 
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
 import com.google.gson.Gson;

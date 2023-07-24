@@ -1,7 +1,7 @@
 package com.dillo.commands;
 
-import com.dillo.dilloUtils.BlockUtils.fileUtils.ClearRoute;
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.main.files.localizedData.currentRoute;
+import com.dillo.main.files.readwrite.ClearRoute;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.prefix;
 import gg.essential.api.commands.Command;

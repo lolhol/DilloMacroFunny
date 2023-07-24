@@ -2,7 +2,7 @@ package com.dillo.commands.RouteCommands;
 
 import static com.dillo.utils.renderUtils.RenderString.renderStr;
 
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.renderUtils.RenderBox;

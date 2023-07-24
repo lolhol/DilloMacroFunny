@@ -1,9 +1,9 @@
 package com.dillo.commands.RouteCommands;
 
-import static com.dillo.MITGUI.Overlay.curTime;
+import static com.dillo.gui.Overlay.curTime;
 
-import com.dillo.dilloUtils.BlockUtils.fileUtils.ReadFileContents;
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.main.files.localizedData.currentRoute;
+import com.dillo.main.files.readwrite.ReadFileContents;
 import com.dillo.utils.GetConfigFolder;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.prefix;

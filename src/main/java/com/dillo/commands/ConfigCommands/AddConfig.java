@@ -1,6 +1,6 @@
 package com.dillo.commands.ConfigCommands;
 
-import com.dillo.data.config;
+import com.dillo.config.config;
 import com.dillo.utils.GetConfigFolder;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;

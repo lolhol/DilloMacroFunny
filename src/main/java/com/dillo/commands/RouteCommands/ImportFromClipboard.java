@@ -3,8 +3,8 @@ package com.dillo.commands.RouteCommands;
 import static com.dillo.commands.RouteCommands.ImportFromWeb.decodeWaypointData;
 import static com.dillo.commands.RouteCommands.ImportFromWeb.writeFileList;
 
-import com.dillo.dilloUtils.BlockUtils.fileUtils.WriteFile;
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.main.files.localizedData.currentRoute;
+import com.dillo.main.files.readwrite.WriteFile;
 import com.dillo.utils.GetConfigFolder;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;

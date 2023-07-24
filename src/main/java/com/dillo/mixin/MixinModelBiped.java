@@ -1,6 +1,6 @@
 package com.dillo.mixin;
 
-import static com.dillo.data.config.isShowServerLook;
+import static com.dillo.config.config.isShowServerLook;
 
 import com.dillo.utils.previous.random.ids;
 import net.minecraft.client.model.ModelBiped;

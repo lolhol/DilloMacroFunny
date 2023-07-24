@@ -1,6 +1,6 @@
 package com.dillo.utils.previous.chatUtils;
 
-import static com.dillo.data.config.antiSpam;
+import static com.dillo.config.config.antiSpam;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;

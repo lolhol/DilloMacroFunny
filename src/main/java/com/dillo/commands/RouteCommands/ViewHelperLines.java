@@ -1,9 +1,8 @@
 package com.dillo.commands.RouteCommands;
 
-import static com.dillo.dilloUtils.RouteUtils.ViewClearLines.ViewClearLines.clearLines;
-import static com.dillo.dilloUtils.RouteUtils.ViewClearLines.ViewClearLines.viewClearLines;
+import static com.dillo.main.route.ViewClearLines.ViewClearLines.clearLines;
+import static com.dillo.main.route.ViewClearLines.ViewClearLines.viewClearLines;
 
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
 

@@ -1,6 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Minecraft Client" type="Application" factoryName="Application">
+  <configuration default="false" name="Minecraft Client" type="Application" factoryName="Application" activateToolWindowBeforeRun="false">
+    <option name="ALTERNATIVE_JRE_PATH" value="corretto-1.8" />
     <option name="MAIN_CLASS_NAME" value="net.fabricmc.devlaunchinjector.Main" />
+    <shortenClasspath name="NONE" />
     <option name="VM_PARAMETERS" value="&quot;-Dfabric.dli.config=$PROJECT_DIR$/.gradle/loom-cache/launch.cfg&quot; &quot;-Dfabric.dli.env=client&quot; &quot;-Dfabric.dli.main=net.minecraft.launchwrapper.Launch&quot;" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run/" />
     <method v="2">

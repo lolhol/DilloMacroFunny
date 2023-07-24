@@ -1,6 +1,6 @@
 package com.dillo.mixin;
 
-import com.dillo.Events.RenderLivingEntityEvent;
+import com.dillo.events.RenderLivingEntityEvent;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;

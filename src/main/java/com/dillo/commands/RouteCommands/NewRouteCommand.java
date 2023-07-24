@@ -1,6 +1,6 @@
 package com.dillo.commands.RouteCommands;
 
-import com.dillo.dilloUtils.BlockUtils.fileUtils.localizedData.currentRoute;
+import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.utils.GetConfigFolder;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.prefix;

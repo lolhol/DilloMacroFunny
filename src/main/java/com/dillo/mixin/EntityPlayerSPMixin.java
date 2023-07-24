@@ -1,7 +1,7 @@
 package com.dillo.mixin;
 
-import com.dillo.Events.PlayerMoveEvent;
-import com.dillo.Events.ScreenClosedEvent;
+import com.dillo.events.PlayerMoveEvent;
+import com.dillo.events.ScreenClosedEvent;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;

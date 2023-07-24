@@ -1,6 +1,6 @@
 package com.dillo.commands.RouteCommands;
 
-import com.dillo.MITGUI.GUIUtils.CheckRoute.GetFailPointsList;
+import com.dillo.gui.GUIUtils.CheckRoute.GetFailPointsList;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
 import gg.essential.api.commands.Command;

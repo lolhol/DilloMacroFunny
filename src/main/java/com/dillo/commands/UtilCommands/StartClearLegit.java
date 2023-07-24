@@ -1,6 +1,6 @@
 package com.dillo.commands.UtilCommands;
 
-import com.dillo.dilloUtils.RouteUtils.LegitRouteClear.LegitRouteClear;
+import com.dillo.main.route.LegitRouteClear.LegitRouteClear;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
 

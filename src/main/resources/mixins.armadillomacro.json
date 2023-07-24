@@ -15,6 +15,7 @@
     "MixinModelBiped"
   ],
   "mixins": [
-    "RenderManagerAccessor"
+    "RenderManagerAccessor",
+    "MixinNetworkManager"
   ]
 }

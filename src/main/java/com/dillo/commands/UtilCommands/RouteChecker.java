@@ -1,6 +1,6 @@
 package com.dillo.commands.UtilCommands;
 
-import static com.dillo.dilloUtils.RouteChecker.CheckForStruc.isObstructed;
+import static com.dillo.main.route.RouteChecker.CheckForStruc.isObstructed;
 
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
