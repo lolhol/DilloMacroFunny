@@ -77,7 +77,7 @@ public class GetMostOptimalPath {
         }
 
         if (Math.abs(getYawNeededVec(centerBlock(nextBlock), next)) < 30) {
-          points += 8;
+          points += 5;
         }
       }
 

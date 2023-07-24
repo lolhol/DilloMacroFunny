@@ -142,9 +142,8 @@ public class IsOnBlock {
             if (result) {
               curFailsafe = null;
             } else {
-              SendChat.chat(prefix.prefix + "Failed to restart!");
-              curFailsafe = null;
-              ArmadilloStates.offlineState = KillSwitch.OFFLINE;
+              curFailsafe = FAILSAFE_RETP;
+              initiateFailSafes();
             }
 
             tpWalkOverride = false;
