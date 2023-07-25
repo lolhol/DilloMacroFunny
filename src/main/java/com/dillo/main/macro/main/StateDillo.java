@@ -79,7 +79,7 @@ public class StateDillo {
         }
 
         try {
-          Thread.sleep(100);
+          Thread.sleep(50);
         } catch (InterruptedException e) {
           throw new RuntimeException(e);
         }
@@ -109,11 +109,6 @@ public class StateDillo {
           Thread.sleep(config.rod_drill_switch_time);
 
           playerYBe4 = (float) ids.mc.thePlayer.posY;
-          ids.mc.playerController.sendUseItem(
-            ids.mc.thePlayer,
-            ids.mc.theWorld,
-            ids.mc.thePlayer.inventory.getStackInSlot(ids.mc.thePlayer.inventory.currentItem)
-          );
 
           if (ArmadilloStates.isOnline()) {
             canCheckIfOnDillo = true;

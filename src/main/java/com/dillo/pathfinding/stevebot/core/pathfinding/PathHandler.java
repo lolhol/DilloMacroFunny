@@ -43,7 +43,6 @@ public class PathHandler {
         excecutor.startFollowing(enableFreelook);
       }
     } else {
-      SendChat.chat(String.valueOf(excecutor.stateMachine.getState()));
       StevebotLog.log("Can not start new path. Another path is already in progress.");
     }
   }

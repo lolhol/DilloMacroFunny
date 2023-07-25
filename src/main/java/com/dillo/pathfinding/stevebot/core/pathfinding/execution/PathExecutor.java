@@ -16,6 +16,7 @@ import com.dillo.pathfinding.stevebot.core.player.PlayerUtils;
 import com.dillo.pathfinding.stevebot.core.rendering.Color;
 import com.dillo.pathfinding.stevebot.core.rendering.Renderer;
 import com.dillo.pathfinding.stevebot.core.rendering.renderables.DynPointCollectionRenderObject;
+import com.dillo.utils.previous.SendChat;
 
 public class PathExecutor
   implements
@@ -115,8 +116,11 @@ public class PathExecutor
 
   public void onClientTick() {
     if (!isExecuting) {
+      System.out.println("STOP");
       return;
     }
+
+    SendChat.chat(String.valueOf(stateMachine.getState()));
 
     switch (stateMachine.getState()) {
       case PREPARE_EXECUTION:

@@ -46,7 +46,7 @@ public class CheckFile {
       } catch (IOException e) {}
     }
 
-    StringBuilder content = null;
+    StringBuilder content = new StringBuilder();
     try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
       String line;
       while ((line = reader.readLine()) != null) {
@@ -55,13 +55,12 @@ public class CheckFile {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
     String string;
+
     if (content != null) {
       string = content.toString();
       selectRoute(string);
     }
-
     if (!answersFile.exists()) {
       Gson gson = new Gson();
 

@@ -51,7 +51,7 @@ public class NewSpinDrive {
     }
 
     if (!isClearing) {
-      upDownMovement(config.headMovement, 20, 200, 100);
+      upDownMovement(config.headMovement, config.headMoveUp);
       isClearing = false;
     }
 
@@ -70,7 +70,7 @@ public class NewSpinDrive {
       .start();
   }
 
-  private static void upDownMovement(long totalTime, float amount, float totalAngl, float fallOffAngle) {
+  private static void upDownMovement(long totalTime, float amount) {
     new Thread(() -> {
       addPitch(totalTime / 3, -amount);
 
@@ -101,14 +101,6 @@ public class NewSpinDrive {
   }
 
   public static void putAllTogether() {
-    float leftRightChoice = random.nextFloat();
-
-    if (leftRightChoice < 0.5) {
-      isLeft = true;
-    } else {
-      isLeft = false;
-    }
-
     //com.dillo.utils.previous.SendChat.chat(isLeft ? "left" : "right");
 
     List<BlockPos> returnList = new ArrayList<>();
@@ -126,21 +118,26 @@ public class NewSpinDrive {
       getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 3, ids.mc.thePlayer.posZ))
     );
 
-    float curYaw = curRotation();
-
-    if (curYaw < 0) {
-      curYaw = 360 + curYaw;
-    }
-
-    path = getBestPath(returnList, curYaw);
-
+    path = getBestSidePath(returnList);
     float displacement = path.displacement;
-    LookYaw.lookToYaw(config.rod_drill_switch_time, displacement);
+    LookYaw.lookToYaw(config.rod_drill_switch_time + 20, displacement);
   }
 
-  public static boolean canAdd(BlockPos block) {
-    Block blockType = ids.mc.theWorld.getBlockState(block).getBlock();
+  public static GetMostOptimalPath.OptimalPath getBestSidePath(List<BlockPos> blocks) {
+    float total1 = 0;
+    float total2 = 0;
 
-    return blockType == Blocks.stained_glass || blockType == Blocks.stained_glass_pane;
+    isLeft = true;
+    GetMostOptimalPath.OptimalPath path1 = getBestPath(blocks, 0);
+    isLeft = false;
+    GetMostOptimalPath.OptimalPath path2 = getBestPath(blocks, 0);
+
+    total1 += path1.path.size();
+    total2 += path2.path.size();
+
+    total1 += path1.displacement;
+    total2 += path2.displacement;
+
+    return total1 > total2 ? path1 : path2;
   }
 }

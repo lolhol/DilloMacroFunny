@@ -10,6 +10,26 @@ public class config extends Vigilant {
   // MAIN
 
   @Property(
+    type = PropertyType.SLIDER,
+    name = "Head Speed",
+    description = "Basically the speed of head movement of macro. (1 is fastest 10 is slowest)",
+    category = "Main",
+    min = 1,
+    max = 1000
+  )
+  public static int headMovement = 400;
+
+  @Property(
+    type = PropertyType.SLIDER,
+    name = "Head Movement Up Amount",
+    description = "In the macro, it moves the head up as the swipe progresses here you can modify how high it goes.",
+    category = "Main",
+    min = 0,
+    max = 40
+  )
+  public static int headMoveUp = 20;
+
+  @Property(
     type = PropertyType.SELECTOR,
     name = "Mob Killer Weapon Type",
     description = "Customize what weapon the mob killer uses",
@@ -49,16 +69,6 @@ public class config extends Vigilant {
     category = "Main"
   )
   public static boolean isIncludeMithril = false;
-
-  @Property(
-    type = PropertyType.SLIDER,
-    name = "Head Speed",
-    description = "Basically the speed of head movement of macro. (1 is fastest 10 is slowest)",
-    category = "Main",
-    min = 1,
-    max = 1000
-  )
-  public static int headMovement = 400;
 
   @Property(
     type = PropertyType.SLIDER,
