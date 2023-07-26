@@ -19,6 +19,7 @@ import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.CurrentState;
 import com.dillo.calls.KillSwitch;
 import com.dillo.config.config;
+import com.dillo.events.PlayerLocChangeEvent;
 import com.dillo.main.failsafes.RestartMacroFailsafe;
 import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.main.teleport.Enums.FailsafesOnBlock;
@@ -61,66 +62,76 @@ public class IsOnBlock {
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
       if (startCheck) {
-        if (curTicks <= checkTime) {
-          if (blockPos != null) {
-            if (
-              Math.abs(ids.mc.thePlayer.posX - blockPos.getX() - 0.5) < 0.0001 &&
-              Math.abs(ids.mc.thePlayer.posZ - blockPos.getZ() - 0.5) < 0.0001
-            ) {
-              reset();
-              RayTracingUtils.foundCollisions.clear();
-              isThrowRod = true;
-              startCheck = false;
-              curReTps = 0;
-              clearAttempts = 0;
-              curTicks = 0;
-              attemptedToSmartTP = false;
-
-              SendChat.chat(prefix.prefix + "Teleported successfully!");
-              KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
-
-              yaw = 0.0F;
-              alrMoved = false;
-              LookAt.smoothLook(new LookAt.Rotation(yaw, curRotation()), 100);
-
-              isClearing = false;
-
-              if (RestartMacroFailsafe.isRestart) {
-                ArmadilloStates.offlineState = KillSwitch.ONLINE;
-                RestartMacroFailsafe.isRestart = false;
-              }
-
-              isTeleporting = true;
-
-              timesTriggered = 0;
-
-              currentRoute.currentBlock = blockPos;
-              mobKiller.killMobsAround(6, nextState);
-            }
-          }
-        } else {
-          reset();
-          startCheck = false;
-          curTicks = 0;
-          stopLook();
-
-          BlockPos nextBlock = getNextBlock();
-          if (nextBlock == null || ids.mc.theWorld.getBlockState(nextBlock).getBlock() == Blocks.air) {
-            ArmadilloStates.offlineState = KillSwitch.OFFLINE;
-            SendChat.chat(prefix.prefix + "Failed to tp! No cobblestone detected :/.");
-            return;
-          }
-
-          if (timesTriggered < 5) {
-            curFailsafe = FAILSAFE_TPBACKANDNEXT;
-            initiateFailSafes();
-            timesTriggered++;
-          }
+        if (curTicks >= config.checkOnBlockTime) {
+          notOnBlock();
         }
       }
 
       if (startCheck) curTicks++;
     }
+  }
+
+  @SubscribeEvent
+  public void onChange(PlayerLocChangeEvent event) {
+    if (startCheck) {
+      if (event.newPos.equals(blockPos.add(0, 1, 0))) {
+        doneTp();
+      } else {
+        notOnBlock();
+      }
+    }
+  }
+
+  void notOnBlock() {
+    reset();
+    startCheck = false;
+    curTicks = 0;
+    stopLook();
+
+    BlockPos nextBlock = getNextBlock();
+    if (nextBlock == null || ids.mc.theWorld.getBlockState(nextBlock).getBlock() == Blocks.air) {
+      ArmadilloStates.offlineState = KillSwitch.OFFLINE;
+      SendChat.chat(prefix.prefix + "Failed to tp! No cobblestone detected :/.");
+      return;
+    }
+
+    if (timesTriggered < 5) {
+      curFailsafe = FAILSAFE_TPBACKANDNEXT;
+      initiateFailSafes();
+      timesTriggered++;
+    }
+  }
+
+  void doneTp() {
+    reset();
+    RayTracingUtils.foundCollisions.clear();
+    isThrowRod = true;
+    startCheck = false;
+    curReTps = 0;
+    clearAttempts = 0;
+    curTicks = 0;
+    attemptedToSmartTP = false;
+
+    SendChat.chat(prefix.prefix + "Teleported successfully!");
+    KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
+
+    yaw = 0.0F;
+    alrMoved = false;
+    LookAt.smoothLook(new LookAt.Rotation(yaw, curRotation()), 100);
+
+    isClearing = false;
+
+    if (RestartMacroFailsafe.isRestart) {
+      ArmadilloStates.offlineState = KillSwitch.ONLINE;
+      RestartMacroFailsafe.isRestart = false;
+    }
+
+    isTeleporting = true;
+
+    timesTriggered = 0;
+
+    currentRoute.currentBlock = blockPos;
+    mobKiller.killMobsAround(6, nextState);
   }
 
   void initiateFailSafes() {

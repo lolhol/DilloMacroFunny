@@ -222,7 +222,7 @@ public class armadillomacro {
       new RemoveBlockFailsafe(),
       new RegistersStevebot(),
       new PlayerLocChangeTrigger(),
-      new Test()
+      new com.dillo.main.teleport.utils.Test()
     );
 
     registerKeybinds(keybinds);
