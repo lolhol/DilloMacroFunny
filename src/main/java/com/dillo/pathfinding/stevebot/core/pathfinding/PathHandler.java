@@ -45,6 +45,7 @@ public class PathHandler {
     } else {
       StevebotLog.log("Can not start new path. Another path is already in progress.");
     }
+    //WAITING_TO_START
   }
 
   /**

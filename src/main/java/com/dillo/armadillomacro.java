@@ -57,6 +57,7 @@ import com.dillo.pathfinding.stevebot.core.data.blocks.BlockUtils;
 import com.dillo.pathfinding.stevebot.core.data.items.ItemLibrary;
 import com.dillo.pathfinding.stevebot.core.data.items.ItemUtils;
 import com.dillo.pathfinding.stevebot.core.minecraft.MinecraftAdapter;
+import com.dillo.pathfinding.stevebot.core.minecraft.OpenGLAdapter;
 import com.dillo.pathfinding.stevebot.core.pathfinding.PathHandler;
 import com.dillo.pathfinding.stevebot.core.pathfinding.actions.ActionUtils;
 import com.dillo.pathfinding.stevebot.core.player.*;
@@ -275,7 +276,7 @@ public class armadillomacro {
     //renderer = new Renderer(openGLAdapter, blockProvider);
 
     // player camera
-    //playerCamera = new PlayerCamera(minecraftAdapter);
+    playerCamera = new PlayerCamera(minecraftAdapter);
 
     // player input
     playerInput = new PlayerInput(minecraftAdapter);

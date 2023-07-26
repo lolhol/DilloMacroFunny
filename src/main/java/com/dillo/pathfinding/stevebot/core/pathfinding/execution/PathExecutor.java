@@ -120,8 +120,6 @@ public class PathExecutor
       return;
     }
 
-    SendChat.chat(String.valueOf(stateMachine.getState()));
-
     switch (stateMachine.getState()) {
       case PREPARE_EXECUTION:
         {

@@ -28,9 +28,9 @@ public class WalkToCustom extends Command {
 
   @DefaultHandler
   public void handle(int x, int y, int z) {
-    SendChat.chat("Killing!");
-    mobKiller.killMobsAround(6, null);
-    //SendChat.chat("Path Finding!");
-    //api.path(new BaseBlockPos(PlayerUtils.getPlayerBlockPos()), new BaseBlockPos(x, y, z), false, false);
+    //SendChat.chat("Killing!");
+    //mobKiller.killMobsAround(6, null);
+    SendChat.chat("Path Finding!");
+    api.path(new BaseBlockPos(PlayerUtils.getPlayerBlockPos()), new BaseBlockPos(x, y, z), true, false);
   }
 }

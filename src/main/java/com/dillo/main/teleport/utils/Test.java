@@ -9,6 +9,6 @@ public class Test {
 
   @SubscribeEvent
   public void onChange(PlayerLocChangeEvent event) {
-    SendChat.chat("CHNAGE!");
+    //SendChat.chat("CHNAGE!");
   }
 }
