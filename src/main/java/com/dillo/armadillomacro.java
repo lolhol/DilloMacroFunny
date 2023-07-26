@@ -16,6 +16,7 @@ import com.dillo.commands.RouteMakerUtils.CalcRouteAvgGemPerc;
 import com.dillo.commands.RouteMakerUtils.CheckIfCanTpToEvery;
 import com.dillo.commands.RouteMakerUtils.GemESP;
 import com.dillo.commands.UtilCommands.*;
+import com.dillo.commands.UtilCommands.Test;
 import com.dillo.commands.baritone.StartAutoSetupWithBaritone;
 import com.dillo.commands.baritone.WalkToBlockWithBaritone;
 import com.dillo.events.*;
@@ -42,11 +43,7 @@ import com.dillo.main.route.PlaceBlocks.PlaceCobbleModule;
 import com.dillo.main.route.RouteDeletr.RouteDeletrMain;
 import com.dillo.main.route.ViewClearLines.ViewClearLines;
 import com.dillo.main.teleport.TeleportMovePlayer.MoveToVertex;
-import com.dillo.main.teleport.utils.IsOnBlock;
-import com.dillo.main.teleport.utils.LookWhileGoingDown;
-import com.dillo.main.teleport.utils.TeleportToBlock;
-import com.dillo.main.teleport.utils.WaitThenCall;
-import com.dillo.main.teleport.utils.WalkForward;
+import com.dillo.main.teleport.utils.*;
 import com.dillo.main.utils.looks.DriveLook;
 import com.dillo.main.utils.looks.LookAt;
 import com.dillo.main.utils.looks.YawLook;
@@ -223,7 +220,9 @@ public class armadillomacro {
       mobKiller,
       new WarpOutFail(),
       new RemoveBlockFailsafe(),
-      new RegistersStevebot()
+      new RegistersStevebot(),
+      new PlayerLocChangeTrigger(),
+      new Test()
     );
 
     registerKeybinds(keybinds);
