@@ -1,5 +1,8 @@
 package com.dillo.pathfinding.stevebot.core.pathfinding.execution;
 
+import com.dillo.events.DonePathEvent;
+import com.dillo.events.PlayerLocChangeEvent;
+import com.dillo.events.utilevents.RouteClearDoneWalking;
 import com.dillo.pathfinding.stevebot.core.data.blockpos.BaseBlockPos;
 import com.dillo.pathfinding.stevebot.core.minecraft.MinecraftAdapter;
 import com.dillo.pathfinding.stevebot.core.misc.Config;
@@ -17,6 +20,8 @@ import com.dillo.pathfinding.stevebot.core.rendering.Color;
 import com.dillo.pathfinding.stevebot.core.rendering.Renderer;
 import com.dillo.pathfinding.stevebot.core.rendering.renderables.DynPointCollectionRenderObject;
 import com.dillo.utils.previous.SendChat;
+import com.dillo.utils.previous.random.ids;
+import net.minecraftforge.common.MinecraftForge;
 
 public class PathExecutor
   implements
@@ -163,6 +168,7 @@ public class PathExecutor
           }
           if (state == ProcState.DONE) {
             StevebotLog.log("Done following segment  (" + pathTicks + ")");
+            MinecraftForge.EVENT_BUS.post(new RouteClearDoneWalking());
             Path path = pathFactory.getCurrentPath();
             if (path.reachedGoal() || path instanceof EmptyPath) {
               pathFactory.removeCurrentPath();

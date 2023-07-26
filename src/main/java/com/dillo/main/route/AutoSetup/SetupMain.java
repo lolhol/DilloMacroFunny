@@ -1,70 +1,71 @@
 package com.dillo.main.route.AutoSetup;
 
+import static com.dillo.armadillomacro.destroyer;
+import static com.dillo.armadillomacro.pathHandler;
 import static com.dillo.commands.baritone.StartAutoSetupWithBaritone.main;
 import static com.dillo.main.route.Nuker.NukerMain.*;
 import static com.dillo.main.route.Nuker.StartNuker.stopNuker;
+import static com.dillo.utils.BlockUtils.getBlock;
 import static com.dillo.utils.BlockUtils.makeNewBlock;
 
 import com.dillo.events.MillisecondEvent;
+import com.dillo.events.utilevents.RouteClearDoneWalking;
 import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.main.route.Nuker.NukerMain;
 import com.dillo.main.route.Utils.GetBlocksForNuker;
 import com.dillo.pathfinding.baritone.automine.AutoMineBaritone;
 import com.dillo.pathfinding.baritone.automine.config.BaritoneConfig;
 import com.dillo.pathfinding.baritone.automine.config.MiningType;
+import com.dillo.pathfinding.stevebot.core.StevebotApi;
+import com.dillo.pathfinding.stevebot.core.data.blockpos.BaseBlockPos;
+import com.dillo.pathfinding.stevebot.core.player.PlayerUtils;
+import com.dillo.utils.BlockUtils;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
+import com.dillo.utils.previous.random.prefix;
+import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.Vec3i;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class SetupMain {
 
-  public static boolean isAutoSetupOn = false;
+  public boolean isAutoSetupOn = false;
 
   public static boolean isTurnedOn = false;
-  private static List<BlockPos> neededToMineBlocks = new ArrayList<BlockPos>();
+  public static List<BlockPos> neededToMineBlocks = new ArrayList<>();
 
-  boolean isFirstDone = false;
-  boolean alrNuking = false;
+  public static boolean isFirstDone = false;
+  public static boolean alrNuking = false;
+  boolean isStartCheckForDonePath;
   public static boolean usingBaritone = false;
   NukerMain nuker = new NukerMain();
-  AutoMineBaritone autoMineBaritone;
   List<BlockPos> baritoneFailBlocks = new ArrayList<BlockPos>();
-  int baritoneWait = 0;
+
+  StevebotApi api = new StevebotApi(pathHandler);
 
   public void reset() {
+    neededToMineBlocks.clear();
     prev = 2;
     isTurnedOn = false;
     isFirstDone = false;
     alrNuking = false;
     usingBaritone = false;
-    if (autoMineBaritone != null) {
-      autoMineBaritone.disableBaritone();
-    }
+    this.isStartCheckForDonePath = false;
     stopNuker();
   }
 
-  final List<Block> blocksAllowedToMine = new ArrayList<Block>() {
-    {
-      add(Blocks.stone);
-      add(Blocks.gold_ore);
-      add(Blocks.emerald_ore);
-      add(Blocks.redstone_ore);
-      add(Blocks.iron_ore);
-      add(Blocks.coal_ore);
-      add(Blocks.stained_glass_pane);
-      add(Blocks.stained_glass);
-      add(Blocks.air);
-
-      // Remove this for skyblock
-      add(Blocks.dirt);
-      add(Blocks.grass);
-    }
-  };
+  @SubscribeEvent
+  public void onDonePath(RouteClearDoneWalking event) {
+    if (!isStartCheckForDonePath) return;
+    SendChat.chat(prefix.prefix + "DONE WITH PATH!");
+    reStart();
+  }
 
   @SubscribeEvent
   public void onMillisecond(MillisecondEvent event) {
@@ -90,29 +91,17 @@ public class SetupMain {
           BlockPos block = getBaritoneWalkBlock(nuking, ids.mc.thePlayer.getPosition());
 
           if (block != null) {
-            SendChat.chat(String.valueOf(block));
-
             if (!main.baritoneFailBlocks.contains(block)) {
-              autoMineBaritone =
-                new AutoMineBaritone(
-                  new BaritoneConfig(
-                    MiningType.DYNAMIC,
-                    false,
-                    true,
-                    false,
-                    200,
-                    8,
-                    null,
-                    blocksAllowedToMine,
-                    256,
-                    256
-                  )
-                );
-              autoMineBaritone.mineFor(block);
+              isStartCheckForDonePath = true;
+              api.path(
+                new BaseBlockPos(PlayerUtils.getPlayerBlockPos()),
+                new BaseBlockPos(block.getX(), block.getY(), block.getZ()),
+                true,
+                false
+              );
             } else {
               SendChat.chat("RESET");
               usingBaritone = false;
-              //reset();
             }
           } else {
             SendChat.chat("RESET!!!");
@@ -158,6 +147,7 @@ public class SetupMain {
     main.baritoneFailBlocks.clear();
     usingBaritone = false;
     prev = 100;
+    isStartCheckForDonePath = false;
     unpauseNuker();
   }
 
@@ -180,41 +170,44 @@ public class SetupMain {
   }
 
   BlockPos getBaritoneWalkBlock(List<BlockPos> curNukerBlocks, BlockPos lastKnownPos) {
-    BlockPos furthestPos = null;
-    int highestI = 0;
+    BlockPos returnBlock = curNukerBlocks.get(0);
 
-    for (int i = 0; i < curNukerBlocks.size(); i++) {
-      BlockPos cur = curNukerBlocks.get(i);
+    if (!isCanWalkTo(returnBlock)) {
+      Iterable<BlockPos> blocks = BlockPos.getAllInBox(
+        returnBlock.subtract(new Vec3i(-1, -1, -1)),
+        returnBlock.add(1, 1, 1)
+      );
 
-      if (
-        (
-          (
-            ids.mc.theWorld.getBlockState(makeNewBlock(0, 1, 0, cur)).getBlock() == Blocks.air &&
-            ids.mc.theWorld.getBlockState(cur).getBlock() == Blocks.air &&
-            ids.mc.theWorld.getBlockState(makeNewBlock(0, -1, 0, cur)).getBlock() != Blocks.air
-          ) ||
-          (
-            ids.mc.theWorld.getBlockState(cur).getBlock() != Blocks.air &&
-            ids.mc.theWorld.getBlockState(makeNewBlock(0, 1, 0, cur)).getBlock() == Blocks.air &&
-            ids.mc.theWorld.getBlockState(makeNewBlock(0, 2, 0, cur)).getBlock() == Blocks.air
-          )
-        )
-      ) {
-        if (i > highestI) {
-          highestI = i;
-
-          if (!main.baritoneFailBlocks.contains(cur) && !main.baritoneFailBlocks.contains(makeNewBlock(0, 1, 0, cur))) {
-            if (ids.mc.theWorld.getBlockState(cur).getBlock() == Blocks.air) furthestPos = cur; else furthestPos =
-              makeNewBlock(0, 1, 0, cur);
-          }
+      for (BlockPos block : blocks) {
+        if (isCanWalkTo(block)) {
+          returnBlock = block;
         }
       }
     }
 
-    return furthestPos;
+    assert returnBlock != null;
+    RenderOneBlockMod.renderOneBlock(BlockUtils.fromBlockPosToVec3(returnBlock), true);
+
+    return returnBlock;
   }
 
   public static void updateVariablesAutoSetup(List<BlockPos> blocksFound) {
     neededToMineBlocks = blocksFound;
+  }
+
+  boolean isCanWalkTo(BlockPos block) {
+    return (
+      (
+        getBlock(block) == Blocks.air &&
+        getBlock(makeNewBlock(0, 1, 0, block)) == Blocks.air &&
+        getBlock(makeNewBlock(0, -1, 0, block)) != Blocks.air
+      ) ||
+      (
+        getBlock(block) != Blocks.air &&
+        getBlock(makeNewBlock(0, -1, 0, block)) != Blocks.air &&
+        getBlock(makeNewBlock(0, 1, 0, block)) == Blocks.air &&
+        getBlock(makeNewBlock(0, 2, 0, block)) == Blocks.air
+      )
+    );
   }
 }

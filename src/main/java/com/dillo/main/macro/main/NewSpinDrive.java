@@ -2,6 +2,7 @@ package com.dillo.main.macro.main;
 
 import static com.dillo.calls.CurrentState.STATEDILLONOGETTINGON;
 import static com.dillo.config.config.attemptToClearOnSpot;
+import static com.dillo.gui.GUIUtils.totalveins.TotalVeinsMain.totalVeinsCur;
 import static com.dillo.main.macro.main.StateDillo.canDilloOn;
 import static com.dillo.main.teleport.macro.SmartTP.smartTpBlocks;
 import static com.dillo.main.teleport.macro.TeleportToNextBlock.isClearing;

@@ -3,7 +3,6 @@ package com.dillo.main.route.Nuker;
 import static com.dillo.config.config.nukerRange;
 import static com.dillo.config.config.nukerServerRotations;
 import static com.dillo.keybinds.Keybinds.isNuking;
-import static com.dillo.main.route.AutoSetup.SetupMain.isAutoSetupOn;
 import static com.dillo.main.route.Utils.GetBlocksForNuker.Blockss;
 import static com.dillo.main.route.Utils.IsAbleToMine.isAbleToMine;
 import static com.dillo.main.route.Utils.IsAbleToMine.isBlockInRoute;
@@ -258,11 +257,7 @@ public class NukerMain {
       getYawNeededVec(BlockUtils.fromBlockPosToVec3(blockPos).addVector(0.5, 0.5, 0.5), curRotation())
     );
 
-    if (!isAutoSetupOn) {
-      return fovBlock < fov;
-    } else {
-      return true;
-    }
+    return fovBlock < fov;
   }
 
   public static boolean canBeBroken(BlockPos block) {
@@ -273,11 +268,7 @@ public class NukerMain {
       false
     );
 
-    if (!isAutoSetupOn) {
-      return blockHit != null;
-    } else {
-      return true;
-    }
+    return blockHit != null;
   }
 
   @SubscribeEvent(priority = EventPriority.NORMAL)

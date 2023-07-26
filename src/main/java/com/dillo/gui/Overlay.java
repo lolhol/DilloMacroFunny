@@ -11,6 +11,7 @@ import com.dillo.gui.GUIUtils.CurRatesUtils.GetTotalEarned;
 import com.dillo.gui.GUIUtils.CurRatesUtils.ItemsPickedUp;
 import com.dillo.gui.GUIUtils.CurTimeVein.CurTime;
 import com.dillo.gui.GUIUtils.DilloRouteUtils.IsInBlockRange;
+import com.dillo.gui.GUIUtils.totalveins.TotalVeinsMain;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
@@ -136,6 +137,11 @@ public class Overlay {
       } else {
         startTime = System.currentTimeMillis();
       }
+    }
+
+    int totalVeins = new TotalVeinsMain().totalGemsMined();
+    if (totalVeins > 0) {
+      draw("Total Veins Mined -> " + totalVeins, 50, 50);
     }
   }
 

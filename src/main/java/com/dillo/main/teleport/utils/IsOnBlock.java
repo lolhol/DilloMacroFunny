@@ -4,6 +4,7 @@ import static com.dillo.armadillomacro.mobKiller;
 import static com.dillo.armadillomacro.vertexMover;
 import static com.dillo.calls.CurrentState.*;
 import static com.dillo.config.config.reTeleport;
+import static com.dillo.gui.GUIUtils.totalveins.TotalVeinsMain.totalVeinsCur;
 import static com.dillo.main.teleport.Enums.FailsafesOnBlock.*;
 import static com.dillo.main.teleport.macro.TeleportToNextBlock.*;
 import static com.dillo.main.teleport.utils.LookWhileGoingDown.stopLook;
@@ -103,6 +104,7 @@ public class IsOnBlock {
   }
 
   void doneTp() {
+    totalVeinsCur++;
     reset();
     RayTracingUtils.foundCollisions.clear();
     isThrowRod = true;

@@ -107,7 +107,8 @@ public class armadillomacro {
   private static PlayerInventory playerInventory;
   public static MobKillerMain mobKiller = new MobKillerMain();
   public static Renderer renderer;
-  private static PathHandler pathHandler;
+  public static PathHandler pathHandler;
+  public static RouteDeletrMain destroyer = new RouteDeletrMain();
 
   public static MoveToVertex vertexMover = new MoveToVertex();
 
@@ -125,8 +126,6 @@ public class armadillomacro {
     keybinds.add(new KeyBinding("Quick View Structures", Keyboard.KEY_NONE, "Mining In Two"));
     keybinds.add(new KeyBinding("Add Point", Keyboard.KEY_NONE, "Mining In Two"));
     keybinds.add(new KeyBinding("Test Key", Keyboard.KEY_NONE, "Mining In Two"));
-
-    RouteDeletrMain destroyer = new RouteDeletrMain();
 
     // Comment
 
