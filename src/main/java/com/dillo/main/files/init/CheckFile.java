@@ -13,6 +13,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CheckFile {
 
@@ -98,6 +99,8 @@ public class CheckFile {
   }
 
   private static void selectRoute(String name) {
+    if (Objects.equals(name, "") || Objects.equals(name, " ") || name == null) return;
+
     File configFile;
 
     if (name.contains(".json")) {
@@ -106,8 +109,12 @@ public class CheckFile {
       configFile = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs/" + name + ".json");
     }
 
-    if (!configFile.exists()) {
-      SendChat.chat(prefix.prefix + "There is no config with that name!");
+    try {
+      if (!configFile.exists()) {
+        SendChat.chat(prefix.prefix + "There is no config with that name!");
+        return;
+      }
+    } catch (NullPointerException e) {
       return;
     }
 

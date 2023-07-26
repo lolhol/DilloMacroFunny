@@ -27,6 +27,7 @@ import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.previous.random.swapToSlot;
+import com.dillo.utils.throwRod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.BlockPos;
@@ -84,6 +85,7 @@ public class TeleportToNextBlock {
     );
 
     if (!result) {
+      isThrowRod = false;
       stopLook();
 
       VertexGetter getVertex = new VertexGetter();
@@ -98,12 +100,12 @@ public class TeleportToNextBlock {
         if (config.smartTeleport) {
           SendChat.chat(prefix.prefix + "Route is obstructed! Attempting other method of tp!");
           SmartTP.smartTP(nextBlockInList, false);
+          attemptedToSmartTP = true;
           return;
         }
       }
 
-      if (canDillo() && clearAttempts < 5 && isOnBlockInRoute(ids.mc.thePlayer.getPosition())) {
-        attemptedToSmartTP = false;
+      if (canDillo() && clearAttempts < 5) {
         KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
         isClear = true;
         ArmadilloStates.currentState = ARMADILLO;

@@ -74,6 +74,7 @@ public class IsOnBlock {
               curReTps = 0;
               clearAttempts = 0;
               curTicks = 0;
+              attemptedToSmartTP = false;
 
               SendChat.chat(prefix.prefix + "Teleported successfully!");
               KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);

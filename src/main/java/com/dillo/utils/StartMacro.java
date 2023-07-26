@@ -37,7 +37,9 @@ public class StartMacro {
       }
     } else {
       SendChat.chat(
-        ArmadilloStates.offlineState == OFFLINE ? prefix.prefix + "Please stand on a block on route!" : "Macro stopped!"
+        ArmadilloStates.offlineState == OFFLINE
+          ? prefix.prefix + "Please stand on a block on route!"
+          : prefix.prefix + "Macro stopped!"
       );
       ArmadilloStates.offlineState = OFFLINE;
       ArmadilloStates.currentState = null;

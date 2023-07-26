@@ -5,6 +5,7 @@ import static com.dillo.config.config.attemptToClearOnSpot;
 import static com.dillo.main.macro.main.StateDillo.canDilloOn;
 import static com.dillo.main.teleport.macro.SmartTP.smartTpBlocks;
 import static com.dillo.main.teleport.macro.TeleportToNextBlock.isClearing;
+import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
 import static com.dillo.main.utils.GetMostOptimalPath.getBestPath;
 import static com.dillo.main.utils.GetMostOptimalPath.isClear;
 import static com.dillo.main.utils.looks.DriveLook.addPitch;
@@ -93,6 +94,7 @@ public class NewSpinDrive {
       ArmadilloStates.currentState = STATEDILLONOGETTINGON;
       driveClearCount++;
     } else {
+      isThrowRod = true;
       ArmadilloStates.currentState = null;
       SendChat.chat(prefix.prefix + "Done breaking! Moving to next vein!");
       TeleportToNextBlock.teleportToNextBlock();
@@ -138,6 +140,12 @@ public class NewSpinDrive {
     total1 += path1.displacement;
     total2 += path2.displacement;
 
-    return total1 > total2 ? path1 : path2;
+    if (total1 > total2) {
+      isLeft = true;
+      return path1;
+    } else {
+      isLeft = false;
+      return path2;
+    }
   }
 }
