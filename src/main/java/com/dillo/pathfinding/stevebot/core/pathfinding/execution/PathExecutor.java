@@ -162,10 +162,12 @@ public class PathExecutor
       case FOLLOWING:
         {
           final ProcState state = tick();
+
           if (state == ProcState.FAILED) {
             stateMachine.fireError();
             onClientTick();
           }
+
           if (state == ProcState.DONE) {
             StevebotLog.log("Done following segment  (" + pathTicks + ")");
             MinecraftForge.EVENT_BUS.post(new RouteClearDoneWalking());

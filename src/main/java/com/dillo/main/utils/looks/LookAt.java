@@ -2,7 +2,10 @@ package com.dillo.main.utils.looks;
 
 import static com.dillo.utils.previous.random.ids.mc;
 
+import com.dillo.calls.ArmadilloStates;
+import com.dillo.calls.KillSwitch;
 import com.dillo.events.PlayerMoveEvent;
+import com.dillo.utils.previous.SendChat;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
@@ -287,17 +290,22 @@ public class LookAt {
 
   @SubscribeEvent
   public void onRenderWorld(RenderWorldLastEvent event) {
-    if (rotationType != RotationType.NORMAL) return;
-    if (System.currentTimeMillis() <= endTime) {
-      mc.thePlayer.rotationPitch = interpolate(startRot.pitch, endRot.pitch);
-      mc.thePlayer.rotationYaw = interpolate(startRot.yaw, endRot.yaw);
-    } else {
-      if (!done) {
-        mc.thePlayer.rotationYaw = endRot.yaw;
-        mc.thePlayer.rotationPitch = endRot.pitch;
-      }
+    try {
+      if (rotationType != RotationType.NORMAL) return;
+      if (System.currentTimeMillis() <= endTime) {
+        mc.thePlayer.rotationPitch = interpolate(startRot.pitch, endRot.pitch);
+        mc.thePlayer.rotationYaw = interpolate(startRot.yaw, endRot.yaw);
+      } else {
+        if (!done && endRot != null) {
+          mc.thePlayer.rotationYaw = endRot.yaw;
+          mc.thePlayer.rotationPitch = endRot.pitch;
+        }
 
-      reset();
+        reset();
+      }
+    } catch (NullPointerException e) {
+      ArmadilloStates.offlineState = KillSwitch.OFFLINE;
+      SendChat.chat("Something went wrong when looking at next block!");
     }
   }
 

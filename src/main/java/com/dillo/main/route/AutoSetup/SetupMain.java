@@ -63,7 +63,6 @@ public class SetupMain {
   @SubscribeEvent
   public void onDonePath(RouteClearDoneWalking event) {
     if (!isStartCheckForDonePath) return;
-    SendChat.chat(prefix.prefix + "DONE WITH PATH!");
     reStart();
   }
 

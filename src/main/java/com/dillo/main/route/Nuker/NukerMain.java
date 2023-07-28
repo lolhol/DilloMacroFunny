@@ -128,8 +128,8 @@ public class NukerMain {
                 false
               );
             } else {
-              nuking.remove(1);
               broken.add(nuking.get(1));
+              nuking.remove(1);
             }
           }
         }
