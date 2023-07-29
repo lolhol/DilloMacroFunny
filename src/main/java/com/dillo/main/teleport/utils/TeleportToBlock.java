@@ -86,7 +86,7 @@ public class TeleportToBlock {
         }
 
         if (!serverRotations) {
-          LookAt.smoothLook(LookAt.getRotation(nextBlockPos), time);
+          LookAt.smoothLook(LookAt.getRotation(nextBlockPos), !earlyLook ? time : 52);
         } else {
           serverSmoothLook(LookAt.getRotation(nextBlockPos), time);
           isStartLooking = true;
