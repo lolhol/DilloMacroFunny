@@ -6,7 +6,6 @@ import static com.dillo.main.utils.looks.LookAt.getNeededChange;
 import static com.dillo.main.utils.looks.LookAt.getRotation;
 import static com.dillo.utils.BlockUtils.getNextBlock;
 
-import com.dillo.config.config;
 import com.dillo.main.utils.looks.LookAt;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class GetMostOptimalPath {
     OptimalPath optimalPath = new OptimalPath(new ArrayList<>(), 0);
     float currRotPoints = 0;
 
-    float maxRot = config.headRotationMax;
+    float maxRot = 180;
 
     if (isClearing) {
       maxRot = 100;

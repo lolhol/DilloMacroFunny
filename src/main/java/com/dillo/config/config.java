@@ -25,7 +25,7 @@ public class config extends Vigilant {
     description = "In the macro, it moves the head up as the swipe progresses here you can modify how high it goes.",
     category = "Main",
     min = 0,
-    max = 40
+    max = 100
   )
   public static int headMoveUp = 20;
 
@@ -249,6 +249,9 @@ public class config extends Vigilant {
     category = "Fun"
   )
   public static boolean currentActionOverlay = true;
+
+  @Property(type = PropertyType.SWITCH, name = "Debug text", description = "Will show debug text.", category = "Fun")
+  public static boolean debugText = false;
 
   // Teleportation Options
 

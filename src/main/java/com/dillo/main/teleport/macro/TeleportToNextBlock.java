@@ -11,7 +11,6 @@ import static com.dillo.main.utils.GetMostOptimalPath.isClear;
 import static com.dillo.main.utils.keybinds.AllKeybinds.SNEAK;
 import static com.dillo.main.utils.looks.LookYaw.curRotation;
 import static com.dillo.utils.BlockUtils.getNextBlock;
-import static com.dillo.utils.BlockUtils.isOnBlockInRoute;
 
 import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.KillSwitch;
@@ -27,7 +26,6 @@ import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.previous.random.swapToSlot;
-import com.dillo.utils.throwRod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.BlockPos;
@@ -105,6 +103,12 @@ public class TeleportToNextBlock {
         }
       }
 
+      if (vertex != null && !alrMoved) {
+        vertexMover.moveToVertex(vertex, TPSTAGEWALK, true, 60);
+        alrMoved = true;
+        return;
+      }
+
       if (canDillo() && clearAttempts < 5) {
         KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
         isClear = true;
@@ -112,12 +116,6 @@ public class TeleportToNextBlock {
         clearAttempts++;
         LookAt.smoothLook(new LookAt.Rotation(20, curRotation()), 20);
         isClearing = true;
-        return;
-      }
-
-      if (vertex != null && !alrMoved) {
-        vertexMover.moveToVertex(vertex, TPSTAGEWALK, true, 60);
-        alrMoved = true;
         return;
       }
 

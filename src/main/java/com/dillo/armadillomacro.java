@@ -31,6 +31,7 @@ import com.dillo.main.failsafes.AminStuff.WarpOutFail;
 import com.dillo.main.failsafes.RouteFailsafes.RemoveBlockFailsafe;
 import com.dillo.main.files.init.CheckFile;
 import com.dillo.main.macro.main.GetOffArmadillo;
+import com.dillo.main.macro.main.NewSpinDrive;
 import com.dillo.main.macro.main.StateDillo;
 import com.dillo.main.macro.refuel.ReFuelDrill;
 import com.dillo.main.macro.refuel.ReFuelDrillTriger;
@@ -57,14 +58,12 @@ import com.dillo.pathfinding.stevebot.core.data.blocks.BlockUtils;
 import com.dillo.pathfinding.stevebot.core.data.items.ItemLibrary;
 import com.dillo.pathfinding.stevebot.core.data.items.ItemUtils;
 import com.dillo.pathfinding.stevebot.core.minecraft.MinecraftAdapter;
-import com.dillo.pathfinding.stevebot.core.minecraft.OpenGLAdapter;
 import com.dillo.pathfinding.stevebot.core.pathfinding.PathHandler;
 import com.dillo.pathfinding.stevebot.core.pathfinding.actions.ActionUtils;
 import com.dillo.pathfinding.stevebot.core.player.*;
 import com.dillo.pathfinding.stevebot.core.rendering.Renderer;
 import com.dillo.remote.*;
 import com.dillo.utils.GetConfigFolder;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.renderUtils.renderModules.*;
 import gg.essential.api.EssentialAPI;
 import gg.essential.api.commands.Command;
@@ -85,7 +84,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -222,7 +220,8 @@ public class armadillomacro {
       new RemoveBlockFailsafe(),
       new RegistersStevebot(),
       new PlayerLocChangeTrigger(),
-      new com.dillo.main.teleport.utils.Test()
+      new com.dillo.main.teleport.utils.Test(),
+      new NewSpinDrive()
     );
 
     registerKeybinds(keybinds);

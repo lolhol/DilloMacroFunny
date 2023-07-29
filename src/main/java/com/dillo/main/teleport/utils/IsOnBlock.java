@@ -2,7 +2,8 @@ package com.dillo.main.teleport.utils;
 
 import static com.dillo.armadillomacro.mobKiller;
 import static com.dillo.armadillomacro.vertexMover;
-import static com.dillo.calls.CurrentState.*;
+import static com.dillo.calls.CurrentState.ARMADILLO;
+import static com.dillo.calls.CurrentState.TPSTAGEWALK;
 import static com.dillo.config.config.reTeleport;
 import static com.dillo.gui.GUIUtils.totalveins.TotalVeinsMain.totalVeinsCur;
 import static com.dillo.main.teleport.Enums.FailsafesOnBlock.*;
@@ -12,9 +13,7 @@ import static com.dillo.main.teleport.utils.TeleportToBlock.tpWalkOverride;
 import static com.dillo.main.utils.looks.DriveLook.addYaw;
 import static com.dillo.main.utils.looks.LookAt.reset;
 import static com.dillo.main.utils.looks.LookYaw.curRotation;
-import static com.dillo.utils.BlockUtils.getNextBlock;
-import static com.dillo.utils.BlockUtils.getPrevBlockPos;
-import static com.dillo.utils.BlockUtils.isOnBlockInRoute;
+import static com.dillo.utils.BlockUtils.*;
 
 import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.CurrentState;
@@ -75,7 +74,10 @@ public class IsOnBlock {
   @SubscribeEvent
   public void onChange(PlayerLocChangeEvent event) {
     if (startCheck) {
-      if (event.newPos.equals(blockPos.add(0, 1, 0))) {
+      if (
+        Math.abs(event.newPos.getX() - blockPos.getX() - 1) < 0.001 &&
+        Math.abs(event.newPos.getZ() - blockPos.getZ() - 1) < 0.001
+      ) {
         doneTp();
       } else {
         notOnBlock();
@@ -117,9 +119,9 @@ public class IsOnBlock {
     SendChat.chat(prefix.prefix + "Teleported successfully!");
     KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
 
-    yaw = 0.0F;
+    yaw = 30F;
     alrMoved = false;
-    LookAt.smoothLook(new LookAt.Rotation(yaw, curRotation()), 100);
+    LookAt.smoothLook(new LookAt.Rotation(yaw, curRotation()), 40);
 
     isClearing = false;
 

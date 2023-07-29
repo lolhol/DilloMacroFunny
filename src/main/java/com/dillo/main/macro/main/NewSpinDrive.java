@@ -1,8 +1,26 @@
 package com.dillo.main.macro.main;
 
+import com.dillo.calls.ArmadilloStates;
+import com.dillo.config.config;
+import com.dillo.events.macro.OnStartJumpEvent;
+import com.dillo.main.files.localizedData.currentRoute;
+import com.dillo.main.teleport.macro.TeleportToNextBlock;
+import com.dillo.main.utils.GetMostOptimalPath;
+import com.dillo.main.utils.looks.LookYaw;
+import com.dillo.utils.previous.chatUtils.SendChat;
+import com.dillo.utils.previous.random.ids;
+import com.dillo.utils.previous.random.prefix;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.dillo.calls.CurrentState.STATEDILLONOGETTINGON;
 import static com.dillo.config.config.attemptToClearOnSpot;
-import static com.dillo.gui.GUIUtils.totalveins.TotalVeinsMain.totalVeinsCur;
 import static com.dillo.main.macro.main.StateDillo.canDilloOn;
 import static com.dillo.main.teleport.macro.SmartTP.smartTpBlocks;
 import static com.dillo.main.teleport.macro.TeleportToNextBlock.isClearing;
@@ -11,25 +29,7 @@ import static com.dillo.main.utils.GetMostOptimalPath.getBestPath;
 import static com.dillo.main.utils.GetMostOptimalPath.isClear;
 import static com.dillo.main.utils.looks.DriveLook.addPitch;
 import static com.dillo.main.utils.looks.DriveLook.addYaw;
-import static com.dillo.main.utils.looks.LookYaw.curRotation;
 import static com.dillo.utils.BlockUtils.getBlocksLayer;
-
-import com.dillo.calls.ArmadilloStates;
-import com.dillo.config.config;
-import com.dillo.main.files.localizedData.currentRoute;
-import com.dillo.main.teleport.macro.TeleportToNextBlock;
-import com.dillo.main.utils.GetMostOptimalPath;
-import com.dillo.main.utils.looks.LookYaw;
-import com.dillo.utils.previous.chatUtils.SendChat;
-import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.previous.random.prefix;
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
 
 public class NewSpinDrive {
 
@@ -40,30 +40,40 @@ public class NewSpinDrive {
   public static GetMostOptimalPath.OptimalPath path = null;
   public static int driveClearCount = 0;
   public static boolean isFirst = true;
+  private static boolean isDone;
 
   public static void newSpinDrive() {
-    ArmadilloStates.currentState = null;
-
-    KeyBinding.setKeyBindState(jump.getKeyCode(), true);
-
-    if (isLeft) {
-      addYaw(config.headMovement, -config.headRotationMax);
-    } else {
-      addYaw(config.headMovement, config.headRotationMax);
-    }
-
-    if (!isClearing) {
-      upDownMovement(config.headMovement, config.headMoveUp);
-      isClearing = false;
-    }
-
     new Thread(() -> {
+      isFirst = true;
+      isDone = false;
+      SendChat.chat(String.valueOf(System.currentTimeMillis()));
+      List<BlockPos> blocksBe4 = getBlocks();
+      //SendChat.chat(String.valueOf(blocksBe4.size()));
+      ArmadilloStates.currentState = null;
+
+      long speed = (long) (config.headMovement / 1.5);
+
+      addYaw(speed, 180);
+
       try {
-        Thread.sleep(config.headMovement);
+        Thread.sleep(speed);
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
+
+      long speed2 = config.headMovement - speed;
+
+      addYaw(speed2, config.headRotationMax - 180);
+
+      try {
+        Thread.sleep(speed2);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+
       KeyBinding.setKeyBindState(jump.getKeyCode(), false);
+
+      if (config.debugText) debugText(blocksBe4);
 
       if (ArmadilloStates.isOnline()) {
         startAgain();
@@ -72,17 +82,28 @@ public class NewSpinDrive {
       .start();
   }
 
+  @SubscribeEvent
+  public void onJump(OnStartJumpEvent event) {
+    if (!ArmadilloStates.isOnline() || !isFirst || isDone) return;
+    isDone = true;
+    SendChat.chat(String.valueOf(System.currentTimeMillis()));
+    KeyBinding.setKeyBindState(jump.getKeyCode(), true);
+
+    if (isClearing) return;
+    upDownMovement(event.time, config.headMoveUp);
+  }
+
   private static void upDownMovement(long totalTime, float amount) {
     new Thread(() -> {
-      addPitch(totalTime / 3, -amount);
+      addPitch(totalTime / 4, -amount);
 
       try {
-        Thread.sleep((totalTime / 4) * 2);
+        Thread.sleep((totalTime / 4) * 3);
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
 
-      addPitch(totalTime / 3, amount);
+      addPitch(totalTime / 4, amount);
     })
       .start();
   }
@@ -121,9 +142,53 @@ public class NewSpinDrive {
       getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 3, ids.mc.thePlayer.posZ))
     );
 
-    path = getBestSidePath(returnList);
+    isLeft = false;
+    path = getBestPath(returnList, 0);
     float displacement = path.displacement;
     LookYaw.lookToYaw(config.rod_drill_switch_time + 20, displacement);
+  }
+
+  public static void debugText(List<BlockPos> startBlocks) {
+    List<BlockPos> blocks = new ArrayList<>();
+
+    for (int x = -1; x <= 1; x++) {
+      for (int y = -1; y <= 5; y++) {
+        for (int z = -1; z <= 1; z++) {
+          BlockPos block = ids.mc.thePlayer.getPosition().add(x, y, z).add(-1, 0, -1);
+          //RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(block), true);
+
+          if (
+            ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass ||
+            ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass_pane
+          ) blocks.add(block);
+        }
+      }
+    }
+
+    double both = (double) blocks.size() / (double) startBlocks.size();
+
+    SendChat.chat(100 - (both * 100) + "%");
+  }
+
+  public static List<BlockPos> getBlocks() {
+    List<BlockPos> blocks = new ArrayList<>();
+    //RenderMultipleBlocksMod.renderMultipleBlocks(null, false);
+
+    for (int x = -1; x <= 1; x++) {
+      for (int y = -1; y <= 4; y++) {
+        for (int z = -1; z <= 1; z++) {
+          BlockPos block = ids.mc.thePlayer.getPosition().add(x, y, z).add(-1, 0, -1);
+          //RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(block), true);
+
+          if (
+            ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass ||
+            ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass_pane
+          ) blocks.add(block);
+        }
+      }
+    }
+
+    return blocks;
   }
 
   public static GetMostOptimalPath.OptimalPath getBestSidePath(List<BlockPos> blocks) {

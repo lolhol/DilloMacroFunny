@@ -49,14 +49,13 @@ public class TeleportToBlock {
 
     nextBlock = block;
 
+    Vec3 nextBlockPos = adjustLook(
+      ids.mc.thePlayer.getPositionVector(),
+      nextBlock,
+      new net.minecraft.block.Block[] { Blocks.air },
+      false
+    );
     if (!walkOnTP || tpWalkOverride) {
-      Vec3 nextBlockPos = adjustLook(
-        ids.mc.thePlayer.getPositionVector(),
-        nextBlock,
-        new net.minecraft.block.Block[] { Blocks.air },
-        false
-      );
-
       if (nextBlockPos == null) {
         // nextBlockPos = getUnobstructedPos(nextBlock);
         return false;
@@ -71,13 +70,6 @@ public class TeleportToBlock {
 
       WaitThenCall.waitThenCall(waitTime + time, TPSTAGE2);
     } else {
-      Vec3 nextBlockPos = adjustLook(
-        ids.mc.thePlayer.getPositionVector(),
-        nextBlock,
-        new net.minecraft.block.Block[] { Blocks.air },
-        false
-      );
-
       MoveToVertex vertexMover = new MoveToVertex();
       VertexGetter getVertex = new VertexGetter();
       VertexGetterConfig config = new VertexGetterConfig(ids.mc.thePlayer.getPositionVector(), nextBlock, 1.54F);

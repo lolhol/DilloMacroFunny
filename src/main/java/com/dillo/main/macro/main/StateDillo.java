@@ -9,7 +9,7 @@ import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
 import static com.dillo.main.utils.keybinds.AllKeybinds.JUMP;
 import static com.dillo.main.utils.looks.DriveLook.addYaw;
 import static com.dillo.main.utils.looks.DriveLook.reset;
-import static com.dillo.utils.BlockUtils.*;
+import static com.dillo.utils.BlockUtils.getBlocksLayer;
 import static com.dillo.utils.BlockUtils.getNextBlock;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
 import static com.dillo.utils.keyBindings.rightClick;
@@ -18,7 +18,6 @@ import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.KillSwitch;
 import com.dillo.config.config;
 import com.dillo.main.files.localizedData.currentRoute;
-import com.dillo.main.macro.main.NewSpinDrive;
 import com.dillo.main.teleport.macro.TeleportToNextBlock;
 import com.dillo.utils.GetSBItems;
 import com.dillo.utils.previous.random.getItemInSlot;
@@ -154,44 +153,41 @@ public class StateDillo {
 
   public static boolean canDillo() {
     return (
-      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ)).size() >
-      0 ||
-      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 1, ids.mc.thePlayer.posZ)).size() >
-      0 ||
-      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ)).size() > 0
+      !getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ))
+        .isEmpty() ||
+      !getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 1, ids.mc.thePlayer.posZ))
+        .isEmpty() ||
+      !getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ)).isEmpty()
     );
   }
 
   public static boolean canDilloOn() {
     return (
       (
-        getBlocksLayer(
+        !getBlocksLayer(
           new BlockPos(
             currentRoute.currentBlock.getX(),
             currentRoute.currentBlock.getY() + 4,
             currentRoute.currentBlock.getZ()
           )
         )
-          .size() >
-        0 ||
-        getBlocksLayer(
+          .isEmpty() ||
+        !getBlocksLayer(
           new BlockPos(
             currentRoute.currentBlock.getX(),
             currentRoute.currentBlock.getY() + 3,
             currentRoute.currentBlock.getZ()
           )
         )
-          .size() >
-        0 ||
-        getBlocksLayer(
+          .isEmpty() ||
+        !getBlocksLayer(
           new BlockPos(
             currentRoute.currentBlock.getX(),
             currentRoute.currentBlock.getY() + 2,
             currentRoute.currentBlock.getZ()
           )
         )
-          .size() >
-        0
+          .isEmpty()
       ) &&
       adjustLook(
         new Vec3(

@@ -3,7 +3,8 @@ package com.dillo.main.utils.looks;
 import static com.dillo.utils.previous.random.ids.mc;
 
 import com.dillo.events.MillisecondEvent;
-import com.dillo.main.utils.looks.LookAt;
+import com.dillo.events.macro.OnStartJumpEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class DriveLook {
@@ -17,12 +18,16 @@ public class DriveLook {
   private static double addPi = 0;
   private static boolean isDoneRotate = true;
   private static double add = 0;
+  private static boolean registered;
+  long time;
 
   public static void addYaw(long totalTime, float addYaw) {
     addAm = addYaw / totalTime;
     endTime = System.currentTimeMillis() + totalTime;
+    add = 0;
 
     isDoneRotate = false;
+    registered = false;
   }
 
   public static void addPitch(long totalTime, float addPitch) {
@@ -44,6 +49,11 @@ public class DriveLook {
         add += addAm;
       } else {
         isDoneRotate = true;
+      }
+
+      if (add > 120 && !registered) {
+        MinecraftForge.EVENT_BUS.post(new OnStartJumpEvent(endTime - System.currentTimeMillis()));
+        registered = true;
       }
     }
 
