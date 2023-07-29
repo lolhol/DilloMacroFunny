@@ -1,5 +1,7 @@
 package com.dillo.main.macro.main;
 
+import static com.dillo.main.teleport.macro.TeleportToNextBlock.SNEEK;
+
 import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.CurrentState;
 import com.dillo.utils.previous.SendChat;
@@ -29,6 +31,8 @@ public class GetOffArmadillo {
     blockYPos = blockY;
     startOff = true;
     ammountOfCheckTicks = amountOTicks;
+
+    KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
   }
 
   @SubscribeEvent
@@ -50,6 +54,7 @@ public class GetOffArmadillo {
           }
         } else {
           SendChat.chat("Failed to get off the dillo.");
+          KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
           startOff = false;
           currTicks = 0;
           ArmadilloStates.currentState = null;

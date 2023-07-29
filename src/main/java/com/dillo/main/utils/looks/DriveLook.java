@@ -51,7 +51,7 @@ public class DriveLook {
         isDoneRotate = true;
       }
 
-      if (add > 120 && !registered) {
+      if (add > 150 && !registered) {
         MinecraftForge.EVENT_BUS.post(new OnStartJumpEvent(endTime - System.currentTimeMillis()));
         registered = true;
       }

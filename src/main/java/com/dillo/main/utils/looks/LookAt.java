@@ -31,6 +31,7 @@ public class LookAt {
   public static float currentFakeYaw;
   public static float currentFakePitch;
   public static boolean done = true;
+  public static boolean excludePitch;
 
   private enum RotationType {
     NORMAL,
@@ -286,6 +287,7 @@ public class LookAt {
     endTime = 0;
     currentFakeYaw = 0;
     currentFakePitch = 0;
+    excludePitch = false;
   }
 
   @SubscribeEvent
@@ -293,12 +295,12 @@ public class LookAt {
     try {
       if (rotationType != RotationType.NORMAL) return;
       if (System.currentTimeMillis() <= endTime) {
-        mc.thePlayer.rotationPitch = interpolate(startRot.pitch, endRot.pitch);
+        if (!excludePitch) mc.thePlayer.rotationPitch = interpolate(startRot.pitch, endRot.pitch);
         mc.thePlayer.rotationYaw = interpolate(startRot.yaw, endRot.yaw);
       } else {
         if (!done && endRot != null) {
+          if (!excludePitch) mc.thePlayer.rotationPitch = endRot.pitch;
           mc.thePlayer.rotationYaw = endRot.yaw;
-          mc.thePlayer.rotationPitch = endRot.pitch;
         }
 
         reset();

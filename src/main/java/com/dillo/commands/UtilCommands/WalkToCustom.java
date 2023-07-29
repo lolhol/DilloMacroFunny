@@ -1,8 +1,16 @@
 package com.dillo.commands.UtilCommands;
 
 import static com.dillo.armadillomacro.mobKiller;
+import static com.dillo.main.macro.main.NewSpinDrive.newSpinDrive;
+import static com.dillo.main.macro.main.NewSpinDrive.putAllTogether;
+import static com.dillo.main.teleport.macro.TeleportToNextBlock.alrMoved;
+import static com.dillo.main.teleport.utils.IsOnBlock.yaw;
+import static com.dillo.main.utils.looks.LookYaw.curRotation;
 
+import com.dillo.calls.ArmadilloStates;
+import com.dillo.calls.KillSwitch;
 import com.dillo.main.files.localizedData.currentRoute;
+import com.dillo.main.utils.looks.LookAt;
 import com.dillo.pathfinding.stevebot.core.StevebotApi;
 import com.dillo.pathfinding.stevebot.core.data.blockpos.BaseBlockPos;
 import com.dillo.pathfinding.stevebot.core.player.PlayerUtils;
@@ -27,10 +35,30 @@ public class WalkToCustom extends Command {
   }
 
   @DefaultHandler
-  public void handle(int x, int y, int z) {
-    //SendChat.chat("Killing!");
-    //mobKiller.killMobsAround(6, null);
-    SendChat.chat("Path Finding!");
-    api.path(new BaseBlockPos(PlayerUtils.getPlayerBlockPos()), new BaseBlockPos(x, y, z), true, false);
+  public void handle() {
+    new Thread(() -> {
+      ArmadilloStates.offlineState = KillSwitch.ONLINE;
+
+      SendChat.chat("Rotating!");
+      yaw = 30F;
+      LookAt.smoothLook(new LookAt.Rotation(yaw, curRotation()), 40);
+
+      try {
+        Thread.sleep(200);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+
+      putAllTogether();
+
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+
+      newSpinDrive();
+    })
+      .start();
   }
 }

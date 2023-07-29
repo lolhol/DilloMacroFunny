@@ -48,7 +48,7 @@ public class Test {
 
           float displacement = path.displacement;
 
-          LookYaw.lookToYaw(config.headMovement * 10L, displacement);
+          LookYaw.lookToYaw(config.headMovement * 10L, displacement, false);
 
           first = false;
         }
@@ -57,7 +57,7 @@ public class Test {
           if (angle < 170) {
             float add = config.headMovement * 7 + random.nextFloat() * 10;
 
-            LookYaw.lookToYaw(config.headMovement * 10L, add);
+            LookYaw.lookToYaw(config.headMovement * 10L, add, false);
             angle += add;
           } else {
             angle = 0;

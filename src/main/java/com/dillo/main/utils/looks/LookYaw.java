@@ -8,7 +8,8 @@ import com.dillo.utils.previous.random.ids;
 
 public class LookYaw {
 
-  public static void lookToYaw(long time, float addYaw) {
+  public static void lookToYaw(long time, float addYaw, boolean excludePitch) {
+    LookAt.excludePitch = excludePitch;
     LookAt.smoothLook(new LookAt.Rotation(yaw, curRotation() + addYaw), time);
   }
 

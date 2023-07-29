@@ -1,24 +1,5 @@
 package com.dillo.main.macro.main;
 
-import com.dillo.calls.ArmadilloStates;
-import com.dillo.config.config;
-import com.dillo.events.macro.OnStartJumpEvent;
-import com.dillo.main.files.localizedData.currentRoute;
-import com.dillo.main.teleport.macro.TeleportToNextBlock;
-import com.dillo.main.utils.GetMostOptimalPath;
-import com.dillo.main.utils.looks.LookYaw;
-import com.dillo.utils.previous.chatUtils.SendChat;
-import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.previous.random.prefix;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.dillo.calls.CurrentState.STATEDILLONOGETTINGON;
 import static com.dillo.config.config.attemptToClearOnSpot;
 import static com.dillo.main.macro.main.StateDillo.canDilloOn;
@@ -30,6 +11,24 @@ import static com.dillo.main.utils.GetMostOptimalPath.isClear;
 import static com.dillo.main.utils.looks.DriveLook.addPitch;
 import static com.dillo.main.utils.looks.DriveLook.addYaw;
 import static com.dillo.utils.BlockUtils.getBlocksLayer;
+
+import com.dillo.calls.ArmadilloStates;
+import com.dillo.config.config;
+import com.dillo.events.macro.OnStartJumpEvent;
+import com.dillo.main.files.localizedData.currentRoute;
+import com.dillo.main.teleport.macro.TeleportToNextBlock;
+import com.dillo.main.utils.GetMostOptimalPath;
+import com.dillo.main.utils.looks.LookYaw;
+import com.dillo.utils.previous.chatUtils.SendChat;
+import com.dillo.utils.previous.random.ids;
+import com.dillo.utils.previous.random.prefix;
+import java.util.ArrayList;
+import java.util.List;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class NewSpinDrive {
 
@@ -48,6 +47,7 @@ public class NewSpinDrive {
       isDone = false;
       SendChat.chat(String.valueOf(System.currentTimeMillis()));
       List<BlockPos> blocksBe4 = getBlocks();
+      if (!isClearing) upDownMovement(config.headMovement, config.headMoveUp);
       //SendChat.chat(String.valueOf(blocksBe4.size()));
       ArmadilloStates.currentState = null;
 
@@ -88,22 +88,19 @@ public class NewSpinDrive {
     isDone = true;
     SendChat.chat(String.valueOf(System.currentTimeMillis()));
     KeyBinding.setKeyBindState(jump.getKeyCode(), true);
-
-    if (isClearing) return;
-    upDownMovement(event.time, config.headMoveUp);
   }
 
   private static void upDownMovement(long totalTime, float amount) {
     new Thread(() -> {
-      addPitch(totalTime / 4, -amount);
+      addPitch(totalTime / 2, -amount);
 
       try {
-        Thread.sleep((totalTime / 4) * 3);
+        Thread.sleep((totalTime / 6) * 4);
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
 
-      addPitch(totalTime / 4, amount);
+      addPitch(totalTime / 6, amount - (amount / 6));
     })
       .start();
   }
@@ -125,7 +122,7 @@ public class NewSpinDrive {
   }
 
   public static void putAllTogether() {
-    //com.dillo.utils.previous.SendChat.chat(isLeft ? "left" : "right");
+    //com.dillo.utils.previous.SendChaxt.chat(isLeft ? "left" : "right");
 
     List<BlockPos> returnList = new ArrayList<>();
 
@@ -145,7 +142,7 @@ public class NewSpinDrive {
     isLeft = false;
     path = getBestPath(returnList, 0);
     float displacement = path.displacement;
-    LookYaw.lookToYaw(config.rod_drill_switch_time + 20, displacement);
+    LookYaw.lookToYaw(config.rod_drill_switch_time + 20, displacement, true);
   }
 
   public static void debugText(List<BlockPos> startBlocks) {

@@ -7,6 +7,8 @@ import static com.dillo.main.utils.looks.LookAt.getRotation;
 import static com.dillo.utils.BlockUtils.getNextBlock;
 
 import com.dillo.main.utils.looks.LookAt;
+import com.dillo.utils.BlockUtils;
+import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +23,11 @@ public class GetMostOptimalPath {
   public static boolean isClear = false;
 
   public static OptimalPath getBestPath(List<BlockPos> originBlocks, float currentLook) {
-    BlockPos nextBlock = getNextBlock();
-    float bestRot = 0;
-
     OptimalPathRotation bestPath = new OptimalPathRotation(new ArrayList<>(), 0, 0);
     float bestPoints = 0;
     OptimalPath optimalPath = new OptimalPath(new ArrayList<>(), 0);
-    float currRotPoints = 0;
 
-    float maxRot = 180;
+    float maxRot = 120;
 
     if (isClearing) {
       maxRot = 100;
@@ -60,6 +58,12 @@ public class GetMostOptimalPath {
           }
 
           blocks.add(block);
+        }
+      }
+
+      if (blocks.size() > 0 && optimalPath.path.size() > 0) {
+        if (getClosestToCamYaw(optimalPath.path, displacement) > getClosestToCamYaw(blocks, displacement)) {
+          points += 10;
         }
       }
 
@@ -111,6 +115,20 @@ public class GetMostOptimalPath {
 
   public static Vec3 centerBlock(BlockPos block) {
     return new Vec3(block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
+  }
+
+  public static float getClosestToCamYaw(List<BlockPos> blocks, float displacement) {
+    float bestYaw = 10000000;
+
+    for (BlockPos block : blocks) {
+      float newYaw = getYawNeededVec(BlockUtils.fromBlockPosToVec3(block), displacement);
+
+      if (newYaw < bestYaw) {
+        bestYaw = newYaw;
+      }
+    }
+
+    return bestYaw;
   }
 
   public static float getYawNeededVec(Vec3 block, float addCurYaw) {

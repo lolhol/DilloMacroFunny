@@ -43,8 +43,6 @@ public class TeleportToNextBlock {
 
   public static void teleportToNextBlock() {
     if (ArmadilloStates.offlineState == ONLINE) {
-      KeyBinding.setKeyBindState(SNEEK.getKeyCode(), false);
-
       BlockPos nextBlock = getNextBlock();
       nextBlockInList = nextBlock;
       isTeleporting = true;
