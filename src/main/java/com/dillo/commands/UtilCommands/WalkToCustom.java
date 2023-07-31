@@ -1,10 +1,15 @@
 package com.dillo.commands.UtilCommands;
 
 import static com.dillo.armadillomacro.regJump;
+import static com.dillo.main.macro.main.NewSpinDrive.jump;
+import static com.dillo.main.utils.looks.DriveLook.*;
 
+import com.dillo.events.utilevents.CurJumpProgress;
 import com.dillo.pathfinding.stevebot.core.StevebotApi;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.common.MinecraftForge;
 
 public class WalkToCustom extends Command {
 
@@ -43,7 +48,14 @@ public class WalkToCustom extends Command {
     })
       .start();*/
 
+    startJTime = System.currentTimeMillis();
+    addYaw(400, 180);
+    MinecraftForge.EVENT_BUS.post(new CurJumpProgress(0, 0, startRender));
+    KeyBinding.setKeyBindState(jump.getKeyCode(), true);
+    resetJump();
     regJump.startStop(startRender);
+    projectJump = startRender;
+
     startRender = !startRender;
   }
 }

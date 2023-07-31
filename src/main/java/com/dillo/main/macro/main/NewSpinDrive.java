@@ -35,7 +35,7 @@ public class NewSpinDrive {
   public static boolean isLeft = false;
   public static float angle = 0;
   public static java.util.Random random = new java.util.Random();
-  private static final KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
+  public static final KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
   public static GetMostOptimalPath.OptimalPath path = null;
   public static int driveClearCount = 0;
   public static boolean isFirst = true;

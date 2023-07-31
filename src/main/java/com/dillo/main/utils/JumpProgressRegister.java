@@ -21,7 +21,7 @@ public class JumpProgressRegister {
   public void reset() {
     maxY = 0;
     isOnDillo = false;
-    MinecraftForge.EVENT_BUS.post(new CurJumpProgress(0, maxY, true));
+    MinecraftForge.EVENT_BUS.post(new CurJumpProgress(0, 0, true));
   }
 
   @SubscribeEvent
@@ -33,8 +33,6 @@ public class JumpProgressRegister {
         maxY += ids.mc.thePlayer.posY - prevY;
         MinecraftForge.EVENT_BUS.post(new CurJumpProgress(ids.mc.thePlayer.posY - prevY, maxY, false));
       }
-
-      SendChat.chat(String.valueOf(ids.mc.thePlayer.posY - prevY) + "!!!");
 
       prevY = ids.mc.thePlayer.posY;
       isFirst = false;
