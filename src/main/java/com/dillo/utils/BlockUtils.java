@@ -3,7 +3,6 @@ package com.dillo.utils;
 import static com.dillo.config.config.isIncludeMithril;
 
 import com.dillo.main.files.localizedData.currentRoute;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.IsSameBlock;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
@@ -88,7 +87,7 @@ public class BlockUtils {
   public static boolean isOnBlockInRoute(BlockPos curBlock) {
     for (BlockPos block : currentRoute.currentRoute) {
       if (
-        Math.abs(block.getZ() - curBlock.getZ()) < 0.001 && Math.abs(block.getX() - curBlock.getX()) < 0.001
+        Math.abs(block.getZ() - curBlock.getZ() + 1) < 0.001 && Math.abs(block.getX() - curBlock.getX() + 1) < 0.001
       ) return true;
     }
 

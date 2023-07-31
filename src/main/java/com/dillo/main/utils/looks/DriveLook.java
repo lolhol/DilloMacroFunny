@@ -2,15 +2,19 @@ package com.dillo.main.utils.looks;
 
 import static com.dillo.utils.previous.random.ids.mc;
 
+import com.dillo.config.config;
 import com.dillo.events.MillisecondEvent;
 import com.dillo.events.macro.OnStartJumpEvent;
+import com.dillo.events.utilevents.CurJumpProgress;
+import com.dillo.events.utilevents.OnChangeYawEvent;
+import com.dillo.utils.previous.SendChat;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class DriveLook {
 
-  public static LookAt.Rotation startRot;
-  public static LookAt.Rotation endRot;
+  public static long startJTime;
+  private static long startTime;
   private static long endTime;
   private static long endTimeP;
   private static boolean isDoneP = true;
@@ -19,12 +23,18 @@ public class DriveLook {
   private static boolean isDoneRotate = true;
   private static double add = 0;
   private static boolean registered;
-  long time;
+  private static double max;
+  private static float addYawLook;
+  public static boolean projectJump = false;
+  public static boolean doneLook180 = false;
 
   public static void addYaw(long totalTime, float addYaw) {
     addAm = addYaw / totalTime;
+    addYawLook = addYaw;
+    startTime = System.currentTimeMillis();
     endTime = System.currentTimeMillis() + totalTime;
     add = 0;
+    max = 0;
 
     isDoneRotate = false;
     registered = false;
@@ -41,17 +51,29 @@ public class DriveLook {
     isDoneRotate = true;
   }
 
+  public static void pause() {
+    isDoneRotate = true;
+  }
+
+  public static void unpause() {
+    isDoneRotate = false;
+  }
+
   @SubscribeEvent
   public void onMillisecond(MillisecondEvent event) {
     if (!isDoneRotate) {
       if (System.currentTimeMillis() <= endTime) {
-        mc.thePlayer.rotationYaw += addAm;
+        mc.thePlayer.rotationYaw += (float) addAm;
         add += addAm;
+        MinecraftForge.EVENT_BUS.post(new OnChangeYawEvent(mc.thePlayer.rotationYaw));
       } else {
+        doneLook180 = true;
+        projectJump = false;
         isDoneRotate = true;
       }
 
-      if (add > 150 && !registered) {
+      if (add > 60 && !registered) {
+        SendChat.chat(String.valueOf(add));
         MinecraftForge.EVENT_BUS.post(new OnStartJumpEvent(endTime - System.currentTimeMillis()));
         registered = true;
       }
@@ -63,6 +85,23 @@ public class DriveLook {
       } else {
         isDoneP = true;
       }
+    }
+  }
+
+  @SubscribeEvent
+  public void onChangeJump(CurJumpProgress event) {
+    if (!projectJump || event.isRest) return;
+    max += event.progress;
+
+    double curJTime = System.currentTimeMillis() - startJTime;
+    double percentDone = (max / 1.5) * 100;
+    double projectedTimePPercent = curJTime / percentDone;
+    double projectedTime = projectedTimePPercent * (100 - percentDone);
+
+    SendChat.chat(String.valueOf(event.progress));
+
+    if (System.currentTimeMillis() + projectedTime - 20 > endTime && projectedTime < config.headMovement) {
+      addYaw((long) projectedTime, (float) (addYawLook - add));
     }
   }
 }

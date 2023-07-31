@@ -1,5 +1,6 @@
 package com.dillo.main.macro.main;
 
+import static com.dillo.armadillomacro.regJump;
 import static com.dillo.calls.CurrentState.STATEDILLONOGETTINGON;
 import static com.dillo.config.config.attemptToClearOnSpot;
 import static com.dillo.main.macro.main.StateDillo.canDilloOn;
@@ -8,8 +9,7 @@ import static com.dillo.main.teleport.macro.TeleportToNextBlock.isClearing;
 import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
 import static com.dillo.main.utils.GetMostOptimalPath.getBestPath;
 import static com.dillo.main.utils.GetMostOptimalPath.isClear;
-import static com.dillo.main.utils.looks.DriveLook.addPitch;
-import static com.dillo.main.utils.looks.DriveLook.addYaw;
+import static com.dillo.main.utils.looks.DriveLook.*;
 import static com.dillo.utils.BlockUtils.getBlocksLayer;
 
 import com.dillo.calls.ArmadilloStates;
@@ -43,22 +43,29 @@ public class NewSpinDrive {
 
   public static void newSpinDrive() {
     new Thread(() -> {
+      KeyBinding.setKeyBindState(jump.getKeyCode(), true);
+      startJTime = System.currentTimeMillis();
+      regJump.reset();
+      regJump.startStop(true);
+      projectJump = true;
+
       isFirst = true;
       isDone = false;
-      SendChat.chat(String.valueOf(System.currentTimeMillis()));
       List<BlockPos> blocksBe4 = getBlocks();
-      if (!isClearing) upDownMovement(config.headMovement, config.headMoveUp);
-      //SendChat.chat(String.valueOf(blocksBe4.size()));
       ArmadilloStates.currentState = null;
 
-      long speed = (long) (config.headMovement / 1.5);
+      long speed = (config.headMovement / 5) * 3;
 
       addYaw(speed, 180);
 
-      try {
-        Thread.sleep(speed);
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
+      if (!isClearing) upDownMovement(config.headMovement, config.headMoveUp);
+
+      while (!doneLook180) {
+        try {
+          Thread.sleep(1);
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
       }
 
       long speed2 = config.headMovement - speed;
@@ -86,21 +93,19 @@ public class NewSpinDrive {
   public void onJump(OnStartJumpEvent event) {
     if (!ArmadilloStates.isOnline() || !isFirst || isDone) return;
     isDone = true;
-    SendChat.chat(String.valueOf(System.currentTimeMillis()));
+    //SendChat.chat(String.valueOf(System.currentTimeMillis()));
     KeyBinding.setKeyBindState(jump.getKeyCode(), true);
   }
 
   private static void upDownMovement(long totalTime, float amount) {
     new Thread(() -> {
       addPitch(totalTime / 2, -amount);
-
       try {
-        Thread.sleep((totalTime / 6) * 4);
+        Thread.sleep(totalTime / 2);
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
-
-      addPitch(totalTime / 6, amount - (amount / 6));
+      addPitch(totalTime / 2, amount / 2);
     })
       .start();
   }
@@ -126,18 +131,18 @@ public class NewSpinDrive {
 
     List<BlockPos> returnList = new ArrayList<>();
 
-    returnList.addAll(
+    /*returnList.addAll(
       getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ))
-    );
+    );*/
     returnList.addAll(
       getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ))
     );
     returnList.addAll(
       getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 1, ids.mc.thePlayer.posZ))
     );
-    returnList.addAll(
+    /*returnList.addAll(
       getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 3, ids.mc.thePlayer.posZ))
-    );
+    );*/
 
     isLeft = false;
     path = getBestPath(returnList, 0);

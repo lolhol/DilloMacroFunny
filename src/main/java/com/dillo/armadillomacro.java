@@ -45,6 +45,7 @@ import com.dillo.main.route.RouteDeletr.RouteDeletrMain;
 import com.dillo.main.route.ViewClearLines.ViewClearLines;
 import com.dillo.main.teleport.TeleportMovePlayer.MoveToVertex;
 import com.dillo.main.teleport.utils.*;
+import com.dillo.main.utils.JumpProgressRegister;
 import com.dillo.main.utils.looks.DriveLook;
 import com.dillo.main.utils.looks.LookAt;
 import com.dillo.main.utils.looks.YawLook;
@@ -113,6 +114,7 @@ public class armadillomacro {
   public static File modFile = null;
 
   public static ArrayList<KeyBinding> keybinds = new ArrayList<>();
+  public static JumpProgressRegister regJump = new JumpProgressRegister();
 
   @Mod.EventHandler
   public void init(FMLInitializationEvent event) {
@@ -221,7 +223,8 @@ public class armadillomacro {
       new RegistersStevebot(),
       new PlayerLocChangeTrigger(),
       new com.dillo.main.teleport.utils.Test(),
-      new NewSpinDrive()
+      new NewSpinDrive(),
+      regJump
     );
 
     registerKeybinds(keybinds);

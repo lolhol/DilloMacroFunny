@@ -92,6 +92,12 @@ public class TeleportToNextBlock {
       );
       VertexGetter.VertexGetterClass vertex = getVertex.getVertex(vertConfig);
 
+      if (vertex != null && !alrMoved) {
+        vertexMover.moveToVertex(vertex, TPSTAGEWALK, true, 60);
+        alrMoved = true;
+        return;
+      }
+
       if (!attemptedToSmartTP) {
         if (config.smartTeleport) {
           SendChat.chat(prefix.prefix + "Route is obstructed! Attempting other method of tp!");
@@ -99,12 +105,6 @@ public class TeleportToNextBlock {
           attemptedToSmartTP = true;
           return;
         }
-      }
-
-      if (vertex != null && !alrMoved) {
-        vertexMover.moveToVertex(vertex, TPSTAGEWALK, true, 60);
-        alrMoved = true;
-        return;
       }
 
       if (canDillo() && clearAttempts < 5) {

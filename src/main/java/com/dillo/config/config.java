@@ -76,9 +76,9 @@ public class config extends Vigilant {
     description = "The maximum rotation that the macro will take",
     category = "Main",
     min = 100,
-    max = 360
+    max = 500
   )
-  public static int headRotationMax = 230;
+  public static int headRotationMax = 400;
 
   @Property(
     type = PropertyType.SLIDER,

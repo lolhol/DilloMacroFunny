@@ -4,11 +4,9 @@ import static com.dillo.main.macro.main.NewSpinDrive.isLeft;
 import static com.dillo.main.teleport.macro.TeleportToNextBlock.isClearing;
 import static com.dillo.main.utils.looks.LookAt.getNeededChange;
 import static com.dillo.main.utils.looks.LookAt.getRotation;
-import static com.dillo.utils.BlockUtils.getNextBlock;
 
 import com.dillo.main.utils.looks.LookAt;
 import com.dillo.utils.BlockUtils;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +25,13 @@ public class GetMostOptimalPath {
     float bestPoints = 0;
     OptimalPath optimalPath = new OptimalPath(new ArrayList<>(), 0);
 
-    float maxRot = 120;
+    float maxRot = 40;
 
     if (isClearing) {
       maxRot = 100;
     }
 
-    for (int displacement = 0; displacement < 360; displacement += 5) {
+    for (int displacement = 0; displacement < 400; displacement += 5) {
       List<BlockPos> blocks = new ArrayList<>();
       float points = 0;
 
@@ -44,7 +42,11 @@ public class GetMostOptimalPath {
         if (!isLeft) {
           if (neededYaw > 0 && neededYaw < maxRot) {
             if (ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass) {
-              points += 1.5;
+              if (neededYaw + 10 > displacement) {
+                points += 4;
+              } else {
+                points += 1.5F;
+              }
             } else {
               points += 1;
             }
@@ -61,7 +63,7 @@ public class GetMostOptimalPath {
         }
       }
 
-      if (blocks.size() > 0 && optimalPath.path.size() > 0) {
+      if (!blocks.isEmpty() && !optimalPath.path.isEmpty()) {
         if (getClosestToCamYaw(optimalPath.path, displacement) > getClosestToCamYaw(blocks, displacement)) {
           points += 10;
         }

@@ -1,6 +1,6 @@
 package com.dillo.main.macro.main;
 
-import static com.dillo.main.teleport.macro.TeleportToNextBlock.SNEEK;
+import static com.dillo.armadillomacro.regJump;
 
 import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.CurrentState;
@@ -27,6 +27,8 @@ public class GetOffArmadillo {
     ArmadilloStates.currentState = null;
     sneak = turnOffSneak;
 
+    regJump.reset();
+
     setNewState = newState;
     blockYPos = blockY;
     startOff = true;
@@ -42,6 +44,7 @@ public class GetOffArmadillo {
         if (currTicks <= ammountOfCheckTicks) {
           if (ArmadilloStates.isOnline()) {
             if (Math.abs(blockYPos - ids.mc.thePlayer.posY + 1) < 0.0001) {
+              regJump.startStop(false);
               if (sneak) KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
               startOff = false;
               currTicks = 0;

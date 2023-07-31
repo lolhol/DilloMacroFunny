@@ -11,7 +11,10 @@ import com.dillo.config.config;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.random.ids;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
@@ -348,7 +351,16 @@ public class GetBlocksForNuker {
     }
 
     List<BlockPos> blocks = interpreterPolars(mineX, mineY, mineZ);
-    return removeDupe(blocks);
+    return filterOutAir(removeDupe(blocks));
+  }
+
+  public static List<BlockPos> filterOutAir(List<BlockPos> blocks) {
+    return blocks
+      .stream()
+      .filter(a -> {
+        return ids.mc.theWorld.getBlockState(a).getBlock() != Blocks.air;
+      })
+      .collect(Collectors.toList());
   }
 
   public static List<BlockPos> removeDupe(List<BlockPos> blocks) {

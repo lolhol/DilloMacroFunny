@@ -74,14 +74,17 @@ public class IsOnBlock {
   @SubscribeEvent
   public void onChange(PlayerLocChangeEvent event) {
     if (startCheck) {
-      if (
-        Math.abs(event.newPos.getX() - blockPos.getX() - 1) < 0.001 &&
-        Math.abs(event.newPos.getZ() - blockPos.getZ() - 1) < 0.001
-      ) {
-        doneTp();
-      } else {
-        notOnBlock();
-      }
+      new Thread(() -> {
+        if (
+          Math.abs(event.newPos.getX() - blockPos.getX() - 1) < 0.001 &&
+          Math.abs(event.newPos.getZ() - blockPos.getZ() - 1) < 0.001
+        ) {
+          doneTp();
+        } else {
+          notOnBlock();
+        }
+      })
+        .start();
     }
   }
 
@@ -119,7 +122,7 @@ public class IsOnBlock {
     SendChat.chat(prefix.prefix + "Teleported successfully!");
     KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
 
-    yaw = 30F;
+    yaw = 20F;
     alrMoved = false;
     LookAt.smoothLook(new LookAt.Rotation(yaw, curRotation()), 40);
 
@@ -140,7 +143,6 @@ public class IsOnBlock {
 
   void initiateFailSafes() {
     ArmadilloStates.currentState = null;
-
     switch (curFailsafe) {
       case FAILSAFE_TPBACKANDNEXT:
         if (!isOnBlockInRoute(ids.mc.thePlayer.getPosition())) {
@@ -171,7 +173,7 @@ public class IsOnBlock {
 
         return;
       case FAILSAFE_RETP:
-        SendChat.chat(prefix.prefix + "Failed to teleport!" + (reTeleport ? "Re-Teleporting!" : ""));
+        SendChat.chat(prefix.prefix + "Failed to teleport!" + (reTeleport ? " Re-Teleporting!" : ""));
 
         if (isOnBlockInRoute(ids.mc.thePlayer.getPosition())) {
           if (curReTps < config.reTpTimes) {

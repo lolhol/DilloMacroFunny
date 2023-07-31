@@ -1,13 +1,12 @@
 package com.dillo.main.macro.main;
 
+import static com.dillo.armadillomacro.regJump;
 import static com.dillo.calls.CurrentState.ROUTEOBSTRUCTEDCLEAR;
 import static com.dillo.calls.CurrentState.SPINDRIVE;
 import static com.dillo.config.config.fasterDillo;
-import static com.dillo.main.macro.main.NewSpinDrive.isLeft;
 import static com.dillo.main.macro.main.NewSpinDrive.newSpinDrive;
 import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
 import static com.dillo.main.utils.keybinds.AllKeybinds.JUMP;
-import static com.dillo.main.utils.looks.DriveLook.addYaw;
 import static com.dillo.main.utils.looks.DriveLook.reset;
 import static com.dillo.utils.BlockUtils.getBlocksLayer;
 import static com.dillo.utils.BlockUtils.getNextBlock;
@@ -64,6 +63,7 @@ public class StateDillo {
   }
 
   public static void stateDillo() {
+    //KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
     if (canDillo() && ArmadilloStates.isOnline() && !isSmartTP) {
       ArmadilloStates.currentState = null;
 
@@ -110,6 +110,7 @@ public class StateDillo {
           playerYBe4 = (float) ids.mc.thePlayer.posY;
 
           if (ArmadilloStates.isOnline()) {
+            //KeyBinding.setKeyBindState(jump.getKeyCode(), true);
             canCheckIfOnDillo = true;
           }
         } catch (InterruptedException e) {
@@ -211,27 +212,29 @@ public class StateDillo {
           reset();
           checkedNumber = 0;
           tickDilloCheckCount = 0;
-
           canCheckIfOnDillo = false;
-
           look = true;
+
+          regJump.reset();
 
           if (ArmadilloStates.isOnline()) {
             if (isNoTp) {
               ArmadilloStates.currentState = ROUTEOBSTRUCTEDCLEAR;
               isNoTp = false;
             } else {
-              KeyBinding.setKeyBindState(JUMP.getKeyCode(), true);
-              if (ArmadilloStates.isOnline()) {
-                newSpinDrive();
-                //ArmadilloStates.currentState = SPINDRIVE;
-              } else {
-                KeyBinding.setKeyBindState(JUMP.getKeyCode(), false);
-              }
+              new Thread(() -> {
+                if (ArmadilloStates.isOnline()) {
+                  newSpinDrive();
+                  //ArmadilloStates.currentState = SPINDRIVE;
+                } else {
+                  KeyBinding.setKeyBindState(JUMP.getKeyCode(), false);
+                }
+              })
+                .start();
             }
           }
         } else {
-          if (!looking && ids.mc.thePlayer.posY - playerYBe4 > 0.2) {
+          /*if (!looking && ids.mc.thePlayer.posY - playerYBe4 > 0.2) {
             looking = true;
 
             if (isLeft) {
@@ -239,7 +242,7 @@ public class StateDillo {
             } else {
               addYaw(200, 20);
             }
-          }
+          }*/
 
           if (tickDilloCheckCount >= 4) {
             if (!fasterDillo) {
