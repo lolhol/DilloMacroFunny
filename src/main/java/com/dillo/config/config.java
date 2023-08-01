@@ -127,6 +127,16 @@ public class config extends Vigilant {
   @Property(type = PropertyType.SWITCH, name = "Re-Fuel", description = "Will re-fuel drill", category = "Main")
   public static boolean refuel = true;
 
+  @Property(
+    type = PropertyType.SLIDER,
+    name = "Ping",
+    description = "Set ur ping here.",
+    category = "Main",
+    min = 1,
+    max = 500
+  )
+  public static int ping = 80;
+
   //Route Utils
   @Property(
     type = PropertyType.SWITCH,

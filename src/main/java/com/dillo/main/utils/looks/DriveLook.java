@@ -15,6 +15,7 @@ public class DriveLook {
 
   public static long startJTime;
   private static long startTime;
+  private static long totalTime1;
   private static long endTime;
   private static long endTimeP;
   private static boolean isDoneP = true;
@@ -33,6 +34,7 @@ public class DriveLook {
     addYawLook = addYaw;
     startTime = System.currentTimeMillis();
     endTime = System.currentTimeMillis() + totalTime;
+    totalTime1 = totalTime;
     add = 0;
     max = 0;
 
@@ -70,10 +72,10 @@ public class DriveLook {
         doneLook180 = true;
         projectJump = false;
         isDoneRotate = true;
+        resetJump();
       }
 
       if (add > 60 && !registered) {
-        //SendChat.chat(String.valueOf(add));
         MinecraftForge.EVENT_BUS.post(new OnStartJumpEvent(endTime - System.currentTimeMillis()));
         registered = true;
       }
@@ -94,19 +96,22 @@ public class DriveLook {
 
   @SubscribeEvent
   public void onChangeJump(CurJumpProgress event) {
-    if (!projectJump || event.isRest1) return;
+    if (!projectJump) return;
     max += event.progress;
+
+    //SendChat.chat(String.valueOf(max));
 
     double curJTime = System.currentTimeMillis() - startJTime;
     double percentDone = (max / 1.5) * 100;
     double projectedTimePPercent = curJTime / percentDone;
     double projectedTime = projectedTimePPercent * (100 - percentDone);
 
-    SendChat.chat(String.valueOf(projectedTime) + "!!");
-
     //SendChat.chat(String.valueOf(projectedTime));
 
-    if (System.currentTimeMillis() + projectedTime + 50 < endTime && projectedTime < config.headMovement) {
+    if (
+      System.currentTimeMillis() + projectedTime > endTime && projectedTime < config.headMovement && projectedTime > 0
+    ) {
+      SendChat.chat(String.valueOf(projectedTime) + "!!");
       addYaw((long) projectedTime, (float) (addYawLook - add));
     }
   }

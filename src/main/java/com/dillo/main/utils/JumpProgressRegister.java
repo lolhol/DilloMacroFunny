@@ -3,9 +3,9 @@ package com.dillo.main.utils;
 import com.dillo.events.utilevents.CurJumpProgress;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class JumpProgressRegister {
 
@@ -25,7 +25,7 @@ public class JumpProgressRegister {
   }
 
   @SubscribeEvent
-  public void onTick(TickEvent.ClientTickEvent event) {
+  public void onRenderWorld(RenderWorldLastEvent event) {
     if (!isOnDillo) return;
 
     try {

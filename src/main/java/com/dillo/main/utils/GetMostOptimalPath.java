@@ -25,10 +25,10 @@ public class GetMostOptimalPath {
     float bestPoints = 0;
     OptimalPath optimalPath = new OptimalPath(new ArrayList<>(), 0);
 
-    float maxRot = 40;
+    float maxRot = 25;
 
     if (isClearing) {
-      maxRot = 100;
+      maxRot = 20;
     }
 
     for (int displacement = 0; displacement < 400; displacement += 5) {

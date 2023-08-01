@@ -4,6 +4,7 @@ import static com.dillo.armadillomacro.regJump;
 import static com.dillo.calls.CurrentState.ROUTEOBSTRUCTEDCLEAR;
 import static com.dillo.calls.CurrentState.SPINDRIVE;
 import static com.dillo.config.config.fasterDillo;
+import static com.dillo.config.config.ping;
 import static com.dillo.main.macro.main.NewSpinDrive.newSpinDrive;
 import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
 import static com.dillo.main.utils.keybinds.AllKeybinds.JUMP;
@@ -224,6 +225,12 @@ public class StateDillo {
             } else {
               new Thread(() -> {
                 if (ArmadilloStates.isOnline()) {
+                  try {
+                    Thread.sleep(ping * 2L);
+                  } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                  }
+
                   newSpinDrive();
                   //ArmadilloStates.currentState = SPINDRIVE;
                 } else {

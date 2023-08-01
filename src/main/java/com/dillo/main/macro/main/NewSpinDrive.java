@@ -1,17 +1,5 @@
 package com.dillo.main.macro.main;
 
-import static com.dillo.armadillomacro.regJump;
-import static com.dillo.calls.CurrentState.STATEDILLONOGETTINGON;
-import static com.dillo.config.config.attemptToClearOnSpot;
-import static com.dillo.main.macro.main.StateDillo.canDilloOn;
-import static com.dillo.main.teleport.macro.SmartTP.smartTpBlocks;
-import static com.dillo.main.teleport.macro.TeleportToNextBlock.isClearing;
-import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
-import static com.dillo.main.utils.GetMostOptimalPath.getBestPath;
-import static com.dillo.main.utils.GetMostOptimalPath.isClear;
-import static com.dillo.main.utils.looks.DriveLook.*;
-import static com.dillo.utils.BlockUtils.getBlocksLayer;
-
 import com.dillo.calls.ArmadilloStates;
 import com.dillo.config.config;
 import com.dillo.events.macro.OnStartJumpEvent;
@@ -22,13 +10,27 @@ import com.dillo.main.utils.looks.LookYaw;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.dillo.calls.CurrentState.STATEDILLONOGETTINGON;
+import static com.dillo.config.config.attemptToClearOnSpot;
+import static com.dillo.config.config.ping;
+import static com.dillo.main.macro.main.StateDillo.canDilloOn;
+import static com.dillo.main.teleport.macro.SmartTP.smartTpBlocks;
+import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
+import static com.dillo.main.utils.GetMostOptimalPath.getBestPath;
+import static com.dillo.main.utils.GetMostOptimalPath.isClear;
+import static com.dillo.main.utils.keybinds.AllKeybinds.JUMP;
+import static com.dillo.main.utils.looks.DriveLook.addPitch;
+import static com.dillo.main.utils.looks.DriveLook.addYaw;
+import static com.dillo.utils.BlockUtils.getBlocksLayer;
 
 public class NewSpinDrive {
 
@@ -43,44 +45,43 @@ public class NewSpinDrive {
 
   public static void newSpinDrive() {
     new Thread(() -> {
-      KeyBinding.setKeyBindState(jump.getKeyCode(), true);
-      startJTime = System.currentTimeMillis();
-      regJump.reset();
-      regJump.startStop(true);
-      projectJump = true;
-
-      isFirst = true;
-      isDone = false;
-      List<BlockPos> blocksBe4 = getBlocks();
-      ArmadilloStates.currentState = null;
-
-      long speed = (config.headMovement / 5) * 3;
-
-      addYaw(speed, 180);
-
-      if (!isClearing) upDownMovement(config.headMovement, config.headMoveUp);
-
-      while (!doneLook180) {
-        try {
-          Thread.sleep(1);
-        } catch (InterruptedException e) {
-          throw new RuntimeException(e);
-        }
-      }
-
-      long speed2 = config.headMovement - speed;
-
-      addYaw(speed2, config.headRotationMax - 180);
+      KeyBinding.setKeyBindState(JUMP.getKeyCode(), true);
 
       try {
-        Thread.sleep(speed2);
+        Thread.sleep(ping);
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
 
-      KeyBinding.setKeyBindState(jump.getKeyCode(), false);
+      upDownMovement(config.headMovement, config.headMoveUp);
 
-      if (config.debugText) debugText(blocksBe4);
+      //startJTime = System.currentTimeMillis();
+      addYaw(config.headMovement / 2, 180);
+      //MinecraftForge.EVENT_BUS.post(new CurJumpProgress(0, 0, true));
+      //resetJump();
+      //regJump.startStop(true);
+      //projectJump = true;
+
+      try {
+        Thread.sleep(config.headMovement / 2);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+
+      addYaw(config.headMovement / 2, config.headRotationMax - 180);
+
+      try {
+        Thread.sleep(config.headMovement / 2);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+
+      //MinecraftForge.EVENT_BUS.post(new CurJumpProgress(0, 0, false));
+      //resetJump();
+      //regJump.startStop(false);
+      //projectJump = false;
+
+      KeyBinding.setKeyBindState(jump.getKeyCode(), false);
 
       if (ArmadilloStates.isOnline()) {
         startAgain();
@@ -105,7 +106,7 @@ public class NewSpinDrive {
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
-      addPitch(totalTime / 2, amount / 2);
+      addPitch(totalTime / 2, amount / 4);
     })
       .start();
   }
