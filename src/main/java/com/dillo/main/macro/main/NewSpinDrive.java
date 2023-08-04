@@ -17,6 +17,7 @@ import static com.dillo.main.utils.looks.DriveLook.addYaw;
 import static com.dillo.utils.BlockUtils.getBlocksLayer;
 
 import com.dillo.calls.ArmadilloStates;
+import com.dillo.calls.KillSwitch;
 import com.dillo.config.config;
 import com.dillo.events.macro.OnStartJumpEvent;
 import com.dillo.main.files.localizedData.currentRoute;
@@ -47,6 +48,8 @@ public class NewSpinDrive {
 
   public static void newSpinDrive() {
     new Thread(() -> {
+      List<BlockPos> originalBlocks = getBlocks();
+
       KeyBinding.setKeyBindState(JUMP.getKeyCode(), true);
 
       /*regJump.reset();
@@ -89,8 +92,11 @@ public class NewSpinDrive {
 
       KeyBinding.setKeyBindState(jump.getKeyCode(), false);
 
-      if (ArmadilloStates.isOnline()) {
+      if (ArmadilloStates.isOnline() && !isAdminPreventing(originalBlocks)) {
         startAgain();
+      } else {
+        ArmadilloStates.offlineState = KillSwitch.OFFLINE;
+        ArmadilloStates.currentState = null;
       }
     })
       .start();
@@ -102,6 +108,14 @@ public class NewSpinDrive {
     isDone = true;
     //SendChat.chat(String.valueOf(System.currentTimeMillis()));
     KeyBinding.setKeyBindState(jump.getKeyCode(), true);
+  }
+
+  private static boolean isAdminPreventing(List<BlockPos> prevBlocks) {
+    List<BlockPos> newBlocks = getBlocks();
+
+    return (
+      prevBlocks.size() > 0 && (newBlocks.size() == prevBlocks.size() || newBlocks.size() - 1 == prevBlocks.size())
+    );
   }
 
   private static void upDownMovement(long totalTime, float amount) {
