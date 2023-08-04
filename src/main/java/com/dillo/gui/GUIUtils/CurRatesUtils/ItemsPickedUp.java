@@ -1,5 +1,7 @@
 package com.dillo.gui.GUIUtils.CurRatesUtils;
 
+import static com.dillo.gui.GUIUtils.StringUtils.StringParser.parseStringFlawed;
+
 import com.dillo.gui.GUIUtils.StringUtils.StringParser;
 import com.dillo.gui.GUIUtils.StringUtils.StringParserClass;
 import com.google.gson.JsonObject;
@@ -22,7 +24,10 @@ public class ItemsPickedUp {
 
   @SubscribeEvent
   public void onChatReceived(ClientChatReceivedEvent event) {
-    if (event.message.getUnformattedText().contains("Gemstone")) {
+    if (
+      event.message.getUnformattedText().contains("Gemstone") &&
+      parseStringFlawed(event.message.getUnformattedText()) != null
+    ) {
       if (first) {
         //SendChat.chat(":?");
         firstTime = System.currentTimeMillis();
