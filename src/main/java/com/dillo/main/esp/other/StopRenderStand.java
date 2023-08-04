@@ -1,5 +1,6 @@
 package com.dillo.main.esp.other;
 
+import static com.dillo.config.config.armadildo;
 import static com.dillo.config.config.armadilloDefeatr;
 
 import com.dillo.utils.previous.random.ids;
@@ -22,7 +23,7 @@ public class StopRenderStand {
       entity instanceof EntityArmorStand &&
       lower.contains(ids.mc.thePlayer.getName().toLowerCase()) &&
       lower.contains("armadillo") &&
-      armadilloDefeatr
+      (armadilloDefeatr || armadildo)
     ) {
       event.setCanceled(true);
     }

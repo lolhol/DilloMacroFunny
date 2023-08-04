@@ -39,12 +39,8 @@ public class ItemsPickedUp {
       String unformattedText = event.message.getUnformattedText();
       String lowerText = unformattedText.toLowerCase();
 
-      //System.out.println(event.message.getFormattedText());
-
       time += System.currentTimeMillis() - timePoint;
       timePoint = System.currentTimeMillis();
-
-      //SendChat.chat(unformattedText + "!!!!");
 
       for (String gem : gems) {
         if (event.message.getUnformattedText().toLowerCase().contains(gem.toLowerCase())) {

@@ -34,7 +34,6 @@ public class NewRouteCommand extends Command {
           currentRoute.currentRouteFile = newRoute;
           currentRoute.strucList = new ArrayList<>();
           currentRoute.currentRoute = new ArrayList<>();
-          //SendChat.chat(String.valueOf(GetConfigFolder.getMcDir() + "/MiningInTwo/" + name));
           SendChat.chat(prefix.prefix + "Route with name " + name + " created! (and selected)");
         } catch (IOException e) {
           SendChat.chat(prefix.prefix + "Failed route creation! Run again or dm me!");

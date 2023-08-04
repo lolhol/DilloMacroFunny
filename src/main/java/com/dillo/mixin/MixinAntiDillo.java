@@ -28,7 +28,7 @@ public class MixinAntiDillo {
     double camZ,
     CallbackInfoReturnable<Boolean> cir
   ) {
-    if (config.armadilloDefeatr) {
+    if (config.armadilloDefeatr || config.armadildo) {
       cir.setReturnValue(false);
     }
   }

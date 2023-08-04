@@ -168,7 +168,8 @@ public class armadillomacro {
       new GemESP(),
       new WalkToBlockWithBaritone(),
       new StartAutoSetupWithBaritone(),
-      new RouteDestroyr(destroyer)
+      new RouteDestroyr(destroyer),
+      new ImportRouteFromWebsite()
     );
 
     registerEvents(
