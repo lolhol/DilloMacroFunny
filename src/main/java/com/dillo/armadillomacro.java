@@ -25,6 +25,9 @@ import com.dillo.gui.GUIUtils.CurRatesUtils.ItemsPickedUp;
 import com.dillo.gui.GUIUtils.CurTimeVein.CurTime;
 import com.dillo.gui.Overlay;
 import com.dillo.keybinds.Keybinds;
+import com.dillo.main.esp.chat.FilterChat;
+import com.dillo.main.esp.other.BigDildoDillo;
+import com.dillo.main.esp.other.StopRenderStand;
 import com.dillo.main.esp.route.BlockOnRouteESP;
 import com.dillo.main.failsafes.*;
 import com.dillo.main.failsafes.AminStuff.WarpOutFail;
@@ -46,6 +49,7 @@ import com.dillo.main.route.ViewClearLines.ViewClearLines;
 import com.dillo.main.teleport.TeleportMovePlayer.MoveToVertex;
 import com.dillo.main.teleport.utils.*;
 import com.dillo.main.utils.JumpProgressRegister;
+import com.dillo.main.utils.jump.GetProjectedTime;
 import com.dillo.main.utils.looks.DriveLook;
 import com.dillo.main.utils.looks.LookAt;
 import com.dillo.main.utils.looks.YawLook;
@@ -224,7 +228,11 @@ public class armadillomacro {
       new PlayerLocChangeTrigger(),
       new com.dillo.main.teleport.utils.Test(),
       new NewSpinDrive(),
-      regJump
+      regJump,
+      new GetProjectedTime(),
+      new StopRenderStand(),
+      new BigDildoDillo(),
+      new FilterChat()
     );
 
     registerKeybinds(keybinds);

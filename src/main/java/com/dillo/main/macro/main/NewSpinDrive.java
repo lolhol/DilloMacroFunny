@@ -1,5 +1,21 @@
 package com.dillo.main.macro.main;
 
+import static com.dillo.armadillomacro.regJump;
+import static com.dillo.calls.CurrentState.STATEDILLONOGETTINGON;
+import static com.dillo.config.config.attemptToClearOnSpot;
+import static com.dillo.config.config.ping;
+import static com.dillo.main.macro.main.StateDillo.canDilloOn;
+import static com.dillo.main.teleport.macro.SmartTP.smartTpBlocks;
+import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
+import static com.dillo.main.utils.GetMostOptimalPath.getBestPath;
+import static com.dillo.main.utils.GetMostOptimalPath.isClear;
+import static com.dillo.main.utils.jump.GetProjectedTime.getProjectedTime;
+import static com.dillo.main.utils.jump.GetProjectedTime.startJump;
+import static com.dillo.main.utils.keybinds.AllKeybinds.JUMP;
+import static com.dillo.main.utils.looks.DriveLook.addPitch;
+import static com.dillo.main.utils.looks.DriveLook.addYaw;
+import static com.dillo.utils.BlockUtils.getBlocksLayer;
+
 import com.dillo.calls.ArmadilloStates;
 import com.dillo.config.config;
 import com.dillo.events.macro.OnStartJumpEvent;
@@ -10,27 +26,13 @@ import com.dillo.main.utils.looks.LookYaw;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.dillo.calls.CurrentState.STATEDILLONOGETTINGON;
-import static com.dillo.config.config.attemptToClearOnSpot;
-import static com.dillo.config.config.ping;
-import static com.dillo.main.macro.main.StateDillo.canDilloOn;
-import static com.dillo.main.teleport.macro.SmartTP.smartTpBlocks;
-import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
-import static com.dillo.main.utils.GetMostOptimalPath.getBestPath;
-import static com.dillo.main.utils.GetMostOptimalPath.isClear;
-import static com.dillo.main.utils.keybinds.AllKeybinds.JUMP;
-import static com.dillo.main.utils.looks.DriveLook.addPitch;
-import static com.dillo.main.utils.looks.DriveLook.addYaw;
-import static com.dillo.utils.BlockUtils.getBlocksLayer;
 
 public class NewSpinDrive {
 
@@ -47,31 +49,31 @@ public class NewSpinDrive {
     new Thread(() -> {
       KeyBinding.setKeyBindState(JUMP.getKeyCode(), true);
 
-      try {
-        Thread.sleep(ping);
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
+      /*regJump.reset();
+      regJump.startStop(true);
+      startJump(true);*/
+
+      long time = config.headMovement / 2;
 
       upDownMovement(config.headMovement, config.headMoveUp);
-
-      //startJTime = System.currentTimeMillis();
-      addYaw(config.headMovement / 2, 180);
+      addYaw(time, 180);
       //MinecraftForge.EVENT_BUS.post(new CurJumpProgress(0, 0, true));
       //resetJump();
       //regJump.startStop(true);
       //projectJump = true;
 
       try {
-        Thread.sleep(config.headMovement / 2);
+        Thread.sleep(time);
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
 
-      addYaw(config.headMovement / 2, config.headRotationMax - 180);
+      long time2 = config.headMovement - time;
+
+      addYaw(time2, config.headRotationMax - 180);
 
       try {
-        Thread.sleep(config.headMovement / 2);
+        Thread.sleep(time2);
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
@@ -80,6 +82,10 @@ public class NewSpinDrive {
       //resetJump();
       //regJump.startStop(false);
       //projectJump = false;
+
+      /*startJump(false);
+      regJump.startStop(false);
+      regJump.reset();*/
 
       KeyBinding.setKeyBindState(jump.getKeyCode(), false);
 

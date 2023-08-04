@@ -18,6 +18,5 @@ public class CurJumpProgress extends Event {
       this.max = 0;
       this.isRest1 = true;
     }
-    //SendChat.chat(curProgress + "!!!!");
   }
 }

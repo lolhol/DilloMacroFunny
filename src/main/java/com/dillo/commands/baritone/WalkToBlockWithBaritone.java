@@ -1,8 +1,13 @@
 package com.dillo.commands.baritone;
 
+import static com.dillo.armadillomacro.pathHandler;
+
 import com.dillo.pathfinding.baritone.automine.AutoMineBaritone;
 import com.dillo.pathfinding.baritone.automine.config.BaritoneConfig;
 import com.dillo.pathfinding.baritone.automine.config.MiningType;
+import com.dillo.pathfinding.stevebot.core.StevebotApi;
+import com.dillo.pathfinding.stevebot.core.data.blockpos.BaseBlockPos;
+import com.dillo.pathfinding.stevebot.core.player.PlayerUtils;
 import com.dillo.utils.previous.SendChat;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
@@ -18,16 +23,15 @@ public class WalkToBlockWithBaritone extends Command {
     super("walkBaritone");
   }
 
+  StevebotApi api = new StevebotApi(pathHandler);
+
   @DefaultHandler
   public void handle(int x, int y, int z) {
     /*SendChat.chat(prefix.prefix + "Walking!");
     BlockPos blockToWalk = new BlockPos(x, y, z);
     autoMineBaritone.goTo(blockToWalk);*/
 
-    SendChat.chat("SSS");
-
-    AutoMineBaritone autoMineBaritone = new AutoMineBaritone(getMineBehaviour());
-    autoMineBaritone.mineFor(new BlockPos(x, y, z));
+    api.path(new BaseBlockPos(PlayerUtils.getPlayerBlockPos()), new BaseBlockPos(x, y, z), true, false);
   }
 
   final List<Block> blocksAllowedToMine = new ArrayList<Block>() {

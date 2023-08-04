@@ -1,5 +1,8 @@
 package com.dillo.main.teleport.utils;
 
+import static com.dillo.calls.CurrentState.TPSTAGE2;
+import static com.dillo.main.teleport.utils.TeleportToBlock.teleportStage2;
+
 import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.CurrentState;
 import com.dillo.calls.KillSwitch;
@@ -29,6 +32,12 @@ public class WaitThenCall {
           ArmadilloStates.currentState = null;
         } else {
           startWait = false;
+
+          if (newSetState == TPSTAGE2) {
+            teleportStage2();
+            return;
+          }
+
           ArmadilloStates.currentState = newSetState;
         }
       } else {

@@ -82,7 +82,11 @@ public class MoveToVertex {
 
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
-    if (!isStart || !ArmadilloStates.isOnline()) return;
+    if (!isStart || !ArmadilloStates.isOnline()) {
+      isStart = false;
+      curTicks = 0;
+      return;
+    }
 
     if (curTicks < amountOTicks) {
       curTicks++;

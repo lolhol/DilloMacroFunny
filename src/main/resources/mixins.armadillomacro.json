@@ -12,7 +12,8 @@
     "MixinGemESP",
     "EntityPlayerSPAccessor",
     "MinecraftAccessor",
-    "MixinModelBiped"
+    "MixinModelBiped",
+    "MixinAntiDillo"
   ],
   "mixins": [
     "RenderManagerAccessor",

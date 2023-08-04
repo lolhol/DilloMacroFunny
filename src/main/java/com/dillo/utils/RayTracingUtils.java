@@ -24,7 +24,7 @@ public class RayTracingUtils {
   public static List<BlockPos> foundCollisions = new ArrayList<>();
 
   public static Vec3 adjustLook(Vec3 block1, BlockPos destBlock, Block[] blocksToIgnore, boolean isCheck) {
-    double playerHeight = 1.52;
+    double playerHeight = 1.53;
 
     RayTracingUtils.blocksToIgnore = blocksToIgnore;
     RayTracingUtils.destBlock1 = block1;

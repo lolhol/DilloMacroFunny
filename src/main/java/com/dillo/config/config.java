@@ -188,6 +188,30 @@ public class config extends Vigilant {
 
   //Fun
 
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Stop Rendering Armadillo",
+    description = "Will stop rendering the armadillo.",
+    category = "Fun"
+  )
+  public static boolean armadilloDefeatr = false;
+
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Remove Proc Chat",
+    description = "Will Remove procs :D.",
+    category = "Fun"
+  )
+  public static boolean removeProcs = false;
+
+  @Property(
+    type = PropertyType.SWITCH,
+    name = "Make armadillo big dildo",
+    description = "Will make armadillo look like a dildo... (funny + will look... sussy...)",
+    category = "Fun"
+  )
+  public static boolean armadildo = false;
+
   @Property(type = PropertyType.SWITCH, name = "Time / Vein display", description = "What it seems.", category = "Fun")
   public static boolean timeVein = true;
 

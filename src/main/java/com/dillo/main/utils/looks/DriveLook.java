@@ -93,26 +93,4 @@ public class DriveLook {
   public static void resetJump() {
     max = 0;
   }
-
-  @SubscribeEvent
-  public void onChangeJump(CurJumpProgress event) {
-    if (!projectJump) return;
-    max += event.progress;
-
-    //SendChat.chat(String.valueOf(max));
-
-    double curJTime = System.currentTimeMillis() - startJTime;
-    double percentDone = (max / 1.5) * 100;
-    double projectedTimePPercent = curJTime / percentDone;
-    double projectedTime = projectedTimePPercent * (100 - percentDone);
-
-    //SendChat.chat(String.valueOf(projectedTime));
-
-    if (
-      System.currentTimeMillis() + projectedTime > endTime && projectedTime < config.headMovement && projectedTime > 0
-    ) {
-      SendChat.chat(String.valueOf(projectedTime) + "!!");
-      addYaw((long) projectedTime, (float) (addYawLook - add));
-    }
-  }
 }

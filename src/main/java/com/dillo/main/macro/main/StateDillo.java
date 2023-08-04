@@ -232,7 +232,6 @@ public class StateDillo {
                   }
 
                   newSpinDrive();
-                  //ArmadilloStates.currentState = SPINDRIVE;
                 } else {
                   KeyBinding.setKeyBindState(JUMP.getKeyCode(), false);
                 }

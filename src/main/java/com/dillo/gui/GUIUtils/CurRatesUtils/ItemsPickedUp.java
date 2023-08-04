@@ -70,9 +70,4 @@ public class ItemsPickedUp {
   public static long getTime() {
     return time;
   }
-
-  public static void clearEverything() {
-    time = System.currentTimeMillis();
-    jsonObject = new JsonObject();
-  }
 }

@@ -242,7 +242,8 @@ public class NukerMain {
         if (
           stringName.toLowerCase().contains("drill") ||
           stringName.toLowerCase().contains("pickaxe") ||
-          stringName.toLowerCase().contains("gauntlet")
+          stringName.toLowerCase().contains("gauntlet") ||
+          stringName.toLowerCase().contains("pickonimbus")
         ) {
           return true;
         }

@@ -120,7 +120,6 @@ public class TeleportToBlock {
     }
 
     KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
-
     WaitThenCall.waitThenCall(20, TPSTAGE3);
   }
 
