@@ -1,6 +1,5 @@
 package com.dillo.gui.hud;
 
-import com.dillo.utils.previous.random.ids;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;

@@ -6,13 +6,18 @@ import com.dillo.calls.ArmadilloStates;
 import com.dillo.config.config;
 import com.dillo.gui.GUIUtils.CurTimeVein.CurTime;
 import com.dillo.gui.GUIUtils.Element;
-import com.dillo.gui.util.FontDefiner;
-import com.dillo.gui.util.FontRender;
 import java.awt.*;
+import net.minecraft.util.Vec3;
 
 public class TimePerVein extends Element {
 
   public boolean isHeld;
+  public Vec3 drag = new Vec3(0, 0, 0);
+
+  @Override
+  public Vec3 drag() {
+    return drag;
+  }
 
   public TimePerVein() {
     width = 140;
@@ -45,8 +50,9 @@ public class TimePerVein extends Element {
   }
 
   @Override
-  public void onClick() {
+  public void onClick(int mouseX, int mouseY) {
     isHeld = true;
+    drag = new Vec3(mouseX, mouseY, 0);
   }
 
   @Override
@@ -54,6 +60,7 @@ public class TimePerVein extends Element {
     isHeld = false;
     setX(mouseX);
     setY(mouseY);
+    drag = new Vec3(0, 0, 0);
   }
 
   @Override

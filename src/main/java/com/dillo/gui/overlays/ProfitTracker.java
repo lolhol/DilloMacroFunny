@@ -1,23 +1,31 @@
 package com.dillo.gui.overlays;
 
 import static com.dillo.gui.GUIUtils.CurRatesUtils.ItemsPickedUp.started;
-import static com.dillo.gui.Overlay.drawWithColor;
 
-import com.dillo.calls.ArmadilloStates;
 import com.dillo.config.config;
 import com.dillo.gui.GUIUtils.CurRatesUtils.GetTotalEarned;
 import com.dillo.gui.GUIUtils.CurRatesUtils.ItemsPickedUp;
 import com.dillo.gui.GUIUtils.Element;
+import java.awt.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.util.vector.Vector;
 
 public class ProfitTracker extends Element {
 
   public boolean isHeld;
+  public Vec3 drag = new Vec3(0, 0, 0);
 
   public ProfitTracker() {
-    width = 140;
+    width = 110;
     height = 10;
+  }
+
+  @Override
+  public Vec3 drag() {
+    return drag;
   }
 
   @Override
@@ -46,8 +54,9 @@ public class ProfitTracker extends Element {
   }
 
   @Override
-  public void onClick() {
+  public void onClick(int mouseX, int mouseY) {
     isHeld = true;
+    drag = new Vec3(mouseX, mouseY, 0);
   }
 
   @Override
@@ -55,6 +64,7 @@ public class ProfitTracker extends Element {
     isHeld = false;
     setX(mouseX);
     setY(mouseY);
+    drag = new Vec3(0, 0, 0);
   }
 
   @Override
@@ -67,7 +77,16 @@ public class ProfitTracker extends Element {
     if (started) {
       if (ItemsPickedUp.timePoint + 10000 >= System.currentTimeMillis()) {
         if (GetTotalEarned.totalEarned().totalEarned > 0) {
-          renderProfitTracker(false, getX(), getY(), config.profitTrackerSize);
+          GetTotalEarned.TotalEarning earnings = GetTotalEarned.totalEarned();
+
+          renderProfitTracker(
+            false,
+            getX(),
+            getY(),
+            config.profitTrackerSize,
+            earnings.totalEarningString,
+            earnings.perHour
+          );
         } else {
           started = false;
           GetTotalEarned.clearTotalEarned();
@@ -82,53 +101,30 @@ public class ProfitTracker extends Element {
 
   @Override
   public void editorDraw(int x, int y) {
-    renderProfitTracker(false, x, y, config.profitTrackerSize);
+    renderProfitTracker(false, x, y, config.profitTrackerSize, "69.420", "69.420");
   }
 
-  private void renderProfitTracker(boolean isNon, int x, int y, int size) {
+  private void renderProfitTracker(
+    boolean isNon,
+    int x,
+    int y,
+    int size,
+    String amountOCoinTotal,
+    String amountOCoinAnHour
+  ) {
     if (isNon) return;
 
-    GetTotalEarned.TotalEarning earnings = GetTotalEarned.totalEarned();
+    String text = "Total Earned: " + amountOCoinTotal + "$";
+    String textPerHour = "Per hour: " + amountOCoinAnHour + "$/hr";
 
-    String text = "Total Earned: " + earnings.totalEarningString + "$";
-    String textPerHour = "Per hour: " + earnings.perHour + "$/hr";
-    drawTextInBox(text, textPerHour, x, y, 30 * size / 2, 20 * size / 2);
+    draw(textPerHour, x, y + 10, Color.green);
+    draw(text, x, y, Color.green);
+    //drawTextInBox(text, textPerHour, x, y, 30 * size / 2, 20 * size / 2);
   }
 
-  private static void draw(String text, int x, int y) {
+  private static void draw(String text, int x, int y, Color color) {
     Minecraft mc = Minecraft.getMinecraft();
     FontRenderer fontRenderer = mc.fontRendererObj;
-    fontRenderer.drawStringWithShadow(text, x, y, 0xFFFFFF);
-  }
-
-  private static void drawBoxAround(int x, int y, int width, int height) {
-    StringBuilder topText = new StringBuilder();
-
-    for (int i = 0; i < width; i++) {
-      topText.append("_");
-    }
-
-    draw(topText.toString(), x, y - height * 3 - 5);
-
-    int currDepth = y;
-
-    for (int i = 0; i < height; i++) {
-      draw("|", x, currDepth);
-      currDepth -= 3;
-    }
-
-    draw(topText.toString(), x, y);
-
-    int currDepth1 = y;
-    for (int i = 0; i < height; i++) {
-      draw("|", x + width * 6, currDepth1);
-      currDepth1 -= 3;
-    }
-  }
-
-  private static void drawTextInBox(String text1, String text2, int x, int y, int width, int height) {
-    drawBoxAround(x, y, width, height);
-    draw(text1, x + width / 2, y - height / 2 - 10);
-    draw(text2, x + width / 2, y - 25 - height / 2);
+    fontRenderer.drawStringWithShadow(text, x, y, color.getRGB());
   }
 }

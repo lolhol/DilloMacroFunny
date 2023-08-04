@@ -699,7 +699,7 @@ public class config extends Vigilant {
   public static config INSTANCE = new config();
 
   public config() {
-    super(new File("./config/MiningInTwoConf.toml"));
+    super(new File("./MiningInTwoConf.toml"));
     initialize();
   }
 }

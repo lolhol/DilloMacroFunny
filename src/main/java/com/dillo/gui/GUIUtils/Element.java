@@ -1,10 +1,17 @@
 package com.dillo.gui.GUIUtils;
 
+import net.minecraft.util.Vec3;
+
 public class Element {
 
   public boolean isHudModule = true;
   public int width = 0;
   public int height = 0;
+  public Vec3 drag = null;
+
+  public Vec3 drag() {
+    return null;
+  }
 
   public int getX() {
     return 0;
@@ -24,7 +31,7 @@ public class Element {
 
   public void mouseReleased(int mouseX, int mouseY) {}
 
-  public void onClick() {}
+  public void onClick(int mouseX, int mouseY) {}
 
   public boolean enabled() {
     return true;

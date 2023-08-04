@@ -21,6 +21,7 @@ public class CheckFile {
   public static File file = new File(GetConfigFolder.getMcDir() + "/MiningInTwo");
   public static File configs = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs");
   public static File configMain = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs/configsMain.json");
+  public static File configDefault = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs/defaultConfig.json");
   public static File configFile = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/default-route.json");
   public static File answersFile = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/chatAnswers.json");
   private static boolean startCheck = false;
@@ -41,27 +42,53 @@ public class CheckFile {
       configs.mkdirs();
     }
 
+    StringBuilder content = new StringBuilder();
     if (!configMain.exists()) {
       try {
         configMain.createNewFile();
       } catch (IOException e) {}
+    } else {
+      try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+          content.append(line);
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
 
-    StringBuilder content = new StringBuilder();
-    try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
+    StringBuilder contentDefault = new StringBuilder();
+    try (BufferedReader reader = new BufferedReader(new FileReader(configDefault))) {
       String line;
       while ((line = reader.readLine()) != null) {
-        content.append(line);
+        contentDefault.append(line);
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
-    String string;
 
-    if (content != null) {
-      string = content.toString();
-      selectRoute(string);
+    if (
+      configDefault.exists() &&
+      !Objects.equals(contentDefault.toString(), "") &&
+      !Objects.equals(contentDefault.toString(), " ")
+    ) {
+      if (!content.toString().equals("") && !content.toString().equals(" ")) {
+        String string;
+        string = content.toString();
+        selectConfigFromName(string);
+      } else {
+        selectConfigFromName("defaultConfig");
+      }
+    } else {
+      try {
+        configDefault.createNewFile();
+      } catch (IOException e) {}
+
+      presetConfig(new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs/defaultConfig.json"));
+      selectConfigFromName("defaultConfig");
     }
+
     if (!answersFile.exists()) {
       Gson gson = new Gson();
 
@@ -98,7 +125,7 @@ public class CheckFile {
     }
   }
 
-  private static void selectRoute(String name) {
+  private static void selectConfigFromName(String name) {
     if (Objects.equals(name, "") || Objects.equals(name, " ") || name == null) return;
 
     File configFile;
@@ -155,6 +182,31 @@ public class CheckFile {
           }
         }
       }
+    }
+  }
+
+  public static void presetConfig(File file) {
+    JsonArray main = new JsonArray();
+    Gson gson = new Gson();
+
+    for (Field field : config.class.getFields()) {
+      try {
+        if (!field.getName().equals("INSTANCE")) {
+          JsonObject jsonSub = new JsonObject();
+          jsonSub.add(field.getName(), new JsonPrimitive(field.get(null).toString()));
+          main.add(jsonSub);
+        }
+      } catch (IllegalAccessException e) {}
+    }
+
+    String mainJsonString = gson.toJson(main);
+
+    try {
+      FileWriter writer = new FileWriter(file);
+      writer.write(mainJsonString);
+      writer.close();
+    } catch (Exception e) {
+      SendChat.chat(prefix.prefix + "Failed backing up into file!");
     }
   }
 }

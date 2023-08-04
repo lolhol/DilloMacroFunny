@@ -12,8 +12,10 @@ import com.dillo.events.PlayerMoveEvent;
 import com.dillo.main.utils.looks.LookAt;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -22,6 +24,41 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class MobKillerMain {
 
   boolean start;
+
+  // Will add more mobs in the future for now this is all i have (hypixel wiki) if u want me to add more dm me all the mob names :O :D
+
+  public static String[] mobNames = new String[] {
+    "sludge",
+    "jungle key guardian",
+    "butterfly",
+    "Yog",
+    "Blaze",
+    "Bal",
+    "Scatha Worm",
+    "Automaton",
+    "Grunt",
+    "Executive Sebastian",
+    "Executive Wendy",
+    "Executive Viper",
+    "Boss Corleone",
+    "Thyst",
+    "Sneaky Creeper",
+    "Lapis Zombie",
+    "Redstone Pigman",
+    "Emerald Slime",
+    "Miner Zombie",
+    "Miner Skeleton",
+    "Goblin",
+    "Water Worm",
+    "Poisoned Water Worm",
+    "Flaming Worm",
+    "Zombie Miner",
+    "Lava Blaze",
+    "Lava Pigman",
+    "Weakling",
+    "Kalhuiki Tribe",
+    "Team Treasurite",
+  };
 
   public void killMobsAround(float range, CurrentState newState) {
     start = true;

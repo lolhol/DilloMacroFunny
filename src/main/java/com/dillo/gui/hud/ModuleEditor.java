@@ -3,12 +3,11 @@ package com.dillo.gui.hud;
 import static com.dillo.armadillomacro.allOverlays;
 
 import com.dillo.gui.GUIUtils.Element;
+import com.dillo.gui.overlays.ProfitTracker;
 import com.dillo.utils.previous.SendChat;
 import java.io.IOException;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 
 /**
@@ -30,6 +29,7 @@ public class ModuleEditor extends GuiScreen {
     for (Element element : allOverlays) {
       if (!element.isHeld()) {
         element.editorDraw(element.getX(), element.getY());
+
         drawRectWithOutline(
           element.getX() - 2,
           element.getY() - 2,
@@ -40,8 +40,12 @@ public class ModuleEditor extends GuiScreen {
         continue;
       }
 
-      element.editorDraw(mouseX, mouseY);
-      drawRectWithOutline(mouseX - 2, mouseY - 2, mouseX + element.width, mouseY + element.height, 0xFFFFFFFF);
+      int x = (int) (mouseX - (element.drag().xCoord - element.getX()));
+      int y = (int) (mouseY - (element.drag().yCoord - element.getY()));
+
+      element.editorDraw(x, y);
+
+      drawRectWithOutline(x - 2, y - 2, x + element.width, y + element.height, 0xFFFFFFFF);
     }
     //drawRect(mouseX - 2, mouseY - 2, mouseX + 2, mouseY + 2, 0xFFFFFFFF);
   }
@@ -64,7 +68,7 @@ public class ModuleEditor extends GuiScreen {
     for (Element element : allOverlays) {
       if (isHover(element.getX(), element.getY(), element.width, element.height, mouseX, mouseY)) {
         SendChat.chat("!!!");
-        element.onClick();
+        element.onClick(mouseX, mouseY);
       }
     }
   }
@@ -73,8 +77,10 @@ public class ModuleEditor extends GuiScreen {
   public void mouseReleased(int mouseX, int mouseY, int state) {
     for (Element element : allOverlays) {
       if (element.isHeld()) {
-        SendChat.chat("!!!1");
-        element.mouseReleased(mouseX, mouseY);
+        element.mouseReleased(
+          (int) (mouseX - (element.drag().xCoord - element.getX())),
+          (int) (mouseY - (element.drag().yCoord - element.getY()))
+        );
       }
     }
   }

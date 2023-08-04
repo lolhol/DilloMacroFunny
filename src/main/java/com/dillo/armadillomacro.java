@@ -19,6 +19,7 @@ import com.dillo.commands.UtilCommands.*;
 import com.dillo.commands.UtilCommands.Test;
 import com.dillo.commands.baritone.StartAutoSetupWithBaritone;
 import com.dillo.commands.baritone.WalkToBlockWithBaritone;
+import com.dillo.config.AutoSaveConfig;
 import com.dillo.events.*;
 import com.dillo.gui.GUIUtils.CurRatesUtils.GetCurGemPrice;
 import com.dillo.gui.GUIUtils.CurRatesUtils.ItemsPickedUp;
@@ -240,13 +241,15 @@ public class armadillomacro {
       new StopRenderStand(),
       new BigDildoDillo(),
       new FilterChat(),
-      new ModuleEditorTrigger()
+      new ModuleEditorTrigger(),
+      new AutoSaveConfig()
     );
 
     registerKeybinds(keybinds);
     makeAcusation(new File(GetConfigFolder.getMcDir() + "/MiningInTwo/chatAnswers.json"));
 
     new Thread(GetCurGemPrice::getCurrGemPrice).start();
+
     //////////////////////////////////
     // STEVEBOT PATHFINDING MODULE  //
     /////////////////////////////////
