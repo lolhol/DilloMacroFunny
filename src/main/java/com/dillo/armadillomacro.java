@@ -23,7 +23,11 @@ import com.dillo.events.*;
 import com.dillo.gui.GUIUtils.CurRatesUtils.GetCurGemPrice;
 import com.dillo.gui.GUIUtils.CurRatesUtils.ItemsPickedUp;
 import com.dillo.gui.GUIUtils.CurTimeVein.CurTime;
+import com.dillo.gui.GUIUtils.Element;
 import com.dillo.gui.Overlay;
+import com.dillo.gui.hud.ModuleEditorTrigger;
+import com.dillo.gui.overlays.ProfitTracker;
+import com.dillo.gui.overlays.TimePerVein;
 import com.dillo.keybinds.Keybinds;
 import com.dillo.main.esp.chat.FilterChat;
 import com.dillo.main.esp.other.BigDildoDillo;
@@ -76,6 +80,7 @@ import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -118,6 +123,7 @@ public class armadillomacro {
   public static File modFile = null;
 
   public static ArrayList<KeyBinding> keybinds = new ArrayList<>();
+  public static List<Element> allOverlays = new ArrayList<>();
   public static JumpProgressRegister regJump = new JumpProgressRegister();
 
   @Mod.EventHandler
@@ -233,7 +239,8 @@ public class armadillomacro {
       new GetProjectedTime(),
       new StopRenderStand(),
       new BigDildoDillo(),
-      new FilterChat()
+      new FilterChat(),
+      new ModuleEditorTrigger()
     );
 
     registerKeybinds(keybinds);
@@ -245,6 +252,12 @@ public class armadillomacro {
     /////////////////////////////////
 
     eventProducer.onInit();
+    addAllOverlays();
+  }
+
+  public void addAllOverlays() {
+    allOverlays.add(new TimePerVein());
+    allOverlays.add(new ProfitTracker());
   }
 
   private void setup() {

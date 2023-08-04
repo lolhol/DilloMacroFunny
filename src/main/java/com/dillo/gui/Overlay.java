@@ -1,5 +1,6 @@
 package com.dillo.gui;
 
+import static com.dillo.armadillomacro.allOverlays;
 import static com.dillo.config.config.*;
 import static com.dillo.gui.GUIUtils.CurRatesUtils.ItemsPickedUp.started;
 import static com.dillo.gui.GUIUtils.MatchServer.IsChecked.isChecked;
@@ -11,6 +12,7 @@ import com.dillo.gui.GUIUtils.CurRatesUtils.GetTotalEarned;
 import com.dillo.gui.GUIUtils.CurRatesUtils.ItemsPickedUp;
 import com.dillo.gui.GUIUtils.CurTimeVein.CurTime;
 import com.dillo.gui.GUIUtils.DilloRouteUtils.IsInBlockRange;
+import com.dillo.gui.GUIUtils.Element;
 import com.dillo.gui.GUIUtils.totalveins.TotalVeinsMain;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
@@ -36,7 +38,11 @@ public class Overlay {
       return;
     }
 
-    if (timeVein) {
+    for (Element element : allOverlays) {
+      element.guiDraw();
+    }
+
+    /*if (timeVein) {
       long currTime = CurTime.curTime();
 
       if (currTime > 0) {
@@ -46,8 +52,9 @@ public class Overlay {
           drawWithColor("Current Time/Vein: NONE", 10, 20, Color.GREEN);
         }
       }
-    }
+    }*/
 
+    /*
     if (started) {
       if (ItemsPickedUp.timePoint + 10000 >= System.currentTimeMillis()) {
         if (GetTotalEarned.totalEarned().totalEarned > 0) {
@@ -72,6 +79,7 @@ public class Overlay {
         GetTotalEarned.clearTotalEarned();
       }
     }
+     */
 
     if (onRouteCheck) {
       if (IsInBlockRange.isInCheckRange()) {
@@ -163,7 +171,7 @@ public class Overlay {
     fontRenderer.drawStringWithShadow(text, x, y, 0xFFFFFF);
   }
 
-  private static void drawWithColor(String text, int x, int y, Color color) {
+  public static void drawWithColor(String text, int x, int y, Color color) {
     Minecraft mc = Minecraft.getMinecraft();
     FontRenderer fontRenderer = mc.fontRendererObj;
     fontRenderer.drawStringWithShadow(text, x, y, color.getRGB());

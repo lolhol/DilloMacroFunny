@@ -1,5 +1,7 @@
 package com.dillo.config;
 
+import com.dillo.gui.hud.ModuleEditor;
+import com.dillo.utils.previous.random.ids;
 import gg.essential.vigilance.Vigilant;
 import gg.essential.vigilance.data.Property;
 import gg.essential.vigilance.data.PropertyType;
@@ -8,6 +10,11 @@ import java.io.File;
 public class config extends Vigilant {
 
   // MAIN
+
+  @Property(type = PropertyType.BUTTON, name = "Open Customize HUD GUI", description = "", category = "Main")
+  public void displayHUD() {
+    ids.mc.displayGuiScreen(new ModuleEditor());
+  }
 
   @Property(
     type = PropertyType.SLIDER,
@@ -557,26 +564,6 @@ public class config extends Vigilant {
 
   @Property(
     type = PropertyType.SLIDER,
-    name = "Profit tracker X",
-    description = "X",
-    category = "Profit Tracker",
-    min = 1,
-    max = 1000
-  )
-  public static int profitTrackerX = 50;
-
-  @Property(
-    type = PropertyType.SLIDER,
-    name = "Profit tracker Y",
-    description = "Y",
-    category = "Profit Tracker",
-    min = 1,
-    max = 1000
-  )
-  public static int profitTrackerY = 50;
-
-  @Property(
-    type = PropertyType.SLIDER,
     name = "Profit tracker size",
     description = "size || WARNING MAY NOT WORK PROPERLY! ",
     category = "Profit Tracker",
@@ -656,6 +643,46 @@ public class config extends Vigilant {
     max = 360
   )
   public static int nukerFOV = 150;
+
+  @Property(
+    type = PropertyType.SLIDER,
+    name = "Time/Vein X",
+    description = ".",
+    category = "Locations",
+    min = 0,
+    max = 1000
+  )
+  public static int timeVeinX = 150;
+
+  @Property(
+    type = PropertyType.SLIDER,
+    name = "Time/Vein Y",
+    description = ".",
+    category = "Locations",
+    min = 0,
+    max = 1000
+  )
+  public static int timeVeinY = 150;
+
+  @Property(
+    type = PropertyType.SLIDER,
+    name = "Profit tracker X",
+    description = "X",
+    category = "Locations",
+    min = 0,
+    max = 1000
+  )
+  public static int profitTrackerX = 50;
+
+  @Property(
+    type = PropertyType.SLIDER,
+    name = "Profit tracker Y",
+    description = "Y",
+    category = "Locations",
+    min = 0,
+    max = 1000
+  )
+  public static int profitTrackerY = 50;
 
   // TO DO:
 
