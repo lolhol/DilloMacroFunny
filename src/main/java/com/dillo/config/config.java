@@ -644,10 +644,12 @@ public class config extends Vigilant {
   )
   public static int nukerFOV = 150;
 
+  // Locations
+
   @Property(
     type = PropertyType.SLIDER,
     name = "Time/Vein X",
-    description = ".",
+    description = "X",
     category = "Locations",
     min = 0,
     max = 1000
@@ -657,7 +659,7 @@ public class config extends Vigilant {
   @Property(
     type = PropertyType.SLIDER,
     name = "Time/Vein Y",
-    description = ".",
+    description = "Y",
     category = "Locations",
     min = 0,
     max = 1000
@@ -683,6 +685,26 @@ public class config extends Vigilant {
     max = 1000
   )
   public static int profitTrackerY = 50;
+
+  @Property(
+    type = PropertyType.SLIDER,
+    name = "Big Route Check Text X",
+    description = "X",
+    category = "Locations",
+    min = 0,
+    max = 1000
+  )
+  public static int routeCheckX = 50;
+
+  @Property(
+    type = PropertyType.SLIDER,
+    name = "Big Route Check Text Y",
+    description = "Y",
+    category = "Locations",
+    min = 0,
+    max = 1000
+  )
+  public static int routeCheckY = 50;
 
   // TO DO:
 

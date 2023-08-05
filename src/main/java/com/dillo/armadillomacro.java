@@ -27,6 +27,7 @@ import com.dillo.gui.GUIUtils.CurTimeVein.CurTime;
 import com.dillo.gui.GUIUtils.Element;
 import com.dillo.gui.Overlay;
 import com.dillo.gui.hud.ModuleEditorTrigger;
+import com.dillo.gui.overlays.OnRouteCheck;
 import com.dillo.gui.overlays.ProfitTracker;
 import com.dillo.gui.overlays.TimePerVein;
 import com.dillo.keybinds.Keybinds;
@@ -179,71 +180,73 @@ public class armadillomacro {
       new ImportRouteFromWebsite()
     );
 
-    registerEvents(
-      new LookAt(),
-      new ArmadilloMain(),
-      new StateDillo(),
-      new RenderSingleLineTwoPoints(),
-      new RenderOneBlockMod(),
-      new RenderMultipleBlocksMod(),
-      new RenderPoints(),
-      new BlockOnRouteESP(),
-      new WaitThenCall(),
-      new WaitThenCall(),
-      new IsOnBlock(),
-      new RenderMultipleLines(),
-      new WalkOnPath(),
-      new DestroyBlock(),
-      new Keybinds(),
-      new GetOffArmadillo(),
-      new ServerTPSFailsafe(),
-      new OverlayMod(),
-      new LookWhileGoingDown(),
-      new GetRemoteControl(),
-      new PauseMacro(),
-      new Movements(),
-      new PlayerFailsafe(),
-      new AnswerPPL(),
-      new ItemsPickedUp(),
-      new RemoteControl(),
-      new RemoteControlChat(),
-      new UsePathfinderInstead(),
-      new NukerMain(),
-      new Overlay(),
-      new CurTime(),
-      new StructurePoints(),
-      new LegitRouteClear(),
-      new ViewClearLines(),
-      new WalkForward(),
-      new Test(),
-      new TooFarAwayFailsafe(),
-      new ReFuelDrill(),
-      new ReFuelDrillTriger(),
-      new ThrowAtEnd(),
-      new CheckFile(),
-      new YawLook(),
-      new PassReNew(),
-      new DriveLook(),
-      new TeleportToBlock(),
-      new PlaceCobbleModule(),
-      new SetupMain(),
-      destroyer,
-      vertexMover,
-      mobKiller,
-      new WarpOutFail(),
-      new RemoveBlockFailsafe(),
-      new RegistersStevebot(),
-      new PlayerLocChangeTrigger(),
-      new com.dillo.main.teleport.utils.Test(),
-      new NewSpinDrive(),
-      regJump,
-      new GetProjectedTime(),
-      new StopRenderStand(),
-      new BigDildoDillo(),
-      new FilterChat(),
-      new ModuleEditorTrigger(),
-      new AutoSaveConfig()
-    );
+    try {
+      registerEvents(
+        new LookAt(),
+        new ArmadilloMain(),
+        new StateDillo(),
+        new RenderSingleLineTwoPoints(),
+        new RenderOneBlockMod(),
+        new RenderMultipleBlocksMod(),
+        new RenderPoints(),
+        new BlockOnRouteESP(),
+        new WaitThenCall(),
+        new WaitThenCall(),
+        new IsOnBlock(),
+        new RenderMultipleLines(),
+        new WalkOnPath(),
+        new DestroyBlock(),
+        new Keybinds(),
+        new GetOffArmadillo(),
+        new ServerTPSFailsafe(),
+        new OverlayMod(),
+        new LookWhileGoingDown(),
+        new GetRemoteControl(),
+        new PauseMacro(),
+        new Movements(),
+        new PlayerFailsafe(),
+        new AnswerPPL(),
+        new ItemsPickedUp(),
+        new RemoteControl(),
+        new RemoteControlChat(),
+        new UsePathfinderInstead(),
+        new NukerMain(),
+        new Overlay(),
+        new CurTime(),
+        new StructurePoints(),
+        new LegitRouteClear(),
+        new ViewClearLines(),
+        new WalkForward(),
+        new Test(),
+        new TooFarAwayFailsafe(),
+        new ReFuelDrill(),
+        new ReFuelDrillTriger(),
+        new ThrowAtEnd(),
+        new YawLook(),
+        new PassReNew(),
+        new DriveLook(),
+        new TeleportToBlock(),
+        new PlaceCobbleModule(),
+        new SetupMain(),
+        destroyer,
+        vertexMover,
+        mobKiller,
+        new WarpOutFail(),
+        new RemoveBlockFailsafe(),
+        new RegistersStevebot(),
+        new PlayerLocChangeTrigger(),
+        new NewSpinDrive(),
+        regJump,
+        new GetProjectedTime(),
+        new StopRenderStand(),
+        new BigDildoDillo(),
+        new FilterChat(),
+        new ModuleEditorTrigger(),
+        new AutoSaveConfig()
+      );
+    } catch (NoClassDefFoundError e) {
+      System.out.println(e.getClass() + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    }
 
     registerKeybinds(keybinds);
     makeAcusation(new File(GetConfigFolder.getMcDir() + "/MiningInTwo/chatAnswers.json"));
@@ -261,6 +264,7 @@ public class armadillomacro {
   public void addAllOverlays() {
     allOverlays.add(new TimePerVein());
     allOverlays.add(new ProfitTracker());
+    allOverlays.add(new OnRouteCheck());
   }
 
   private void setup() {
