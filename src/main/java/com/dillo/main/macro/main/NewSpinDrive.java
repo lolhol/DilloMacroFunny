@@ -1,16 +1,12 @@
 package com.dillo.main.macro.main;
 
-import static com.dillo.armadillomacro.regJump;
 import static com.dillo.calls.CurrentState.STATEDILLONOGETTINGON;
 import static com.dillo.config.config.attemptToClearOnSpot;
-import static com.dillo.config.config.ping;
 import static com.dillo.main.macro.main.StateDillo.canDilloOn;
 import static com.dillo.main.teleport.macro.SmartTP.smartTpBlocks;
 import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
 import static com.dillo.main.utils.GetMostOptimalPath.getBestPath;
 import static com.dillo.main.utils.GetMostOptimalPath.isClear;
-import static com.dillo.main.utils.jump.GetProjectedTime.getProjectedTime;
-import static com.dillo.main.utils.jump.GetProjectedTime.startJump;
 import static com.dillo.main.utils.keybinds.AllKeybinds.JUMP;
 import static com.dillo.main.utils.looks.DriveLook.addPitch;
 import static com.dillo.main.utils.looks.DriveLook.addYaw;
@@ -29,11 +25,13 @@ import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import scala.Int;
 
 public class NewSpinDrive {
 
@@ -42,14 +40,13 @@ public class NewSpinDrive {
   public static java.util.Random random = new java.util.Random();
   public static final KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
   public static GetMostOptimalPath.OptimalPath path = null;
+  public static List<BlockPos> originalBlocks = new ArrayList<>();
   public static int driveClearCount = 0;
   public static boolean isFirst = true;
   private static boolean isDone;
 
   public static void newSpinDrive() {
     new Thread(() -> {
-      List<BlockPos> originalBlocks = getBlocks();
-
       KeyBinding.setKeyBindState(JUMP.getKeyCode(), true);
 
       /*regJump.reset();
@@ -92,7 +89,11 @@ public class NewSpinDrive {
 
       KeyBinding.setKeyBindState(jump.getKeyCode(), false);
 
-      if (ArmadilloStates.isOnline() && !isAdminPreventing(originalBlocks)) {
+      Pair<Boolean, Integer> pair = isAdminPreventing(originalBlocks);
+
+      if (ArmadilloStates.isOnline() && !pair.getKey()) {
+        // Later => add the % vein
+
         startAgain();
       } else {
         ArmadilloStates.offlineState = KillSwitch.OFFLINE;
@@ -110,12 +111,22 @@ public class NewSpinDrive {
     KeyBinding.setKeyBindState(jump.getKeyCode(), true);
   }
 
-  private static boolean isAdminPreventing(List<BlockPos> prevBlocks) {
-    List<BlockPos> newBlocks = getBlocks();
+  private static Pair<Boolean, Integer> isAdminPreventing(List<BlockPos> prevBlocks) {
+    int air = 0;
+    int nonair = 0;
 
-    return (
-      prevBlocks.size() > 0 && (newBlocks.size() == prevBlocks.size() || newBlocks.size() - 1 == prevBlocks.size())
-    );
+    for (BlockPos block : prevBlocks) {
+      if (
+        ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass ||
+        ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass_pane
+      ) {
+        nonair++;
+      } else {
+        air++;
+      }
+    }
+
+    return new Pair<>(prevBlocks.size() == air || prevBlocks.size() - 3 < air, nonair);
   }
 
   private static void upDownMovement(long totalTime, float amount) {

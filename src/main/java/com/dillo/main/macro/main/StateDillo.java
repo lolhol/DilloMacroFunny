@@ -5,7 +5,7 @@ import static com.dillo.calls.CurrentState.ROUTEOBSTRUCTEDCLEAR;
 import static com.dillo.calls.CurrentState.SPINDRIVE;
 import static com.dillo.config.config.fasterDillo;
 import static com.dillo.config.config.ping;
-import static com.dillo.main.macro.main.NewSpinDrive.newSpinDrive;
+import static com.dillo.main.macro.main.NewSpinDrive.*;
 import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
 import static com.dillo.main.utils.keybinds.AllKeybinds.JUMP;
 import static com.dillo.main.utils.looks.DriveLook.reset;
@@ -102,6 +102,8 @@ public class StateDillo {
         }
 
         swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
+
+        originalBlocks = getBlocks();
 
         NewSpinDrive.putAllTogether();
 
