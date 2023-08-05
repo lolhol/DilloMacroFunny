@@ -6,12 +6,11 @@ import com.dillo.config.config;
 import com.dillo.gui.GUIUtils.CurRatesUtils.GetTotalEarned;
 import com.dillo.gui.GUIUtils.CurRatesUtils.ItemsPickedUp;
 import com.dillo.gui.GUIUtils.Element;
-import java.awt.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.util.vector.Vector;
+
+import java.awt.*;
 
 public class ProfitTracker extends Element {
 
@@ -21,6 +20,12 @@ public class ProfitTracker extends Element {
   public ProfitTracker() {
     width = 110;
     height = 20;
+  }
+
+  private static void draw(String text, int x, int y, Color color) {
+    Minecraft mc = Minecraft.getMinecraft();
+    FontRenderer fontRenderer = mc.fontRendererObj;
+    fontRenderer.drawStringWithShadow(text, x, y, color.getRGB());
   }
 
   @Override
@@ -120,11 +125,5 @@ public class ProfitTracker extends Element {
     draw(textPerHour, x, y + 10, Color.green);
     draw(text, x, y, Color.green);
     //drawTextInBox(text, textPerHour, x, y, 30 * size / 2, 20 * size / 2);
-  }
-
-  private static void draw(String text, int x, int y, Color color) {
-    Minecraft mc = Minecraft.getMinecraft();
-    FontRenderer fontRenderer = mc.fontRendererObj;
-    fontRenderer.drawStringWithShadow(text, x, y, color.getRGB());
   }
 }
