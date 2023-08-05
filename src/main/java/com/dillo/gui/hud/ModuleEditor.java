@@ -3,6 +3,7 @@ package com.dillo.gui.hud;
 import static com.dillo.armadillomacro.allOverlays;
 
 import com.dillo.gui.GUIUtils.Element;
+import com.dillo.gui.overlays.OnRouteCheck;
 import com.dillo.gui.overlays.ProfitTracker;
 import com.dillo.utils.previous.SendChat;
 import java.io.IOException;
@@ -28,6 +29,20 @@ public class ModuleEditor extends GuiScreen {
     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     for (Element element : allOverlays) {
       if (!element.isHeld()) {
+        /*if (element instanceof OnRouteCheck) {
+          element.editorDraw(element.getX() / 4, element.getY() / 4);
+
+          drawRectWithOutline(
+            element.getX() - 2,
+            element.getY() - 2,
+            element.getX() + element.width,
+            element.getY() + element.height,
+            0xFFFFFFFF
+          );
+
+          continue;
+        }*/
+
         element.editorDraw(element.getX(), element.getY());
 
         drawRectWithOutline(
@@ -37,6 +52,7 @@ public class ModuleEditor extends GuiScreen {
           element.getY() + element.height,
           0xFFFFFFFF
         );
+
         continue;
       }
 
@@ -67,7 +83,6 @@ public class ModuleEditor extends GuiScreen {
 
     for (Element element : allOverlays) {
       if (isHover(element.getX(), element.getY(), element.width, element.height, mouseX, mouseY)) {
-        SendChat.chat("!!!");
         element.onClick(mouseX, mouseY);
       }
     }

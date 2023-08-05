@@ -20,7 +20,7 @@ public class ProfitTracker extends Element {
 
   public ProfitTracker() {
     width = 110;
-    height = 10;
+    height = 20;
   }
 
   @Override
