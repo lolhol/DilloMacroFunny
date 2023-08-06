@@ -115,7 +115,7 @@ public class ModuleEditor extends GuiScreen {
     );
 
     buttonList.add(button);
-    ButtonGuiClass newClass = new ButtonGuiClass(button, Color.GREEN, , Color.GREEN, Color.green, "On", true, option1, option2, callBack);
+    ButtonGuiClass newClass = new ButtonGuiClass(button, Color.GREEN , Color.GREEN, Color.green, "On", true, option1, option2, callBack);
     buttons.add(newClass);
     return newClass;
   }
