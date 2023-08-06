@@ -6,10 +6,11 @@ import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.utils.DistFromXPlayer;
 import com.dillo.utils.previous.BoxRenderer;
 import com.dillo.utils.renderUtils.RenderString;
-import java.awt.*;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.awt.*;
 
 public class BlockOnRouteESP {
 
@@ -21,7 +22,7 @@ public class BlockOnRouteESP {
           BlockPos block = currentRoute.currentRoute.get(i);
 
           if (DistFromXPlayer.distFromXPlayer(block.getX(), block.getY(), block.getZ()) <= config.routeDist) {
-            if (GetFailPointsList.failListPoints.size() > 0 && GetFailPointsList.failListPoints.contains(i - 1)) {
+            if (GetFailPointsList.failListPoints.size() > 0 && GetFailPointsList.failListPoints.contains(i)) {
               BoxRenderer.drawBox(
                 block.getX(),
                 block.getY(),

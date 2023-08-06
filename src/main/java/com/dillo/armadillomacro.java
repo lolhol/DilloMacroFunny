@@ -27,9 +27,9 @@ import com.dillo.gui.GUIUtils.CurTimeVein.CurTime;
 import com.dillo.gui.GUIUtils.Element;
 import com.dillo.gui.Overlay;
 import com.dillo.gui.hud.ModuleEditorTrigger;
-import com.dillo.gui.overlays.OnRouteCheck;
-import com.dillo.gui.overlays.ProfitTracker;
-import com.dillo.gui.overlays.TimePerVein;
+import com.dillo.gui.overlays.overlay.OnRouteCheck;
+import com.dillo.gui.overlays.overlay.ProfitTracker;
+import com.dillo.gui.overlays.overlay.TimePerVein;
 import com.dillo.keybinds.Keybinds;
 import com.dillo.main.esp.chat.FilterChat;
 import com.dillo.main.esp.other.BigDildoDillo;
@@ -40,7 +40,6 @@ import com.dillo.main.failsafes.*;
 import com.dillo.main.failsafes.RouteFailsafes.RemoveBlockFailsafe;
 import com.dillo.main.files.init.CheckFile;
 import com.dillo.main.macro.main.GetOffArmadillo;
-import com.dillo.main.macro.main.NewSpinDrive;
 import com.dillo.main.macro.main.StateDillo;
 import com.dillo.main.macro.refuel.ReFuelDrill;
 import com.dillo.main.macro.refuel.ReFuelDrillTriger;
@@ -98,6 +97,7 @@ import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -288,7 +288,6 @@ public class armadillomacro {
         new RenderPoints(),
         new BlockOnRouteESP(),
         new WaitThenCall(),
-        new WaitThenCall(),
         new IsOnBlock(),
         new RenderMultipleLines(),
         new WalkOnPath(),
@@ -332,7 +331,7 @@ public class armadillomacro {
         new RemoveBlockFailsafe(),
         new RegistersStevebot(),
         new PlayerLocChangeTrigger(),
-        new NewSpinDrive(),
+        //new NewSpinDrive(),
         regJump,
         new GetProjectedTime(),
         new StopRenderStand(),
@@ -342,7 +341,7 @@ public class armadillomacro {
         new AutoSaveConfig()
       );
     } catch (NoClassDefFoundError e) {
-      System.out.println(e.getClass() + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      System.out.println(Arrays.toString(e.getStackTrace()) + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
     registerKeybinds(keybinds);
@@ -462,6 +461,7 @@ public class armadillomacro {
 
   private void registerEvents(Object... events) {
     for (Object event : events) {
+      System.out.println(event.toString() + "!!!");
       MinecraftForge.EVENT_BUS.register(event);
     }
 

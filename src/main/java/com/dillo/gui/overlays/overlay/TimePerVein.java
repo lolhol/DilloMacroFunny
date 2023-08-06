@@ -1,4 +1,4 @@
-package com.dillo.gui.overlays;
+package com.dillo.gui.overlays.overlay;
 
 import static com.dillo.gui.Overlay.drawWithColor;
 
@@ -6,10 +6,16 @@ import com.dillo.calls.ArmadilloStates;
 import com.dillo.config.config;
 import com.dillo.gui.GUIUtils.CurTimeVein.CurTime;
 import com.dillo.gui.GUIUtils.Element;
-import java.awt.*;
+import com.dillo.gui.hud.ModuleEditor;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.Vec3;
 
+import java.awt.*;
+
 public class TimePerVein extends Element {
+
+  @Override
+  public void initiateMiniMenu(ModuleEditor editor) {}
 
   public boolean isHeld;
   public Vec3 drag = new Vec3(0, 0, 0);
@@ -67,6 +73,9 @@ public class TimePerVein extends Element {
   public boolean isHeld() {
     return isHeld;
   }
+
+  @Override
+  public void buttonActions(boolean buttonState, GuiButton button) {}
 
   @Override
   public void guiDraw() {

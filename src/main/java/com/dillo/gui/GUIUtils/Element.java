@@ -1,43 +1,41 @@
 package com.dillo.gui.GUIUtils;
 
+import com.dillo.gui.hud.ModuleEditor;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.Vec3;
 
-public class Element {
+public abstract class Element {
 
-  public boolean isHudModule = true;
   public int width = 0;
   public int height = 0;
-  public Vec3 drag = null;
 
-  public Vec3 drag() {
-    return null;
-  }
+  public abstract Vec3 drag();
 
-  public int getX() {
-    return 0;
-  }
+  public abstract int getX();
 
-  public void setX(int pos) {}
+  public abstract void setX(int pos);
 
-  public int getY() {
-    return 0;
-  }
+  public abstract int getY();
 
-  public void setY(int pos) {}
+  public abstract void setY(int pos);
 
-  public void editorDraw(int x, int y) {}
+  public abstract void editorDraw(int x, int y);
 
-  public void guiDraw() {}
+  public abstract void guiDraw();
 
-  public void mouseReleased(int mouseX, int mouseY) {}
+  public abstract void mouseReleased(int mouseX, int mouseY);
 
-  public void onClick(int mouseX, int mouseY) {}
+  public abstract void onClick(int mouseX, int mouseY);
 
   public boolean enabled() {
     return true;
   }
 
+  public abstract void initiateMiniMenu(ModuleEditor editor);
+
   public boolean isHeld() {
     return false;
   }
+
+  public abstract void buttonActions(boolean buttonState, GuiButton button);
 }

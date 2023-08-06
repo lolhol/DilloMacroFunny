@@ -1,15 +1,24 @@
-package com.dillo.gui.overlays;
+package com.dillo.gui.overlays.overlay;
 
 import static com.dillo.config.config.onRouteCheck;
+import static com.dillo.gui.hud.ModuleEditor.isMiniGuiOn;
 
 import com.dillo.config.config;
 import com.dillo.gui.GUIUtils.DilloRouteUtils.IsInBlockRange;
 import com.dillo.gui.GUIUtils.Element;
+import com.dillo.gui.GUIUtils.button_utils.ButtonConfig;
+import com.dillo.gui.hud.ModuleEditor;
+import com.dillo.gui.overlays.button.ButtonGuiClass;
+import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
-import java.awt.*;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.Vec3;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OnRouteCheck extends Element {
 
@@ -17,10 +26,17 @@ public class OnRouteCheck extends Element {
 
   public boolean isHeld;
   public Vec3 drag = new Vec3(0, 0, 0);
+  public float size = 1;
+  public boolean inited;
+  public List<ButtonGuiClass> buttons = new ArrayList<>();
 
   public OnRouteCheck() {
-    width = 110;
-    height = 10;
+    width = (int) (80 * getSize());
+    height = (int) (10 * getSize());
+  }
+
+  public float getSize() {
+    return size;
   }
 
   @Override
@@ -77,7 +93,7 @@ public class OnRouteCheck extends Element {
     if (onRouteCheck) {
       if (ids.mc.theWorld != null && ids.mc.thePlayer != null && IsInBlockRange.isInCheckRange()) {
         if (curTime + 10000 > System.currentTimeMillis()) {
-          renderBigText(false, getX() / 2, getY() / 2, 2);
+          renderBigText(getX(), getY(), getSize());
         }
       } else {
         curTime = System.currentTimeMillis();
@@ -88,16 +104,44 @@ public class OnRouteCheck extends Element {
 
   @Override
   public void editorDraw(int x, int y) {
-    renderBigText(false, x / 2, y / 2, 2);
+    renderBigText(x, y, getSize());
   }
 
-  private void renderBigText(boolean isNon, int x, int y, int size) {
-    if (isNon) return;
+  public void initiateMiniMenu(ModuleEditor editor) {
+    if (!inited) {
+      isMiniGuiOn = true;
+      buttons.add(
+        editor.addButton(
+          new ButtonConfig(0, 100, 20, 100, 100, "On"),
+          "On",
+          "Off",
+          () -> {
+            SendChat.chat("BRU");
+          }
+        )
+      );
+      editor.curElement = this;
+    } else {
+      isMiniGuiOn = false;
+      buttons.forEach(b -> {
+        editor.removeButton(null, -1, b.button.id);
+      });
+      editor.curElement = null;
+    }
 
+    inited = !inited;
+  }
+
+  public void buttonActions(boolean buttonState, GuiButton button) {
+    if (button.id == 0) {
+    }
+  }
+
+  private void renderBigText(int x, int y, float size) {
     GlStateManager.pushMatrix();
     GlStateManager.scale(size, size, size);
     FontRenderer fontRenderer = ids.mc.fontRendererObj;
-    fontRenderer.drawStringWithShadow("Use Path Check!", x, y, Color.GREEN.getRGB());
+    fontRenderer.drawStringWithShadow("Use Path Check!", (float) x / size, (float) y / size, Color.GREEN.getRGB());
     GlStateManager.popMatrix();
   }
 }

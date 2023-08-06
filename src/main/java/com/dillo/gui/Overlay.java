@@ -2,27 +2,18 @@ package com.dillo.gui;
 
 import static com.dillo.armadillomacro.allOverlays;
 import static com.dillo.config.config.*;
-import static com.dillo.gui.GUIUtils.CurRatesUtils.ItemsPickedUp.started;
 import static com.dillo.gui.GUIUtils.MatchServer.IsChecked.isChecked;
 
-import com.dillo.calls.ArmadilloStates;
-import com.dillo.config.config;
-import com.dillo.gui.GUIUtils.CheckRoute.GetFailPointsList;
-import com.dillo.gui.GUIUtils.CurRatesUtils.GetTotalEarned;
-import com.dillo.gui.GUIUtils.CurRatesUtils.ItemsPickedUp;
-import com.dillo.gui.GUIUtils.CurTimeVein.CurTime;
-import com.dillo.gui.GUIUtils.DilloRouteUtils.IsInBlockRange;
 import com.dillo.gui.GUIUtils.Element;
 import com.dillo.gui.GUIUtils.totalveins.TotalVeinsMain;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.previous.random.prefix;
-import java.awt.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.awt.*;
 
 public class Overlay {
 
@@ -81,7 +72,7 @@ public class Overlay {
     }
      */
 
-    if (onRouteCheck) {
+    /*if (onRouteCheck) {
       if (IsInBlockRange.isInCheckRange()) {
         if (curTime + 10000 > System.currentTimeMillis()) {
           GlStateManager.pushMatrix();
@@ -94,7 +85,7 @@ public class Overlay {
       } else {
         curTime = System.currentTimeMillis();
       }
-    }
+    }*/
 
     if (alrCheckedLobby && !ids.mc.isSingleplayer()) {
       if (isChecked()) {
@@ -121,7 +112,7 @@ public class Overlay {
       }
     }
 
-    if (failCheckRouteDisplay && isStartRenderPoints) {
+    /*if (failCheckRouteDisplay && isStartRenderPoints) {
       if (startTime + 10000 > System.currentTimeMillis()) {
         int x = 20;
         int y = 40;
@@ -145,7 +136,7 @@ public class Overlay {
       } else {
         startTime = System.currentTimeMillis();
       }
-    }
+    }*/
 
     int totalVeins = new TotalVeinsMain().totalGemsMined();
     if (totalVeins > 0) {

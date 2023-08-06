@@ -1,4 +1,4 @@
-package com.dillo.gui.overlays;
+package com.dillo.gui.overlays.overlay;
 
 import static com.dillo.gui.GUIUtils.CurRatesUtils.ItemsPickedUp.started;
 
@@ -6,8 +6,10 @@ import com.dillo.config.config;
 import com.dillo.gui.GUIUtils.CurRatesUtils.GetTotalEarned;
 import com.dillo.gui.GUIUtils.CurRatesUtils.ItemsPickedUp;
 import com.dillo.gui.GUIUtils.Element;
+import com.dillo.gui.hud.ModuleEditor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.Vec3;
 
 import java.awt.*;
@@ -16,6 +18,9 @@ public class ProfitTracker extends Element {
 
   public boolean isHeld;
   public Vec3 drag = new Vec3(0, 0, 0);
+
+  @Override
+  public void initiateMiniMenu(ModuleEditor editor) {}
 
   public ProfitTracker() {
     width = 110;
@@ -76,6 +81,9 @@ public class ProfitTracker extends Element {
   public boolean isHeld() {
     return isHeld;
   }
+
+  @Override
+  public void buttonActions(boolean buttonState, GuiButton button) {}
 
   @Override
   public void guiDraw() {
