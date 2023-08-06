@@ -7,13 +7,12 @@ import static com.dillo.gui.GUIUtils.MatchServer.IsChecked.isChecked;
 import com.dillo.gui.GUIUtils.Element;
 import com.dillo.gui.GUIUtils.totalveins.TotalVeinsMain;
 import com.dillo.utils.previous.random.ids;
+import java.awt.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.awt.*;
 
 public class Overlay {
 

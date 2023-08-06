@@ -7,10 +7,9 @@ import com.dillo.config.config;
 import com.dillo.gui.GUIUtils.CurTimeVein.CurTime;
 import com.dillo.gui.GUIUtils.Element;
 import com.dillo.gui.hud.ModuleEditor;
+import java.awt.*;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.Vec3;
-
-import java.awt.*;
 
 public class TimePerVein extends Element {
 

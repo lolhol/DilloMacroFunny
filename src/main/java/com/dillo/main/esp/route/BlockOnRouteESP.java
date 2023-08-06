@@ -6,11 +6,10 @@ import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.utils.DistFromXPlayer;
 import com.dillo.utils.previous.BoxRenderer;
 import com.dillo.utils.renderUtils.RenderString;
+import java.awt.*;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.awt.*;
 
 public class BlockOnRouteESP {
 

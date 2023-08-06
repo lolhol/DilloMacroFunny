@@ -7,12 +7,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import java.io.FileWriter;
+import java.lang.reflect.Field;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
-
-import java.io.FileWriter;
-import java.lang.reflect.Field;
 
 public class AutoSaveConfig {
 

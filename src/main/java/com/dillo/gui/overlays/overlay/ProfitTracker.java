@@ -7,12 +7,11 @@ import com.dillo.gui.GUIUtils.CurRatesUtils.GetTotalEarned;
 import com.dillo.gui.GUIUtils.CurRatesUtils.ItemsPickedUp;
 import com.dillo.gui.GUIUtils.Element;
 import com.dillo.gui.hud.ModuleEditor;
+import java.awt.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.Vec3;
-
-import java.awt.*;
 
 public class ProfitTracker extends Element {
 

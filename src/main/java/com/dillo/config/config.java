@@ -5,7 +5,6 @@ import com.dillo.utils.previous.random.ids;
 import gg.essential.vigilance.Vigilant;
 import gg.essential.vigilance.data.Property;
 import gg.essential.vigilance.data.PropertyType;
-
 import java.io.File;
 
 public class config extends Vigilant {

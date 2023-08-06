@@ -1,10 +1,9 @@
 package com.dillo.gui.overlays.button;
 
+import java.awt.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.client.gui.GuiButton;
-
-import java.awt.*;
 
 @Getter
 @AllArgsConstructor
