@@ -2,6 +2,7 @@ package com.dillo.keybinds;
 
 import static com.dillo.commands.RouteCommands.StructurePoints.render;
 import static com.dillo.main.macro.refuel.ReFuelDrill.isStart;
+import static com.dillo.main.route.Utils.AddBlockRoute.addBlockRoute;
 import static com.dillo.main.teleport.macro.TeleportToNextBlock.alrMoved;
 import static com.dillo.main.utils.looks.LookAt.reset;
 
@@ -17,6 +18,7 @@ public class Keybinds {
 
   public static boolean isNuking = false;
   public static boolean wasDown = false;
+  public static boolean isPressed;
 
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
@@ -47,6 +49,11 @@ public class Keybinds {
           render = false;
           wasDown = false;
         }
+      }
+
+      if (armadillomacro.keybinds.get(3).isKeyDown() && !isPressed) {
+        addBlockRoute();
+        isPressed = true;
       }
 
       if (armadillomacro.keybinds.get(4).isKeyDown()) {
