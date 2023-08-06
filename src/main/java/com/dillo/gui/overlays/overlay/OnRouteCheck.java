@@ -133,8 +133,7 @@ public class OnRouteCheck extends Element {
   }
 
   public void buttonActions(boolean buttonState, GuiButton button) {
-    if (button.id == 0) {
-    }
+    if (button.id == 0) {}
   }
 
   private void renderBigText(int x, int y, float size) {
