@@ -9,6 +9,7 @@ import com.dillo.utils.GetConfigFolder;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.prefix;
 import com.google.gson.*;
+
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -17,87 +18,98 @@ import java.util.Objects;
 
 public class CheckFile {
 
-  private static List<List<String>> defaultAcusations = new ArrayList<List<String>>();
+  private static final List<List<String>> defaultAcusations = new ArrayList<List<String>>();
   public static File file = new File(GetConfigFolder.getMcDir() + "/MiningInTwo");
   public static File configs = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs");
   public static File configMain = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs/configsMain.json");
   public static File configDefault = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs/defaultConfig.json");
   public static File configFile = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/default-route.json");
   public static File answersFile = new File(GetConfigFolder.getMcDir() + "/MiningInTwo/chatAnswers.json");
-  private static boolean startCheck = false;
-  private static String name = "";
+  private static final boolean startCheck = false;
+  private static final String name = "";
 
   public static void checkFiles() {
-    if (!file.exists()) {
-      file.mkdirs();
-    }
-
-    if (!configFile.exists()) {
+    new Thread(() -> {
       try {
-        configFile.createNewFile();
-      } catch (IOException e) {}
-    }
+        Thread.sleep(2000);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
 
-    if (!configs.exists()) {
-      configs.mkdirs();
-    }
+      if (!file.exists()) {
+        file.mkdirs();
+      }
 
-    StringBuilder content = new StringBuilder();
-    if (!configMain.exists()) {
-      try {
-        configMain.createNewFile();
-      } catch (IOException e) {}
-    } else {
-      try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
+      if (!configFile.exists()) {
+        try {
+          configFile.createNewFile();
+        } catch (IOException e) {}
+      }
+
+      if (!configs.exists()) {
+        configs.mkdirs();
+      }
+
+      StringBuilder content = new StringBuilder();
+      if (!configMain.exists()) {
+        try {
+          configMain.createNewFile();
+        } catch (IOException ignored) {}
+      } else {
+        try (BufferedReader reader = new BufferedReader(new FileReader(configMain))) {
+          String line;
+          while ((line = reader.readLine()) != null) {
+            content.append(line);
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+
+      StringBuilder contentDefault = new StringBuilder();
+      try (BufferedReader reader = new BufferedReader(new FileReader(configDefault))) {
         String line;
         while ((line = reader.readLine()) != null) {
-          content.append(line);
+          contentDefault.append(line);
         }
       } catch (IOException e) {
         e.printStackTrace();
       }
-    }
 
-    StringBuilder contentDefault = new StringBuilder();
-    try (BufferedReader reader = new BufferedReader(new FileReader(configDefault))) {
-      String line;
-      while ((line = reader.readLine()) != null) {
-        contentDefault.append(line);
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    if (
-      configDefault.exists() &&
-      !Objects.equals(contentDefault.toString(), "") &&
-      !Objects.equals(contentDefault.toString(), " ")
-    ) {
-      if (!content.toString().equals("") && !content.toString().equals(" ")) {
-        String string;
-        string = content.toString();
-        selectConfigFromName(string);
+      if (
+        configDefault.exists() &&
+        !Objects.equals(contentDefault.toString(), "") &&
+        !Objects.equals(contentDefault.toString(), " ")
+      ) {
+        if (!content.toString().equals("") && !content.toString().equals(" ")) {
+          String string;
+          string = content.toString();
+          System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!");
+          selectConfigFromName(string);
+        } else {
+          selectConfigFromName("defaultConfig");
+          writeStringFile(configMain, "defaultConfig");
+        }
       } else {
+        try {
+          configDefault.createNewFile();
+        } catch (IOException e) {}
+
+        presetConfig(new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs/defaultConfig.json"));
         selectConfigFromName("defaultConfig");
       }
-    } else {
-      try {
-        configDefault.createNewFile();
-      } catch (IOException e) {}
 
-      presetConfig(new File(GetConfigFolder.getMcDir() + "/MiningInTwo/configs/defaultConfig.json"));
-      selectConfigFromName("defaultConfig");
-    }
+      if (!answersFile.exists()) {
+        Gson gson = new Gson();
 
-    if (!answersFile.exists()) {
-      Gson gson = new Gson();
-
-      try {
-        answersFile.createNewFile();
-        makeAcusations();
-        writeStringFile(answersFile, gson.toJson(defaultAcusations));
-      } catch (IOException e) {}
-    }
+        try {
+          answersFile.createNewFile();
+          makeAcusations();
+          writeStringFile(answersFile, gson.toJson(defaultAcusations));
+        } catch (IOException e) {}
+      }
+    })
+      .start();
   }
 
   public static void writeStringFile(File file, String text) {
@@ -169,20 +181,34 @@ public class CheckFile {
             String contents = object1.get(field.getName()).getAsString();
 
             try {
-              boolean cont = Boolean.parseBoolean(contents);
-              field.set(null, cont);
-              continue;
-            } catch (NumberFormatException e) {} catch (IllegalAccessException e) {
-              throw new RuntimeException(e);
-            } catch (IllegalArgumentException e) {
-              try {
-                field.set(null, Integer.parseInt(contents));
-              } catch (Exception ev2) {}
+              if (isBooleanString(contents)) {
+                boolean cont = Boolean.parseBoolean(contents);
+                field.set(null, cont);
+                continue;
+              }
+
+              if (contents.equals("") || contents.equals(" ")) {
+                field.set(null, "");
+                continue;
+              }
+
+              field.set(null, parseIntFromString(contents));
+            } catch (IllegalAccessException e) {
+              //SendChat.chat(e.toString() + "!!!!!!!!!!!!!!!!!!!!!");
             }
           }
         }
       }
     }
+  }
+
+  public static int parseIntFromString(String str) {
+    return Integer.parseInt(str);
+  }
+
+  public static boolean isBooleanString(String inputStr) {
+    String lowercaseInput = inputStr.toLowerCase();
+    return lowercaseInput.equals("true") || lowercaseInput.equals("false");
   }
 
   public static void presetConfig(File file) {

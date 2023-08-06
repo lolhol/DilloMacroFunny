@@ -5,6 +5,7 @@ import com.dillo.utils.previous.random.ids;
 import gg.essential.vigilance.Vigilant;
 import gg.essential.vigilance.data.Property;
 import gg.essential.vigilance.data.PropertyType;
+
 import java.io.File;
 
 public class config extends Vigilant {
@@ -152,14 +153,6 @@ public class config extends Vigilant {
     category = "Route Utils"
   )
   public static boolean isAbleToTeleportChecks = false;
-
-  @Property(
-    type = PropertyType.SWITCH,
-    name = "Fail CheckRoute Route Points Display",
-    description = "If there are going to be any points on route that fail the route check, there is going to be a thing that will display them.",
-    category = "Route Utils"
-  )
-  public static boolean failCheckRouteDisplay = true;
 
   @Property(
     type = PropertyType.SWITCH,
