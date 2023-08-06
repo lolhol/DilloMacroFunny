@@ -3,13 +3,19 @@ package com.dillo.gui.hud;
 import static com.dillo.armadillomacro.allOverlays;
 
 import com.dillo.gui.GUIUtils.Element;
-import com.dillo.gui.overlays.OnRouteCheck;
-import com.dillo.gui.overlays.ProfitTracker;
-import com.dillo.utils.previous.SendChat;
-import java.io.IOException;
+import com.dillo.gui.GUIUtils.button_utils.ButtonConfig;
+import com.dillo.gui.overlays.button.ButtonGuiClass;
+import com.dillo.gui.overlays.button.FunctionCallBack;
+import com.dillo.utils.previous.random.ids;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.input.Mouse;
+
+import java.awt.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Papa-Stalin Gabagooooooooooool ChatGPT
@@ -20,6 +26,10 @@ import org.lwjgl.input.Mouse;
 
 public class ModuleEditor extends GuiScreen {
 
+  public static boolean isMiniGuiOn;
+  public Element curElement;
+  public static List<ButtonGuiClass> buttons = new ArrayList<>();
+
   @Override
   public void drawScreen(int mouseX, int mouseY, float partialTicks) {
     super.drawScreen(mouseX, mouseY, partialTicks);
@@ -27,10 +37,11 @@ public class ModuleEditor extends GuiScreen {
     drawDefaultBackground();
 
     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-    for (Element element : allOverlays) {
-      if (!element.isHeld()) {
-        /*if (element instanceof OnRouteCheck) {
-          element.editorDraw(element.getX() / 4, element.getY() / 4);
+
+    if (!isMiniGuiOn) {
+      for (Element element : allOverlays) {
+        if (!element.isHeld()) {
+          element.editorDraw(element.getX(), element.getY());
 
           drawRectWithOutline(
             element.getX() - 2,
@@ -41,29 +52,118 @@ public class ModuleEditor extends GuiScreen {
           );
 
           continue;
-        }*/
+        }
 
-        element.editorDraw(element.getX(), element.getY());
+        int x = (int) (mouseX - (element.drag().xCoord - element.getX()));
+        int y = (int) (mouseY - (element.drag().yCoord - element.getY()));
 
-        drawRectWithOutline(
-          element.getX() - 2,
-          element.getY() - 2,
-          element.getX() + element.width,
-          element.getY() + element.height,
-          0xFFFFFFFF
-        );
+        element.editorDraw(x, y);
 
-        continue;
+        drawRectWithOutline(x - 2, y - 2, x + element.width, y + element.height, 0xFFFFFFFF);
       }
+    } else {
+      int borderSize = 10;
+      int rectWidth = width - 2 * borderSize;
+      int rectHeight = height - 2 * borderSize;
+      drawRect(borderSize, borderSize, borderSize + rectWidth, borderSize + rectHeight, Color.WHITE.getRGB());
+    }
 
-      int x = (int) (mouseX - (element.drag().xCoord - element.getX()));
-      int y = (int) (mouseY - (element.drag().yCoord - element.getY()));
-
-      element.editorDraw(x, y);
-
-      drawRectWithOutline(x - 2, y - 2, x + element.width, y + element.height, 0xFFFFFFFF);
+    for (ButtonGuiClass button : buttons) {
+      renderButton(button);
     }
     //drawRect(mouseX - 2, mouseY - 2, mouseX + 2, mouseY + 2, 0xFFFFFFFF);
+  }
+
+  public void changeButtonColor(GuiButton curButton, Color newColor) {
+    ButtonGuiClass buttonGui = getButtonClicked(curButton);
+
+    if (buttonGui != null) {
+      buttonGui.buttonColor = newColor;
+    }
+  }
+
+  public void renderButton(ButtonGuiClass button) {
+    FontRenderer fontRenderer = ids.mc.fontRendererObj;
+    GuiButton buttonGUI = button.button;
+
+    drawRect(
+      buttonGUI.xPosition,
+      buttonGUI.yPosition,
+      buttonGUI.xPosition + buttonGUI.width,
+      buttonGUI.yPosition + buttonGUI.height,
+      button.buttonColor.getRGB()
+    );
+
+    String label = button.buttonText;
+    drawCenteredString(
+      fontRenderer,
+      label,
+      buttonGUI.xPosition + buttonGUI.width / 2,
+      buttonGUI.yPosition + buttonGUI.height / 2 - 4,
+      0xFFFFFFFF
+    );
+  }
+
+  public ButtonGuiClass addButton(ButtonConfig config, String option1, String option2, FunctionCallBack callBack) {
+    GuiButton button = new GuiButton(
+      config.BUTTON_ID,
+      config.BUTTON_X,
+      config.BUTTON_Y,
+      config.BUTTON_WIDTH,
+      config.BUTTON_HEIGHT,
+      config.BUTTON_TEXT
+    );
+
+    buttonList.add(button);
+    ButtonGuiClass newClass = new ButtonGuiClass(button, Color.GREEN, , Color.GREEN, Color.green, "On", true, option1, option2, callBack);
+    buttons.add(newClass);
+    return newClass;
+  }
+
+  public void removeButton(ButtonGuiClass button, int position, int id) {
+    if (position != -1) {
+      buttons.remove(position);
+    } else if (button != null) {
+      buttons.remove(button);
+    } else if (id != -1) {
+      for (ButtonGuiClass curButton : buttons) {
+        if (curButton.button.id == id) {
+          buttonList.remove(curButton.button);
+          buttons.remove(curButton);
+          return;
+        }
+      }
+    }
+  }
+
+  public ButtonGuiClass getButtonClicked(GuiButton button) {
+    for (ButtonGuiClass curButton : buttons) {
+      if (curButton.button.equals(button)) {
+        return curButton;
+      }
+    }
+
+    return null;
+  }
+
+  @Override
+  protected void actionPerformed(GuiButton button) {
+    ButtonGuiClass clickedButtonClass = getButtonClicked(button);
+
+    if (clickedButtonClass != null) {
+      clickedButtonClass.isOn = !clickedButtonClass.isOn;
+      clickedButtonClass.buttonColor = clickedButtonClass.isOn ? Color.GREEN : Color.RED;
+      clickedButtonClass.buttonText =
+        clickedButtonClass.isOn ? clickedButtonClass.buttonTextOn : clickedButtonClass.buttonTextOff;
+
+      if (!clickedButtonClass.isOn) clickedButtonClass.callBack.callFunction();
+
+      if (curElement != null) {
+        curElement.buttonActions(clickedButtonClass.isOn, clickedButtonClass.button);
+      }
+    }
+    /*button.displayString = Objects.equals(button.displayString, "On") ? "Off" : "On";
+    button.enabled = true;*/
   }
 
   @Override
@@ -71,21 +171,44 @@ public class ModuleEditor extends GuiScreen {
     super.initGui();
   }
 
-  @Override
+  /*@Override
   public void handleMouseInput() throws IOException {
     super.handleMouseInput();
     int dWheel = Mouse.getEventDWheel();
-  }
+  }*/
 
   @Override
   public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
     super.mouseClicked(mouseX, mouseY, mouseButton);
 
+    if (mouseButton == 0) {
+      mouseButtonLeft(mouseX, mouseY);
+    } else {
+      mouseButtonRight(mouseX, mouseY);
+    }
+  }
+
+  public void mouseButtonLeft(int mouseX, int mouseY) {
+    Element element = getHoverElement(mouseX, mouseY);
+
+    if (element != null) {
+      element.onClick(mouseX, mouseY);
+    }
+  }
+
+  public void mouseButtonRight(int mouseX, int mouseY) {
+    Element element = getHoverElement(mouseX, mouseY);
+    if (element != null) element.initiateMiniMenu(this);
+  }
+
+  public Element getHoverElement(int mouseX, int mouseY) {
     for (Element element : allOverlays) {
       if (isHover(element.getX(), element.getY(), element.width, element.height, mouseX, mouseY)) {
-        element.onClick(mouseX, mouseY);
+        return element;
       }
     }
+
+    return null;
   }
 
   @Override
