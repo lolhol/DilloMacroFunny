@@ -1,6 +1,7 @@
 package com.dillo.main.teleport.macro;
 
-import static com.dillo.calls.CurrentState.*;
+import static com.dillo.calls.CurrentState.ARMADILLO;
+import static com.dillo.calls.CurrentState.SMARTTP;
 import static com.dillo.config.config.smartTpDepth;
 import static com.dillo.config.config.smartTpRange;
 import static com.dillo.main.teleport.macro.TeleportToNextBlock.attemptedToSmartTP;
@@ -127,28 +128,28 @@ public class SmartTP {
   }
 
   public static List<BlockPos> getPilas(BlockPos reference) {
+    long start = System.currentTimeMillis();
     List<BlockPos> blocks = new ArrayList<>();
+    int total = 0;
 
     for (int y = -smartTpDepth; y <= smartTpDepth; y++) {
       for (int x = -smartTpRange; x <= smartTpRange; x++) {
         for (int z = -smartTpRange; z <= smartTpRange; z++) {
           BlockPos newBlock = makeNewBlock(x, y, z, reference);
 
-          Block blockUnderOne = ids.mc.theWorld.getBlockState(makeNewBlock(0, -1, 0, newBlock)).getBlock();
-          Block blockUnderTwo = ids.mc.theWorld.getBlockState(makeNewBlock(0, -2, 0, newBlock)).getBlock();
-          Block blockUnderThree = ids.mc.theWorld.getBlockState(makeNewBlock(0, -3, 0, newBlock)).getBlock();
-
-          Block blockAbove1 = ids.mc.theWorld.getBlockState(makeNewBlock(0, 1, 0, newBlock)).getBlock();
-          Block blockAbove2 = ids.mc.theWorld.getBlockState(makeNewBlock(0, 2, 0, newBlock)).getBlock();
+          total++;
 
           if (ids.mc.theWorld.getBlockState(newBlock).getBlock() == Blocks.cobblestone) {
-            if (
-              blockUnderThree == Blocks.cobblestone &&
-              blockAbove1 == Blocks.air &&
-              blockAbove2 == Blocks.air &&
-              blockUnderOne == Blocks.cobblestone &&
-              blockUnderTwo == Blocks.cobblestone
-            ) {
+            Block blockUnderThree = ids.mc.theWorld.getBlockState(makeNewBlock(0, -3, 0, newBlock)).getBlock();
+            if (blockUnderThree != Blocks.cobblestone) continue;
+            Block blockAbove1 = ids.mc.theWorld.getBlockState(makeNewBlock(0, 1, 0, newBlock)).getBlock();
+            if (blockAbove1 != Blocks.air) continue;
+            Block blockAbove2 = ids.mc.theWorld.getBlockState(makeNewBlock(0, 2, 0, newBlock)).getBlock();
+            if (blockAbove2 != Blocks.air) continue;
+            Block blockUnderOne = ids.mc.theWorld.getBlockState(makeNewBlock(0, -1, 0, newBlock)).getBlock();
+            if (blockUnderOne != Blocks.cobblestone) continue;
+            Block blockUnderTwo = ids.mc.theWorld.getBlockState(makeNewBlock(0, -2, 0, newBlock)).getBlock();
+            if (blockUnderTwo == Blocks.cobblestone) {
               if (!allKnownPillars.contains(newBlock)) allKnownPillars.add(newBlock);
 
               blocks.add(newBlock);
@@ -157,6 +158,18 @@ public class SmartTP {
         }
       }
     }
+
+    SendChat.chat(String.valueOf(System.currentTimeMillis() - start));
+
+    blocks.sort((BlockPos block1, BlockPos block2) -> {
+      return DistanceFromTo.distanceFromTo(block1, reference) < DistanceFromTo.distanceFromTo(block2, reference)
+        ? -1
+        : 1;
+    });
+
+    SendChat.chat(
+      "Scanned: " + total + " with avg time per block -> " + (double) (System.currentTimeMillis() - start) / total
+    );
 
     return blocks;
   }
