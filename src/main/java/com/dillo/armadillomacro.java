@@ -27,6 +27,7 @@ import com.dillo.gui.GUIUtils.CurTimeVein.CurTime;
 import com.dillo.gui.GUIUtils.Element;
 import com.dillo.gui.Overlay;
 import com.dillo.gui.hud.ModuleEditorTrigger;
+import com.dillo.gui.overlays.overlay.AlrCheckedLobby;
 import com.dillo.gui.overlays.overlay.OnRouteCheck;
 import com.dillo.gui.overlays.overlay.ProfitTracker;
 import com.dillo.gui.overlays.overlay.TimePerVein;
@@ -36,6 +37,7 @@ import com.dillo.main.esp.other.BigDildoDillo;
 import com.dillo.main.esp.other.StopRenderStand;
 import com.dillo.main.esp.route.BlockOnRouteESP;
 import com.dillo.main.failsafes.*;
+import com.dillo.main.failsafes.AminStuff.BedrockFail;
 import com.dillo.main.failsafes.AminStuff.WarpOutFail;
 import com.dillo.main.failsafes.RouteFailsafes.RemoveBlockFailsafe;
 import com.dillo.main.files.init.CheckFile;
@@ -337,7 +339,8 @@ public class armadillomacro {
         new BigDildoDillo(),
         new FilterChat(),
         new ModuleEditorTrigger(),
-        new AutoSaveConfig()
+        new AutoSaveConfig(),
+        new BedrockFail()
       );
     } catch (NoClassDefFoundError e) {
       System.out.println(Arrays.toString(e.getStackTrace()) + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -360,6 +363,7 @@ public class armadillomacro {
     allOverlays.add(new TimePerVein());
     allOverlays.add(new ProfitTracker());
     allOverlays.add(new OnRouteCheck());
+    allOverlays.add(new AlrCheckedLobby());
   }
 
   private void setup() {
