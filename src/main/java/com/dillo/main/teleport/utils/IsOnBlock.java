@@ -50,6 +50,7 @@ public class IsOnBlock {
   private static boolean isFail = false;
   public static FailsafesOnBlock curFailsafe;
   int timesTriggered = 0;
+  public static boolean alrDoing;
 
   public static void isOnBlock(int checkTimeTicks, BlockPos nextBlock, CurrentState newString) {
     blockPos = nextBlock;
@@ -62,6 +63,14 @@ public class IsOnBlock {
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
       if (startCheck) {
+        if (
+          Math.abs(ids.mc.thePlayer.getPosition().getX() - blockPos.getX() - 1) < 0.001 &&
+          Math.abs(ids.mc.thePlayer.getPosition().getZ() - blockPos.getZ() - 1) < 0.001 &&
+          !alrDoing
+        ) {
+          doneTp();
+        }
+
         if (curTicks >= config.checkOnBlockTime) {
           notOnBlock();
         }
@@ -83,6 +92,8 @@ public class IsOnBlock {
         } else {
           notOnBlock();
         }
+
+        alrDoing = true;
       })
         .start();
     }
@@ -118,6 +129,7 @@ public class IsOnBlock {
     clearAttempts = 0;
     curTicks = 0;
     attemptedToSmartTP = false;
+    alrDoing = false;
 
     SendChat.chat(prefix.prefix + "Teleported successfully!");
     KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
