@@ -26,6 +26,7 @@ import com.dillo.main.teleport.Enums.FailsafesOnBlock;
 import com.dillo.main.teleport.TeleportMovePlayer.VertexGetter;
 import com.dillo.main.teleport.TeleportMovePlayer.VertexGetterConfig;
 import com.dillo.main.utils.looks.LookAt;
+import com.dillo.utils.RandomisationUtils;
 import com.dillo.utils.RayTracingUtils;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
@@ -90,6 +91,11 @@ public class IsOnBlock {
         ) {
           doneTp();
         } else {
+          try {
+            Thread.sleep(400 + RandomisationUtils.randomNumberBetweenInt(1, 300));
+          } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+          }
           notOnBlock();
         }
 
