@@ -1,16 +1,12 @@
 package com.dillo.gui;
 
 import static com.dillo.armadillomacro.allOverlays;
-import static com.dillo.config.config.*;
-import static com.dillo.gui.GUIUtils.MatchServer.IsChecked.isChecked;
 
 import com.dillo.gui.GUIUtils.Element;
 import com.dillo.gui.GUIUtils.totalveins.TotalVeinsMain;
-import com.dillo.utils.previous.random.ids;
 import java.awt.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -86,7 +82,7 @@ public class Overlay {
       }
     }*/
 
-    if (alrCheckedLobby && !ids.mc.isSingleplayer()) {
+    /*if (alrCheckedLobby && !ids.mc.isSingleplayer()) {
       if (isChecked()) {
         if (lastLobbyCheck + 5000 > System.currentTimeMillis()) {
           GlStateManager.pushMatrix();
@@ -109,7 +105,7 @@ public class Overlay {
         isFirst = true;
         lastLobbyCheck = System.currentTimeMillis();
       }
-    }
+    }*/
 
     /*if (failCheckRouteDisplay && isStartRenderPoints) {
       if (startTime + 10000 > System.currentTimeMillis()) {
@@ -141,18 +137,6 @@ public class Overlay {
     if (totalVeins > 0) {
       draw("Total Veins Mined -> " + totalVeins, 50, 50);
     }
-  }
-
-  public static void playSound(float volume, float pitch, String sound) {
-    ids.mc.theWorld.playSound(
-      ids.mc.thePlayer.posX,
-      ids.mc.thePlayer.posY,
-      ids.mc.thePlayer.posZ,
-      sound,
-      volume,
-      pitch,
-      false
-    );
   }
 
   private static void draw(String text, int x, int y) {

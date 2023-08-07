@@ -88,6 +88,9 @@ public class OnRouteCheck extends Element {
   }
 
   @Override
+  public void buttonActions(boolean buttonState, GuiButton button) {}
+
+  @Override
   public void guiDraw() {
     if (onRouteCheck) {
       if (ids.mc.theWorld != null && ids.mc.thePlayer != null && IsInBlockRange.isInCheckRange()) {
@@ -111,14 +114,38 @@ public class OnRouteCheck extends Element {
       isMiniGuiOn = true;
       buttons.add(
         editor.addButton(
-          new ButtonConfig(0, 100, 20, 100, 100, "On"),
-          "On",
-          "Off",
+          new ButtonConfig(0, 100, 20, editor.width / 2 - 50, 20, "Master Switch"),
+          "Master Switch",
+          "Master Switch",
           () -> {
-            SendChat.chat("BRU");
+            buttonActions(false, editor.getButtonFromId(0), editor);
+          },
+          () -> {
+            buttonActions(true, editor.getButtonFromId(0), editor);
           }
         )
       );
+
+      int borderSize = 10;
+      int rectWidth = editor.width - 2 * borderSize;
+      //int rectHeight = editor.height - 2 * borderSize;
+
+      SendChat.chat(String.valueOf(editor.height));
+
+      buttons.add(
+        editor.addButton(
+          new ButtonConfig(1, 30, 20, editor.width - 40, 10, "Close"),
+          "Close",
+          "Close",
+          () -> {
+            buttonActions(false, editor.getButtonFromId(1), editor);
+          },
+          () -> {
+            buttonActions(true, editor.getButtonFromId(1), editor);
+          }
+        )
+      );
+
       editor.curElement = this;
     } else {
       isMiniGuiOn = false;
@@ -131,8 +158,27 @@ public class OnRouteCheck extends Element {
     inited = !inited;
   }
 
-  public void buttonActions(boolean buttonState, GuiButton button) {
-    if (button.id == 0) {}
+  public void closeMiniGUI(ModuleEditor editor) {
+    isMiniGuiOn = false;
+    for (ButtonGuiClass button : this.buttons) {
+      editor.removeButton(null, -1, button.getButton().id);
+    }
+    inited = false;
+  }
+
+  public void buttonActions(boolean buttonState, ButtonGuiClass button, ModuleEditor editor) {
+    switch (button.getButton().id) {
+      case 0:
+        if (!buttonState) {
+          //editor.removeButton(null, -1, button.getButton().id);
+        }
+        break;
+      case 1:
+        if (!buttonState) {
+          closeMiniGUI(editor);
+        }
+        break;
+    }
   }
 
   private void renderBigText(int x, int y, float size) {

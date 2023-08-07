@@ -17,5 +17,6 @@ public class ButtonGuiClass {
   public boolean isOn;
   public String buttonTextOn;
   public String buttonTextOff;
-  public FunctionCallBack callBack;
+  public FunctionCallBack onCall;
+  public FunctionCallBack offCall;
 }

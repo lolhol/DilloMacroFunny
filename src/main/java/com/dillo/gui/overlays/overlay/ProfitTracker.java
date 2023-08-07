@@ -22,8 +22,8 @@ public class ProfitTracker extends Element {
   public void initiateMiniMenu(ModuleEditor editor) {}
 
   public ProfitTracker() {
-    width = 110;
-    height = 20;
+    width = 160;
+    height = 30;
   }
 
   private static void draw(String text, int x, int y, Color color) {
@@ -85,6 +85,9 @@ public class ProfitTracker extends Element {
   public void buttonActions(boolean buttonState, GuiButton button) {}
 
   @Override
+  public void closeMiniGUI(ModuleEditor editor) {}
+
+  @Override
   public void guiDraw() {
     if (started) {
       if (ItemsPickedUp.timePoint + 10000 >= System.currentTimeMillis()) {
@@ -97,7 +100,8 @@ public class ProfitTracker extends Element {
             getY(),
             config.profitTrackerSize,
             earnings.totalEarningString,
-            earnings.perHour
+            earnings.perHour,
+            formatTime(earnings.trackTime)
           );
         } else {
           started = false;
@@ -113,7 +117,18 @@ public class ProfitTracker extends Element {
 
   @Override
   public void editorDraw(int x, int y) {
-    renderProfitTracker(false, x, y, config.profitTrackerSize, "69.420", "69.420");
+    renderProfitTracker(false, x, y, config.profitTrackerSize, "69.420", "69.420", formatTime(123456789));
+  }
+
+  public static String formatTime(long milliseconds) {
+    long seconds = milliseconds / 1000;
+    long minutes = seconds / 60;
+    long hours = minutes / 60;
+
+    seconds %= 60;
+    minutes %= 60;
+
+    return String.format("%02dh %02dmin %02dsec", hours, minutes, seconds);
   }
 
   private void renderProfitTracker(
@@ -122,14 +137,17 @@ public class ProfitTracker extends Element {
     int y,
     int size,
     String amountOCoinTotal,
-    String amountOCoinAnHour
+    String amountOCoinAnHour,
+    String timeTracked
   ) {
     if (isNon) return;
 
     String text = "Total Earned: " + amountOCoinTotal + "$";
     String textPerHour = "Per hour: " + amountOCoinAnHour + "$/hr";
+    String textTimeTracked = "Time Tracked: " + timeTracked;
 
     draw(textPerHour, x, y + 10, Color.green);
+    draw(textTimeTracked, x, y + 20, Color.green);
     draw(text, x, y, Color.green);
     //drawTextInBox(text, textPerHour, x, y, 30 * size / 2, 20 * size / 2);
   }

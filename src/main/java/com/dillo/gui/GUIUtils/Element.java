@@ -38,4 +38,6 @@ public abstract class Element {
   }
 
   public abstract void buttonActions(boolean buttonState, GuiButton button);
+
+  public abstract void closeMiniGUI(ModuleEditor editor);
 }

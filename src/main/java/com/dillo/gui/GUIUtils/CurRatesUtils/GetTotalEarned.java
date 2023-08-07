@@ -16,6 +16,7 @@ public class GetTotalEarned {
     public double totalEarned = 0;
     public String perHour = "";
     public String totalEarningString = "";
+    public long trackTime = 0;
   }
 
   public static TotalEarning totalEarned() {
@@ -28,7 +29,6 @@ public class GetTotalEarned {
 
       if (jsonObj.has("FLAWED_" + gem)) {
         double price = 0;
-        // jjj
 
         if (config.npcPrice) {
           price = 240;
@@ -54,6 +54,7 @@ public class GetTotalEarned {
 
     totalEarnings.perHour = numberWithCommas(number);
     totalEarnings.totalEarningString = numberWithCommas((int) total);
+    totalEarnings.trackTime = time;
 
     return totalEarnings;
   }
@@ -62,7 +63,6 @@ public class GetTotalEarned {
     if (x == -1) {
       return "";
     }
-
     String[] parts = Integer.toString(x).split("\\.");
     parts[0] = parts[0].replaceAll("(?<=\\d)(?=(\\d{3})+(?!\\d))", ",");
     return String.join(".", parts);

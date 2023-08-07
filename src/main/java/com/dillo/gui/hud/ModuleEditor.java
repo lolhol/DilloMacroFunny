@@ -1,26 +1,27 @@
 package com.dillo.gui.hud;
 
 import static com.dillo.armadillomacro.allOverlays;
+import static com.dillo.config.AutoSaveConfig.isOverride;
 
 import com.dillo.gui.GUIUtils.Element;
 import com.dillo.gui.GUIUtils.button_utils.ButtonConfig;
 import com.dillo.gui.overlays.button.ButtonGuiClass;
 import com.dillo.gui.overlays.button.FunctionCallBack;
+import com.dillo.gui.overlays.overlay.OnRouteCheck;
 import com.dillo.utils.previous.random.ids;
+import java.awt.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 
-import java.awt.*;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * @author Papa-Stalin Gabagooooooooooool ChatGPT
+ * @author brigeroman
  * @version 1.1
- * @credit ClientAPI (Papa-Stalin)
+ * @credit ClientAPI (Papa-Stalin), Papa-Stalin, Gabagooooooooooool
  * @brief Module Editor
  */
 
@@ -29,6 +30,7 @@ public class ModuleEditor extends GuiScreen {
   public static boolean isMiniGuiOn;
   public Element curElement;
   public static List<ButtonGuiClass> buttons = new ArrayList<>();
+  public Color selectedColor = null;
 
   @Override
   public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -82,6 +84,16 @@ public class ModuleEditor extends GuiScreen {
     }
   }
 
+  public ButtonGuiClass getButtonFromId(int id) {
+    for (ButtonGuiClass button : buttons) {
+      if (button.button.id == id) {
+        return button;
+      }
+    }
+
+    return null;
+  }
+
   public void renderButton(ButtonGuiClass button) {
     FontRenderer fontRenderer = ids.mc.fontRendererObj;
     GuiButton buttonGUI = button.button;
@@ -104,7 +116,13 @@ public class ModuleEditor extends GuiScreen {
     );
   }
 
-  public ButtonGuiClass addButton(ButtonConfig config, String option1, String option2, FunctionCallBack callBack) {
+  public ButtonGuiClass addButton(
+    ButtonConfig config,
+    String option1,
+    String option2,
+    FunctionCallBack offCall,
+    FunctionCallBack onCall
+  ) {
     GuiButton button = new GuiButton(
       config.BUTTON_ID,
       config.BUTTON_X,
@@ -115,7 +133,18 @@ public class ModuleEditor extends GuiScreen {
     );
 
     buttonList.add(button);
-    ButtonGuiClass newClass = new ButtonGuiClass(button, Color.GREEN , Color.GREEN, Color.green, "On", true, option1, option2, callBack);
+    ButtonGuiClass newClass = new ButtonGuiClass(
+      button,
+      Color.GREEN,
+      Color.GREEN,
+      Color.RED,
+      option1,
+      true,
+      option1,
+      option2,
+      onCall,
+      offCall
+    );
     buttons.add(newClass);
     return newClass;
   }
@@ -156,7 +185,9 @@ public class ModuleEditor extends GuiScreen {
       clickedButtonClass.buttonText =
         clickedButtonClass.isOn ? clickedButtonClass.buttonTextOn : clickedButtonClass.buttonTextOff;
 
-      if (!clickedButtonClass.isOn) clickedButtonClass.callBack.callFunction();
+      if (
+        !clickedButtonClass.isOn
+      ) clickedButtonClass.offCall.callFunction(); else clickedButtonClass.onCall.callFunction();
 
       if (curElement != null) {
         curElement.buttonActions(clickedButtonClass.isOn, clickedButtonClass.button);
@@ -223,6 +254,10 @@ public class ModuleEditor extends GuiScreen {
     }
   }
 
+  public void setSelectedColor(Color color) {
+    this.selectedColor = color;
+  }
+
   @Override
   public boolean doesGuiPauseGame() {
     return true;
@@ -231,6 +266,16 @@ public class ModuleEditor extends GuiScreen {
   @Override
   public void onGuiClosed() {
     super.onGuiClosed();
+    reset();
+    isOverride = true;
+  }
+
+  public void reset() {
+    for (Element element : allOverlays) {
+      if (element instanceof OnRouteCheck) {
+        element.closeMiniGUI(this);
+      }
+    }
   }
 
   private boolean isHover(int x, int y, int w, int h, int mX, int mY) {

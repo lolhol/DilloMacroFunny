@@ -77,6 +77,9 @@ public class TimePerVein extends Element {
   public void buttonActions(boolean buttonState, GuiButton button) {}
 
   @Override
+  public void closeMiniGUI(ModuleEditor editor) {}
+
+  @Override
   public void guiDraw() {
     if (!config.timeVein) return;
 
