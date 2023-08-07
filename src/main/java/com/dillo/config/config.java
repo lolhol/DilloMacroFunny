@@ -402,6 +402,16 @@ public class config extends Vigilant {
 
   @Property(
     type = PropertyType.SLIDER,
+    name = "Bedrock Threshold",
+    description = "Set the amount of bedrock in a 5 x 5 x 5 box around you for the failsafe to trigger. THIS IS IN % ! (to turn this off do 0%)",
+    category = "Failsafes",
+    min = 0,
+    max = 100
+  )
+  public static int bedrockPercentAmount = 50;
+
+  @Property(
+    type = PropertyType.SLIDER,
     name = "Tick Failsafe trigger",
     description = "Happens rarely but ehhh. Basically the amount of ticks that the server has ( /sec) for the macro to stop and wait (untill ticks go back up) (changing is not recommended)",
     category = "Failsafes",
@@ -503,28 +513,6 @@ public class config extends Vigilant {
     category = "Structure Scanner"
   )
   public static boolean stuctureFinder = false;
-
-  // Overlay Options
-
-  @Property(
-    type = PropertyType.SLIDER,
-    name = "Overlay X",
-    description = "The pos of overlay in X direction.",
-    category = "Overlay Options",
-    min = 1,
-    max = 700
-  )
-  public static int overlayX = 10;
-
-  @Property(
-    type = PropertyType.SLIDER,
-    name = "Overlay Y",
-    description = "The pos of overlay in Y direction.",
-    category = "Overlay Options",
-    min = 1,
-    max = 700
-  )
-  public static int overlayY = 10;
 
   // Profit Tracker
 
@@ -698,12 +686,52 @@ public class config extends Vigilant {
   )
   public static int routeCheckY = 50;
 
+  @Property(
+    type = PropertyType.SLIDER,
+    name = "Overlay X",
+    description = "The pos of overlay in X direction.",
+    category = "Locations",
+    min = 1,
+    max = 700
+  )
+  public static int overlayX = 10;
+
+  @Property(
+    type = PropertyType.SLIDER,
+    name = "Overlay Y",
+    description = "The pos of overlay in Y direction.",
+    category = "Locations",
+    min = 1,
+    max = 700
+  )
+  public static int overlayY = 10;
+
+  @Property(
+    type = PropertyType.SLIDER,
+    name = "Alr Checked Lobby X",
+    description = "X",
+    category = "Locations",
+    min = 1,
+    max = 700
+  )
+  public static int alrCheckedLobbyX = 10;
+
+  @Property(
+    type = PropertyType.SLIDER,
+    name = "Alr Checked Lobby Y",
+    description = "Y",
+    category = "Locations",
+    min = 1,
+    max = 700
+  )
+  public static int alrCheckedLobbyY = 10;
+
   // TO DO:
 
   @Property(
     type = PropertyType.SLIDER,
-    name = "Restart Macro after",
-    description = "Set the amount of seconds you want the macro restart failsafe to be triggered. (may not work)",
+    name = "Alr Checked Lobby Y",
+    description = "Y",
     category = "Failsafes",
     min = 1,
     max = 30

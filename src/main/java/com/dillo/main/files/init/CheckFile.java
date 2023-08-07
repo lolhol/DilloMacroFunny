@@ -66,13 +66,15 @@ public class CheckFile {
       }
 
       StringBuilder contentDefault = new StringBuilder();
-      try (BufferedReader reader = new BufferedReader(new FileReader(configDefault))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-          contentDefault.append(line);
+      if (configDefault.exists()) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(configDefault))) {
+          String line;
+          while ((line = reader.readLine()) != null) {
+            contentDefault.append(line);
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
         }
-      } catch (IOException e) {
-        e.printStackTrace();
       }
 
       if (
@@ -83,7 +85,6 @@ public class CheckFile {
         if (!content.toString().equals("") && !content.toString().equals(" ")) {
           String string;
           string = content.toString();
-          System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!");
           selectConfigFromName(string);
         } else {
           selectConfigFromName("defaultConfig");

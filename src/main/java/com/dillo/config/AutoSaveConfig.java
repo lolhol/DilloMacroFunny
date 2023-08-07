@@ -15,13 +15,13 @@ import org.lwjgl.input.Keyboard;
 
 public class AutoSaveConfig {
 
+  public static boolean isOverride;
+
   @SubscribeEvent
   public void onTick(TickEvent event) {
-    //SendChat.chat("!!!");
-
-    if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+    if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) || isOverride) {
       backUpFile();
-      //ids.mc.displayGuiScreen(new ModuleEditor());
+      isOverride = false;
     }
   }
 
