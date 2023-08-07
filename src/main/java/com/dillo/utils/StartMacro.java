@@ -7,6 +7,7 @@ import static com.dillo.main.macro.main.StateDillo.stateDilloNoGettingOn;
 import static com.dillo.utils.BlockUtils.checkIfOnBlock;
 
 import com.dillo.calls.ArmadilloStates;
+import com.dillo.main.failsafes.macro.PlaySoundOnLongStop;
 import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
@@ -15,7 +16,10 @@ import net.minecraft.util.BlockPos;
 
 public class StartMacro {
 
+  public static boolean isPlayerTurnedOn;
+
   public static void startMacro() {
+    PlaySoundOnLongStop.override = false;
     BlockPos blockUnder = checkIfOnBlock();
 
     if (blockUnder != null) {
@@ -29,6 +33,7 @@ public class StartMacro {
             : prefix.prefix + "Macro stopped!";
           ArmadilloStates.offlineState = ArmadilloStates.offlineState == OFFLINE ? ONLINE : OFFLINE;
           ArmadilloStates.currentState = ArmadilloStates.offlineState == ONLINE ? ARMADILLO : null;
+          isPlayerTurnedOn = ArmadilloStates.offlineState == ONLINE;
 
           SendChat.chat(str);
         }
@@ -43,6 +48,7 @@ public class StartMacro {
       );
       ArmadilloStates.offlineState = OFFLINE;
       ArmadilloStates.currentState = null;
+      isPlayerTurnedOn = false;
     }
   }
 }

@@ -6,6 +6,7 @@ import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.utils.previous.random.IsSameBlock;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -225,5 +226,30 @@ public class BlockUtils {
     }
 
     return true;
+  }
+
+  public static List<BlockPos> getSpecificBlocksInRadius(
+    Block[] blockTypes,
+    int radiusX,
+    int radiusY,
+    int radiusZ,
+    BlockPos reference
+  ) {
+    List<BlockPos> blocks = new ArrayList<>();
+
+    for (int x = -radiusX; x <= radiusX; x++) {
+      for (int y = -radiusY; y <= radiusY; y++) {
+        for (int z = -radiusZ; z <= radiusZ; z++) {
+          BlockPos newBlock = makeNewBlock(x, y, z, reference);
+          Block newBlockType = ids.mc.theWorld.getBlockState(newBlock).getBlock();
+
+          if (Arrays.stream(blockTypes).anyMatch(a -> a == newBlockType)) {
+            blocks.add(newBlock);
+          }
+        }
+      }
+    }
+
+    return blocks;
   }
 }
