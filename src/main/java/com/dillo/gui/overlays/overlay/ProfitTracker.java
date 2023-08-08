@@ -1,5 +1,6 @@
 package com.dillo.gui.overlays.overlay;
 
+import static com.dillo.gui.GUIUtils.CurRatesUtils.GetTotalEarned.getTotalTime;
 import static com.dillo.gui.GUIUtils.CurRatesUtils.ItemsPickedUp.started;
 
 import com.dillo.config.config;
@@ -93,7 +94,12 @@ public class ProfitTracker extends Element {
     if (started) {
       if (ItemsPickedUp.timePoint + 10000 >= System.currentTimeMillis()) {
         if (GetTotalEarned.totalEarned().totalEarned > 0) {
-          if (ItemsPickedUp.timePoint >= System.currentTimeMillis()) earnings = GetTotalEarned.totalEarned();
+          long time = getTotalTime();
+
+          if (ItemsPickedUp.timePoint >= System.currentTimeMillis()) {
+            earnings = GetTotalEarned.totalEarned();
+            time = earnings.trackTime;
+          }
 
           renderProfitTracker(
             false,
@@ -102,7 +108,7 @@ public class ProfitTracker extends Element {
             config.profitTrackerSize,
             earnings.totalEarningString,
             earnings.perHour,
-            formatTime(earnings.trackTime)
+            formatTime(time)
           );
         } else {
           started = false;

@@ -59,6 +59,10 @@ public class GetTotalEarned {
     return totalEarnings;
   }
 
+  public static long getTotalTime() {
+    return System.currentTimeMillis() - firstTime;
+  }
+
   private static String numberWithCommas(int x) {
     if (x == -1) {
       return "";

@@ -23,8 +23,8 @@ public class GetOffArmadillo {
   private static boolean sneak = false;
   private static final KeyBinding SNEAK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
 
-  private final int MIN_DELAY_AMOUNT = 20;
-  private final int MAX_DELAY_AMOUNT = 130;
+  private final int MIN_DELAY_AMOUNT = 0;
+  private final int MAX_DELAY_AMOUNT = 50;
   private final Random random = new Random();
 
   public static void getOffArmadillo(CurrentState newState, double blockY, int amountOTicks, boolean turnOffSneak) {
@@ -51,11 +51,15 @@ public class GetOffArmadillo {
         if (currTicks <= ammountOfCheckTicks) {
           if (ArmadilloStates.isOnline()) {
             if (Math.abs(blockYPos - ids.mc.thePlayer.posY + 1) < 0.0001) {
-              regJump.startStop(false);
-              if (sneak) KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
-              startOff = false;
-              currTicks = 0;
-              ArmadilloStates.currentState = setNewState;
+              new Thread(() -> {
+                sleepRandomDelay();
+                regJump.startStop(false);
+                if (sneak) KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
+                startOff = false;
+                currTicks = 0;
+                ArmadilloStates.currentState = setNewState;
+              })
+                .start();
             }
           } else {
             startOff = false;
@@ -71,13 +75,11 @@ public class GetOffArmadillo {
         }
 
         currTicks++;
-
-        swapWithRandomDelay(); // Add the random delay here
       }
     }
   }
 
-  private void swapWithRandomDelay() {
+  private void sleepRandomDelay() {
     try {
       int delay = MIN_DELAY_AMOUNT + random.nextInt(MAX_DELAY_AMOUNT - MIN_DELAY_AMOUNT + 1);
       Thread.sleep(delay);
