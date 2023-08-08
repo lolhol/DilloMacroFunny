@@ -23,9 +23,9 @@ import com.dillo.main.utils.looks.LookAt;
 import com.dillo.utils.GetSBItems;
 import com.dillo.utils.RandomisationUtils;
 import com.dillo.utils.previous.SendChat;
+import com.dillo.utils.previous.random.SwapToSlot;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
-import com.dillo.utils.previous.random.swapToSlot;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.BlockPos;
@@ -54,7 +54,7 @@ public class TeleportToNextBlock {
         return;
       }
 
-      if (actuallySwitchAOTV) swapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
+      if (actuallySwitchAOTV) SwapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
 
       if (isThrowRod) {
         if (earlyLook) LookWhileGoingDown.lookUntilState(

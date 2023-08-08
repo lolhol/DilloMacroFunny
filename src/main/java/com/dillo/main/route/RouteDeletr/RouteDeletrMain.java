@@ -11,8 +11,8 @@ import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.main.utils.looks.LookAt;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.packets.sendStart;
+import com.dillo.utils.previous.random.SwapToSlot;
 import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.previous.random.swapToSlot;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.init.Blocks;
@@ -104,7 +104,7 @@ public class RouteDeletrMain {
         sendStart.sendStartPacket(currentBlock, EnumFacing.fromAngle(ids.mc.thePlayer.rotationYaw));
         broken.add(currentBlock);
       } else {
-        swapToSlot.swapToSlot(drillSlot);
+        SwapToSlot.swapToSlot(drillSlot);
       }
     }
 
@@ -124,7 +124,7 @@ public class RouteDeletrMain {
           return;
         }
 
-        swapToSlot.swapToSlot(getBoomSlot());
+        SwapToSlot.swapToSlot(getBoomSlot());
 
         new Thread(() -> {
           try {

@@ -1,7 +1,5 @@
 package com.dillo.commands.UtilCommands;
 
-import static com.dillo.main.teleport.macro.SmartTP.getPilas;
-
 import com.dillo.pathfinding.stevebot.core.StevebotApi;
 import com.dillo.utils.previous.random.ids;
 import gg.essential.api.commands.Command;
@@ -19,9 +17,6 @@ public class WalkToCustom extends Command {
 
   @DefaultHandler
   public void handle() {
-    new Thread(() -> {
-      getPilas(ids.mc.thePlayer.getPosition());
-    })
-      .start();
+    ids.mc.thePlayer.inventory.currentItem = 1;
   }
 }

@@ -4,9 +4,12 @@ import static com.dillo.main.route.MobKiller.MobKillerMain.mobNames;
 import static com.dillo.utils.ScoreboardUtils.GetAllPlayersTab.getAllPlayerNamesList;
 
 import com.dillo.utils.DistanceFromTo;
+import com.dillo.utils.previous.random.SwapToSlot;
 import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.previous.random.swapToSlot;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
@@ -56,7 +59,7 @@ public class Utils {
 
   public static void clickSlot(long delay, int slot) {
     int currentItem = ids.mc.thePlayer.inventory.currentItem;
-    swapToSlot.swapToSlot(slot);
+    SwapToSlot.swapToSlot(slot);
 
     try {
       Thread.sleep(delay);
@@ -75,7 +78,7 @@ public class Utils {
       )
     );
 
-    swapToSlot.swapToSlot(currentItem);
+    SwapToSlot.swapToSlot(currentItem);
   }
 
   public static Tools getConfigTool(int type) {

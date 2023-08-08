@@ -140,9 +140,9 @@ public class IsOnBlock {
     SendChat.chat(prefix.prefix + "Teleported successfully!");
     KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
 
-    yaw = 20F;
+    yaw = 10F;
     alrMoved = false;
-    LookAt.smoothLook(new LookAt.Rotation(yaw, curRotation()), 40);
+    LookAt.smoothLook(new LookAt.Rotation(yaw, curRotation()), 40 + RandomisationUtils.randomNumberBetweenInt(0, 20));
 
     isClearing = false;
 

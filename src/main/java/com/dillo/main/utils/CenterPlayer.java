@@ -8,8 +8,8 @@ import com.dillo.calls.CurrentState;
 import com.dillo.main.teleport.utils.WaitThenCall;
 import com.dillo.main.utils.looks.LookAt;
 import com.dillo.utils.GetSBItems;
+import com.dillo.utils.previous.random.SwapToSlot;
 import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.previous.random.swapToSlot;
 import com.dillo.utils.throwRod;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.BlockPos;
@@ -39,7 +39,7 @@ public class CenterPlayer {
 
     int aotvSlot = GetSBItems.getAOTVSlot();
     if (aotvSlot != -1) {
-      swapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
+      SwapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
       ids.mc.playerController.sendUseItem(
         ids.mc.thePlayer,
         ids.mc.theWorld,
@@ -49,7 +49,7 @@ public class CenterPlayer {
 
     int drillSlot = GetSBItems.getDrillSlot();
     if (drillSlot != -1) {
-      swapToSlot.swapToSlot(drillSlot);
+      SwapToSlot.swapToSlot(drillSlot);
     }
 
     KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);

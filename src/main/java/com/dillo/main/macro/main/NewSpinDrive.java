@@ -20,9 +20,11 @@ import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.main.teleport.macro.TeleportToNextBlock;
 import com.dillo.main.utils.GetMostOptimalPath;
 import com.dillo.main.utils.looks.LookYaw;
+import com.dillo.utils.RandomisationUtils;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
+import com.dillo.utils.random.ThreadUtils;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.util.Pair;
@@ -48,43 +50,10 @@ public class NewSpinDrive {
     new Thread(() -> {
       KeyBinding.setKeyBindState(JUMP.getKeyCode(), true);
 
-      /*regJump.reset();
-      regJump.startStop(true);
-      startJump(true);*/
+      upDownMovement(config.headMovement, config.headMoveUp + RandomisationUtils.randomNumberBetweenInt(-5, 5));
+      addYaw(config.headMovement, config.headRotationMax + RandomisationUtils.randomNumberBetweenInt(-25, 25));
 
-      long time = config.headMovement / 2;
-
-      upDownMovement(config.headMovement, config.headMoveUp);
-      addYaw(time, 180);
-      //MinecraftForge.EVENT_BUS.post(new CurJumpProgress(0, 0, true));
-      //resetJump();
-      //regJump.startStop(true);
-      //projectJump = true;
-
-      try {
-        Thread.sleep(time);
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
-
-      long time2 = config.headMovement - time;
-
-      addYaw(time2, config.headRotationMax - 180);
-
-      try {
-        Thread.sleep(time2);
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
-
-      //MinecraftForge.EVENT_BUS.post(new CurJumpProgress(0, 0, false));
-      //resetJump();
-      //regJump.startStop(false);
-      //projectJump = false;
-
-      /*startJump(false);
-      regJump.startStop(false);
-      regJump.reset();*/
+      ThreadUtils.threadSleepRandom(config.headMovement);
 
       KeyBinding.setKeyBindState(jump.getKeyCode(), false);
 
@@ -107,7 +76,7 @@ public class NewSpinDrive {
     if (!ArmadilloStates.isOnline() || !isFirst || isDone) return;
     isDone = true;
     //SendChat.chat(String.valueOf(System.currentTimeMillis()));
-    KeyBinding.setKeyBindState(jump.getKeyCode(), true);
+    //KeyBinding.setKeyBindState(jump.getKeyCode(), true);
   }
 
   private static Pair<Boolean, Integer> isAdminPreventing(List<BlockPos> prevBlocks) {
@@ -171,9 +140,6 @@ public class NewSpinDrive {
     returnList.addAll(
       getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 1, ids.mc.thePlayer.posZ))
     );
-    /*returnList.addAll(
-      getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 3, ids.mc.thePlayer.posZ))
-    );*/
 
     isLeft = false;
     path = getBestPath(returnList, 0);

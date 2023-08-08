@@ -17,9 +17,9 @@ import com.dillo.main.teleport.TeleportMovePlayer.VertexGetterConfig;
 import com.dillo.main.utils.looks.LookAt;
 import com.dillo.utils.GetSBItems;
 import com.dillo.utils.previous.chatUtils.SendChat;
+import com.dillo.utils.previous.random.SwapToSlot;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
-import com.dillo.utils.previous.random.swapToSlot;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
@@ -101,27 +101,30 @@ public class TeleportToBlock {
   }
 
   public static void teleportStage2() {
-    ArmadilloStates.currentState = null;
+    new Thread(() -> {
+      ArmadilloStates.currentState = null;
 
-    KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
+      KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
 
-    int aotvSlot = GetSBItems.getAOTVSlot();
-    if (aotvSlot != -1) {
-      swapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
-      ids.mc.playerController.sendUseItem(
-        ids.mc.thePlayer,
-        ids.mc.theWorld,
-        ids.mc.thePlayer.inventory.getStackInSlot(ids.mc.thePlayer.inventory.currentItem)
-      );
-    }
+      int aotvSlot = GetSBItems.getAOTVSlot();
+      if (aotvSlot != -1) {
+        SwapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
+        ids.mc.playerController.sendUseItem(
+          ids.mc.thePlayer,
+          ids.mc.theWorld,
+          ids.mc.thePlayer.inventory.getStackInSlot(ids.mc.thePlayer.inventory.currentItem)
+        );
+      }
 
-    int drillSlot = GetSBItems.getDrillSlot();
-    if (drillSlot != -1) {
-      swapToSlot.swapToSlot(drillSlot);
-    }
+      int drillSlot = GetSBItems.getDrillSlot();
+      if (drillSlot != -1) {
+        SwapToSlot.swapToSlot(drillSlot);
+      }
 
-    KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
-    WaitThenCall.waitThenCall(20, TPSTAGE3);
+      KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
+      WaitThenCall.waitThenCall(1, TPSTAGE3);
+    })
+      .start();
   }
 
   public static void tpStageWalk() {

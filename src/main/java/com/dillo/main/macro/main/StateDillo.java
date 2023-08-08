@@ -20,9 +20,11 @@ import com.dillo.config.config;
 import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.main.teleport.macro.TeleportToNextBlock;
 import com.dillo.utils.GetSBItems;
+import com.dillo.utils.RandomisationUtils;
+import com.dillo.utils.previous.random.SwapToSlot;
 import com.dillo.utils.previous.random.getItemInSlot;
 import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.previous.random.swapToSlot;
+import com.dillo.utils.random.ThreadUtils;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -48,12 +50,15 @@ public class StateDillo {
   public static boolean isSmartTP = false;
   private static float isDilloSummonedTickCount = 0;
   boolean looking = false;
+  private static int randomAmTicks = 0;
+  private static int randomTickClick = 0;
+  private static double randomY = 0;
 
   public static void stateDilloNoGettingOn() {
     if (canDillo() && ArmadilloStates.isOnline()) {
       ArmadilloStates.currentState = null;
       NewSpinDrive.putAllTogether();
-      swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
+      SwapToSlot.swapToSlot(GetSBItems.getDrillSlot());
       ArmadilloStates.currentState = SPINDRIVE;
     } else {
       if (ArmadilloStates.isOnline()) {
@@ -101,18 +106,22 @@ public class StateDillo {
           throw new RuntimeException(e);
         }
 
-        swapToSlot.swapToSlot(GetSBItems.getDrillSlot());
+        SwapToSlot.swapToSlot(GetSBItems.getDrillSlot());
 
         originalBlocks = getBlocks();
 
         NewSpinDrive.putAllTogether();
+        isDilloSummonedTickCount = 0;
 
         try {
-          Thread.sleep(config.rod_drill_switch_time);
+          Thread.sleep(config.rod_drill_switch_time + RandomisationUtils.randomNumberBetweenInt(-10, 10));
 
           playerYBe4 = (float) ids.mc.thePlayer.posY;
 
           if (ArmadilloStates.isOnline()) {
+            randomAmTicks = Math.round(RandomisationUtils.randomNumberBetweenInt(1, 4));
+            randomTickClick = RandomisationUtils.randomNumberBetweenInt(2, 5);
+            randomY = RandomisationUtils.randomNumberBetweenDouble(0.0001F, 0.2F);
             //KeyBinding.setKeyBindState(jump.getKeyCode(), true);
             canCheckIfOnDillo = true;
           }
@@ -212,8 +221,9 @@ public class StateDillo {
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
       if (canCheckIfOnDillo && ArmadilloStates.isOnline()) {
-        if (playerYBe4 - ids.mc.thePlayer.posY + 0.01 < 0) {
+        if (playerYBe4 - ids.mc.thePlayer.posY + randomY < 0.0001) {
           reset();
+          isDilloSummonedTickCount = 0;
           checkedNumber = 0;
           tickDilloCheckCount = 0;
           canCheckIfOnDillo = false;
@@ -228,11 +238,7 @@ public class StateDillo {
             } else {
               new Thread(() -> {
                 if (ArmadilloStates.isOnline()) {
-                  try {
-                    Thread.sleep(ping * 2L);
-                  } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                  }
+                  ThreadUtils.threadSleepRandom(ping * 2L);
 
                   newSpinDrive();
                 } else {
@@ -253,9 +259,14 @@ public class StateDillo {
             }
           }*/
 
-          if (tickDilloCheckCount >= 4) {
+          if (tickDilloCheckCount >= randomTickClick) {
             if (!fasterDillo) {
-              if (isDilloSummoned() && isDilloSummonedTickCount > 2) {
+              if (isDilloSummoned()) {
+                if (isDilloSummonedTickCount < randomAmTicks) {
+                  isDilloSummonedTickCount++;
+                  return;
+                }
+
                 rightClick();
               }
             } else {
