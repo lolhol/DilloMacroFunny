@@ -67,25 +67,29 @@ public class VertexGetter {
   List<VertexGetterClass> fromPlayerPosToListOVertexes(Vec3 playerHeightVec) {
     List<VertexGetterClass> returnList = new ArrayList<>();
     returnList.add(
-      new VertexGetterClass(
+      new VertexGetterClass(vec3, positionsMoves,
+
         playerHeightVec.addVector(PositionsMoves.RIGHT.dx, 0, PositionsMoves.RIGHT.dz),
         PositionsMoves.RIGHT
       )
     );
     returnList.add(
-      new VertexGetterClass(
+      new VertexGetterClass(vec3, positionsMoves,
+
         playerHeightVec.addVector(PositionsMoves.LEFT.dx, 0, PositionsMoves.LEFT.dz),
         PositionsMoves.LEFT
       )
     );
     returnList.add(
-      new VertexGetterClass(
+      new VertexGetterClass(vec3, positionsMoves,
+
         playerHeightVec.addVector(PositionsMoves.BACKRIGHT.dx, 0, PositionsMoves.BACKRIGHT.dz),
         PositionsMoves.BACKRIGHT
       )
     );
     returnList.add(
-      new VertexGetterClass(
+      new VertexGetterClass(vec3, positionsMoves,
+
         playerHeightVec.addVector(PositionsMoves.BACKLEFT.dx, 0, PositionsMoves.BACKLEFT.dz),
         PositionsMoves.BACKLEFT
       )
