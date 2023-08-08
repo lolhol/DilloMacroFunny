@@ -62,6 +62,13 @@ public class NewSpinDrive {
       if (ArmadilloStates.isOnline() && !pair.getKey()) {
         // Later => add the % vein
 
+        //TODO: test @this
+        try {
+          Thread.sleep(RandomisationUtils.randomNumberBetweenInt(50, 100));
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+
         startAgain();
       } else {
         ArmadilloStates.offlineState = KillSwitch.OFFLINE;

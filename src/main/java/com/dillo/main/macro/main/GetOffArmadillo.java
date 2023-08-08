@@ -37,6 +37,8 @@ public class GetOffArmadillo {
     KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
   }
 
+  //TODO: Cactus gets off armadillo and doesnt look until like 1/2 the getting off is done
+
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
