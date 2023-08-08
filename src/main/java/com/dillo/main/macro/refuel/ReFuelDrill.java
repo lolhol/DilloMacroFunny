@@ -31,6 +31,10 @@ public class ReFuelDrill {
   private static boolean start1 = false;
   public static boolean isStart = false;
 
+   private final int MIN_DELAY_AMOUNT = 100;
+    private final int MAX_DELAY_AMOUNT = 300;
+    private final Random random = new Random();
+
      public void reFuelDrill() {
         isStart = true;
 
