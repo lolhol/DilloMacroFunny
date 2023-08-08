@@ -31,7 +31,6 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import scala.Int;
 
 public class NewSpinDrive {
 
@@ -179,7 +178,7 @@ public class NewSpinDrive {
     isLeft = false;
     path = getBestPath(returnList, 0);
     float displacement = path.displacement;
-    LookYaw.lookToYaw(config.rod_drill_switch_time + 20, displacement, true);
+    LookYaw.lookToYaw(config.rod_drill_switch_time + 60, displacement, true);
   }
 
   public static void debugText(List<BlockPos> startBlocks) {
