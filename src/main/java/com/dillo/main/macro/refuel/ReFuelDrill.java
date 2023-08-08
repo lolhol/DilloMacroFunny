@@ -7,9 +7,9 @@ import static com.dillo.utils.GetSBItems.*;
 import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.KillSwitch;
 import com.dillo.utils.previous.SendChat;
+import com.dillo.utils.previous.random.SwapToSlot;
 import com.dillo.utils.previous.random.getItemInSlot;
 import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.previous.random.swapToSlot;
 import com.dillo.utils.throwRod;
 import java.util.List;
 import java.util.Objects;
@@ -53,7 +53,7 @@ public class ReFuelDrill {
         return;
       }
 
-      swapToSlot.swapToSlot(slot);
+      SwapToSlot.swapToSlot(slot);
 
       try {
         Thread.sleep(100);
@@ -214,7 +214,7 @@ public class ReFuelDrill {
       if (ThrowAtEnd.isThrow) {
         int slot = getItemInSlot.getItemSlot(Items.fishing_rod);
 
-        swapToSlot.swapToSlot(slot);
+        SwapToSlot.swapToSlot(slot);
 
         try {
           Thread.sleep(200);
