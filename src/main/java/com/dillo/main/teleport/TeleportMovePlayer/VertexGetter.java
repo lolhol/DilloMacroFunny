@@ -4,7 +4,6 @@ import static com.dillo.utils.RayTracingUtils.adjustLook;
 
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.previous.random.ids;
-import com.dillo.utils.renderUtils.renderModules.RenderPoints;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -67,29 +66,25 @@ public class VertexGetter {
   List<VertexGetterClass> fromPlayerPosToListOVertexes(Vec3 playerHeightVec) {
     List<VertexGetterClass> returnList = new ArrayList<>();
     returnList.add(
-      new VertexGetterClass(vec3, positionsMoves,
-
+      new VertexGetterClass(
         playerHeightVec.addVector(PositionsMoves.RIGHT.dx, 0, PositionsMoves.RIGHT.dz),
         PositionsMoves.RIGHT
       )
     );
     returnList.add(
-      new VertexGetterClass(vec3, positionsMoves,
-
+      new VertexGetterClass(
         playerHeightVec.addVector(PositionsMoves.LEFT.dx, 0, PositionsMoves.LEFT.dz),
         PositionsMoves.LEFT
       )
     );
     returnList.add(
-      new VertexGetterClass(vec3, positionsMoves,
-
+      new VertexGetterClass(
         playerHeightVec.addVector(PositionsMoves.BACKRIGHT.dx, 0, PositionsMoves.BACKRIGHT.dz),
         PositionsMoves.BACKRIGHT
       )
     );
     returnList.add(
-      new VertexGetterClass(vec3, positionsMoves,
-
+      new VertexGetterClass(
         playerHeightVec.addVector(PositionsMoves.BACKLEFT.dx, 0, PositionsMoves.BACKLEFT.dz),
         PositionsMoves.BACKLEFT
       )

@@ -21,9 +21,9 @@ public class GetMostOptimalPath {
   public static boolean isClear = false;
 
   public static OptimalPath getBestPath(List<BlockPos> originBlocks, float currentLook) {
-    OptimalPathRotation bestPath = new OptimalPathRotation(new ArrayList<>(), 0, 0, null);
+    OptimalPathRotation bestPath = new OptimalPathRotation(new ArrayList<>(), 0, 0);
     float bestPoints = 0;
-    OptimalPath optimalPath = new OptimalPath(new ArrayList<>(), 0, null);
+    OptimalPath optimalPath = new OptimalPath(new ArrayList<>(), 0);
 
     float maxRot = 25;
 
