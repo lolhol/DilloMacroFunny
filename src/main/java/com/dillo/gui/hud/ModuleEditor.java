@@ -133,7 +133,7 @@ public class ModuleEditor extends GuiScreen {
     );
 
     buttonList.add(button);
-    ButtonGuiClass newClass = new ButtonGuiClass(
+    ButtonGuiClass newClass = new ButtonGuiClass(guiButton, colour1, color2, color3, text, enabled, buttonText, tooltipText, callback1, callback2);
       button,
       Color.GREEN,
       Color.GREEN,
