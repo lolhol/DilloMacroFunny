@@ -23,8 +23,8 @@ public class GetOffArmadillo {
   private static boolean sneak = false;
   private static final KeyBinding SNEAK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
 
-  private final int MIN_DELAY_AMOUNT = 150;
-  private final int MAX_DELAY_AMOUNT = 400;
+  private final int MIN_DELAY_AMOUNT = 20;
+  private final int MAX_DELAY_AMOUNT = 130;
   private final Random random = new Random();
 
   public static void getOffArmadillo(CurrentState newState, double blockY, int amountOTicks, boolean turnOffSneak) {
