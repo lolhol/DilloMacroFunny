@@ -17,6 +17,7 @@ public class ProfitTracker extends Element {
 
   public boolean isHeld;
   public Vec3 drag = new Vec3(0, 0, 0);
+  public static GetTotalEarned.TotalEarning earnings = null;
 
   @Override
   public void initiateMiniMenu(ModuleEditor editor) {}
@@ -92,7 +93,7 @@ public class ProfitTracker extends Element {
     if (started) {
       if (ItemsPickedUp.timePoint + 10000 >= System.currentTimeMillis()) {
         if (GetTotalEarned.totalEarned().totalEarned > 0) {
-          GetTotalEarned.TotalEarning earnings = GetTotalEarned.totalEarned();
+          if (ItemsPickedUp.timePoint >= System.currentTimeMillis()) earnings = GetTotalEarned.totalEarned();
 
           renderProfitTracker(
             false,
