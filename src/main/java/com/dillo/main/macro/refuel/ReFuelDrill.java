@@ -30,68 +30,131 @@ public class ReFuelDrill {
   private static boolean start1 = false;
   public static boolean isStart = false;
 
-  public static void reFuelDrill() {
-    isStart = true;
+     public void reFuelDrill() {
+        isStart = true;
 
-    throwRod.throwRodInv();
+        throwRod.throwRodInv();
 
-    ArmadilloStates.currentState = REFUELING;
-    ArmadilloStates.offlineState = KillSwitch.OFFLINE;
+        ArmadilloStates.currentState = REFUELING;
+        ArmadilloStates.offlineState = KillSwitch.OFFLINE;
 
-    new Thread(() -> {
-      try {
-        Thread.sleep(500);
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
 
-      start = true;
+            start = true;
 
-      int slot = getPhoneSlot();
+            int slot = getPhoneSlot();
 
-      if (slot == -1) {
-        return;
-      }
+            if (slot == -1) {
+                return;
+            }
 
-      swapToSlot.swapToSlot(slot);
+            swapWithRandomDelay(slot);
 
-      try {
-        Thread.sleep(100);
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
+            ids.mc.thePlayer.sendQueue.addToSendQueue(
+                new C08PacketPlayerBlockPlacement(
+                    new BlockPos(-1, -1, -1),
+                    255,
+                    ids.mc.thePlayer.inventory.getStackInSlot(slot),
+                    0,
+                    0,
+                    0
+                )
+            );
 
-      ids.mc.thePlayer.sendQueue.addToSendQueue(
-        new C08PacketPlayerBlockPlacement(
-          new BlockPos(-1, -1, -1),
-          255,
-          ids.mc.thePlayer.inventory.getStackInSlot(slot),
-          0,
-          0,
-          0
-        )
-      );
+            swapWithRandomDelay(250);
 
-      try {
-        Thread.sleep(250);
-      } catch (InterruptedException e) {
-        SendChat.chat("!!!");
-      }
+            start = true;
 
-      start = true;
+            swapWithRandomDelay(10000);
 
-      try {
-        Thread.sleep(10000);
-      } catch (InterruptedException e) {
-        SendChat.chat("!!!");
-      }
+            if (!isOpen) {
+                start = false;
+            }
+        })
+        .start();
+    }
 
-      if (!isOpen) {
-        start = false;
-      }
-    })
-      .start();
-  }
+    public void stage3() {
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            clickSlotShift(81 + getDrillSlot(), 0);
+
+            swapWithRandomDelay(500);
+
+            clickSlotShift(81 + getBarrelSlot(), 0);
+
+            swapWithRandomDelay(500);
+
+            clickSlot(22, 0);
+
+            swapWithRandomDelay(500);
+
+            clickSlot(22, 0);
+
+            swapWithRandomDelay(500);
+
+            ids.mc.thePlayer.closeScreen();
+
+            swapWithRandomDelay(500);
+
+            swapWithRandomDelay(500);
+
+            if (!Objects.equals(getInventoryName(ids.mc.currentScreen), "")) {
+                ids.mc.thePlayer.closeScreen();
+
+                swapWithRandomDelay(500);
+            }
+
+            if (ThrowAtEnd.isThrow) {
+                int slot = getItemInSlot.getItemSlot(Items.fishing_rod);
+
+                swapToSlot.swapToSlot(slot);
+
+                swapWithRandomDelay(200);
+
+                ids.mc.thePlayer.sendQueue.addToSendQueue(
+                    new C08PacketPlayerBlockPlacement(
+                        new BlockPos(-1, -1, -1),
+                        255,
+                        ids.mc.thePlayer.inventory.getStackInSlot(slot),
+                        0,
+                        0,
+                        0
+                    )
+                );
+            }
+
+            if (ArmadilloStates.currentState == REFUELING) {
+                ArmadilloStates.offlineState = KillSwitch.ONLINE;
+                ArmadilloStates.currentState = ARMADILLO;
+            }
+        })
+        .start();
+    }
+
+    private void swapWithRandomDelay(int delayTime) {
+        try {
+            int delay = MIN_DELAY_AMOUNT + random.nextInt(MAX_DELAY_AMOUNT - MIN_DELAY_AMOUNT + 1);
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void swapWithRandomDelay(int slot) {
+        swapToSlot.swapToSlot(slot);
+        swapWithRandomDelay(100);
+    }
 
   public static void stage2() {
     new Thread(() -> {
