@@ -159,17 +159,23 @@ public class SmartTP {
       }
     }
 
-    SendChat.chat(String.valueOf(System.currentTimeMillis() - start));
-
     blocks.sort((BlockPos block1, BlockPos block2) -> {
       return DistanceFromTo.distanceFromTo(block1, reference) < DistanceFromTo.distanceFromTo(block2, reference)
         ? -1
         : 1;
     });
 
-    SendChat.chat(
-      "Scanned: " + total + " with avg time per block -> " + (double) (System.currentTimeMillis() - start) / total
-    );
+    if (config.debugText) {
+      SendChat.chat(String.valueOf(System.currentTimeMillis() - start));
+      SendChat.chat(
+        "Scanned: " +
+        total +
+        " with avg time per block -> " +
+        (double) (System.currentTimeMillis() - start) /
+        total +
+        "."
+      );
+    }
 
     return blocks;
   }

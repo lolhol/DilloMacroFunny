@@ -46,7 +46,7 @@ public class StateDillo {
   public static int checkedNumber = 0;
   private static boolean look = true;
   public static boolean isSmartTP = false;
-  private static float player = 0;
+  private static float isDilloSummonedTickCount = 0;
   boolean looking = false;
 
   public static void stateDilloNoGettingOn() {
@@ -147,6 +147,7 @@ public class StateDillo {
     for (Entity entity : entityList) {
       if (!(entity instanceof EntityPlayer)) {
         if (entity.getName().contains(player.getName())) {
+          isDilloSummonedTickCount++;
           return true;
         }
       }
@@ -254,7 +255,7 @@ public class StateDillo {
 
           if (tickDilloCheckCount >= 4) {
             if (!fasterDillo) {
-              if (isDilloSummoned()) {
+              if (isDilloSummoned() && isDilloSummonedTickCount > 2) {
                 rightClick();
               }
             } else {

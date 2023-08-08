@@ -55,6 +55,7 @@ public class TeleportToBlock {
       new net.minecraft.block.Block[] { Blocks.air },
       false
     );
+
     if (!walkOnTP || tpWalkOverride) {
       if (nextBlockPos == null) {
         // nextBlockPos = getUnobstructedPos(nextBlock);
