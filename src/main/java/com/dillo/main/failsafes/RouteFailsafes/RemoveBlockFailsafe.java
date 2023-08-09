@@ -14,30 +14,30 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class RemoveBlockFailsafe {
 
-  int curTicks = 0;
+    int curTicks = 0;
 
-  public boolean isBlockLoaded(BlockPos block) {
-    Chunk chunk = new Chunk(ids.mc.theWorld, block.getX(), block.getZ());
-    return chunk.isLoaded();
-  }
-
-  @SubscribeEvent
-  public void onClientTick(TickEvent.ClientTickEvent event) {
-    if (!ArmadilloStates.isOnline() || curTicks < 20) {
-      curTicks++;
-      return;
+    public boolean isBlockLoaded(BlockPos block) {
+        Chunk chunk = new Chunk(ids.mc.theWorld, block.getX(), block.getZ());
+        return chunk.isLoaded();
     }
 
-    for (BlockPos block : currentRoute.currentRoute) {
-      if (!isBlockLoaded(block)) continue;
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (!ArmadilloStates.isOnline() || curTicks < 20) {
+            curTicks++;
+            return;
+        }
 
-      if (ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.air) {
-        ArmadilloStates.offlineState = KillSwitch.OFFLINE;
-        SendChat.chat(prefix.prefix + "Detected cobble missing on route! Stopping!");
-        return;
-      }
+        for (BlockPos block : currentRoute.currentRoute) {
+            if (!isBlockLoaded(block)) continue;
+
+            if (ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.air) {
+                ArmadilloStates.offlineState = KillSwitch.OFFLINE;
+                SendChat.chat(prefix.prefix + "Detected cobble missing on route! Stopping!");
+                return;
+            }
+        }
+
+        curTicks = 0;
     }
-
-    curTicks = 0;
-  }
 }

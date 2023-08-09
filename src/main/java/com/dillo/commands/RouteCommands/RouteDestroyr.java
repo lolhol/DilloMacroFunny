@@ -10,31 +10,31 @@ import gg.essential.api.commands.DefaultHandler;
 
 public class RouteDestroyr extends Command {
 
-  boolean routeDestroy = false;
-  RouteDeletrMain deletr;
+    boolean routeDestroy = false;
+    RouteDeletrMain deletr;
 
-  public RouteDestroyr(RouteDeletrMain destroyer) {
-    super("destroyRoute");
-    deletr = destroyer;
-  }
+    public RouteDestroyr(RouteDeletrMain destroyer) {
+        super("destroyRoute");
+        deletr = destroyer;
+    }
 
-  @DefaultHandler
-  public void destroyRoute() {
-    routeDestroy = !routeDestroy;
+    @DefaultHandler
+    public void destroyRoute() {
+        routeDestroy = !routeDestroy;
 
-    String str = routeDestroy ? "Started Destroying!" : "Stopped Destroying";
-    SendChat.chat(prefix.prefix + str);
+        String str = routeDestroy ? "Started Destroying!" : "Stopped Destroying";
+        SendChat.chat(prefix.prefix + str);
 
-    RouteDeletrConfig config = new RouteDeletrConfig(
-      true,
-      true,
-      true,
-      ids.mc.playerController.getBlockReachDistance(),
-      20,
-      30,
-      100
-    );
+        RouteDeletrConfig config = new RouteDeletrConfig(
+                true,
+                true,
+                true,
+                ids.mc.playerController.getBlockReachDistance(),
+                20,
+                30,
+                100
+        );
 
-    deletr.startStop(config, routeDestroy);
-  }
+        deletr.startStop(config, routeDestroy);
+    }
 }

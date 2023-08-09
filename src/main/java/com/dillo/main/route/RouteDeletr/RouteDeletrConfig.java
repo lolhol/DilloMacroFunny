@@ -7,11 +7,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public class RouteDeletrConfig {
 
-  public boolean boomBox;
-  public boolean onlyOnRoute;
-  public boolean isBreakCobble;
-  public float range;
-  public int nukerBPS;
-  public int totalCheckTicks;
-  public int msServerLookTime;
+    public boolean boomBox;
+    public boolean onlyOnRoute;
+    public boolean isBreakCobble;
+    public float range;
+    public int nukerBPS;
+    public int totalCheckTicks;
+    public int msServerLookTime;
 }

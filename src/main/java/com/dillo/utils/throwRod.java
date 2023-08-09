@@ -11,32 +11,32 @@ import net.minecraft.util.BlockPos;
 
 public class throwRod {
 
-  public static Minecraft mc = Minecraft.getMinecraft();
+    public static Minecraft mc = Minecraft.getMinecraft();
 
-  public static void throwRodInv() {
-    Item rod = Items.fishing_rod;
-    //swapToSlot.swapToSlot(rod);
+    public static void throwRodInv() {
+        Item rod = Items.fishing_rod;
+        //swapToSlot.swapToSlot(rod);
 
-    if (checkIfItemInInv.checkIfItemInInv(rod)) {
-      int currentItem = mc.thePlayer.inventory.currentItem;
-      int rodSlot = getItemInSlot.getItemSlot(Items.fishing_rod);
-      //swapToSlot.swapToSlot(Items.fishing_rod);
+        if (checkIfItemInInv.checkIfItemInInv(rod)) {
+            int currentItem = mc.thePlayer.inventory.currentItem;
+            int rodSlot = getItemInSlot.getItemSlot(Items.fishing_rod);
+            //swapToSlot.swapToSlot(Items.fishing_rod);
 
-      mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(rodSlot));
+            mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(rodSlot));
 
-      mc.thePlayer.sendQueue.addToSendQueue(
-        new C08PacketPlayerBlockPlacement(
-          new BlockPos(-1, -1, -1),
-          255,
-          mc.thePlayer.inventory.getStackInSlot(rodSlot),
-          0,
-          0,
-          0
-        )
-      );
+            mc.thePlayer.sendQueue.addToSendQueue(
+                    new C08PacketPlayerBlockPlacement(
+                            new BlockPos(-1, -1, -1),
+                            255,
+                            mc.thePlayer.inventory.getStackInSlot(rodSlot),
+                            0,
+                            0,
+                            0
+                    )
+            );
 
-      mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(currentItem));
-      //swapToSlot.swapToSlot(currentItem);
+            mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(currentItem));
+            //swapToSlot.swapToSlot(currentItem);
+        }
     }
-  }
 }

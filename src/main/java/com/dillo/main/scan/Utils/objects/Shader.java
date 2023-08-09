@@ -4,57 +4,57 @@ import org.lwjgl.opengl.GL20;
 
 public class Shader {
 
-  public int pointer;
+    public int pointer;
 
-  public Shader() {
-    int __result = GL20.glCreateProgram();
-    try {
-      GL20.glAttachShader(
-        __result,
-        compileShader(
-          "#version 120\n" + "varying float alpha;\n" + "void main() {\n" + "    gl_FragColor = gl_Color;\n" + "}",
-          35632
-        )
-      );
-      GL20.glAttachShader(
-        __result,
-        compileShader(
-          "#version 120\n" +
-          "#extension GL_EXT_draw_instanced : enable\n" +
-          "#extension GL_EXT_gpu_shader4 : enable\n" +
-          "uniform vec3 positions[512];\n" +
-          "void main() {\n" +
-          "    gl_FrontColor = gl_Color;\n" +
-          "    gl_Position = gl_ModelViewProjectionMatrix * vec4(gl_Vertex.xyz + positions[gl_InstanceID], 1.0);\n" +
-          "}",
-          35633
-        )
-      );
-      GL20.glLinkProgram(__result);
+    public Shader() {
+        int __result = GL20.glCreateProgram();
+        try {
+            GL20.glAttachShader(
+                    __result,
+                    compileShader(
+                            "#version 120\n" + "varying float alpha;\n" + "void main() {\n" + "    gl_FragColor = gl_Color;\n" + "}",
+                            35632
+                    )
+            );
+            GL20.glAttachShader(
+                    __result,
+                    compileShader(
+                            "#version 120\n" +
+                                    "#extension GL_EXT_draw_instanced : enable\n" +
+                                    "#extension GL_EXT_gpu_shader4 : enable\n" +
+                                    "uniform vec3 positions[512];\n" +
+                                    "void main() {\n" +
+                                    "    gl_FrontColor = gl_Color;\n" +
+                                    "    gl_Position = gl_ModelViewProjectionMatrix * vec4(gl_Vertex.xyz + positions[gl_InstanceID], 1.0);\n" +
+                                    "}",
+                            35633
+                    )
+            );
+            GL20.glLinkProgram(__result);
 
-      if (GL20.glGetProgrami(__result, 35714) == 0) throw new IllegalStateException("Shader failed to link!");
-    } catch (Exception e) {
-      e.printStackTrace();
+            if (GL20.glGetProgrami(__result, 35714) == 0) throw new IllegalStateException("Shader failed to link!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        this.pointer = __result;
     }
 
-    this.pointer = __result;
-  }
+    private int compileShader(String code, int type) {
+        try {
+            int result = GL20.glCreateShader(type);
 
-  private int compileShader(String code, int type) {
-    try {
-      int result = GL20.glCreateShader(type);
+            GL20.glShaderSource(result, code);
+            GL20.glCompileShader(result);
 
-      GL20.glShaderSource(result, code);
-      GL20.glCompileShader(result);
+            if (GL20.glGetShaderi(result, 35713) == 0) throw new IllegalStateException(
+                    "Failed to compile shader! " + GL20.glGetShaderInfoLog(result, 4096)
+            );
 
-      if (GL20.glGetShaderi(result, 35713) == 0) throw new IllegalStateException(
-        "Failed to compile shader! " + GL20.glGetShaderInfoLog(result, 4096)
-      );
-
-      return result;
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new IllegalStateException("Failed to compile shader!");
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalStateException("Failed to compile shader!");
+        }
     }
-  }
 }

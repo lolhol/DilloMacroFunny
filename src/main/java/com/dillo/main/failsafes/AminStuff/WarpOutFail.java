@@ -10,12 +10,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class WarpOutFail {
 
-  @SubscribeEvent
-  public void onWorldChange(WorldEvent.Load event) {
-    if (!ArmadilloStates.isOnline()) return;
-    if (ids.mc.thePlayer == null || ids.mc.theWorld == null) return;
+    @SubscribeEvent
+    public void onWorldChange(WorldEvent.Load event) {
+        if (!ArmadilloStates.isOnline()) return;
+        if (ids.mc.thePlayer == null || ids.mc.theWorld == null) return;
 
-    SendChat.chat(prefix.prefix + "Detected world change! Disabling!");
-    ArmadilloStates.offlineState = KillSwitch.OFFLINE;
-  }
+        SendChat.chat(prefix.prefix + "Detected world change! Disabling!");
+        ArmadilloStates.offlineState = KillSwitch.OFFLINE;
+    }
 }

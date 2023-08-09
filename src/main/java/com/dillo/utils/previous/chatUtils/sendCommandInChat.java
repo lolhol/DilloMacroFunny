@@ -7,9 +7,9 @@ import net.minecraft.util.IChatComponent;
 
 public class sendCommandInChat {
 
-  private static final Minecraft mc = Minecraft.getMinecraft();
+    private static final Minecraft mc = Minecraft.getMinecraft();
 
-  public static void chat(String msg) {
-    mc.thePlayer.addChatMessage((IChatComponent) new ChatComponentText(prefix.prefix + msg));
-  }
+    public static void chat(String msg) {
+        mc.thePlayer.addChatMessage((IChatComponent) new ChatComponentText(prefix.prefix + msg));
+    }
 }

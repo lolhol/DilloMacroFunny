@@ -9,22 +9,22 @@ import gg.essential.api.commands.DefaultHandler;
 
 public class StartAutoSetupWithBaritone extends Command {
 
-  public static SetupMain main = new SetupMain();
+    public static SetupMain main = new SetupMain();
 
-  public StartAutoSetupWithBaritone() {
-    super("autoSetup");
-  }
-
-  @DefaultHandler
-  public void handle() {
-    if (
-      ids.mc.thePlayer.getCurrentEquippedItem().getDisplayName().toLowerCase().contains("drill") &&
-      currentRoute.currentRoute.size() > 0
-    ) {
-      main.isTurnedOn = !main.isTurnedOn;
-      if (!main.isTurnedOn) main.reset();
+    public StartAutoSetupWithBaritone() {
+        super("autoSetup");
     }
 
-    SendChat.chat(main.isTurnedOn ? "Starting!" : "DONE");
-  }
+    @DefaultHandler
+    public void handle() {
+        if (
+                ids.mc.thePlayer.getCurrentEquippedItem().getDisplayName().toLowerCase().contains("drill") &&
+                        currentRoute.currentRoute.size() > 0
+        ) {
+            main.isTurnedOn = !main.isTurnedOn;
+            if (!main.isTurnedOn) main.reset();
+        }
+
+        SendChat.chat(main.isTurnedOn ? "Starting!" : "DONE");
+    }
 }

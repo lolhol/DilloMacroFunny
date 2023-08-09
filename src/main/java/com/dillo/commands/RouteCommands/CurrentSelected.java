@@ -8,20 +8,20 @@ import gg.essential.api.commands.DefaultHandler;
 
 public class CurrentSelected extends Command {
 
-  public CurrentSelected() {
-    super("currentRoute");
-  }
-
-  @DefaultHandler
-  public void handle() {
-    if (
-      currentRoute.currentRouteSelected == null ||
-      currentRoute.currentRouteSelected.equals("") ||
-      currentRoute.currentRouteSelected.equals("none")
-    ) {
-      SendChat.chat(prefix.prefix + "No route is currently selected!");
-    } else {
-      SendChat.chat(prefix.prefix + currentRoute.currentRouteSelected + " is currently selected!");
+    public CurrentSelected() {
+        super("currentRoute");
     }
-  }
+
+    @DefaultHandler
+    public void handle() {
+        if (
+                currentRoute.currentRouteSelected == null ||
+                        currentRoute.currentRouteSelected.equals("") ||
+                        currentRoute.currentRouteSelected.equals("none")
+        ) {
+            SendChat.chat(prefix.prefix + "No route is currently selected!");
+        } else {
+            SendChat.chat(prefix.prefix + currentRoute.currentRouteSelected + " is currently selected!");
+        }
+    }
 }

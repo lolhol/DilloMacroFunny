@@ -7,9 +7,9 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 @Cancelable
 public class ScreenClosedEvent extends Event {
 
-  public Container container;
+    public Container container;
 
-  public ScreenClosedEvent(Container container) {
-    this.container = container;
-  }
+    public ScreenClosedEvent(Container container) {
+        this.container = container;
+    }
 }

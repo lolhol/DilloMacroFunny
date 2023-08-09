@@ -5,6 +5,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 
 public class onKeyPress {
 
-  @SubscribeEvent
-  public void keyPress(InputEvent.KeyInputEvent event) {}
+    @SubscribeEvent
+    public void keyPress(InputEvent.KeyInputEvent event) {
+    }
 }

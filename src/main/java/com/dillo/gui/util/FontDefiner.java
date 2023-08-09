@@ -1,8 +1,9 @@
 package com.dillo.gui.util;
 
-import java.awt.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+
+import java.awt.*;
 
 /**
  * From Aurora :D
@@ -10,32 +11,32 @@ import net.minecraft.util.ResourceLocation;
 
 public class FontDefiner {
 
-  public static FontRender getFontRenderer(float size) {
-    FontRender tempRenderer;
-    try {
-      tempRenderer =
-        new FontRender(
-          Font
-            .createFont(
-              Font.TRUETYPE_FONT,
-              Minecraft.getMinecraft().getResourceManager().getResource(getFontLocation()).getInputStream()
-            )
-            .deriveFont(Font.PLAIN, size),
-          true,
-          false
-        );
-    } catch (Exception e) {
-      throw new RuntimeException(e);
+    public static FontRender getFontRenderer(float size) {
+        FontRender tempRenderer;
+        try {
+            tempRenderer =
+                    new FontRender(
+                            Font
+                                    .createFont(
+                                            Font.TRUETYPE_FONT,
+                                            Minecraft.getMinecraft().getResourceManager().getResource(getFontLocation()).getInputStream()
+                                    )
+                                    .deriveFont(Font.PLAIN, size),
+                            true,
+                            false
+                    );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return tempRenderer;
     }
-    return tempRenderer;
-  }
 
-  public static FontRender getFontRenderer() {
-    return getFontRenderer(19f);
-  }
+    public static FontRender getFontRenderer() {
+        return getFontRenderer(19f);
+    }
 
-  private static ResourceLocation getFontLocation() {
-    String location = "funny-textures:";
+    private static ResourceLocation getFontLocation() {
+        String location = "funny-textures:";
     /*switch (Config.hudFont) {
       case 0:
         location += "kanit.ttf";
@@ -47,6 +48,6 @@ public class FontDefiner {
         location += "dys.ttf";
         break;
     }*/
-    return new ResourceLocation(location);
-  }
+        return new ResourceLocation(location);
+    }
 }

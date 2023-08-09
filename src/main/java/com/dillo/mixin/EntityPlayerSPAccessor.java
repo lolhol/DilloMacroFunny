@@ -6,15 +6,15 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(EntityPlayerSP.class)
 public interface EntityPlayerSPAccessor {
-  @Accessor
-  float getLastReportedYaw();
+    @Accessor
+    float getLastReportedYaw();
 
-  @Accessor
-  void setLastReportedYaw(float lastReportedYaw);
+    @Accessor
+    void setLastReportedYaw(float lastReportedYaw);
 
-  @Accessor
-  void setLastReportedPitch(float lastReportedPitch);
+    @Accessor
+    float getLastReportedPitch();
 
-  @Accessor
-  float getLastReportedPitch();
+    @Accessor
+    void setLastReportedPitch(float lastReportedPitch);
 }

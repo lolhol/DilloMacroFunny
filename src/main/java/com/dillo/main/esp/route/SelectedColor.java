@@ -1,18 +1,19 @@
 package com.dillo.main.esp.route;
 
 import com.dillo.config.config;
+
 import java.awt.*;
 
 public class SelectedColor {
 
-  public static Color getSelectedColor() {
-    if (config.blockESPColor == 0) {
-      return Color.RED;
-    } else if (config.blockESPColor == 1) {
-      return Color.GREEN;
-    } else if (config.blockESPColor == 2) {
-      return Color.BLUE;
-    }/*else if(config.blockESPColor == 3) {
+    public static Color getSelectedColor() {
+        if (config.blockESPColor == 0) {
+            return Color.RED;
+        } else if (config.blockESPColor == 1) {
+            return Color.GREEN;
+        } else if (config.blockESPColor == 2) {
+            return Color.BLUE;
+        }/*else if(config.blockESPColor == 3) {
             //
         } else if(config.blockESPColor == 4) {
             //
@@ -20,6 +21,6 @@ public class SelectedColor {
             //
         }*/
 
-    return Color.MAGENTA;
-  }
+        return Color.MAGENTA;
+    }
 }

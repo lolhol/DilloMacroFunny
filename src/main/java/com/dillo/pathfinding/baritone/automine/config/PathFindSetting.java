@@ -7,12 +7,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PathFindSetting {
 
-  @Getter
-  boolean mineWithPreference;
+    @Getter
+    boolean mineWithPreference;
 
-  @Getter
-  PathMode pathMode;
+    @Getter
+    PathMode pathMode;
 
-  @Getter
-  boolean findWithBlockPos;
+    @Getter
+    boolean findWithBlockPos;
 }

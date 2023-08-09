@@ -7,13 +7,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class BlockChangeEvent extends Event {
 
-  public BlockPos pos;
-  public IBlockState old;
-  public IBlockState update;
+    public BlockPos pos;
+    public IBlockState old;
+    public IBlockState update;
 
-  public BlockChangeEvent(@NotNull BlockPos pos, @NotNull IBlockState old, @NotNull IBlockState update) {
-    this.pos = pos;
-    this.old = old;
-    this.update = update;
-  }
+    public BlockChangeEvent(@NotNull BlockPos pos, @NotNull IBlockState old, @NotNull IBlockState update) {
+        this.pos = pos;
+        this.old = old;
+        this.update = update;
+    }
 }

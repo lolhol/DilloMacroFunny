@@ -9,7 +9,7 @@ import net.minecraft.util.Vec3;
 @AllArgsConstructor
 public class VertexGetterConfig {
 
-  public Vec3 playerPosition;
-  public BlockPos nextBlock;
-  public float playerHeight;
+    public Vec3 playerPosition;
+    public BlockPos nextBlock;
+    public float playerHeight;
 }

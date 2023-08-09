@@ -4,5 +4,5 @@ import net.minecraft.client.Minecraft;
 
 public class ids {
 
-  public static final Minecraft mc = Minecraft.getMinecraft();
+    public static final Minecraft mc = Minecraft.getMinecraft();
 }

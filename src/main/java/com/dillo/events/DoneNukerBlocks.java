@@ -4,5 +4,6 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class DoneNukerBlocks extends Event {
 
-  public DoneNukerBlocks() {}
+    public DoneNukerBlocks() {
+    }
 }

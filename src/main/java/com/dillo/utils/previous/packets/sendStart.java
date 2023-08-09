@@ -7,10 +7,10 @@ import net.minecraft.util.EnumFacing;
 
 public class sendStart {
 
-  public static void sendStartPacket(BlockPos block, EnumFacing enumFacing) {
-    ids.mc.thePlayer.sendQueue.addToSendQueue(
-      new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.START_DESTROY_BLOCK, block, enumFacing)
-    );
-    ids.mc.thePlayer.swingItem();
-  }
+    public static void sendStartPacket(BlockPos block, EnumFacing enumFacing) {
+        ids.mc.thePlayer.sendQueue.addToSendQueue(
+                new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.START_DESTROY_BLOCK, block, enumFacing)
+        );
+        ids.mc.thePlayer.swingItem();
+    }
 }

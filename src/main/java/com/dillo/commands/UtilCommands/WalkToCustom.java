@@ -7,16 +7,16 @@ import gg.essential.api.commands.DefaultHandler;
 
 public class WalkToCustom extends Command {
 
-  public static boolean startRender = false;
-  StevebotApi api;
+    public static boolean startRender = false;
+    StevebotApi api;
 
-  public WalkToCustom(StevebotApi api) {
-    super("walkToCustom");
-    this.api = api;
-  }
+    public WalkToCustom(StevebotApi api) {
+        super("walkToCustom");
+        this.api = api;
+    }
 
-  @DefaultHandler
-  public void handle() {
-    ids.mc.thePlayer.inventory.currentItem = 1;
-  }
+    @DefaultHandler
+    public void handle() {
+        ids.mc.thePlayer.inventory.currentItem = 1;
+    }
 }

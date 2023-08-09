@@ -8,19 +8,19 @@ import gg.essential.api.commands.DefaultHandler;
 
 public class GemESP extends Command {
 
-  public static boolean isRenderGems = false;
+    public static boolean isRenderGems = false;
 
-  public GemESP() {
-    super("gemESP");
-  }
+    public GemESP() {
+        super("gemESP");
+    }
 
-  @DefaultHandler
-  public void handle() {
-    isRenderGems = !isRenderGems;
+    @DefaultHandler
+    public void handle() {
+        isRenderGems = !isRenderGems;
 
-    String str = isRenderGems ? "Started Rendering!" : "Stopped Rendering!";
-    SendChat.chat(prefix.prefix + str);
+        String str = isRenderGems ? "Started Rendering!" : "Stopped Rendering!";
+        SendChat.chat(prefix.prefix + str);
 
-    ids.mc.renderGlobal.loadRenderers();
-  }
+        ids.mc.renderGlobal.loadRenderers();
+    }
 }

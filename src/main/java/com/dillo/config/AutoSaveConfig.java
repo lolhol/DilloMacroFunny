@@ -7,47 +7,49 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import java.io.FileWriter;
-import java.lang.reflect.Field;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Keyboard;
 
+import java.io.FileWriter;
+import java.lang.reflect.Field;
+
 public class AutoSaveConfig {
 
-  public static boolean isOverride;
+    public static boolean isOverride;
 
-  @SubscribeEvent
-  public void onTick(TickEvent event) {
-    if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) || isOverride) {
-      backUpFile();
-      isOverride = false;
-    }
-  }
-
-  public void backUpFile() {
-    JsonArray main = new JsonArray();
-    Gson gson = new Gson();
-
-    for (Field field : config.class.getFields()) {
-      try {
-        if (!field.getName().equals("INSTANCE")) {
-          JsonObject jsonSub = new JsonObject();
-          jsonSub.add(field.getName(), new JsonPrimitive(field.get(null).toString()));
-          main.add(jsonSub);
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) || isOverride) {
+            backUpFile();
+            isOverride = false;
         }
-      } catch (IllegalAccessException e) {}
     }
 
-    String mainJsonString = gson.toJson(main);
+    public void backUpFile() {
+        JsonArray main = new JsonArray();
+        Gson gson = new Gson();
 
-    try {
-      FileWriter writer = new FileWriter(currentRoute.curConfig);
-      writer.write(mainJsonString);
-      writer.close();
-    } catch (Exception e) {
-      SendChat.chat(String.valueOf(currentRoute.curConfig));
-      SendChat.chat(prefix.prefix + "Failed backing up into file!");
+        for (Field field : config.class.getFields()) {
+            try {
+                if (!field.getName().equals("INSTANCE")) {
+                    JsonObject jsonSub = new JsonObject();
+                    jsonSub.add(field.getName(), new JsonPrimitive(field.get(null).toString()));
+                    main.add(jsonSub);
+                }
+            } catch (IllegalAccessException e) {
+            }
+        }
+
+        String mainJsonString = gson.toJson(main);
+
+        try {
+            FileWriter writer = new FileWriter(currentRoute.curConfig);
+            writer.write(mainJsonString);
+            writer.close();
+        } catch (Exception e) {
+            SendChat.chat(String.valueOf(currentRoute.curConfig));
+            SendChat.chat(prefix.prefix + "Failed backing up into file!");
+        }
     }
-  }
 }

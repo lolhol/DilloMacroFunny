@@ -4,7 +4,7 @@ import com.dillo.calls.ArmadilloStates;
 
 public class SetStatesNull {
 
-  public static void setStatesNull() {
-    ArmadilloStates.currentState = null;
-  }
+    public static void setStatesNull() {
+        ArmadilloStates.currentState = null;
+    }
 }

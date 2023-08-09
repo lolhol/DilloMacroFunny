@@ -9,18 +9,18 @@ import gg.essential.api.commands.DefaultHandler;
 
 public class RemoveBlockRoute extends Command {
 
-  public RemoveBlockRoute() {
-    super("removeBlock");
-  }
-
-  @DefaultHandler
-  public void handle(int number) {
-    if (number - 1 < currentRoute.currentRoute.size()) {
-      currentRoute.currentRoute.remove(number - 1);
-      ReWriteFile.reWriteFile(currentRoute.currentRouteFile);
-      SendChat.chat(prefix.prefix + "Block removed!");
-    } else {
-      SendChat.chat(prefix.prefix + "Please provide a valid number on route.");
+    public RemoveBlockRoute() {
+        super("removeBlock");
     }
-  }
+
+    @DefaultHandler
+    public void handle(int number) {
+        if (number - 1 < currentRoute.currentRoute.size()) {
+            currentRoute.currentRoute.remove(number - 1);
+            ReWriteFile.reWriteFile(currentRoute.currentRouteFile);
+            SendChat.chat(prefix.prefix + "Block removed!");
+        } else {
+            SendChat.chat(prefix.prefix + "Please provide a valid number on route.");
+        }
+    }
 }

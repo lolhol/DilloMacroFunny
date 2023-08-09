@@ -15,18 +15,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockRendererDispatcher.class)
 public class MixinGemESP {
 
-  @Inject(method = "renderBlock", at = @At("HEAD"), cancellable = true)
-  private void renderBlock(
-    IBlockState state,
-    BlockPos pos,
-    IBlockAccess blockAccess,
-    WorldRenderer worldRendererIn,
-    CallbackInfoReturnable<Boolean> cir
-  ) {
-    if (GemESP.isRenderGems) {
-      if (state.getBlock() != Blocks.stained_glass && state.getBlock() != Blocks.stained_glass_pane) {
-        cir.setReturnValue(false);
-      }
+    @Inject(method = "renderBlock", at = @At("HEAD"), cancellable = true)
+    private void renderBlock(
+            IBlockState state,
+            BlockPos pos,
+            IBlockAccess blockAccess,
+            WorldRenderer worldRendererIn,
+            CallbackInfoReturnable<Boolean> cir
+    ) {
+        if (GemESP.isRenderGems) {
+            if (state.getBlock() != Blocks.stained_glass && state.getBlock() != Blocks.stained_glass_pane) {
+                cir.setReturnValue(false);
+            }
+        }
     }
-  }
 }

@@ -1,7 +1,5 @@
 package com.dillo.main.macro.main;
 
-import static com.dillo.armadillomacro.regJump;
-
 import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.CurrentState;
 import com.dillo.utils.previous.SendChat;
@@ -11,17 +9,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
 import java.util.Random;
+
+import static com.dillo.armadillomacro.regJump;
 
 public class GetOffArmadillo {
 
+    private static final KeyBinding SNEAK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
     private static double blockYPos = -34;
     private static boolean startOff = false;
     private static int ammountOfCheckTicks = 0;
     private static int currTicks = 0;
     private static boolean sneak = false;
-    private static final KeyBinding SNEAK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
-    
     private final int MIN_DELAY_AMOUNT = 150;
     private final int MAX_DELAY_AMOUNT = 400;
     private final Random random = new Random();
