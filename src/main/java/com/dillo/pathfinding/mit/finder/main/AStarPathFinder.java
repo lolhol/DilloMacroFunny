@@ -45,10 +45,6 @@ public class AStarPathFinder {
       //fCost ====> gCost + hCost.
 
       BlockNodeClass node = openSet.get(0);
-      RenderMultipleBlocksMod.renderMultipleBlocks(
-        new Vec3(node.blockPos().getX(), node.blockPos().getY(), node.blockPos().getZ()),
-        true
-      );
 
       for (BlockNodeClass blockNode : openSet) {
         if (blockNode.totalCost <= node.totalCost && blockNode.hCost < node.hCost) {
@@ -80,8 +76,12 @@ public class AStarPathFinder {
 
         double newCostToNeighbour = node.gCost + DistanceFromTo.distanceFromTo(node.blockPos(), child.blockPos());
         if (newCostToNeighbour < child.gCost || !openSet.contains(child)) {
+          RenderMultipleBlocksMod.renderMultipleBlocks(
+            new Vec3(child.blockPos().getX(), child.blockPos().getY(), child.blockPos().getZ()),
+            true
+          );
           child.gCost = newCostToNeighbour;
-          child.hCost = Costs.calculateHCostBlockPos(child.blockPos, node.finalBlock);
+          child.hCost = Costs.calculateHCostBlockPos(child.blockPos, pathFinderConfig.destinationBlock);
           //child.gCost = DistanceFromTo.distanceFromTo(child.blockPos(), endPoint.blockPos());
           child.totalCost = Costs.calculateFullCostDistance(child);
           child.parentOfBlock = node;

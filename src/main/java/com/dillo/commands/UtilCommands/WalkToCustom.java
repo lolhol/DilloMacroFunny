@@ -28,6 +28,12 @@ public class WalkToCustom extends Command {
     RenderMultipleBlocksMod.renderMultipleBlocks(null, false);
 
     new Thread(() -> {
+      SendChat.chat("Starting");
+      try {
+        Thread.sleep(500);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
       BlockPos endBlock = new BlockPos(x, y, z);
       AStarPathFinder pathFinder = new AStarPathFinder();
       List<BlockPos> foundPath = pathFinder.AStarPathFinder(
@@ -38,7 +44,7 @@ public class WalkToCustom extends Command {
           false,
           false,
           5,
-          50,
+          100,
           100,
           ids.mc.thePlayer.getPosition(),
           endBlock,
