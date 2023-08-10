@@ -8,9 +8,11 @@ import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 
@@ -251,5 +253,60 @@ public class BlockUtils {
     }
 
     return blocks;
+  }
+
+  public static Iterable<BlockPos> getBlocksInBox(AxisAlignedBB axis, BlockPos reference) {
+    return BlockPos.getAllInBox(
+      makeNewBlock(axis.minX, axis.minY, axis.minZ, reference),
+      makeNewBlock(axis.maxX, axis.maxY, axis.maxZ, reference)
+    );
+  }
+
+  public static Block getBlockType(BlockPos block) {
+    return ids.mc.theWorld.getBlockState(block).getBlock();
+  }
+
+  public static double getPercentOfNonAir(Iterable<BlockPos> blocks) {
+    AtomicInteger nonAir = new AtomicInteger();
+    AtomicInteger total = new AtomicInteger();
+
+    blocks.forEach(b -> {
+      if (getBlockType(b) != Blocks.air) {
+        nonAir.getAndIncrement();
+      }
+
+      total.getAndIncrement();
+    });
+
+    if (total.intValue() > 0) {
+      return (double) (nonAir.intValue() / total.intValue()) * 100;
+    }
+
+    return -1;
+  }
+
+  public static double getPercentOfNonAir(List<BlockPos> blocks) {
+    AtomicInteger nonAir = new AtomicInteger();
+    AtomicInteger total = new AtomicInteger();
+
+    blocks.forEach(b -> {
+      if (getBlockType(b) != Blocks.air) {
+        nonAir.getAndIncrement();
+      }
+
+      total.getAndIncrement();
+    });
+
+    if (total.intValue() > 0) {
+      return (double) (nonAir.intValue() / total.intValue()) * 100;
+    }
+
+    return -1;
+  }
+
+  public static boolean isBlockSolid(BlockPos block) {
+    Block blockType = getBlock(block);
+
+    return blockType != Blocks.air && blockType != Blocks.lava && blockType != Blocks.water;
   }
 }

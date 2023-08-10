@@ -24,7 +24,6 @@ public class GetMostOptimalPath {
     OptimalPathRotation bestPath = new OptimalPathRotation(new ArrayList<>(), 0, 0);
     float bestPoints = 0;
     OptimalPath optimalPath = new OptimalPath(new ArrayList<>(), 0);
-
     float maxRot = 25;
 
     if (isClearing) {

@@ -35,6 +35,7 @@ import com.dillo.keybinds.Keybinds;
 import com.dillo.main.esp.chat.FilterChat;
 import com.dillo.main.esp.other.BigDildoDillo;
 import com.dillo.main.esp.other.StopRenderStand;
+import com.dillo.main.esp.player.FreeLook;
 import com.dillo.main.esp.route.BlockOnRouteESP;
 import com.dillo.main.failsafes.*;
 import com.dillo.main.failsafes.AminStuff.BedrockFail;
@@ -63,6 +64,7 @@ import com.dillo.main.utils.looks.YawLook;
 import com.dillo.pathfinding.Brigeros.DestroyBlock;
 import com.dillo.pathfinding.Brigeros.WalkOnPath;
 import com.dillo.pathfinding.RegistersStevebot;
+import com.dillo.pathfinding.mit.finder.main.AStarPathFinder;
 import com.dillo.pathfinding.stevebot.core.StevebotApi;
 import com.dillo.pathfinding.stevebot.core.data.blocks.BlockLibrary;
 import com.dillo.pathfinding.stevebot.core.data.blocks.BlockProvider;
@@ -340,7 +342,9 @@ public class armadillomacro {
         new FilterChat(),
         new ModuleEditorTrigger(),
         new AutoSaveConfig(),
-        new BedrockFail()
+        new BedrockFail(),
+        new FreeLook(),
+        new AStarPathFinder()
       );
     } catch (NoClassDefFoundError e) {
       System.out.println(Arrays.toString(e.getStackTrace()) + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");

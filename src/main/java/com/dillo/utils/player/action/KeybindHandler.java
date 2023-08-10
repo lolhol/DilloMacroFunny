@@ -1,9 +1,11 @@
-package com.dillo.pathfinding.baritone.automine.handlers;
+package com.dillo.utils.player.action;
 
-import com.dillo.pathfinding.baritone.automine.AutoMineBaritone;
-import com.dillo.pathfinding.baritone.automine.config.WalkBaritoneConfig;
+import java.lang.reflect.Field;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class KeybindHandler {
 
@@ -18,7 +20,41 @@ public class KeybindHandler {
   public static KeyBinding keyBindShift = mc.gameSettings.keyBindSneak;
   public static KeyBinding keyBindJump = mc.gameSettings.keyBindJump;
 
-  AutoMineBaritone debugBaritone = new AutoMineBaritone(new WalkBaritoneConfig(0, 256, 5));
+  private static Field mcLeftClickCounter;
+
+  static {
+    mcLeftClickCounter = ReflectionHelper.findField(Minecraft.class, "field_71429_W", "leftClickCounter");
+    if (mcLeftClickCounter != null) mcLeftClickCounter.setAccessible(true);
+  }
+
+  @SubscribeEvent
+  public void tickEvent(TickEvent.PlayerTickEvent event) {
+    if (mcLeftClickCounter != null) {
+      if (mc.inGameHasFocus) {
+        try {
+          mcLeftClickCounter.set(mc, 0);
+        } catch (IllegalAccessException | IndexOutOfBoundsException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+
+  public static void setKeyBindState(KeyBinding key, boolean pressed) {
+    if (pressed) {
+      if (mc.currentScreen != null) {
+        realSetKeyBindState(key, false);
+        return;
+      }
+    }
+    realSetKeyBindState(key, pressed);
+  }
+
+  public static void onTick(KeyBinding key) {
+    if (mc.currentScreen == null) {
+      KeyBinding.onTick(key.getKeyCode());
+    }
+  }
 
   public static void updateKeys(
     boolean wBool,
@@ -40,16 +76,6 @@ public class KeybindHandler {
     realSetKeyBindState(keybindAttack, atkBool);
     realSetKeyBindState(keybindUseItem, useBool);
     realSetKeyBindState(keyBindShift, shiftBool);
-  }
-
-  public static void setKeyBindState(KeyBinding key, boolean pressed) {
-    if (pressed) {
-      if (mc.currentScreen != null) {
-        realSetKeyBindState(key, false);
-        return;
-      }
-    }
-    realSetKeyBindState(key, pressed);
   }
 
   public static void updateKeys(

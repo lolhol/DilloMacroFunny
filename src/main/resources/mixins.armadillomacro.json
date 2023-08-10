@@ -6,17 +6,17 @@
   "mixins": [
   ],
   "client": [
-    "MixinGuiMainMenu",
-    "EntityPlayerSPMixin",
-    "MixinRendererLivingEntity",
-    "MixinGemESP",
     "EntityPlayerSPAccessor",
+    "EntityPlayerSPMixin",
     "MinecraftAccessor",
-    "MixinModelBiped",
-    "MixinAntiDillo"
+    "MixinAntiDillo",
+    "MixinGemESP",
+    "MixinGuiMainMenu",
+    "MixinModelBiped"
   ],
   "mixins": [
     "RenderManagerAccessor",
-    "MixinNetworkManager"
+    "MixinNetworkManager",
+    "MixinPlayerCameraPos"
   ]
 }

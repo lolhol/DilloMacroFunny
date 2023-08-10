@@ -9,8 +9,8 @@ import static com.dillo.main.utils.looks.LookAt.reset;
 import com.dillo.armadillomacro;
 import com.dillo.main.macro.refuel.ReFuelDrill;
 import com.dillo.main.route.Nuker.StartNuker;
-import com.dillo.pathfinding.baritone.automine.handlers.KeybindHandler;
 import com.dillo.utils.StartMacro;
+import com.dillo.utils.player.action.KeybindHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 

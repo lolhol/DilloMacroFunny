@@ -5,7 +5,7 @@ import static com.dillo.main.utils.keybinds.AllKeybinds.SNEAK;
 import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.CurrentState;
 import com.dillo.main.utils.looks.LookAt;
-import com.dillo.pathfinding.baritone.automine.handlers.KeybindHandler;
+import com.dillo.utils.player.action.KeybindHandler;
 import com.dillo.utils.previous.random.ids;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
