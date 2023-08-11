@@ -55,6 +55,7 @@ import com.dillo.main.route.ViewClearLines.ViewClearLines;
 import com.dillo.main.teleport.TeleportMovePlayer.MoveToVertex;
 import com.dillo.main.teleport.utils.*;
 import com.dillo.main.utils.JumpProgressRegister;
+import com.dillo.main.utils.funny.CancelAllBadSounds;
 import com.dillo.main.utils.jump.GetProjectedTime;
 import com.dillo.main.utils.looks.DriveLook;
 import com.dillo.main.utils.looks.LookAt;
@@ -220,7 +221,8 @@ public class armadillomacro {
         new FilterChat(),
         new ModuleEditorTrigger(),
         new AutoSaveConfig(),
-        new BedrockFail()
+        new BedrockFail(),
+        new CancelAllBadSounds()
       );
     } catch (NoClassDefFoundError e) {
       System.out.println(Arrays.toString(e.getStackTrace()) + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
