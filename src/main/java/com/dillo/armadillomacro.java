@@ -1,5 +1,7 @@
 package com.dillo;
 
+import static com.dillo.main.failsafes.AnswerPPL.makeAcusation;
+
 import com.dillo.adapter.MinecraftAdapterImpl;
 import com.dillo.calls.ArmadilloMain;
 import com.dillo.commands.*;
@@ -13,8 +15,8 @@ import com.dillo.commands.RouteCommands.*;
 import com.dillo.commands.RouteMakerUtils.CalcRouteAvgGemPerc;
 import com.dillo.commands.RouteMakerUtils.CheckIfCanTpToEvery;
 import com.dillo.commands.RouteMakerUtils.GemESP;
-import com.dillo.commands.UtilCommands.Test;
 import com.dillo.commands.UtilCommands.*;
+import com.dillo.commands.UtilCommands.Test;
 import com.dillo.commands.baritone.StartAutoSetupWithBaritone;
 import com.dillo.commands.baritone.WalkToBlockWithBaritone;
 import com.dillo.config.AutoSaveConfig;
@@ -34,9 +36,9 @@ import com.dillo.main.esp.chat.FilterChat;
 import com.dillo.main.esp.other.BigDildoDillo;
 import com.dillo.main.esp.other.StopRenderStand;
 import com.dillo.main.esp.route.BlockOnRouteESP;
+import com.dillo.main.failsafes.*;
 import com.dillo.main.failsafes.AminStuff.BedrockFail;
 import com.dillo.main.failsafes.AminStuff.WarpOutFail;
-import com.dillo.main.failsafes.*;
 import com.dillo.main.failsafes.RouteFailsafes.RemoveBlockFailsafe;
 import com.dillo.main.files.init.CheckFile;
 import com.dillo.main.macro.main.GetOffArmadillo;
@@ -77,6 +79,15 @@ import com.dillo.utils.GetConfigFolder;
 import com.dillo.utils.renderUtils.renderModules.*;
 import gg.essential.api.EssentialAPI;
 import gg.essential.api.commands.Command;
+import java.io.File;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -93,390 +104,376 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
-import java.io.File;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import static com.dillo.main.failsafes.AnswerPPL.makeAcusation;
-
 @Mod(modid = "autogg", name = "autogg", version = "1.0.0", clientSideOnly = true)
 @SideOnly(Side.CLIENT)
 public class armadillomacro {
 
-    public static BlockProvider blockProvider;
-    public static PlayerCamera playerCamera;
-    public static PlayerInput playerInput;
-    public static MobKillerMain mobKiller = new MobKillerMain();
-    public static Renderer renderer;
-    public static PathHandler pathHandler;
-    public static RouteDeletrMain destroyer = new RouteDeletrMain();
-    public static MoveToVertex vertexMover = new MoveToVertex();
-    public static File modFile = null;
-    public static ArrayList<KeyBinding> keybinds = new ArrayList<>();
-    public static List<Element> allOverlays = new ArrayList<>();
-    public static JumpProgressRegister regJump = new JumpProgressRegister();
-    private static EventManager eventManager;
-    private static ModEventProducer eventProducer;
-    private static BlockLibrary blockLibrary;
-    private static ItemLibrary itemLibrary;
-    private static PlayerMovement playerMovement;
-    private static PlayerInventory playerInventory;
-    private final EventListener<PostInitEvent> listenerPostInit = new EventListener<PostInitEvent>() {
-        @Override
-        public Class<PostInitEvent> getEventClass() {
-            return PostInitEvent.class;
-        }
+  public static BlockProvider blockProvider;
+  public static PlayerCamera playerCamera;
+  public static PlayerInput playerInput;
+  public static MobKillerMain mobKiller = new MobKillerMain();
+  public static Renderer renderer;
+  public static PathHandler pathHandler;
+  public static RouteDeletrMain destroyer = new RouteDeletrMain();
+  public static MoveToVertex vertexMover = new MoveToVertex();
+  public static File modFile = null;
+  public static ArrayList<KeyBinding> keybinds = new ArrayList<>();
+  public static List<Element> allOverlays = new ArrayList<>();
+  public static JumpProgressRegister regJump = new JumpProgressRegister();
+  private static EventManager eventManager;
+  private static ModEventProducer eventProducer;
+  private static BlockLibrary blockLibrary;
+  private static ItemLibrary itemLibrary;
+  private static PlayerMovement playerMovement;
+  private static PlayerInventory playerInventory;
+  private final EventListener<PostInitEvent> listenerPostInit = new EventListener<PostInitEvent>() {
+    @Override
+    public Class<PostInitEvent> getEventClass() {
+      return PostInitEvent.class;
+    }
 
-        @Override
-        public void onEvent(PostInitEvent event) {
-            blockLibrary.onEventInitialize();
-            itemLibrary.onEventInitialize();
-        }
-    };
-    private final EventListener<BlockEvent.BreakEvent> listenerBreakBlock = new EventListener<BlockEvent.BreakEvent>() {
-        @Override
-        public Class<BlockEvent.BreakEvent> getEventClass() {
-            return BlockEvent.BreakEvent.class;
-        }
+    @Override
+    public void onEvent(PostInitEvent event) {
+      blockLibrary.onEventInitialize();
+      itemLibrary.onEventInitialize();
+    }
+  };
+  private final EventListener<BlockEvent.BreakEvent> listenerBreakBlock = new EventListener<BlockEvent.BreakEvent>() {
+    @Override
+    public Class<BlockEvent.BreakEvent> getEventClass() {
+      return BlockEvent.BreakEvent.class;
+    }
 
-        @Override
-        public void onEvent(BlockEvent.BreakEvent event) {
-            blockProvider.getBlockCache().onEventBlockBreak(event.pos.getX(), event.pos.getY(), event.pos.getZ());
-        }
-    };
-    private final EventListener<BlockEvent.PlaceEvent> listenerPlaceBlock = new EventListener<BlockEvent.PlaceEvent>() {
-        @Override
-        public Class<BlockEvent.PlaceEvent> getEventClass() {
-            return BlockEvent.PlaceEvent.class;
-        }
+    @Override
+    public void onEvent(BlockEvent.BreakEvent event) {
+      blockProvider.getBlockCache().onEventBlockBreak(event.pos.getX(), event.pos.getY(), event.pos.getZ());
+    }
+  };
+  private final EventListener<BlockEvent.PlaceEvent> listenerPlaceBlock = new EventListener<BlockEvent.PlaceEvent>() {
+    @Override
+    public Class<BlockEvent.PlaceEvent> getEventClass() {
+      return BlockEvent.PlaceEvent.class;
+    }
 
-        @Override
-        public void onEvent(BlockEvent.PlaceEvent event) {
-            blockProvider.getBlockCache().onEventBlockPlace(event.pos.getX(), event.pos.getY(), event.pos.getZ());
-        }
-    };
-    private final EventListener<TickEvent.RenderTickEvent> listenerRenderTick =
-            new EventListener<TickEvent.RenderTickEvent>() {
-                @Override
-                public Class<TickEvent.RenderTickEvent> getEventClass() {
-                    return TickEvent.RenderTickEvent.class;
-                }
+    @Override
+    public void onEvent(BlockEvent.PlaceEvent event) {
+      blockProvider.getBlockCache().onEventBlockPlace(event.pos.getX(), event.pos.getY(), event.pos.getZ());
+    }
+  };
+  private final EventListener<TickEvent.RenderTickEvent> listenerRenderTick =
+    new EventListener<TickEvent.RenderTickEvent>() {
+      @Override
+      public Class<TickEvent.RenderTickEvent> getEventClass() {
+        return TickEvent.RenderTickEvent.class;
+      }
 
-                @Override
-                public void onEvent(TickEvent.RenderTickEvent event) {
-                    try {
-                        playerCamera.onRenderTickEvent(event.phase == TickEvent.Phase.START);
-                    } catch (NullPointerException e) {
-                    }
-                }
-            };
-    private final EventListener<TickEvent.ClientTickEvent> listenerClientTick =
-            new EventListener<TickEvent.ClientTickEvent>() {
-                @Override
-                public Class<TickEvent.ClientTickEvent> getEventClass() {
-                    return TickEvent.ClientTickEvent.class;
-                }
-
-                @Override
-                public void onEvent(TickEvent.ClientTickEvent event) {
-                    pathHandler.onEventClientTick();
-                }
-            };
-    private final EventListener<RenderWorldLastEvent> listenerRenderWorld = new EventListener<RenderWorldLastEvent>() {
-        @Override
-        public Class<RenderWorldLastEvent> getEventClass() {
-            return RenderWorldLastEvent.class;
-        }
-
-        @Override
-        public void onEvent(RenderWorldLastEvent event) {
-            try {
-                renderer.onEventRender(PlayerUtils.getPlayerPosition());
-            } catch (NullPointerException e) {
-            }
-        }
-    };
-    private final EventListener<TickEvent.PlayerTickEvent> listenerPlayerTick =
-            new EventListener<TickEvent.PlayerTickEvent>() {
-                @Override
-                public Class<TickEvent.PlayerTickEvent> getEventClass() {
-                    return TickEvent.PlayerTickEvent.class;
-                }
-
-                @Override
-                public void onEvent(TickEvent.PlayerTickEvent event) {
-                    if (event.phase == TickEvent.Phase.START) {
-                        playerInput.onEventPlayerTick();
-                    }
-                }
-            };
-    private final EventListener<ConfigChangedEvent.PostConfigChangedEvent> listenerConfigChanged =
-            new EventListener<ConfigChangedEvent.PostConfigChangedEvent>() {
-                @Override
-                public Class<ConfigChangedEvent.PostConfigChangedEvent> getEventClass() {
-                    return ConfigChangedEvent.PostConfigChangedEvent.class;
-                }
-
-                @Override
-                public void onEvent(ConfigChangedEvent.PostConfigChangedEvent event) {
-                    playerInput.onEventConfigChanged();
-                }
-            };
-
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
-        Display.setTitle("MiningInTwo");
-
-        CheckFile.checkFiles();
-        keybinds.add(new KeyBinding("Enable Macro", Keyboard.KEY_NONE, "Mining In Two"));
-        keybinds.add(new KeyBinding("Enable Nuker", Keyboard.KEY_NONE, "Mining In Two"));
-        keybinds.add(new KeyBinding("Quick View Structures", Keyboard.KEY_NONE, "Mining In Two"));
-        keybinds.add(new KeyBinding("Add Point", Keyboard.KEY_NONE, "Mining In Two"));
-        keybinds.add(new KeyBinding("Test Key", Keyboard.KEY_NONE, "Mining In Two"));
-
-        // Comment
-
-        registerCommands(
-                new StartMacroCommand(),
-                new DetectEntityUnderCommand(),
-                new AddBlockRouteCommand(),
-                new ClearBlockRoute(),
-                new SelectRouteCommand(),
-                new NewRouteCommand(),
-                new OpenGUI(),
-                new CurrentSelected(),
-                new RoutesInFolder(),
-                new AddAnswer(),
-                new RemoveAccusation(),
-                new ImportFromClipboard(),
-                new DeleteRoute(),
-                new ImportFromWeb(),
-                new RouteChecker(),
-                new AddStucture(),
-                new RemoveStructure(),
-                new StructurePoints(),
-                new ClearStructures(),
-                new StartClearLegit(),
-                new ViewHelperLines(),
-                new MainHelp(),
-                new HelpStructureCheck(),
-                new InsertInMiddle(),
-                new RemoveBlockRoute(),
-                new ReplaceBlockRoute(),
-                new ObstructedPoints(),
-                new AddConfig(),
-                new SelectConfig(),
-                new CalcRouteAvgGemPerc(),
-                new CheckIfCanTpToEvery(),
-                new GemESP(),
-                new WalkToBlockWithBaritone(),
-                new StartAutoSetupWithBaritone(),
-                new RouteDestroyr(destroyer),
-                new ImportRouteFromWebsite()
-        );
-
+      @Override
+      public void onEvent(TickEvent.RenderTickEvent event) {
         try {
-            registerEvents(
-                    new LookAt(),
-                    new ArmadilloMain(),
-                    new StateDillo(),
-                    new RenderSingleLineTwoPoints(),
-                    new RenderOneBlockMod(),
-                    new RenderMultipleBlocksMod(),
-                    new RenderPoints(),
-                    new BlockOnRouteESP(),
-                    new WaitThenCall(),
-                    new IsOnBlock(),
-                    new RenderMultipleLines(),
-                    new WalkOnPath(),
-                    new DestroyBlock(),
-                    new Keybinds(),
-                    new GetOffArmadillo(),
-                    new ServerTPSFailsafe(),
-                    new OverlayMod(),
-                    new LookWhileGoingDown(),
-                    new GetRemoteControl(),
-                    new PauseMacro(),
-                    new Movements(),
-                    new PlayerFailsafe(),
-                    new AnswerPPL(),
-                    new ItemsPickedUp(),
-                    new RemoteControl(),
-                    new RemoteControlChat(),
-                    new UsePathfinderInstead(),
-                    new NukerMain(),
-                    new Overlay(),
-                    new CurTime(),
-                    new StructurePoints(),
-                    new LegitRouteClear(),
-                    new ViewClearLines(),
-                    new WalkForward(),
-                    new Test(),
-                    new TooFarAwayFailsafe(),
-                    new ReFuelDrill(),
-                    new ReFuelDrillTriger(),
-                    new ThrowAtEnd(),
-                    new YawLook(),
-                    new PassReNew(),
-                    new DriveLook(),
-                    new TeleportToBlock(),
-                    new PlaceCobbleModule(),
-                    new SetupMain(),
-                    destroyer,
-                    vertexMover,
-                    mobKiller,
-                    new WarpOutFail(),
-                    new RemoveBlockFailsafe(),
-                    new RegistersStevebot(),
-                    new PlayerLocChangeTrigger(),
-                    //new NewSpinDrive(),
-                    regJump,
-                    new GetProjectedTime(),
-                    new StopRenderStand(),
-                    new BigDildoDillo(),
-                    new FilterChat(),
-                    new ModuleEditorTrigger(),
-                    new AutoSaveConfig(),
-                    new BedrockFail()
-            );
-        } catch (NoClassDefFoundError e) {
-            System.out.println(Arrays.toString(e.getStackTrace()) + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+          playerCamera.onRenderTickEvent(event.phase == TickEvent.Phase.START);
+        } catch (NullPointerException e) {}
+      }
+    };
+  private final EventListener<TickEvent.ClientTickEvent> listenerClientTick =
+    new EventListener<TickEvent.ClientTickEvent>() {
+      @Override
+      public Class<TickEvent.ClientTickEvent> getEventClass() {
+        return TickEvent.ClientTickEvent.class;
+      }
+
+      @Override
+      public void onEvent(TickEvent.ClientTickEvent event) {
+        pathHandler.onEventClientTick();
+      }
+    };
+  private final EventListener<RenderWorldLastEvent> listenerRenderWorld = new EventListener<RenderWorldLastEvent>() {
+    @Override
+    public Class<RenderWorldLastEvent> getEventClass() {
+      return RenderWorldLastEvent.class;
+    }
+
+    @Override
+    public void onEvent(RenderWorldLastEvent event) {
+      try {
+        renderer.onEventRender(PlayerUtils.getPlayerPosition());
+      } catch (NullPointerException e) {}
+    }
+  };
+  private final EventListener<TickEvent.PlayerTickEvent> listenerPlayerTick =
+    new EventListener<TickEvent.PlayerTickEvent>() {
+      @Override
+      public Class<TickEvent.PlayerTickEvent> getEventClass() {
+        return TickEvent.PlayerTickEvent.class;
+      }
+
+      @Override
+      public void onEvent(TickEvent.PlayerTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+          playerInput.onEventPlayerTick();
         }
+      }
+    };
+  private final EventListener<ConfigChangedEvent.PostConfigChangedEvent> listenerConfigChanged =
+    new EventListener<ConfigChangedEvent.PostConfigChangedEvent>() {
+      @Override
+      public Class<ConfigChangedEvent.PostConfigChangedEvent> getEventClass() {
+        return ConfigChangedEvent.PostConfigChangedEvent.class;
+      }
 
-        registerKeybinds(keybinds);
-        makeAcusation(new File(GetConfigFolder.getMcDir() + "/MiningInTwo/chatAnswers.json"));
+      @Override
+      public void onEvent(ConfigChangedEvent.PostConfigChangedEvent event) {
+        playerInput.onEventConfigChanged();
+      }
+    };
 
-        new Thread(GetCurGemPrice::getCurrGemPrice).start();
+  @Mod.EventHandler
+  public void init(FMLInitializationEvent event) {
+    Display.setTitle("MiningInTwo");
 
-        //////////////////////////////////
-        // STEVEBOT PATHFINDING MODULE  //
-        /////////////////////////////////
+    CheckFile.checkFiles();
+    keybinds.add(new KeyBinding("Enable Macro", Keyboard.KEY_NONE, "Mining In Two"));
+    keybinds.add(new KeyBinding("Enable Nuker", Keyboard.KEY_NONE, "Mining In Two"));
+    keybinds.add(new KeyBinding("Quick View Structures", Keyboard.KEY_NONE, "Mining In Two"));
+    keybinds.add(new KeyBinding("Add Point", Keyboard.KEY_NONE, "Mining In Two"));
+    keybinds.add(new KeyBinding("Test Key", Keyboard.KEY_NONE, "Mining In Two"));
 
-        eventProducer.onInit();
-        addAllOverlays();
+    // Comment
+
+    registerCommands(
+      new StartMacroCommand(),
+      new DetectEntityUnderCommand(),
+      new AddBlockRouteCommand(),
+      new ClearBlockRoute(),
+      new SelectRouteCommand(),
+      new NewRouteCommand(),
+      new OpenGUI(),
+      new CurrentSelected(),
+      new RoutesInFolder(),
+      new AddAnswer(),
+      new RemoveAccusation(),
+      new ImportFromClipboard(),
+      new DeleteRoute(),
+      new ImportFromWeb(),
+      new RouteChecker(),
+      new AddStucture(),
+      new RemoveStructure(),
+      new StructurePoints(),
+      new ClearStructures(),
+      new StartClearLegit(),
+      new ViewHelperLines(),
+      new MainHelp(),
+      new HelpStructureCheck(),
+      new InsertInMiddle(),
+      new RemoveBlockRoute(),
+      new ReplaceBlockRoute(),
+      new ObstructedPoints(),
+      new AddConfig(),
+      new SelectConfig(),
+      new CalcRouteAvgGemPerc(),
+      new CheckIfCanTpToEvery(),
+      new GemESP(),
+      new WalkToBlockWithBaritone(),
+      new StartAutoSetupWithBaritone(),
+      new RouteDestroyr(destroyer),
+      new ImportRouteFromWebsite()
+    );
+
+    try {
+      registerEvents(
+        new LookAt(),
+        new ArmadilloMain(),
+        new StateDillo(),
+        new RenderSingleLineTwoPoints(),
+        new RenderOneBlockMod(),
+        new RenderMultipleBlocksMod(),
+        new RenderPoints(),
+        new BlockOnRouteESP(),
+        new WaitThenCall(),
+        new IsOnBlock(),
+        new RenderMultipleLines(),
+        new WalkOnPath(),
+        new DestroyBlock(),
+        new Keybinds(),
+        new GetOffArmadillo(),
+        new ServerTPSFailsafe(),
+        new OverlayMod(),
+        new LookWhileGoingDown(),
+        new GetRemoteControl(),
+        new PauseMacro(),
+        new Movements(),
+        new PlayerFailsafe(),
+        new AnswerPPL(),
+        new ItemsPickedUp(),
+        new RemoteControl(),
+        new RemoteControlChat(),
+        new UsePathfinderInstead(),
+        new NukerMain(),
+        new Overlay(),
+        new CurTime(),
+        new StructurePoints(),
+        new LegitRouteClear(),
+        new ViewClearLines(),
+        new WalkForward(),
+        new Test(),
+        new TooFarAwayFailsafe(),
+        new ReFuelDrill(),
+        new ReFuelDrillTriger(),
+        new ThrowAtEnd(),
+        new YawLook(),
+        new PassReNew(),
+        new DriveLook(),
+        new TeleportToBlock(),
+        new PlaceCobbleModule(),
+        new SetupMain(),
+        destroyer,
+        vertexMover,
+        mobKiller,
+        new WarpOutFail(),
+        new RemoveBlockFailsafe(),
+        new RegistersStevebot(),
+        new PlayerLocChangeTrigger(),
+        //new NewSpinDrive(),
+        regJump,
+        new GetProjectedTime(),
+        new StopRenderStand(),
+        new BigDildoDillo(),
+        new FilterChat(),
+        new ModuleEditorTrigger(),
+        new AutoSaveConfig(),
+        new BedrockFail()
+      );
+    } catch (NoClassDefFoundError e) {
+      System.out.println(Arrays.toString(e.getStackTrace()) + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
-    public void addAllOverlays() {
-        allOverlays.add(new TimePerVein());
-        allOverlays.add(new ProfitTracker());
-        allOverlays.add(new OnRouteCheck());
-        allOverlays.add(new AlrCheckedLobby());
+    registerKeybinds(keybinds);
+    makeAcusation(new File(GetConfigFolder.getMcDir() + "/MiningInTwo/chatAnswers.json"));
+
+    new Thread(GetCurGemPrice::getCurrGemPrice).start();
+
+    //////////////////////////////////
+    // STEVEBOT PATHFINDING MODULE  //
+    /////////////////////////////////
+
+    eventProducer.onInit();
+    addAllOverlays();
+  }
+
+  public void addAllOverlays() {
+    allOverlays.add(new TimePerVein());
+    allOverlays.add(new ProfitTracker());
+    allOverlays.add(new OnRouteCheck());
+    allOverlays.add(new AlrCheckedLobby());
+  }
+
+  private void setup() {
+    // minecraft
+    MinecraftAdapter minecraftAdapter = new MinecraftAdapterImpl();
+    //OpenGLAdapter openGLAdapter = new OpenGLAdapterImpl();
+
+    ActionUtils.initMinecraftAdapter(minecraftAdapter);
+
+    // events
+    eventManager = new EventManagerImpl();
+    eventProducer = new ModEventProducer(eventManager);
+
+    eventManager.addListener(listenerPostInit);
+    eventManager.addListener(listenerBreakBlock);
+    eventManager.addListener(listenerPlaceBlock);
+    eventManager.addListener(listenerRenderTick);
+    eventManager.addListener(listenerRenderWorld);
+    eventManager.addListener(listenerPlayerTick);
+    eventManager.addListener(listenerClientTick);
+    eventManager.addListener(listenerConfigChanged);
+
+    // block library
+    blockLibrary = new BlockLibrary(minecraftAdapter);
+
+    // block provider
+    blockProvider = new BlockProvider(minecraftAdapter, blockLibrary);
+
+    // block utils
+    BlockUtils.initialize(minecraftAdapter, blockProvider, blockLibrary);
+
+    // item library
+    itemLibrary = new ItemLibrary(minecraftAdapter);
+
+    // item utils
+    ItemUtils.initialize(minecraftAdapter, itemLibrary);
+
+    // renderer
+    //renderer = new Renderer(openGLAdapter, blockProvider);
+
+    // player camera
+    playerCamera = new PlayerCamera(minecraftAdapter);
+
+    // player input
+    playerInput = new PlayerInput(minecraftAdapter);
+
+    // player movement
+    playerMovement = new PlayerMovement(playerInput, playerCamera);
+
+    // player inventory
+    playerInventory = new PlayerInventory(minecraftAdapter);
+
+    // player utils
+    PlayerUtils.initialize(minecraftAdapter, playerInput, playerCamera, playerMovement, playerInventory);
+
+    // path handler
+    pathHandler = new PathHandler(minecraftAdapter, renderer);
+    EssentialAPI.getCommandRegistry().registerCommand(new WalkToCustom(new StevebotApi(pathHandler)));
+  }
+
+  @Mod.EventHandler
+  public void postFMLInitialization(FMLPostInitializationEvent event) {
+    LocalDateTime now = LocalDateTime.now();
+    Duration initialDelay = Duration.between(now, now);
+    long initialDelaySeconds = initialDelay.getSeconds();
+
+    ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(1);
+    threadPool.scheduleAtFixedRate(
+      () -> MinecraftForge.EVENT_BUS.post(new SecondEvent()),
+      initialDelaySeconds,
+      1,
+      TimeUnit.SECONDS
+    );
+    threadPool.scheduleAtFixedRate(
+      () -> MinecraftForge.EVENT_BUS.post(new MillisecondEvent()),
+      initialDelaySeconds,
+      1,
+      TimeUnit.MILLISECONDS
+    );
+
+    eventProducer.onPostInit();
+    itemLibrary.insertBlocks(blockLibrary.getAllBlocks());
+    blockLibrary.insertItems(itemLibrary.getAllItems());
+  }
+
+  @Mod.EventHandler
+  public void preInit(FMLPreInitializationEvent event) {
+    setup();
+    eventProducer.onPreInit();
+    modFile = event.getSourceFile();
+  }
+
+  private void registerKeybinds(ArrayList<KeyBinding> keybinds) {
+    for (KeyBinding keybind : keybinds) {
+      ClientRegistry.registerKeyBinding(keybind);
+    }
+  }
+
+  private void registerEvents(Object... events) {
+    for (Object event : events) {
+      System.out.println(event.toString() + "!!!");
+      MinecraftForge.EVENT_BUS.register(event);
     }
 
-    private void setup() {
-        // minecraft
-        MinecraftAdapter minecraftAdapter = new MinecraftAdapterImpl();
-        //OpenGLAdapter openGLAdapter = new OpenGLAdapterImpl();
+    MinecraftForge.EVENT_BUS.register(new DoneNukerBlocks());
+  }
 
-        ActionUtils.initMinecraftAdapter(minecraftAdapter);
-
-        // events
-        eventManager = new EventManagerImpl();
-        eventProducer = new ModEventProducer(eventManager);
-
-        eventManager.addListener(listenerPostInit);
-        eventManager.addListener(listenerBreakBlock);
-        eventManager.addListener(listenerPlaceBlock);
-        eventManager.addListener(listenerRenderTick);
-        eventManager.addListener(listenerRenderWorld);
-        eventManager.addListener(listenerPlayerTick);
-        eventManager.addListener(listenerClientTick);
-        eventManager.addListener(listenerConfigChanged);
-
-        // block library
-        blockLibrary = new BlockLibrary(minecraftAdapter);
-
-        // block provider
-        blockProvider = new BlockProvider(minecraftAdapter, blockLibrary);
-
-        // block utils
-        BlockUtils.initialize(minecraftAdapter, blockProvider, blockLibrary);
-
-        // item library
-        itemLibrary = new ItemLibrary(minecraftAdapter);
-
-        // item utils
-        ItemUtils.initialize(minecraftAdapter, itemLibrary);
-
-        // renderer
-        //renderer = new Renderer(openGLAdapter, blockProvider);
-
-        // player camera
-        playerCamera = new PlayerCamera(minecraftAdapter);
-
-        // player input
-        playerInput = new PlayerInput(minecraftAdapter);
-
-        // player movement
-        playerMovement = new PlayerMovement(playerInput, playerCamera);
-
-        // player inventory
-        playerInventory = new PlayerInventory(minecraftAdapter);
-
-        // player utils
-        PlayerUtils.initialize(minecraftAdapter, playerInput, playerCamera, playerMovement, playerInventory);
-
-        // path handler
-        pathHandler = new PathHandler(minecraftAdapter, renderer);
-        EssentialAPI.getCommandRegistry().registerCommand(new WalkToCustom(new StevebotApi(pathHandler)));
+  private void registerCommands(Command... commands) {
+    for (Command command : commands) {
+      EssentialAPI.getCommandRegistry().registerCommand(command);
     }
-
-    @Mod.EventHandler
-    public void postFMLInitialization(FMLPostInitializationEvent event) {
-        LocalDateTime now = LocalDateTime.now();
-        Duration initialDelay = Duration.between(now, now);
-        long initialDelaySeconds = initialDelay.getSeconds();
-
-        ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(1);
-        threadPool.scheduleAtFixedRate(
-                () -> MinecraftForge.EVENT_BUS.post(new SecondEvent()),
-                initialDelaySeconds,
-                1,
-                TimeUnit.SECONDS
-        );
-        threadPool.scheduleAtFixedRate(
-                () -> MinecraftForge.EVENT_BUS.post(new MillisecondEvent()),
-                initialDelaySeconds,
-                1,
-                TimeUnit.MILLISECONDS
-        );
-
-        eventProducer.onPostInit();
-        itemLibrary.insertBlocks(blockLibrary.getAllBlocks());
-        blockLibrary.insertItems(itemLibrary.getAllItems());
-    }
-
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        setup();
-        eventProducer.onPreInit();
-        modFile = event.getSourceFile();
-    }
-
-    private void registerKeybinds(ArrayList<KeyBinding> keybinds) {
-        for (KeyBinding keybind : keybinds) {
-            ClientRegistry.registerKeyBinding(keybind);
-        }
-    }
-
-    private void registerEvents(Object... events) {
-        for (Object event : events) {
-            System.out.println(event.toString() + "!!!");
-            MinecraftForge.EVENT_BUS.register(event);
-        }
-
-        MinecraftForge.EVENT_BUS.register(new DoneNukerBlocks());
-    }
-
-    private void registerCommands(Command... commands) {
-        for (Command command : commands) {
-            EssentialAPI.getCommandRegistry().registerCommand(command);
-        }
-    }
+  }
 }
