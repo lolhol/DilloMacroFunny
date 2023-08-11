@@ -4,19 +4,20 @@
   "minVersion": "0.7",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-  ],
-  "client": [
+    "RenderManagerAccessor",
+    "MixinNetworkManager",
     "EntityPlayerSPAccessor",
     "EntityPlayerSPMixin",
     "MinecraftAccessor",
     "MixinAntiDillo",
     "MixinGemESP",
     "MixinGuiMainMenu",
-    "MixinModelBiped"
+    "MixinModelBiped",
+    "MixinRendererLivingEntity"
   ],
-  "mixins": [
-    "RenderManagerAccessor",
-    "MixinNetworkManager",
-    "MixinPlayerCameraPos"
+  "client": [
+    "EntityPlayerSPAccessor",
+    "EntityPlayerSPMixin",
+    "MinecraftAccessor"
   ]
 }

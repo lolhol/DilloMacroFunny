@@ -6,23 +6,23 @@ import net.minecraft.util.BlockPos;
 
 public class BlockNode {
 
-  @Setter
-  @Getter
-  BlockPos pos;
+    @Setter
+    @Getter
+    BlockPos pos;
 
-  @Getter
-  @Setter
-  BlockType type;
+    @Getter
+    @Setter
+    BlockType type;
 
-  @Getter
-  boolean isFullPath; // only use in last blockNode of path
+    @Getter
+    boolean isFullPath; // only use in last blockNode of path
 
-  public BlockNode(BlockPos pos, BlockType type) {
-    this.pos = pos;
-    this.type = type;
-  }
+    public BlockNode(BlockPos pos, BlockType type) {
+        this.pos = pos;
+        this.type = type;
+    }
 
-  public BlockNode(boolean isFullPath) {
-    this.isFullPath = isFullPath;
-  }
+    public BlockNode(boolean isFullPath) {
+        this.isFullPath = isFullPath;
+    }
 }

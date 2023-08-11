@@ -8,11 +8,11 @@ import net.minecraft.util.Vec3;
 
 public class getBlockEnum {
 
-  public static EnumFacing getEnum(BlockPos block) {
-    MovingObjectPosition fake = ids.mc.objectMouseOver;
-    fake.hitVec = new Vec3(block);
-    EnumFacing enumFacing = fake.sideHit;
+    public static EnumFacing getEnum(BlockPos block) {
+        MovingObjectPosition fake = ids.mc.objectMouseOver;
+        fake.hitVec = new Vec3(block);
+        EnumFacing enumFacing = fake.sideHit;
 
-    return enumFacing;
-  }
+        return enumFacing;
+    }
 }

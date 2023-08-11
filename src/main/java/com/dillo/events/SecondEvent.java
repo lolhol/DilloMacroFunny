@@ -1,15 +1,16 @@
 package com.dillo.events;
 
-import java.time.LocalDateTime;
 import net.minecraftforge.fml.common.eventhandler.Event;
+
+import java.time.LocalDateTime;
 
 public class SecondEvent extends Event {
 
-  public LocalDateTime dateTime;
-  public long timestamp;
+    public LocalDateTime dateTime;
+    public long timestamp;
 
-  public SecondEvent() {
-    dateTime = LocalDateTime.now();
-    timestamp = System.currentTimeMillis();
-  }
+    public SecondEvent() {
+        dateTime = LocalDateTime.now();
+        timestamp = System.currentTimeMillis();
+    }
 }

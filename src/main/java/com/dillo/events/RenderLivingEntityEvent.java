@@ -8,27 +8,27 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 @Cancelable
 public class RenderLivingEntityEvent extends Event {
 
-  public EntityLivingBase entity;
-  public float limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor;
-  public ModelBase modelBase;
+    public EntityLivingBase entity;
+    public float limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor;
+    public ModelBase modelBase;
 
-  public RenderLivingEntityEvent(
-    EntityLivingBase entity,
-    float limbSwing,
-    float limbSwingAmount,
-    float ageInTicks,
-    float netHeadYaw,
-    float headPitch,
-    float scaleFactor,
-    ModelBase modelBase
-  ) {
-    this.entity = entity;
-    this.limbSwing = limbSwing;
-    this.limbSwingAmount = limbSwingAmount;
-    this.ageInTicks = ageInTicks;
-    this.netHeadYaw = netHeadYaw;
-    this.headPitch = headPitch;
-    this.scaleFactor = scaleFactor;
-    this.modelBase = modelBase;
-  }
+    public RenderLivingEntityEvent(
+            EntityLivingBase entity,
+            float limbSwing,
+            float limbSwingAmount,
+            float ageInTicks,
+            float netHeadYaw,
+            float headPitch,
+            float scaleFactor,
+            ModelBase modelBase
+    ) {
+        this.entity = entity;
+        this.limbSwing = limbSwing;
+        this.limbSwingAmount = limbSwingAmount;
+        this.ageInTicks = ageInTicks;
+        this.netHeadYaw = netHeadYaw;
+        this.headPitch = headPitch;
+        this.scaleFactor = scaleFactor;
+        this.modelBase = modelBase;
+    }
 }

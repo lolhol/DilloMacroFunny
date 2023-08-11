@@ -5,9 +5,9 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class PlayerLocChangeEvent extends Event {
 
-  public BlockPos newPos;
+    public BlockPos newPos;
 
-  public PlayerLocChangeEvent(BlockPos newBlock) {
-    newPos = newBlock;
-  }
+    public PlayerLocChangeEvent(BlockPos newBlock) {
+        newPos = newBlock;
+    }
 }

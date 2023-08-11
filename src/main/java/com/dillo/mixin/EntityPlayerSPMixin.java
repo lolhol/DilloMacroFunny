@@ -15,27 +15,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = EntityPlayerSP.class)
 public class EntityPlayerSPMixin extends EntityPlayer {
 
-  public EntityPlayerSPMixin(World worldIn, GameProfile gameProfileIn) {
-    super(worldIn, gameProfileIn);
-  }
+    public EntityPlayerSPMixin(World worldIn, GameProfile gameProfileIn) {
+        super(worldIn, gameProfileIn);
+    }
 
-  @Inject(method = "closeScreen", at = @At("HEAD"), cancellable = true)
-  public void closeScreen(CallbackInfo ci) {
-    if (MinecraftForge.EVENT_BUS.post(new ScreenClosedEvent(this.openContainer))) ci.cancel();
-  }
+    @Inject(method = "closeScreen", at = @At("HEAD"), cancellable = true)
+    public void closeScreen(CallbackInfo ci) {
+        if (MinecraftForge.EVENT_BUS.post(new ScreenClosedEvent(this.openContainer))) ci.cancel();
+    }
 
-  @Inject(method = "onUpdateWalkingPlayer", at = @At("HEAD"), cancellable = true)
-  public void onUpdateWalking(CallbackInfo ci) {
-    if (MinecraftForge.EVENT_BUS.post(new PlayerMoveEvent.Pre())) ci.cancel();
-  }
+    @Inject(method = "onUpdateWalkingPlayer", at = @At("HEAD"), cancellable = true)
+    public void onUpdateWalking(CallbackInfo ci) {
+        if (MinecraftForge.EVENT_BUS.post(new PlayerMoveEvent.Pre())) ci.cancel();
+    }
 
-  @Inject(method = "onUpdateWalkingPlayer", at = @At("RETURN"), cancellable = true)
-  public void onWalking(CallbackInfo ci) {
-    if (MinecraftForge.EVENT_BUS.post(new PlayerMoveEvent.Post())) ci.cancel();
-  }
+    @Inject(method = "onUpdateWalkingPlayer", at = @At("RETURN"), cancellable = true)
+    public void onWalking(CallbackInfo ci) {
+        if (MinecraftForge.EVENT_BUS.post(new PlayerMoveEvent.Post())) ci.cancel();
+    }
 
-  @Override
-  public boolean isSpectator() {
-    return false;
-  }
+    @Override
+    public boolean isSpectator() {
+        return false;
+    }
 }

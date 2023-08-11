@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GuiMainMenu.class)
 public class MixinGuiMainMenu {
 
-  @Inject(method = "initGui", at = @At("HEAD"))
-  public void onInitGui(CallbackInfo ci) {
-    System.out.println("Hello from Main Menu!");
-  }
+    @Inject(method = "initGui", at = @At("HEAD"))
+    public void onInitGui(CallbackInfo ci) {
+        System.out.println("Hello from Main Menu!");
+    }
 }

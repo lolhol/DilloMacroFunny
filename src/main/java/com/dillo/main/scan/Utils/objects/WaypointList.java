@@ -1,124 +1,125 @@
 package com.dillo.main.scan.Utils.objects;
 
 import com.google.gson.annotations.Expose;
+import net.minecraft.util.BlockPos;
+
 import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.util.BlockPos;
 
 public class WaypointList {
 
-  @Expose
-  public boolean enabled;
+    @Expose
+    public boolean enabled;
 
-  @Expose
-  public String name;
+    @Expose
+    public String name;
 
-  @Expose
-  public boolean showCoords;
+    @Expose
+    public boolean showCoords;
 
-  @Expose
-  public HashMap<Integer, Waypoint> waypoints;
+    @Expose
+    public HashMap<Integer, Waypoint> waypoints;
 
-  public WaypointList(String name) {
-    this.enabled = false;
-    this.showCoords = false;
-    this.waypoints = new HashMap<>();
-    this.name = name;
-  }
-
-  public WaypointList(String name, boolean enabled, boolean showCoords, HashMap<Integer, Waypoint> waypoints) {
-    this.enabled = enabled;
-    this.showCoords = showCoords;
-    this.waypoints = waypoints;
-    this.name = name;
-  }
-
-  public Waypoint getValue(Waypoint waypointIn) {
-    for (Waypoint waypoint : waypoints.values()) {
-      if (waypoint.equals(waypointIn)) {
-        return waypoint;
-      }
+    public WaypointList(String name) {
+        this.enabled = false;
+        this.showCoords = false;
+        this.waypoints = new HashMap<>();
+        this.name = name;
     }
 
-    return null;
-  }
-
-  public void removeValue(Waypoint waypointIn) {
-    int key = -1;
-    for (Map.Entry<Integer, Waypoint> entry : waypoints.entrySet()) {
-      if (entry.getValue().equals(waypointIn)) {
-        key = entry.getKey();
-      }
+    public WaypointList(String name, boolean enabled, boolean showCoords, HashMap<Integer, Waypoint> waypoints) {
+        this.enabled = enabled;
+        this.showCoords = showCoords;
+        this.waypoints = waypoints;
+        this.name = name;
     }
 
-    if (key != -1) {
-      waypoints.remove(key);
-    }
-  }
+    public Waypoint getValue(Waypoint waypointIn) {
+        for (Waypoint waypoint : waypoints.values()) {
+            if (waypoint.equals(waypointIn)) {
+                return waypoint;
+            }
+        }
 
-  public boolean containsValue(BlockPos blockPos) {
-    for (Waypoint waypoint : this.waypoints.values()) {
-      if (waypoint.equals(blockPos)) {
-        return true;
-      }
+        return null;
     }
 
-    return false;
-  }
+    public void removeValue(Waypoint waypointIn) {
+        int key = -1;
+        for (Map.Entry<Integer, Waypoint> entry : waypoints.entrySet()) {
+            if (entry.getValue().equals(waypointIn)) {
+                key = entry.getKey();
+            }
+        }
 
-  public Integer getKey(BlockPos blockPos) {
-    for (Map.Entry<Integer, Waypoint> entry : this.waypoints.entrySet()) {
-      if (entry.getValue().equals(blockPos)) {
-        return entry.getKey();
-      }
+        if (key != -1) {
+            waypoints.remove(key);
+        }
     }
 
-    return null;
-  }
+    public boolean containsValue(BlockPos blockPos) {
+        for (Waypoint waypoint : this.waypoints.values()) {
+            if (waypoint.equals(blockPos)) {
+                return true;
+            }
+        }
 
-  public Integer getEmptyIndex() {
-    if (this.waypoints.isEmpty()) return 0;
-
-    for (int i = 0; i < getLastIndex(); i++) {
-      if (!this.waypoints.containsKey(i)) return i;
+        return false;
     }
 
-    return getLastIndex() + 1;
-  }
+    public Integer getKey(BlockPos blockPos) {
+        for (Map.Entry<Integer, Waypoint> entry : this.waypoints.entrySet()) {
+            if (entry.getValue().equals(blockPos)) {
+                return entry.getKey();
+            }
+        }
 
-  public Integer getFirstIndex() {
-    int firstIndex = 0;
-
-    for (int index : this.waypoints.keySet()) {
-      if (index < firstIndex) firstIndex = index;
+        return null;
     }
 
-    return firstIndex;
-  }
+    public Integer getEmptyIndex() {
+        if (this.waypoints.isEmpty()) return 0;
 
-  public Integer getLastIndex() {
-    int lastIndex = 0;
+        for (int i = 0; i < getLastIndex(); i++) {
+            if (!this.waypoints.containsKey(i)) return i;
+        }
 
-    for (int index : this.waypoints.keySet()) {
-      if (index > lastIndex) lastIndex = index;
+        return getLastIndex() + 1;
     }
 
-    return lastIndex;
-  }
+    public Integer getFirstIndex() {
+        int firstIndex = 0;
 
-  public Integer getNextIndex(int index) {
-    int nextIndex = -1;
-    for (Integer key : this.waypoints.keySet()) {
-      if (key > index) {
-        nextIndex = key;
-        break;
-      }
+        for (int index : this.waypoints.keySet()) {
+            if (index < firstIndex) firstIndex = index;
+        }
+
+        return firstIndex;
     }
 
-    if (nextIndex == -1) {
-      nextIndex = getFirstIndex();
+    public Integer getLastIndex() {
+        int lastIndex = 0;
+
+        for (int index : this.waypoints.keySet()) {
+            if (index > lastIndex) lastIndex = index;
+        }
+
+        return lastIndex;
     }
 
-    return nextIndex;
-  }
+    public Integer getNextIndex(int index) {
+        int nextIndex = -1;
+        for (Integer key : this.waypoints.keySet()) {
+            if (key > index) {
+                nextIndex = key;
+                break;
+            }
+        }
+
+        if (nextIndex == -1) {
+            nextIndex = getFirstIndex();
+        }
+
+        return nextIndex;
+    }
 }

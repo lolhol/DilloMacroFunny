@@ -6,10 +6,10 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class VeinCombo {
 
-  int ticks = 0;
+    int ticks = 0;
 
-  @SubscribeEvent
-  public void onTick(TickEvent.ClientTickEvent event) {
-    if (!ArmadilloStates.isOnline()) return;
-  }
+    @SubscribeEvent
+    public void onTick(TickEvent.ClientTickEvent event) {
+        if (!ArmadilloStates.isOnline()) return;
+    }
 }

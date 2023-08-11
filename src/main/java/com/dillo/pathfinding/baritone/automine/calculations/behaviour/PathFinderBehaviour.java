@@ -1,28 +1,29 @@
 package com.dillo.pathfinding.baritone.automine.calculations.behaviour;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.block.Block;
 
+import java.util.List;
+
 @AllArgsConstructor
 public class PathFinderBehaviour {
 
-  @Getter
-  List<Block> forbiddenMiningBlocks;
+    @Getter
+    List<Block> forbiddenMiningBlocks;
 
-  @Getter
-  List<Block> allowedMiningBlocks;
+    @Getter
+    List<Block> allowedMiningBlocks;
 
-  @Getter
-  int maxY;
+    @Getter
+    int maxY;
 
-  @Getter
-  int minY;
+    @Getter
+    int minY;
 
-  @Getter
-  int searchRadius;
+    @Getter
+    int searchRadius;
 
-  @Getter
-  boolean staticMode;
+    @Getter
+    boolean staticMode;
 }

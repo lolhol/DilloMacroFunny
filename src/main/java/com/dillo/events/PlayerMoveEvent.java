@@ -6,8 +6,10 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 @Cancelable
 public class PlayerMoveEvent {
 
-  @Cancelable
-  public static class Pre extends Event {}
+    @Cancelable
+    public static class Pre extends Event {
+    }
 
-  public static class Post extends Event {}
+    public static class Post extends Event {
+    }
 }

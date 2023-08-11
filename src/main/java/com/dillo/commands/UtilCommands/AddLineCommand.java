@@ -1,3 +1,4 @@
 package com.dillo.commands.UtilCommands;
 
-public class AddLineCommand {}
+public class AddLineCommand {
+}

@@ -8,16 +8,16 @@ import gg.essential.api.commands.DefaultHandler;
 
 public class ObstructedPoints extends Command {
 
-  public ObstructedPoints() {
-    super("obstructedPoints");
-  }
-
-  @DefaultHandler
-  public void handle() {
-    SendChat.chat(prefix.prefix + "The points are: ");
-
-    for (int point : GetFailPointsList.failListPoints) {
-      SendChat.chat("Point -> " + ((int) point + 1));
+    public ObstructedPoints() {
+        super("obstructedPoints");
     }
-  }
+
+    @DefaultHandler
+    public void handle() {
+        SendChat.chat(prefix.prefix + "The points are: ");
+
+        for (int point : GetFailPointsList.failListPoints) {
+            SendChat.chat("Point -> " + ((int) point + 1));
+        }
+    }
 }

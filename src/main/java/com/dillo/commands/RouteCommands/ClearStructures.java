@@ -9,17 +9,17 @@ import gg.essential.api.commands.DefaultHandler;
 
 public class ClearStructures extends Command {
 
-  public ClearStructures() {
-    super("clearStructures");
-  }
-
-  @DefaultHandler
-  public void handle() {
-    if (currentRoute.strucList.size() > 0) {
-      currentRoute.strucList.clear();
-      ReWriteFile.reWriteFile(currentRoute.currentRouteFile);
-    } else {
-      SendChat.chat(prefix.prefix + "The route that you selected does not have any structures!");
+    public ClearStructures() {
+        super("clearStructures");
     }
-  }
+
+    @DefaultHandler
+    public void handle() {
+        if (currentRoute.strucList.size() > 0) {
+            currentRoute.strucList.clear();
+            ReWriteFile.reWriteFile(currentRoute.currentRouteFile);
+        } else {
+            SendChat.chat(prefix.prefix + "The route that you selected does not have any structures!");
+        }
+    }
 }

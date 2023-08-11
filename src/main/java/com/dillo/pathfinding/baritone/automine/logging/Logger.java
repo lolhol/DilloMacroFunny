@@ -6,12 +6,12 @@ import org.apache.logging.log4j.LogManager;
 
 public class Logger {
 
-  // POV : You think this is a token logger
-  public static void log(String msg) {
-    LogManager.getLogger("autogg").info(msg);
-  }
+    // POV : You think this is a token logger
+    public static void log(String msg) {
+        LogManager.getLogger("autogg").info(msg);
+    }
 
-  public static void playerLog(String msg) {
-    Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("[Baritone] : " + msg));
-  }
+    public static void playerLog(String msg) {
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("[Baritone] : " + msg));
+    }
 }

@@ -1,312 +1,256 @@
 package com.dillo.utils;
 
-import static com.dillo.config.config.isIncludeMithril;
-
 import com.dillo.main.files.localizedData.currentRoute;
 import com.dillo.utils.previous.random.IsSameBlock;
 import com.dillo.utils.previous.random.ids;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.dillo.config.config.isIncludeMithril;
+
 public class BlockUtils {
 
-  public static Vec3 fromBlockPosToVec3(BlockPos block) {
-    return new Vec3(block.getX(), block.getY(), block.getZ());
-  }
-
-  public static BlockPos fromVec3ToBlockPos(Vec3 block) {
-    return new BlockPos(block.xCoord, block.yCoord, block.zCoord);
-  }
-
-  public static BlockPos getNextBlock() {
-    for (int i = 0; i < currentRoute.currentRoute.size(); i++) {
-      if (IsSameBlock.isSameBlock(currentRoute.currentBlock, currentRoute.currentRoute.get(i))) {
-        if (i == currentRoute.currentRoute.size() - 1) {
-          return currentRoute.currentRoute.get(0);
-        } else {
-          return currentRoute.currentRoute.get(i + 1);
-        }
-      }
+    public static Vec3 fromBlockPosToVec3(BlockPos block) {
+        return new Vec3(block.getX(), block.getY(), block.getZ());
     }
 
-    return null;
-  }
-
-  public static ArrayList<BlockPos> getNearestBlocks() {
-    int radius = 1;
-    ArrayList<BlockPos> blockPosList = new ArrayList<BlockPos>();
-    for (int i = -radius; i <= radius; i++) {
-      for (int y = -3; y <= 5; y++) {
-        for (int z = -radius; z <= radius; z++) {
-          IBlockState block = ids.mc.theWorld.getBlockState(
-            new BlockPos(ids.mc.thePlayer.posX + i, ids.mc.thePlayer.posY + y, ids.mc.thePlayer.posZ + z)
-          );
-
-          if (block.getBlock() == Blocks.stained_glass_pane || block.getBlock() == Blocks.stained_glass) {
-            blockPosList.add(
-              new BlockPos(ids.mc.thePlayer.posX + i, ids.mc.thePlayer.posY + y, ids.mc.thePlayer.posZ + z)
-            );
-          }
-        }
-      }
+    public static BlockPos fromVec3ToBlockPos(Vec3 block) {
+        return new BlockPos(block.xCoord, block.yCoord, block.zCoord);
     }
 
-    return blockPosList;
-  }
-
-  public static int getPrevBlockPosition(BlockPos curBlock) {
-    for (int i = 0; i < currentRoute.currentRoute.size(); i++) {
-      BlockPos block = currentRoute.currentRoute.get(i);
-
-      if (curBlock.equals(block)) {
-        int prev = 0;
-
-        if (i == 0) {
-          prev = currentRoute.currentRoute.size() - 1;
-        } else {
-          prev = i - 1;
+    public static BlockPos getNextBlock() {
+        for (int i = 0; i < currentRoute.currentRoute.size(); i++) {
+            if (IsSameBlock.isSameBlock(currentRoute.currentBlock, currentRoute.currentRoute.get(i))) {
+                if (i == currentRoute.currentRoute.size() - 1) {
+                    return currentRoute.currentRoute.get(0);
+                } else {
+                    return currentRoute.currentRoute.get(i + 1);
+                }
+            }
         }
 
-        return prev;
-      }
+        return null;
     }
 
-    return -1;
-  }
+    public static ArrayList<BlockPos> getNearestBlocks() {
+        int radius = 1;
+        ArrayList<BlockPos> blockPosList = new ArrayList<BlockPos>();
+        for (int i = -radius; i <= radius; i++) {
+            for (int y = -3; y <= 5; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    IBlockState block = ids.mc.theWorld.getBlockState(
+                            new BlockPos(ids.mc.thePlayer.posX + i, ids.mc.thePlayer.posY + y, ids.mc.thePlayer.posZ + z)
+                    );
 
-  public static BlockPos getPrevBlockPos(BlockPos curBlock) {
-    int result = getPrevBlockPosition(curBlock);
-    return result == -1 ? null : currentRoute.currentRoute.get(result);
-  }
-
-  public static boolean isOnBlockInRoute(BlockPos curBlock) {
-    for (BlockPos block : currentRoute.currentRoute) {
-      if (
-        Math.abs(block.getZ() - curBlock.getZ() + 1) < 0.001 && Math.abs(block.getX() - curBlock.getX() + 1) < 0.001
-      ) return true;
-    }
-
-    return false;
-  }
-
-  public static List<BlockPos> getBlocksLayer(BlockPos refrenceBlock) {
-    List<BlockPos> blocks = new ArrayList<BlockPos>();
-
-    for (int x = -1; x <= 1; x++) {
-      for (int z = -1; z <= 1; z++) {
-        BlockPos block = makeNewBlock(x, 0, z, refrenceBlock);
-
-        if (!isIncludeMithril) {
-          if (
-            (
-              ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass_pane ||
-              ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass
-            ) &&
-            !isSameBlock(block, refrenceBlock)
-          ) {
-            blocks.add(block);
-          }
-        } else {
-          if (
-            (
-              ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.prismarine ||
-              ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.wool
-            ) &&
-            !isSameBlock(block, refrenceBlock)
-          ) {
-            blocks.add(block);
-          }
+                    if (block.getBlock() == Blocks.stained_glass_pane || block.getBlock() == Blocks.stained_glass) {
+                        blockPosList.add(
+                                new BlockPos(ids.mc.thePlayer.posX + i, ids.mc.thePlayer.posY + y, ids.mc.thePlayer.posZ + z)
+                        );
+                    }
+                }
+            }
         }
-      }
+
+        return blockPosList;
     }
 
-    //SendChat.chat(String.valueOf(blocks.size()));
-    return blocks;
-  }
+    public static int getPrevBlockPosition(BlockPos curBlock) {
+        for (int i = 0; i < currentRoute.currentRoute.size(); i++) {
+            BlockPos block = currentRoute.currentRoute.get(i);
 
-  public static BlockPos checkIfOnBlock() {
-    List<BlockPos> blocks = currentRoute.currentRoute;
+            if (curBlock.equals(block)) {
+                int prev = 0;
 
-    for (int i = 0; i < blocks.size(); i++) {
-      //SendChat.chat(String.valueOf(Math.abs(blocks.get(i).getX() - ids.mc.thePlayer.posX + 0.5)));
+                if (i == 0) {
+                    prev = currentRoute.currentRoute.size() - 1;
+                } else {
+                    prev = i - 1;
+                }
 
-      if (
-        Math.abs(blocks.get(i).getX() - ids.mc.thePlayer.posX + 0.5) <= 0.0001 &&
-        Math.abs(blocks.get(i).getZ() - ids.mc.thePlayer.posZ + 0.5) <= 0.0001 &&
-        Math.abs(blocks.get(i).getY() - ids.mc.thePlayer.posY + 1) <= 0.0001
-      ) {
-        return blocks.get(i);
-      }
+                return prev;
+            }
+        }
+
+        return -1;
     }
 
-    return null;
-  }
-
-  private static boolean isSameBlock(BlockPos refrenceBlock, BlockPos block) {
-    if (block.getX() == refrenceBlock.getX() && block.getZ() == refrenceBlock.getZ()) {
-      return true;
+    public static BlockPos getPrevBlockPos(BlockPos curBlock) {
+        int result = getPrevBlockPosition(curBlock);
+        return result == -1 ? null : currentRoute.currentRoute.get(result);
     }
 
-    return false;
-  }
+    public static boolean isOnBlockInRoute(BlockPos curBlock) {
+        for (BlockPos block : currentRoute.currentRoute) {
+            if (
+                    Math.abs(block.getZ() - curBlock.getZ() + 1) < 0.001 && Math.abs(block.getX() - curBlock.getX() + 1) < 0.001
+            ) return true;
+        }
 
-  private static BlockPos getConnectedBlock(BlockPos refrenceBlock, List<BlockPos> blocks) {
-    for (BlockPos block : blocks) {
-      if (block != refrenceBlock && areConnectedSide(block, refrenceBlock)) {
-        return block;
-      }
-    }
-
-    return null;
-  }
-
-  private static BlockPos getConnectedBlockY(BlockPos refrenceBlock, List<BlockPos> blocks) {
-    for (BlockPos block : blocks) {
-      if (block != refrenceBlock && areConnectedY(block, refrenceBlock)) {
-        return block;
-      }
-    }
-
-    return null;
-  }
-
-  private static boolean areConnectedSideXZ(BlockPos block1, BlockPos block2) {
-    int dx = Math.abs(block1.getX() - block2.getX());
-    int dz = Math.abs(block1.getZ() - block2.getZ());
-
-    return dx <= 1 && dz <= 1;
-  }
-
-  private static boolean areConnectedSide(BlockPos block1, BlockPos block2) {
-    int dx = Math.abs(block1.getX() - block2.getX());
-    int dz = Math.abs(block1.getZ() - block2.getZ());
-
-    return (dx == 0 && dz <= 1) || (dx <= 1 && dz == 0);
-  }
-
-  private static boolean areConnectedY(BlockPos block1, BlockPos block2) {
-    int dx = Math.abs(block1.getX() - block2.getX());
-    int dy = Math.abs(block1.getY() - block2.getY());
-    int dz = Math.abs(block1.getZ() - block2.getZ());
-
-    return ((dx == 0 && dz <= 1) || (dx <= 1 && dz == 0)) && dy <= 1;
-  }
-
-  private static BlockPos getConnectingY(List<BlockPos> blocks, BlockPos block) {
-    for (int i = 0; i < blocks.size(); i++) {
-      if (areConnectedY(blocks.get(i), block)) {
-        return blocks.get(i);
-      }
-    }
-
-    return null;
-  }
-
-  public static BlockPos makeNewBlock(double addx, double addy, double addz, BlockPos prevBlock) {
-    return new BlockPos(prevBlock.getX() + addx, prevBlock.getY() + addy, prevBlock.getZ() + addz);
-  }
-
-  public static Block getBlock(BlockPos blockPos) {
-    return ids.mc.theWorld.getBlockState(blockPos).getBlock();
-  }
-
-  public static boolean areAllLoaded(List<BlockPos> blocksInRoute) {
-    for (BlockPos block : blocksInRoute) {
-      BlockPos pos = block;
-
-      if (!ids.mc.theWorld.getChunkFromBlockCoords(block).isLoaded()) {
         return false;
-      }
     }
 
-    return true;
-  }
+    public static List<BlockPos> getBlocksLayer(BlockPos refrenceBlock) {
+        List<BlockPos> blocks = new ArrayList<BlockPos>();
 
-  public static List<BlockPos> getSpecificBlocksInRadius(
-    Block[] blockTypes,
-    int radiusX,
-    int radiusY,
-    int radiusZ,
-    BlockPos reference
-  ) {
-    List<BlockPos> blocks = new ArrayList<>();
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -1; z <= 1; z++) {
+                BlockPos block = makeNewBlock(x, 0, z, refrenceBlock);
 
-    for (int x = -radiusX; x <= radiusX; x++) {
-      for (int y = -radiusY; y <= radiusY; y++) {
-        for (int z = -radiusZ; z <= radiusZ; z++) {
-          BlockPos newBlock = makeNewBlock(x, y, z, reference);
-          Block newBlockType = ids.mc.theWorld.getBlockState(newBlock).getBlock();
-
-          if (Arrays.stream(blockTypes).anyMatch(a -> a == newBlockType)) {
-            blocks.add(newBlock);
-          }
+                if (!isIncludeMithril) {
+                    if (
+                            (
+                                    ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass_pane ||
+                                            ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.stained_glass
+                            ) &&
+                                    !isSameBlock(block, refrenceBlock)
+                    ) {
+                        blocks.add(block);
+                    }
+                } else {
+                    if (
+                            (
+                                    ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.prismarine ||
+                                            ids.mc.theWorld.getBlockState(block).getBlock() == Blocks.wool
+                            ) &&
+                                    !isSameBlock(block, refrenceBlock)
+                    ) {
+                        blocks.add(block);
+                    }
+                }
+            }
         }
-      }
+
+        //SendChat.chat(String.valueOf(blocks.size()));
+        return blocks;
     }
 
-    return blocks;
-  }
+    public static BlockPos checkIfOnBlock() {
+        List<BlockPos> blocks = currentRoute.currentRoute;
 
-  public static Iterable<BlockPos> getBlocksInBox(AxisAlignedBB axis, BlockPos reference) {
-    return BlockPos.getAllInBox(
-      makeNewBlock(axis.minX, axis.minY, axis.minZ, reference),
-      makeNewBlock(axis.maxX, axis.maxY, axis.maxZ, reference)
-    );
-  }
+        for (int i = 0; i < blocks.size(); i++) {
+            //SendChat.chat(String.valueOf(Math.abs(blocks.get(i).getX() - ids.mc.thePlayer.posX + 0.5)));
 
-  public static Block getBlockType(BlockPos block) {
-    return ids.mc.theWorld.getBlockState(block).getBlock();
-  }
+            if (
+                    Math.abs(blocks.get(i).getX() - ids.mc.thePlayer.posX + 0.5) <= 0.0001 &&
+                            Math.abs(blocks.get(i).getZ() - ids.mc.thePlayer.posZ + 0.5) <= 0.0001 &&
+                            Math.abs(blocks.get(i).getY() - ids.mc.thePlayer.posY + 1) <= 0.0001
+            ) {
+                return blocks.get(i);
+            }
+        }
 
-  public static double getPercentOfNonAir(Iterable<BlockPos> blocks) {
-    AtomicInteger nonAir = new AtomicInteger();
-    AtomicInteger total = new AtomicInteger();
-
-    blocks.forEach(b -> {
-      if (getBlockType(b) != Blocks.air) {
-        nonAir.getAndIncrement();
-      }
-
-      total.getAndIncrement();
-    });
-
-    if (total.intValue() > 0) {
-      return (double) (nonAir.intValue() / total.intValue()) * 100;
+        return null;
     }
 
-    return -1;
-  }
+    private static boolean isSameBlock(BlockPos refrenceBlock, BlockPos block) {
+        if (block.getX() == refrenceBlock.getX() && block.getZ() == refrenceBlock.getZ()) {
+            return true;
+        }
 
-  public static double getPercentOfNonAir(List<BlockPos> blocks) {
-    AtomicInteger nonAir = new AtomicInteger();
-    AtomicInteger total = new AtomicInteger();
-
-    blocks.forEach(b -> {
-      if (getBlockType(b) != Blocks.air) {
-        nonAir.getAndIncrement();
-      }
-
-      total.getAndIncrement();
-    });
-
-    if (total.intValue() > 0) {
-      return (double) (nonAir.intValue() / total.intValue()) * 100;
+        return false;
     }
 
-    return -1;
-  }
+    private static BlockPos getConnectedBlock(BlockPos refrenceBlock, List<BlockPos> blocks) {
+        for (BlockPos block : blocks) {
+            if (block != refrenceBlock && areConnectedSide(block, refrenceBlock)) {
+                return block;
+            }
+        }
 
-  public static boolean isBlockSolid(BlockPos block) {
-    Block blockType = getBlock(block);
+        return null;
+    }
 
-    return blockType != Blocks.air && blockType != Blocks.lava && blockType != Blocks.water;
-  }
+    private static BlockPos getConnectedBlockY(BlockPos refrenceBlock, List<BlockPos> blocks) {
+        for (BlockPos block : blocks) {
+            if (block != refrenceBlock && areConnectedY(block, refrenceBlock)) {
+                return block;
+            }
+        }
+
+        return null;
+    }
+
+    private static boolean areConnectedSideXZ(BlockPos block1, BlockPos block2) {
+        int dx = Math.abs(block1.getX() - block2.getX());
+        int dz = Math.abs(block1.getZ() - block2.getZ());
+
+        return dx <= 1 && dz <= 1;
+    }
+
+    private static boolean areConnectedSide(BlockPos block1, BlockPos block2) {
+        int dx = Math.abs(block1.getX() - block2.getX());
+        int dz = Math.abs(block1.getZ() - block2.getZ());
+
+        return (dx == 0 && dz <= 1) || (dx <= 1 && dz == 0);
+    }
+
+    private static boolean areConnectedY(BlockPos block1, BlockPos block2) {
+        int dx = Math.abs(block1.getX() - block2.getX());
+        int dy = Math.abs(block1.getY() - block2.getY());
+        int dz = Math.abs(block1.getZ() - block2.getZ());
+
+        return ((dx == 0 && dz <= 1) || (dx <= 1 && dz == 0)) && dy <= 1;
+    }
+
+    private static BlockPos getConnectingY(List<BlockPos> blocks, BlockPos block) {
+        for (int i = 0; i < blocks.size(); i++) {
+            if (areConnectedY(blocks.get(i), block)) {
+                return blocks.get(i);
+            }
+        }
+
+        return null;
+    }
+
+    public static BlockPos makeNewBlock(double addx, double addy, double addz, BlockPos prevBlock) {
+        return new BlockPos(prevBlock.getX() + addx, prevBlock.getY() + addy, prevBlock.getZ() + addz);
+    }
+
+    public static Block getBlock(BlockPos blockPos) {
+        return ids.mc.theWorld.getBlockState(blockPos).getBlock();
+    }
+
+    public static boolean areAllLoaded(List<BlockPos> blocksInRoute) {
+        for (BlockPos block : blocksInRoute) {
+            BlockPos pos = block;
+
+            if (!ids.mc.theWorld.getChunkFromBlockCoords(block).isLoaded()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static List<BlockPos> getSpecificBlocksInRadius(
+            Block[] blockTypes,
+            int radiusX,
+            int radiusY,
+            int radiusZ,
+            BlockPos reference
+    ) {
+        List<BlockPos> blocks = new ArrayList<>();
+
+        for (int x = -radiusX; x <= radiusX; x++) {
+            for (int y = -radiusY; y <= radiusY; y++) {
+                for (int z = -radiusZ; z <= radiusZ; z++) {
+                    BlockPos newBlock = makeNewBlock(x, y, z, reference);
+                    Block newBlockType = ids.mc.theWorld.getBlockState(newBlock).getBlock();
+
+                    if (Arrays.stream(blockTypes).anyMatch(a -> a == newBlockType)) {
+                        blocks.add(newBlock);
+                    }
+                }
+            }
+        }
+
+        return blocks;
+    }
 }
