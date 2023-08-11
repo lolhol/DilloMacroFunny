@@ -1,5 +1,15 @@
 package com.dillo.main.macro.main;
 
+import static com.dillo.calls.CurrentState.ROUTEOBSTRUCTEDCLEAR;
+import static com.dillo.calls.CurrentState.SPINDRIVE;
+import static com.dillo.config.config.ping;
+import static com.dillo.main.macro.main.NewSpinDrive.*;
+import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
+import static com.dillo.main.utils.keybinds.AllKeybinds.JUMP;
+import static com.dillo.utils.BlockUtils.getBlocksLayer;
+import static com.dillo.utils.BlockUtils.getNextBlock;
+import static com.dillo.utils.RayTracingUtils.adjustLook;
+
 import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.KillSwitch;
 import com.dillo.config.config;
@@ -14,6 +24,8 @@ import com.dillo.utils.previous.random.getItemInSlot;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.random.ThreadUtils;
+import java.util.List;
+import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
@@ -28,19 +40,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.dillo.calls.CurrentState.ROUTEOBSTRUCTEDCLEAR;
-import static com.dillo.calls.CurrentState.SPINDRIVE;
-import static com.dillo.config.config.ping;
-import static com.dillo.main.macro.main.NewSpinDrive.*;
-import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
-import static com.dillo.main.utils.keybinds.AllKeybinds.JUMP;
-import static com.dillo.utils.BlockUtils.getBlocksLayer;
-import static com.dillo.utils.BlockUtils.getNextBlock;
-import static com.dillo.utils.RayTracingUtils.adjustLook;
 
 public class StateDillo {
 
