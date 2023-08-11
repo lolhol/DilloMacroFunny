@@ -454,19 +454,11 @@ public class config extends Vigilant {
   )
   public static boolean hackAccusationAnswer = false;
 
-  @Property(
-    type = PropertyType.SWITCH,
-    name = "Remote control",
-    description = "THIS IS EXPERIMENTAL AND THE SITE IS STILL UNDER DEVELOPMENT. (AKA -> DOES NOT WORK)",
-    category = "Online / Remote Control"
-  )
-  public static boolean remoteControl = false;
-
   // Online / Remote Control
   @Property(
     type = PropertyType.SLIDER,
     name = "Time between fetches",
-    description = "THIS IS EXPERIMENTAL AND THE SITE IS STILL UNDER DEVELOPMENT. (AKA -> DOES NOT WORK)",
+    description = "The time that the macro will fetch the server and get all the actions needed",
     category = "Online / Remote Control",
     min = 1,
     max = 60
@@ -474,9 +466,17 @@ public class config extends Vigilant {
   public static int timeBetweenFetches = 30;
 
   @Property(
+    type = PropertyType.SWITCH,
+    name = "Remote control",
+    description = "on/off",
+    category = "Online / Remote Control"
+  )
+  public static boolean remoteControl = false;
+
+  @Property(
     type = PropertyType.SLIDER,
     name = "Time between executions",
-    description = "THIS IS EXPERIMENTAL AND THE SITE IS STILL UNDER DEVELOPMENT. (AKA -> DOES NOT WORK)",
+    description = "Time between the macro will execute one thing and go over to the next",
     category = "Online / Remote Control",
     min = 1,
     max = 30
@@ -486,7 +486,7 @@ public class config extends Vigilant {
   @Property(
     type = PropertyType.SLIDER,
     name = "Pause",
-    description = "THIS IS EXPERIMENTAL AND THE SITE IS STILL UNDER DEVELOPMENT. (AKA -> DOES NOT WORK)",
+    description = "Pause time.",
     category = "Online / Remote Control",
     min = 1,
     max = 120
@@ -496,7 +496,7 @@ public class config extends Vigilant {
   @Property(
     type = PropertyType.SLIDER,
     name = "Walk Time",
-    description = "THIS IS EXPERIMENTAL AND THE SITE IS STILL UNDER DEVELOPMENT. (AKA -> DOES NOT WORK)",
+    description = "Time for macro to press the key be4 stopping",
     category = "Online / Remote Control",
     min = 1,
     max = 30

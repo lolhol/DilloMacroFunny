@@ -36,7 +36,6 @@ public class GetRemoteControl {
 
       return element.getAsJsonArray();
     } catch (Exception e) {
-      e.printStackTrace();
       return null;
     }
   }
@@ -53,12 +52,10 @@ public class GetRemoteControl {
           String encodedChat = null;
           try {
             encodedChat = URLEncoder.encode(currChat, "UTF-8");
-          } catch (java.io.UnsupportedEncodingException e) {
-            //SendChat.chat(e.toString());
-          }
+          } catch (java.io.UnsupportedEncodingException ignored) {}
 
           JsonArray output = requestData(
-            "http://localhost:3000/api/getUserData?name=" + getCurrentUsername().toLowerCase() + "&chat=" + encodedChat
+            "http://play.lolhol.net/api/getUserData?name=" + getCurrentUsername().toLowerCase() + "&chat=" + encodedChat
           );
 
           //SendChat.chat(String.valueOf(output));

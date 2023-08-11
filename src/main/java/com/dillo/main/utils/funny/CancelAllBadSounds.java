@@ -1,30 +1,40 @@
 package com.dillo.main.utils.funny;
 
-import java.util.Arrays;
+import com.dillo.utils.previous.SendChat;
+import com.dillo.utils.previous.random.ids;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class CancelAllBadSounds {
 
-  public String[] sounds = new String[] {
-    "block.glass.break",
-    "block.glass.place",
-    "block.glass.hit",
-    "block.glass.fall",
-    "step",
+  public List<String> list = new ArrayList<String>() {
+    {
+      add("glass");
+      add("step");
+    }
   };
 
   @SubscribeEvent
   public void onSound(PlaySoundEvent event) {
-    if (
-      Arrays
-        .stream(sounds)
-        .noneMatch(a -> {
-          return event.name.toLowerCase().contains(a.toLowerCase());
-        })
-    ) {
-      event.setCanceled(true);
+    if (ids.mc.theWorld == null) return;
+
+    if (!isContains(list, event.name)) {
+      SendChat.chat(event.name);
+      //event.setCanceled(true);
       event.setResult(null);
+      event.result = null;
     }
+  }
+
+  private boolean isContains(List<String> strings, String target) {
+    for (String str : strings) {
+      if (target.toLowerCase().contains(str.toLowerCase())) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
