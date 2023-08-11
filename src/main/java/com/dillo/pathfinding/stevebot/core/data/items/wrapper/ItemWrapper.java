@@ -1,8 +1,5 @@
 package com.dillo.pathfinding.stevebot.core.data.items.wrapper;
 
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemTool;
-
 public class ItemWrapper {
 
     private final int id;

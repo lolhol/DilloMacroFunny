@@ -13,31 +13,27 @@ import com.dillo.pathfinding.baritone.automine.logging.Logger;
 import com.dillo.pathfinding.baritone.automine.movement.PathExecutor;
 import com.dillo.pathfinding.baritone.automine.structures.Path;
 import com.dillo.pathfinding.baritone.automine.structures.SemiPath;
-import com.dillo.pathfinding.baritone.automine.utils.BlockUtils;
-import com.dillo.pathfinding.baritone.automine.utils.BlockUtils.BlockData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class AutoMineBaritone {
 
-    Minecraft mc = Minecraft.getMinecraft();
-    volatile BaritoneState state = BaritoneState.IDLE;
-    PathFindSetting pathSetting;
-    BaritoneConfig config;
-    AStarPathFinder pathFinder;
-    PathExecutor executor;
-    BlockPos playerFloorPos;
-    ArrayList<ArrayList<BlockData<?>>> targetBlockType;
-    BlockPos targetBlockPos;
-    volatile Path path;
-    ExecutorService exec = Executors.newCachedThreadPool();
+    private final Minecraft mc = Minecraft.getMinecraft();
+    private final BaritoneConfig config;
+    private final AStarPathFinder pathFinder;
+    private final PathExecutor executor;
+    private final ExecutorService exec = Executors.newCachedThreadPool();
+
+    private volatile BaritoneState state = BaritoneState.IDLE;
+    private PathFindSetting pathSetting;
+    private BlockPos targetBlockPos;
+    private volatile Path path;
 
     public AutoMineBaritone(BaritoneConfig config) {
         this.config = config;

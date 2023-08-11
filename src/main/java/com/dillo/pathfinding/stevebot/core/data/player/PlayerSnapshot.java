@@ -1,17 +1,11 @@
 package com.dillo.pathfinding.stevebot.core.data.player;
-
-import com.dillo.pathfinding.stevebot.core.data.blocks.BlockLibrary;
-import com.dillo.pathfinding.stevebot.core.data.blocks.BlockUtils;
 import com.dillo.pathfinding.stevebot.core.data.blocks.BlockWrapper;
 import com.dillo.pathfinding.stevebot.core.data.items.ItemLibrary;
 import com.dillo.pathfinding.stevebot.core.data.items.ItemUtils;
 import com.dillo.pathfinding.stevebot.core.data.items.wrapper.*;
-import com.dillo.pathfinding.stevebot.core.data.modification.BlockBreakModification;
-import com.dillo.pathfinding.stevebot.core.data.modification.BlockPlaceModification;
-import com.dillo.pathfinding.stevebot.core.data.modification.HealthChangeModification;
 import com.dillo.pathfinding.stevebot.core.data.modification.Modification;
 import com.dillo.pathfinding.stevebot.core.minecraft.MinecraftAdapter;
-import com.dillo.pathfinding.stevebot.core.pathfinding.actions.ActionCosts;
+
 
 public class PlayerSnapshot {
 
