@@ -13,4 +13,12 @@ public class ThreadUtils {
       throw new RuntimeException(e);
     }
   }
+
+  public static void sleepThread(long time) {
+    try {
+      Thread.sleep(time);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }
