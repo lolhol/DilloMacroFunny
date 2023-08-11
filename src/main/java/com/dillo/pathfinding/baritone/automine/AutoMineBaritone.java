@@ -13,6 +13,7 @@ import com.dillo.pathfinding.baritone.automine.logging.Logger;
 import com.dillo.pathfinding.baritone.automine.movement.PathExecutor;
 import com.dillo.pathfinding.baritone.automine.structures.Path;
 import com.dillo.pathfinding.baritone.automine.structures.SemiPath;
+import com.dillo.pathfinding.baritone.automine.utils.BlockUtils;
 import com.dillo.pathfinding.baritone.automine.utils.BlockUtils.BlockData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
@@ -115,7 +116,7 @@ public class AutoMineBaritone {
 
     // logic is a bit intricate here, sorry
     @SubscribeEvent
-    public void TickEvent(TickEvent.ClientTickEvent event) {
+    public void onClientTick(TickEvent.ClientTickEvent event) {
         if (mc.thePlayer == null || state == BaritoneState.IDLE || state == BaritoneState.FAILED) {
             return;
         }
@@ -127,7 +128,7 @@ public class AutoMineBaritone {
             case EXECUTING:
                 if (executor.hasSuccessfullyFinished()) {
                     Logger.log("Executor has finished");
-                    // TODO: Fix this
+                    //
                     main.reStart();
                     if (path instanceof SemiPath) {
                         startSemiPathFinding();
@@ -152,13 +153,13 @@ public class AutoMineBaritone {
     }
 
     public BlockPos getCurrentBlockPos() {
-        return path != null && path.getBlocksInPath() != null && path.getBlocksInPath().getFirst() != null
+        return path != null && path.getBlocksInPath() != null && !path.getBlocksInPath().isEmpty()
                 ? path.getBlocksInPath().getFirst().getPos()
                 : null;
     }
 
     @SubscribeEvent
-    public void ChunkLoadEvent(ChunkLoadEvent event) {
+    public void onChunkLoad(ChunkLoadEvent event) {
     }
 
     private void startSemiPathFinding() {
@@ -174,19 +175,22 @@ public class AutoMineBaritone {
         KeybindHandler.resetKeybindState();
         //KeybindHandler.setKeyBindState(KeybindHandler.keyBindShift, config.isShiftWhenMine());
 
-        if (getPathBehaviour().isStaticMode()) pathFind();
-        else exec.submit(this::pathFind);
+        if (getPathBehaviour().isStaticMode()) {
+            pathFind();
+        } else {
+            exec.submit(this::pathFind);
+        }
     }
 
     private void pathFind() {
-    /*if (!config.isMineFloor()) {
-      if (playerFloorPos != null) {
-        pathFinder.removeFromBlackList(playerFloorPos);
-      }
+        /*if (!config.isMineFloor()) {
+            if (playerFloorPos != null) {
+                pathFinder.removeFromBlackList(playerFloorPos);
+            }
 
-      playerFloorPos = BlockUtils.getPlayerLoc().down();
-      pathFinder.addToBlackList(playerFloorPos);
-    }*/
+            playerFloorPos = BlockUtils.getPlayerLoc().down();
+            pathFinder.addToBlackList(playerFloorPos);
+        }*/
 
         try {
             switch (pathSetting.getPathMode()) {
@@ -211,8 +215,8 @@ public class AutoMineBaritone {
 
     private PathFinderBehaviour getPathBehaviour() {
         return new PathFinderBehaviour(
-                config.getForbiddenPathfindingBlocks() == null ? null : config.getForbiddenPathfindingBlocks(),
-                config.getAllowedPathfindingBlocks() == null ? null : config.getAllowedPathfindingBlocks(),
+                config.getForbiddenPathfindingBlocks(),
+                config.getAllowedPathfindingBlocks(),
                 config.getMaxY(),
                 config.getMinY(),
                 config.getMineType() == MiningType.DYNAMIC ? 30 : 5,

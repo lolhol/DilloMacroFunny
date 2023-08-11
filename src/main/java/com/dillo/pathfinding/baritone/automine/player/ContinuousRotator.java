@@ -24,25 +24,19 @@ public class ContinuousRotator {
     }
 
     public static float lerpAngleEaseIn(float fromRadians, float toRadians, float elapsedTime, float duration) {
-        // Calculate the interpolation progress based on the elapsed time and the duration
         float progress = elapsedTime / duration;
-        // Modify the progress using an easing function
         progress = easeOut(progress);
         float f = ((toRadians - fromRadians) % 360.0F + 540.0F) % 360.0F - 180.0F;
-        return (fromRadians + f * progress % 360.0F);
+        return (fromRadians + (f * progress + 360.0F) % 360.0F);
     }
 
-    // Easing function that applies an ease-out effect to the progress
     public static float easeOut(float progress) {
         return (float) (1 - Math.pow(1 - progress, 2));
     }
 
     public static float lerpAngleSin(float fromRadians, float toRadians, float progress) {
-        // Calculate the difference between the two angles
         float delta = toRadians - fromRadians;
-        // Use the sin function to interpolate between the two angles
         float interpolatedAngle = fromRadians + delta * (float) Math.sin(progress * Math.PI / 2);
-        // Return the interpolated angle, wrapped around to the range [0, 360)
         return interpolatedAngle % 360.0F;
     }
 
@@ -59,8 +53,7 @@ public class ContinuousRotator {
         float targetYaw = (float) Math.floor(yaw);
         float targetPitch = (float) Math.floor(pitch);
 
-        // "real" means that its in 360 format instead of -180 to 180
-        float realPlayerYaw = AngleUtils.get360RotationYaw(playerYaw); // TODO:fix this
+        float realPlayerYaw = AngleUtils.get360RotationYaw(playerYaw);
         float realPlayerPitch = AngleUtils.get360RotationYaw(playerPitch);
         float realTargetYaw = AngleUtils.get360RotationYaw(targetYaw);
         float realTargetPitch = AngleUtils.get360RotationYaw(targetPitch);

@@ -63,9 +63,9 @@ public class PlayerSnapshot {
         if (modification instanceof BlockBreakModification) {
             final BlockBreakModification breakModification = (BlockBreakModification) modification;
             if (breakModification.usedTool()) {
-                // todo
+                //
             } else {
-                // todo
+                //
             }
         }
 
