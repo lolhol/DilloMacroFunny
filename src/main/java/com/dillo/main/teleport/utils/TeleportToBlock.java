@@ -1,5 +1,12 @@
 package com.dillo.main.teleport.utils;
 
+import static com.dillo.calls.CurrentState.*;
+import static com.dillo.config.config.*;
+import static com.dillo.main.utils.keybinds.AllKeybinds.SNEAK;
+import static com.dillo.main.utils.looks.LookAt.serverSmoothLook;
+import static com.dillo.main.utils.looks.LookAt.updateServerLook;
+import static com.dillo.utils.RayTracingUtils.adjustLook;
+
 import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.CurrentState;
 import com.dillo.calls.KillSwitch;
@@ -22,141 +29,134 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static com.dillo.calls.CurrentState.*;
-import static com.dillo.config.config.*;
-import static com.dillo.main.utils.keybinds.AllKeybinds.SNEAK;
-import static com.dillo.main.utils.looks.LookAt.serverSmoothLook;
-import static com.dillo.main.utils.looks.LookAt.updateServerLook;
-import static com.dillo.utils.RayTracingUtils.adjustLook;
-
 public class TeleportToBlock {
 
-    private static final KeyBinding forward = Minecraft.getMinecraft().gameSettings.keyBindForward;
-    public static boolean isStartLooking = false;
-    public static CurrentState newStateType;
-    public static boolean tpWalkOverride;
-    private static BlockPos nextBlock = null;
-    private static long headMoveTime;
-    private static long waitTime;
+  private static final KeyBinding forward = Minecraft.getMinecraft().gameSettings.keyBindForward;
+  public static boolean isStartLooking = false;
+  public static CurrentState newStateType;
+  public static boolean tpWalkOverride;
+  private static BlockPos nextBlock = null;
+  private static long headMoveTime;
+  private static long waitTime;
 
-    public static boolean teleportToBlock(BlockPos block, long time, long waitTime, CurrentState newState) {
-        newStateType = newState;
-        ArmadilloStates.currentState = null;
-        headMoveTime = time;
-        TeleportToBlock.waitTime = waitTime;
+  public static boolean teleportToBlock(BlockPos block, long time, long waitTime, CurrentState newState) {
+    newStateType = newState;
+    ArmadilloStates.currentState = null;
+    headMoveTime = time;
+    TeleportToBlock.waitTime = waitTime;
 
-        KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
+    KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
 
-        nextBlock = block;
+    nextBlock = block;
 
-        Vec3 nextBlockPos = adjustLook(
-                ids.mc.thePlayer.getPositionVector(),
-                nextBlock,
-                new net.minecraft.block.Block[]{Blocks.air},
-                false
-        );
+    Vec3 nextBlockPos = adjustLook(
+      ids.mc.thePlayer.getPositionVector(),
+      nextBlock,
+      new net.minecraft.block.Block[] { Blocks.air },
+      false
+    );
 
-        if (!walkOnTP || tpWalkOverride) {
-            if (nextBlockPos == null) {
-                // nextBlockPos = getUnobstructedPos(nextBlock);
-                return false;
-            }
+    if (!walkOnTP || tpWalkOverride) {
+      if (nextBlockPos == null) {
+        // nextBlockPos = getUnobstructedPos(nextBlock);
+        return false;
+      }
 
-            if (!serverRotations) {
-                LookAt.smoothLook(LookAt.getRotation(nextBlockPos), time);
-            } else {
-                serverSmoothLook(LookAt.getRotation(nextBlockPos), time);
-                isStartLooking = true;
-            }
+      if (!serverRotations) {
+        LookAt.smoothLook(LookAt.getRotation(nextBlockPos), time);
+      } else {
+        serverSmoothLook(LookAt.getRotation(nextBlockPos), time);
+        isStartLooking = true;
+      }
 
-            WaitThenCall.waitThenCall(waitTime + time, TPSTAGE2);
-        } else {
-            MoveToVertex vertexMover = new MoveToVertex();
-            VertexGetter getVertex = new VertexGetter();
-            VertexGetterConfig config = new VertexGetterConfig(ids.mc.thePlayer.getPositionVector(), nextBlock, 1.54F);
+      WaitThenCall.waitThenCall(waitTime + time, TPSTAGE2);
+    } else {
+      MoveToVertex vertexMover = new MoveToVertex();
+      VertexGetter getVertex = new VertexGetter();
+      VertexGetterConfig config = new VertexGetterConfig(ids.mc.thePlayer.getPositionVector(), nextBlock, 1.54F);
 
-            MinecraftForge.EVENT_BUS.register(vertexMover);
+      MinecraftForge.EVENT_BUS.register(vertexMover);
 
-            VertexGetter.VertexGetterClass vertex = getVertex.getVertex(config);
+      VertexGetter.VertexGetterClass vertex = getVertex.getVertex(config);
 
-            if (vertex != null) {
-                vertexMover.moveToVertex(vertex, TPSTAGEWALK, true, 60);
-            } else {
-                if (nextBlockPos == null) {
-                    return false;
-                }
-
-                if (!serverRotations) {
-                    LookAt.smoothLook(LookAt.getRotation(nextBlockPos), !earlyLook ? time : 52);
-                } else {
-                    serverSmoothLook(LookAt.getRotation(nextBlockPos), time);
-                    isStartLooking = true;
-                }
-
-                WaitThenCall.waitThenCall(waitTime + time, TPSTAGE2);
-            }
-        }
-
-        return true;
-    }
-
-    public static void teleportStage2() {
-        new Thread(() -> {
-            ArmadilloStates.currentState = null;
-
-            KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
-
-            int aotvSlot = GetSBItems.getAOTVSlot();
-            if (aotvSlot != -1) {
-                SwapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
-                ids.mc.playerController.sendUseItem(
-                        ids.mc.thePlayer,
-                        ids.mc.theWorld,
-                        ids.mc.thePlayer.inventory.getStackInSlot(ids.mc.thePlayer.inventory.currentItem)
-                );
-            }
-
-            int drillSlot = GetSBItems.getDrillSlot();
-            if (drillSlot != -1) {
-                SwapToSlot.swapToSlot(drillSlot);
-            }
-
-            KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
-            WaitThenCall.waitThenCall(1, TPSTAGE3);
-        })
-                .start();
-    }
-
-    public static void tpStageWalk() {
-        KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
-
-        ArmadilloStates.currentState = null;
-        Vec3 nextBlockPos = adjustLook(
-                ids.mc.thePlayer.getPositionVector(),
-                nextBlock,
-                new net.minecraft.block.Block[]{Blocks.air},
-                false
-        );
-
+      if (vertex != null) {
+        vertexMover.moveToVertex(vertex, TPSTAGEWALK, true, 60);
+      } else {
         if (nextBlockPos == null) {
-            SendChat.chat(prefix.prefix + "Failed to teleport!");
-            ArmadilloStates.currentState = null;
-            ArmadilloStates.offlineState = KillSwitch.OFFLINE;
-            return;
+          return false;
         }
 
-        LookAt.smoothLook(LookAt.getRotation(nextBlockPos), headMoveTime);
-        WaitThenCall.waitThenCall(headMoveTime + waitTime, TPSTAGE2);
+        if (!serverRotations) {
+          LookAt.smoothLook(LookAt.getRotation(nextBlockPos), !earlyLook ? time : 52);
+        } else {
+          serverSmoothLook(LookAt.getRotation(nextBlockPos), time);
+          isStartLooking = true;
+        }
+
+        WaitThenCall.waitThenCall(waitTime + time, TPSTAGE2);
+      }
     }
 
-    public static void teleportStage3() {
-        ArmadilloStates.currentState = null;
-        IsOnBlock.isOnBlock(checkOnBlockTime, nextBlock, newStateType);
+    return true;
+  }
+
+  public static void teleportStage2() {
+    new Thread(() -> {
+      ArmadilloStates.currentState = null;
+
+      KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
+
+      int aotvSlot = GetSBItems.getAOTVSlot();
+      if (aotvSlot != -1) {
+        SwapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
+        ids.mc.playerController.sendUseItem(
+          ids.mc.thePlayer,
+          ids.mc.theWorld,
+          ids.mc.thePlayer.inventory.getStackInSlot(ids.mc.thePlayer.inventory.currentItem)
+        );
+      }
+
+      int drillSlot = GetSBItems.getDrillSlot();
+      if (drillSlot != -1) {
+        SwapToSlot.swapToSlot(drillSlot);
+      }
+
+      KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
+      WaitThenCall.waitThenCall(1, TPSTAGE3);
+    })
+      .start();
+  }
+
+  public static void tpStageWalk() {
+    KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
+
+    ArmadilloStates.currentState = null;
+    Vec3 nextBlockPos = adjustLook(
+      ids.mc.thePlayer.getPositionVector(),
+      nextBlock,
+      new net.minecraft.block.Block[] { Blocks.air },
+      false
+    );
+
+    if (nextBlockPos == null) {
+      SendChat.chat(prefix.prefix + "Failed to teleport!");
+      ArmadilloStates.currentState = null;
+      ArmadilloStates.offlineState = KillSwitch.OFFLINE;
+      return;
     }
 
-    @SubscribeEvent(priority = EventPriority.NORMAL)
-    public void onUpdatePre(PlayerMoveEvent.Pre pre) {
-        if (!isStartLooking) return;
-        updateServerLook();
-    }
+    LookAt.smoothLook(LookAt.getRotation(nextBlockPos), headMoveTime);
+    WaitThenCall.waitThenCall(headMoveTime + waitTime, TPSTAGE2);
+  }
+
+  public static void teleportStage3() {
+    ArmadilloStates.currentState = null;
+    IsOnBlock.isOnBlock(checkOnBlockTime, nextBlock, newStateType);
+  }
+
+  @SubscribeEvent(priority = EventPriority.NORMAL)
+  public void onUpdatePre(PlayerMoveEvent.Pre pre) {
+    if (!isStartLooking) return;
+    updateServerLook();
+  }
 }

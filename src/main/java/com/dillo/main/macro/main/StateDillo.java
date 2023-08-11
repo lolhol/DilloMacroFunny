@@ -34,7 +34,6 @@ import static com.dillo.config.config.ping;
 import static com.dillo.main.macro.main.NewSpinDrive.*;
 import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
 import static com.dillo.main.utils.keybinds.AllKeybinds.JUMP;
-import static com.dillo.main.utils.looks.DriveLook.reset;
 import static com.dillo.utils.BlockUtils.getBlocksLayer;
 import static com.dillo.utils.BlockUtils.getNextBlock;
 import static com.dillo.utils.RayTracingUtils.adjustLook;
@@ -42,261 +41,249 @@ import static com.dillo.utils.keyBindings.rightClick;
 
 public class StateDillo {
 
-    public static float playerYBe4 = 0;
-    public static boolean canCheckIfOnDillo = false;
-    public static int tickDilloCheckCount = 0;
-    public static boolean isNoTp = false;
-    public static int checkedNumber = 0;
-    public static boolean isSmartTP = false;
-    private static boolean look = true;
-    private static float isDilloSummonedTickCount = 0;
-    private static int randomAmTicks = 0;
-    private static int randomTickClick = 0;
-    private static double randomY = 0;
-    boolean looking = false;
+  public static float playerYBe4 = 0;
+  public static boolean canCheckIfOnDillo = false;
+  public static int tickDilloCheckCount = 0;
+  public static boolean isNoTp = false;
+  public static int checkedNumber = 0;
+  public static boolean isSmartTP = false;
+  private static boolean look = true;
+  private static float isDilloSummonedTickCount = 0;
+  private static int randomAmTicks = 0;
+  private static int randomTickClick = 0;
+  private static double randomY = 0;
+  boolean looking = false;
 
-    public static void stateDilloNoGettingOn() {
-        if (canDillo() && ArmadilloStates.isOnline()) {
-            ArmadilloStates.currentState = null;
-            NewSpinDrive.putAllTogether();
-            SwapToSlot.swapToSlot(GetSBItems.getDrillSlot());
-            ArmadilloStates.currentState = SPINDRIVE;
+  public static void stateDilloNoGettingOn() {
+    if (canDillo() && ArmadilloStates.isOnline()) {
+      ArmadilloStates.currentState = null;
+      NewSpinDrive.putAllTogether();
+      SwapToSlot.swapToSlot(GetSBItems.getDrillSlot());
+      ArmadilloStates.currentState = SPINDRIVE;
+    } else {
+      if (ArmadilloStates.isOnline()) {
+        ArmadilloStates.currentState = null;
+        TeleportToNextBlock.teleportToNextBlock();
+      }
+    }
+  }
+
+  public static void stateDillo() {
+    //KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
+    if (canDillo() && ArmadilloStates.isOnline() && !isSmartTP) {
+      ArmadilloStates.currentState = null;
+
+      new Thread(() -> {
+        int slot = getItemInSlot.getItemSlot(Items.fishing_rod);
+        if (slot != -1) {
+          ids.mc.thePlayer.inventory.currentItem = slot;
         } else {
-            if (ArmadilloStates.isOnline()) {
-                ArmadilloStates.currentState = null;
-                TeleportToNextBlock.teleportToNextBlock();
-            }
+          ArmadilloStates.currentState = null;
+          ArmadilloStates.offlineState = KillSwitch.OFFLINE;
+          return;
         }
+
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+
+        ids.mc.thePlayer.sendQueue.addToSendQueue(
+          new C08PacketPlayerBlockPlacement(
+            new BlockPos(-1, -1, -1),
+            255,
+            ids.mc.thePlayer.inventory.getStackInSlot(slot),
+            0,
+            0,
+            0
+          )
+        );
+
+        try {
+          Thread.sleep(50);
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+
+        SwapToSlot.swapToSlot(GetSBItems.getDrillSlot());
+
+        originalBlocks = getBlocks();
+
+        NewSpinDrive.putAllTogether();
+        isDilloSummonedTickCount = 0;
+
+        try {
+          Thread.sleep(config.rod_drill_switch_time + RandomisationUtils.randomNumberBetweenInt(-10, 10));
+
+          playerYBe4 = (float) ids.mc.thePlayer.posY;
+
+          if (ArmadilloStates.isOnline()) {
+            randomAmTicks = Math.round(RandomisationUtils.randomNumberBetweenInt(0, 1));
+            randomTickClick = RandomisationUtils.randomNumberBetweenInt(0, 1);
+            randomY = RandomisationUtils.randomNumberBetweenDouble(0.0001F, 0.2F);
+            canCheckIfOnDillo = true;
+          }
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+      })
+        .start();
+    } else {
+      if (ArmadilloStates.isOnline()) {
+        isThrowRod = false;
+        ArmadilloStates.currentState = null;
+        TeleportToNextBlock.teleportToNextBlock();
+      }
+    }
+  }
+
+  public static boolean isDilloSummoned() {
+    Minecraft mc = Minecraft.getMinecraft();
+    EntityPlayer player = mc.thePlayer;
+
+    AxisAlignedBB boundingBox = new AxisAlignedBB(
+      player.posX - 3,
+      player.posY - 3,
+      player.posZ - 3,
+      player.posX + 3,
+      player.posY + 3,
+      player.posZ + 3
+    );
+
+    List<Entity> entityList = mc.theWorld.getEntitiesWithinAABB(Entity.class, boundingBox);
+    for (Entity entity : entityList) {
+      if (!(entity instanceof EntityPlayer)) {
+        if (entity.getName().contains(player.getName())) {
+          isDilloSummonedTickCount++;
+          return true;
+        }
+      }
     }
 
-    public static void stateDillo() {
-        //KeyBinding jump = Minecraft.getMinecraft().gameSettings.keyBindJump;
-        if (canDillo() && ArmadilloStates.isOnline() && !isSmartTP) {
-            ArmadilloStates.currentState = null;
+    return false;
+  }
 
-            new Thread(() -> {
-                int slot = getItemInSlot.getItemSlot(Items.fishing_rod);
-                if (slot != -1) {
-                    ids.mc.thePlayer.inventory.currentItem = slot;
+  public static boolean canDillo() {
+    return (
+      !getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ))
+        .isEmpty() ||
+      !getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 1, ids.mc.thePlayer.posZ))
+        .isEmpty() ||
+      !getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ)).isEmpty()
+    );
+  }
+
+  public static boolean canDilloOn() {
+    return (
+      (
+        !getBlocksLayer(
+          new BlockPos(
+            currentRoute.currentBlock.getX(),
+            currentRoute.currentBlock.getY() + 4,
+            currentRoute.currentBlock.getZ()
+          )
+        )
+          .isEmpty() ||
+        !getBlocksLayer(
+          new BlockPos(
+            currentRoute.currentBlock.getX(),
+            currentRoute.currentBlock.getY() + 3,
+            currentRoute.currentBlock.getZ()
+          )
+        )
+          .isEmpty() ||
+        !getBlocksLayer(
+          new BlockPos(
+            currentRoute.currentBlock.getX(),
+            currentRoute.currentBlock.getY() + 2,
+            currentRoute.currentBlock.getZ()
+          )
+        )
+          .isEmpty()
+      ) &&
+      adjustLook(
+        new Vec3(
+          currentRoute.currentBlock.getX() + 0.5,
+          currentRoute.currentBlock.getY() + 2,
+          currentRoute.currentBlock.getZ() + 0.5
+        ),
+        getNextBlock(),
+        new net.minecraft.block.Block[] { Blocks.air },
+        false
+      ) ==
+      null
+    );
+  }
+
+  @SubscribeEvent
+  public void onTick(TickEvent.ClientTickEvent event) {
+    if (event.phase == TickEvent.Phase.END) {
+      if (canCheckIfOnDillo && ArmadilloStates.isOnline()) {
+        if (playerYBe4 - ids.mc.thePlayer.posY + 1 < 0.0001) {
+          isDilloSummonedTickCount = 0;
+          checkedNumber = 0;
+          tickDilloCheckCount = 0;
+          canCheckIfOnDillo = false;
+          look = true;
+
+          regJump.reset();
+
+          if (ArmadilloStates.isOnline()) {
+            if (isNoTp) {
+              ArmadilloStates.currentState = ROUTEOBSTRUCTEDCLEAR;
+              isNoTp = false;
+            } else {
+              new Thread(() -> {
+                if (ArmadilloStates.isOnline()) {
+                  ThreadUtils.threadSleepRandom(ping * 2L);
+
+                  newSpinDrive();
                 } else {
-                    ArmadilloStates.currentState = null;
-                    ArmadilloStates.offlineState = KillSwitch.OFFLINE;
-                    return;
+                  KeyBinding.setKeyBindState(JUMP.getKeyCode(), false);
                 }
-
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-
-                ids.mc.thePlayer.sendQueue.addToSendQueue(
-                        new C08PacketPlayerBlockPlacement(
-                                new BlockPos(-1, -1, -1),
-                                255,
-                                ids.mc.thePlayer.inventory.getStackInSlot(slot),
-                                0,
-                                0,
-                                0
-                        )
-                );
-
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-
-                SwapToSlot.swapToSlot(GetSBItems.getDrillSlot());
-
-                originalBlocks = getBlocks();
-
-                NewSpinDrive.putAllTogether();
-                isDilloSummonedTickCount = 0;
-
-                try {
-                    Thread.sleep(config.rod_drill_switch_time + RandomisationUtils.randomNumberBetweenInt(-10, 10));
-
-                    playerYBe4 = (float) ids.mc.thePlayer.posY;
-
-                    if (ArmadilloStates.isOnline()) {
-                        randomAmTicks = Math.round(RandomisationUtils.randomNumberBetweenInt(1, 4));
-                        randomTickClick = RandomisationUtils.randomNumberBetweenInt(2, 5);
-                        randomY = RandomisationUtils.randomNumberBetweenDouble(0.0001F, 0.2F);
-                        //KeyBinding.setKeyBindState(jump.getKeyCode(), true);
-                        canCheckIfOnDillo = true;
-                    }
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            })
-                    .start();
+              })
+                .start();
+            }
+          }
         } else {
-            if (ArmadilloStates.isOnline()) {
-                isThrowRod = false;
-                ArmadilloStates.currentState = null;
-                TeleportToNextBlock.teleportToNextBlock();
-            }
-        }
-    }
-
-    public static boolean isDilloSummoned() {
-        Minecraft mc = Minecraft.getMinecraft();
-        EntityPlayer player = mc.thePlayer;
-
-        AxisAlignedBB boundingBox = new AxisAlignedBB(
-                player.posX - 3,
-                player.posY - 3,
-                player.posZ - 3,
-                player.posX + 3,
-                player.posY + 3,
-                player.posZ + 3
-        );
-
-        List<Entity> entityList = mc.theWorld.getEntitiesWithinAABB(Entity.class, boundingBox);
-        for (Entity entity : entityList) {
-            if (!(entity instanceof EntityPlayer)) {
-                if (entity.getName().contains(player.getName())) {
-                    isDilloSummonedTickCount++;
-                    return true;
+          if (tickDilloCheckCount >= randomTickClick) {
+            if (!fasterDillo) {
+              if (isDilloSummoned()) {
+                if (isDilloSummonedTickCount < randomAmTicks) {
+                  isDilloSummonedTickCount++;
+                  return;
                 }
-            }
-        }
 
-        return false;
-    }
-
-    public static boolean canDillo() {
-        return (
-                !getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ))
-                        .isEmpty() ||
-                        !getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 1, ids.mc.thePlayer.posZ))
-                                .isEmpty() ||
-                        !getBlocksLayer(new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY, ids.mc.thePlayer.posZ)).isEmpty()
-        );
-    }
-
-    public static boolean canDilloOn() {
-        return (
-                (
-                        !getBlocksLayer(
-                                new BlockPos(
-                                        currentRoute.currentBlock.getX(),
-                                        currentRoute.currentBlock.getY() + 4,
-                                        currentRoute.currentBlock.getZ()
-                                )
-                        )
-                                .isEmpty() ||
-                                !getBlocksLayer(
-                                        new BlockPos(
-                                                currentRoute.currentBlock.getX(),
-                                                currentRoute.currentBlock.getY() + 3,
-                                                currentRoute.currentBlock.getZ()
-                                        )
-                                )
-                                        .isEmpty() ||
-                                !getBlocksLayer(
-                                        new BlockPos(
-                                                currentRoute.currentBlock.getX(),
-                                                currentRoute.currentBlock.getY() + 2,
-                                                currentRoute.currentBlock.getZ()
-                                        )
-                                )
-                                        .isEmpty()
-                ) &&
-                        adjustLook(
-                                new Vec3(
-                                        currentRoute.currentBlock.getX() + 0.5,
-                                        currentRoute.currentBlock.getY() + 2,
-                                        currentRoute.currentBlock.getZ() + 0.5
-                                ),
-                                getNextBlock(),
-                                new net.minecraft.block.Block[]{Blocks.air},
-                                false
-                        ) ==
-                                null
-        );
-    }
-
-    @SubscribeEvent
-    public void onTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            if (canCheckIfOnDillo && ArmadilloStates.isOnline()) {
-                if (playerYBe4 - ids.mc.thePlayer.posY + randomY < 0.0001) {
-                    reset();
-                    isDilloSummonedTickCount = 0;
-                    checkedNumber = 0;
-                    tickDilloCheckCount = 0;
-                    canCheckIfOnDillo = false;
-                    look = true;
-
-                    regJump.reset();
-
-                    if (ArmadilloStates.isOnline()) {
-                        if (isNoTp) {
-                            ArmadilloStates.currentState = ROUTEOBSTRUCTEDCLEAR;
-                            isNoTp = false;
-                        } else {
-                            new Thread(() -> {
-                                if (ArmadilloStates.isOnline()) {
-                                    ThreadUtils.threadSleepRandom(ping * 2L);
-
-                                    newSpinDrive();
-                                } else {
-                                    KeyBinding.setKeyBindState(JUMP.getKeyCode(), false);
-                                }
-                            })
-                                    .start();
-                        }
-                    }
-                } else {
-          /*if (!looking && ids.mc.thePlayer.posY - playerYBe4 > 0.2) {
-            looking = true;
-
-            if (isLeft) {
-              addYaw(200, -20);
+                rightClick();
+              }
             } else {
-              addYaw(200, 20);
+              rightClick();
             }
-          }*/
 
-                    if (tickDilloCheckCount >= randomTickClick) {
-                        if (!fasterDillo) {
-                            if (isDilloSummoned()) {
-                                if (isDilloSummonedTickCount < randomAmTicks) {
-                                    isDilloSummonedTickCount++;
-                                    return;
-                                }
-
-                                rightClick();
-                            }
-                        } else {
-                            rightClick();
-                        }
-
-                        looking = false;
-                        tickDilloCheckCount = 0;
-                    } else {
-                        tickDilloCheckCount++;
-                    }
-                }
-
-                if (checkedNumber > 300) {
-                    checkedNumber = 0;
-                    tickDilloCheckCount = 0;
-                    canCheckIfOnDillo = false;
-                    look = true;
-                } else {
-                    tickDilloCheckCount++;
-                    checkedNumber++;
-                }
-
-                look = false;
-            } else {
-                checkedNumber = 0;
-                tickDilloCheckCount = 0;
-                canCheckIfOnDillo = false;
-            }
+            looking = false;
+            tickDilloCheckCount = 0;
+          } else {
+            tickDilloCheckCount++;
+          }
         }
+
+        if (checkedNumber > 300) {
+          checkedNumber = 0;
+          tickDilloCheckCount = 0;
+          canCheckIfOnDillo = false;
+          look = true;
+        } else {
+          tickDilloCheckCount++;
+          checkedNumber++;
+        }
+
+        look = false;
+      } else {
+        checkedNumber = 0;
+        tickDilloCheckCount = 0;
+        canCheckIfOnDillo = false;
+      }
     }
+  }
 }
