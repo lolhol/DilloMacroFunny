@@ -25,9 +25,6 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.dillo.commands.baritone.StartAutoSetupWithBaritone.main;
-import static com.dillo.main.route.AutoSetup.SetupMain.baritoneFailed;
-
 public class AutoMineBaritone {
 
     Minecraft mc = Minecraft.getMinecraft();
@@ -41,7 +38,6 @@ public class AutoMineBaritone {
     BlockPos targetBlockPos;
     volatile Path path;
     ExecutorService exec = Executors.newCachedThreadPool();
-    //int chunkLoadCount;
 
     public AutoMineBaritone(BaritoneConfig config) {
         this.config = config;
@@ -55,8 +51,6 @@ public class AutoMineBaritone {
         targetBlockPos = block;
         pathSetting = new PathFindSetting(config.isMineWithPreference(), PathMode.MINE, true);
         path = null;
-
-        //targetBlockType = blockTypes;
         startPathFinding();
     }
 
@@ -86,14 +80,12 @@ public class AutoMineBaritone {
     }
 
     public void disableBaritone() {
-        main.reEnable();
         Logger.playerLog("Disabled baritone");
         state = BaritoneState.IDLE;
         executor.reset();
         terminate();
     }
 
-    // failed = true -> Will actually terminate the whole thing, otherwise just restart and pretend nothing has happened...
     private void failBaritone(boolean failed) {
         executor.reset();
         if (path != null && path.getBlocksInPath() != null && !path.getBlocksInPath().isEmpty()) {
@@ -114,7 +106,6 @@ public class AutoMineBaritone {
         KeybindHandler.resetKeybindState();
     }
 
-    // logic is a bit intricate here, sorry
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (mc.thePlayer == null || state == BaritoneState.IDLE || state == BaritoneState.FAILED) {
@@ -128,8 +119,6 @@ public class AutoMineBaritone {
             case EXECUTING:
                 if (executor.hasSuccessfullyFinished()) {
                     Logger.log("Executor has finished");
-                    //
-                    main.reStart();
                     if (path instanceof SemiPath) {
                         startSemiPathFinding();
                     } else {
@@ -137,13 +126,6 @@ public class AutoMineBaritone {
                     }
                 } else if (executor.hasFailed()) {
                     Logger.log("Executor has failed");
-
-                    if (main.isAutoSetupOnline()) {
-                        main.addBlockToBaritoneFailList(targetBlockPos);
-                        main.reEnable();
-                    }
-                    // add a function here to handle fail.
-
                     failBaritone(true);
                 } else if (!executor.isExecuting()) {
                     Logger.log("Executor is starting to execute a path");
@@ -163,7 +145,6 @@ public class AutoMineBaritone {
     }
 
     private void startSemiPathFinding() {
-        //chunkLoadCount = 0;
         startPathFinding();
         executor.reset();
     }
@@ -171,9 +152,7 @@ public class AutoMineBaritone {
     private void startPathFinding() {
         state = BaritoneState.PATH_FINDING;
         Logger.playerLog("Started pathfinding");
-
         KeybindHandler.resetKeybindState();
-        //KeybindHandler.setKeyBindState(KeybindHandler.keyBindShift, config.isShiftWhenMine());
 
         if (getPathBehaviour().isStaticMode()) {
             pathFind();
@@ -183,32 +162,18 @@ public class AutoMineBaritone {
     }
 
     private void pathFind() {
-        /*if (!config.isMineFloor()) {
-            if (playerFloorPos != null) {
-                pathFinder.removeFromBlackList(playerFloorPos);
-            }
-
-            playerFloorPos = BlockUtils.getPlayerLoc().down();
-            pathFinder.addToBlackList(playerFloorPos);
-        }*/
-
         try {
             switch (pathSetting.getPathMode()) {
                 case MINE:
-                    //if (pathSetting.isFindWithBlockPos()) {
                     path = pathFinder.getPath(PathMode.MINE, targetBlockPos);
-                    //} else {
-                    //path = pathFinder.getPath(PathMode.MINE, true, nuking);
-                    //}
                     break;
-                case GOTO: // can add more options later
+                case GOTO:
                     path = pathFinder.getPath(PathMode.GOTO, targetBlockPos);
                     break;
             }
             state = BaritoneState.EXECUTING;
         } catch (NoPathException e) {
             Logger.playerLog("Pathfind failed: " + e);
-            baritoneFailed();
             failBaritone(true);
         }
     }
