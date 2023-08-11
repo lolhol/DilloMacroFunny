@@ -70,7 +70,7 @@ public class AStarPathFinder {
           continue;
         }
 
-        if (!Utils.isAbleToInteract(child.blockPos, child.parentOfBlock.blockPos, pathFinderConfig.isMine)) {
+        if (!Utils.isAbleToInteract(child.blockPos, child.parentOfBlock.blockPos, false)) {
           continue;
         }
 
@@ -80,6 +80,7 @@ public class AStarPathFinder {
             new Vec3(child.blockPos().getX(), child.blockPos().getY(), child.blockPos().getZ()),
             true
           );
+
           child.gCost = newCostToNeighbour;
           child.hCost = Costs.calculateHCostBlockPos(child.blockPos, pathFinderConfig.destinationBlock);
           //child.gCost = DistanceFromTo.distanceFromTo(child.blockPos(), endPoint.blockPos());

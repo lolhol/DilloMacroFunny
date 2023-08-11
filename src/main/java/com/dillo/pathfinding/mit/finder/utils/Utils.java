@@ -120,7 +120,7 @@ public class Utils {
       return BlockUtils.getBlock(block) != Blocks.bedrock && BlockUtils.isBlockSolid(block);
     }
 
-    return canWalkOn(block) || canJumpOn(block, parentBlock) || canFall(block, parentBlock);
+    return canWalkOn(block); // || canJumpOn(block, parentBlock) || canFall(block, parentBlock);
   }
 
   public static boolean canWalkOn(BlockPos block) {
@@ -129,7 +129,7 @@ public class Utils {
       BlockUtils.getBlock(BlockUtils.makeNewBlock(0, -1, 0, block)) != Blocks.air &&
       BlockUtils.getBlock(BlockUtils.makeNewBlock(0, 1, 0, block)) == Blocks.air
     ) {
-      return BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block));
+      return true; //BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block));
     }
 
     return false;
