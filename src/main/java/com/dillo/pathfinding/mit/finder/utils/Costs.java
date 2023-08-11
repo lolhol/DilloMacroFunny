@@ -3,7 +3,6 @@ package com.dillo.pathfinding.mit.finder.utils;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.random.ids;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 
 public class Costs {
@@ -43,12 +42,9 @@ public class Costs {
   }
 
   public static double calculateSurroundingsDoubleCost(BlockPos block) {
-    Iterable<BlockPos> blocks = BlockUtils.getBlocksInBox(
-      new AxisAlignedBB(
-        BlockUtils.makeNewBlock(block.getX() - 4, block.getY(), block.getZ() - 4, block),
-        BlockUtils.makeNewBlock(block.getX() + 4, block.getY() + 1, block.getZ() + 4, block)
-      ),
-      block
+    Iterable<BlockPos> blocks = BlockPos.getAllInBox(
+      BlockUtils.makeNewBlock(block.getX() - 4, block.getY(), block.getZ() - 4, block),
+      BlockUtils.makeNewBlock(block.getX() + 4, block.getY() + 1, block.getZ() + 4, block)
     );
     double percent = BlockUtils.getPercentOfNonAir(blocks);
     return percent / 50;
