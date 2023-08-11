@@ -1,5 +1,8 @@
 package com.dillo.pathfinding.stevebot.core.data.items.wrapper;
 
+import lombok.Getter;
+
+@Getter
 public class ItemWrapper {
 
     private final int id;
@@ -15,24 +18,40 @@ public class ItemWrapper {
     }
 
     /**
-     * @return the id of the item
+     * Check if the item is an instance of ItemBlock.
+     *
+     * @return true if the item is an instance of ItemBlock, false otherwise.
      */
-    public int getId() {
-        return id;
+    public boolean isBlock() {
+        return isItemBlock(this);
     }
 
     /**
-     * @return the name of the item ("minecraft:item_name")
+     * Check if the item is an instance of ItemTool.
+     *
+     * @return true if the item is an instance of ItemTool, false otherwise.
      */
-    public String getName() {
-        return name;
-    }
-
-    public boolean isBlock() {
-        return false; // TODO: item instanceof ItemBlock;
-    }
-
     public boolean isTool() {
-        return false; // TODO item instanceof ItemTool;
+        return isItemTool(this);
+    }
+
+    /**
+     * Check if the provided instance is an instance of ItemBlock.
+     *
+     * @param item the instance to check
+     * @return true if the item is an instance of ItemBlock, false otherwise.
+     */
+    public static boolean isItemBlock(ItemWrapper item) {
+        return item instanceof ItemBlockWrapper;
+    }
+
+    /**
+     * Check if the provided instance is an instance of ItemTool.
+     *
+     * @param item the instance to check
+     * @return true if the item is an instance of ItemTool, false otherwise.
+     */
+    public static boolean isItemTool(ItemWrapper item) {
+        return item instanceof ItemToolWrapper;
     }
 }
