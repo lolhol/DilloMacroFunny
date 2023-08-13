@@ -278,6 +278,13 @@ public class BlockUtils {
 
   public static boolean isBlockSolid(BlockPos block) {
     Block blockType = getBlockType(block);
-    return blockType != Blocks.water && blockType != Blocks.lava && blockType != Blocks.air;
+    return (
+      blockType != Blocks.water &&
+      blockType != Blocks.lava &&
+      blockType != Blocks.air &&
+      blockType != Blocks.red_flower &&
+      blockType != Blocks.tallgrass &&
+      blockType != Blocks.yellow_flower
+    );
   }
 }

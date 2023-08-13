@@ -1,12 +1,12 @@
 package com.dillo.pathfinding.mit.finder.utils;
 
 import com.dillo.utils.BlockUtils;
-import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
 
@@ -22,7 +22,8 @@ public class Utils {
       Costs.getBreakCost(startingBlock),
       Costs.walkCost(),
       Costs.getFullCost(startingBlock, startingBlock, endBlock),
-      BlockUtils.getBlockType(startingBlock)
+      BlockUtils.getBlockType(startingBlock),
+      null
     );
   }
 
@@ -38,7 +39,8 @@ public class Utils {
       Costs.getBreakCost(endBlock),
       Costs.walkCost(),
       Costs.getFullCost(endBlock, startingBlock, endBlock),
-      BlockUtils.getBlockType(endBlock)
+      BlockUtils.getBlockType(endBlock),
+      null
     );
   }
 
@@ -59,7 +61,8 @@ public class Utils {
       Costs.getBreakCost(block),
       Costs.walkCost(),
       Costs.getFullCost(block, starting, ending),
-      BlockUtils.getBlockType(block)
+      BlockUtils.getBlockType(block),
+      null
     );
   }
 
@@ -88,31 +91,33 @@ public class Utils {
     return returnBlocks;
   }
 
-  public static List<BlockPos> retracePath(BlockNodeClass startNode, BlockNodeClass endNode) {
+  public static List<BlockNodeClass> retracePath(BlockNodeClass startNode, BlockNodeClass endNode) {
     List<BlockPos> blockPath = new ArrayList<BlockPos>();
+    List<BlockNodeClass> nodeClass = new ArrayList<>();
     BlockNodeClass currentNode = endNode;
 
     while (currentNode.parentOfBlock != null && !currentNode.equals(startNode)) {
       //SendChat.chat("!");
 
-      RenderMultipleBlocksMod.renderMultipleBlocks(
+      /*RenderMultipleBlocksMod.renderMultipleBlocks(
         new Vec3(currentNode.blockPos().getX(), currentNode.blockPos().getY(), currentNode.blockPos().getZ()),
         true
-      );
+      );*/
 
       blockPath.add(currentNode.blockPos());
+      nodeClass.add(currentNode);
       currentNode = currentNode.parentOfBlock;
     }
 
-    return reverseList(blockPath);
+    return reverseList(nodeClass);
   }
 
-  public static List<BlockPos> reverseList(List<BlockPos> initList) {
+  public static List<BlockNodeClass> reverseList(List<BlockNodeClass> initList) {
     int len = initList.size();
     if (len == 0) return null;
 
     int len2 = len >> 1;
-    BlockPos temp;
+    BlockNodeClass temp;
 
     for (int i = 0; i < len2; ++i) {
       temp = initList.get(i);
@@ -123,20 +128,44 @@ public class Utils {
     return initList;
   }
 
-  public static boolean isAbleToInteract(BlockPos block, BlockPos parentBlock, boolean isMine) {
+  public static ActionTypes isAbleToInteract(BlockPos block, BlockPos parentBlock, boolean isMine) {
     if (isMine) {
-      return BlockUtils.getBlock(block) != Blocks.bedrock && BlockUtils.isBlockSolid(block);
+      return BlockUtils.getBlock(block) != Blocks.bedrock && BlockUtils.isBlockSolid(block) ? ActionTypes.BREAK : null;
     }
 
-    return canWalkOn(block) || canJumpOn(block, parentBlock) || canFall(block, parentBlock);
+    if (canWalkOn(block, parentBlock)) {
+      return ActionTypes.WALK;
+    }
+
+    /*if (canJumpOn(block, parentBlock)) {
+      return ActionTypes.JUMP;
+    }
+
+    if (canFall(block, parentBlock)) {
+      return ActionTypes.FALL;
+    }*/
+
+    return null;
   }
 
-  public static boolean canWalkOn(BlockPos block) {
-    return (
-      BlockUtils.getBlock(block) == Blocks.air &&
-      BlockUtils.getBlock(BlockUtils.makeNewBlock(0, -1, 0, block)) != Blocks.air &&
+  public static boolean canWalkOn(BlockPos block, BlockPos parent) {
+    Block blockType = BlockUtils.getBlock(block);
+
+    double yDif = Math.abs(block.getY() - parent.getY());
+
+    /*if (
+      yDif < 0.001
+    ) */
+    return ( //RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(block), true);
+      (
+        blockType == Blocks.air ||
+        blockType == Blocks.tallgrass ||
+        blockType == Blocks.red_flower ||
+        blockType == Blocks.yellow_flower
+      ) &&
       BlockUtils.getBlock(BlockUtils.makeNewBlock(0, 1, 0, block)) == Blocks.air &&
-      BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block))
+      BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block)) &&
+      yDif <= 0.0001
     );
   }
 
@@ -153,6 +182,30 @@ public class Utils {
     double yDiff = block.getY() - parentBlock.getY();
 
     // TODO: Modify here to adjust for the player takin no dmg from fall in SB.
-    return yDiff < 0 && yDiff > -4 && BlockUtils.isBlockSolid(block);
+    return (
+      yDiff < 0 &&
+      yDiff > -4 &&
+      BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block)) &&
+      BlockUtils.getBlock(block) == Blocks.air
+    );
+  }
+
+  public static boolean isAllClearToY(int y1, int y2, BlockPos block) {
+    boolean isGreater = y1 < y2;
+
+    while (y1 != y2) {
+      if (isGreater) {
+        y1++;
+      } else {
+        y1--;
+      }
+
+      Block curBlock = BlockUtils.getBlock(BlockUtils.makeNewBlock(0, y1, 0, block));
+
+      if (curBlock != Blocks.air) return false;
+      curBlock = BlockUtils.getBlock(BlockUtils.makeNewBlock(0, y1, 0, block));
+    }
+
+    return true;
   }
 }

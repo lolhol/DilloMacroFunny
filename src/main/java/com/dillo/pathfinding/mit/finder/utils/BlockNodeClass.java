@@ -31,6 +31,8 @@ public class BlockNodeClass {
 
   public Block blockType;
 
+  public ActionTypes actionType;
+
   public BlockPos blockPos() {
     return this.blockPos;
   }

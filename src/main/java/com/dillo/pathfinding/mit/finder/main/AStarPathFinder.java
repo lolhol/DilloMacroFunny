@@ -1,18 +1,13 @@
 package com.dillo.pathfinding.mit.finder.main;
 
-import com.dillo.pathfinding.mit.finder.utils.BlockNodeClass;
-import com.dillo.pathfinding.mit.finder.utils.Costs;
-import com.dillo.pathfinding.mit.finder.utils.PathFinderConfig;
-import com.dillo.pathfinding.mit.finder.utils.Utils;
+import com.dillo.pathfinding.mit.finder.utils.*;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.SendChat;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class AStarPathFinder {
 
@@ -22,7 +17,7 @@ public class AStarPathFinder {
   int opened = 0;
   int closed = 0;
 
-  public List<BlockPos> AStarPathFinder(PathFinderConfig pathFinderConfig) {
+  public List<BlockNodeClass> AStarPathFinder(PathFinderConfig pathFinderConfig) {
     int depth = 0;
     List<BlockNodeClass> openSet = new ArrayList<>();
     HashSet<BlockNodeClass> closedSet = new HashSet<>();
@@ -35,7 +30,7 @@ public class AStarPathFinder {
     BlockNodeClass endPoint = Utils.getClassOfEnding(pathFinderConfig.startingBlock, pathFinderConfig.destinationBlock);
     openSet.add(Utils.getClassOfStarting(pathFinderConfig.startingBlock, pathFinderConfig.destinationBlock));
 
-    while (depth <= pathFinderConfig.maxIterations && openSet.size() > 0) {
+    while (depth <= pathFinderConfig.maxIterations && !openSet.isEmpty()) {
       opened = openSet.size();
       closed = closedSet.size();
 
@@ -70,18 +65,15 @@ public class AStarPathFinder {
           continue;
         }
 
-        if (!Utils.isAbleToInteract(child.blockPos, child.parentOfBlock.blockPos, false)) {
+        ActionTypes typeAction = Utils.isAbleToInteract(child.blockPos, child.parentOfBlock.blockPos, false);
+        if (typeAction == null) {
           continue;
         }
 
+        child.actionType = typeAction;
+
         double newCostToNeighbour = node.gCost + DistanceFromTo.distanceFromTo(node.blockPos(), child.blockPos());
         if (newCostToNeighbour < child.gCost || !openSet.contains(child)) {
-          /*RenderMultipleBlocksMod.renderMultipleBlocks(
-            new Vec3(child.blockPos().getX(), child.blockPos().getY(), child.blockPos().getZ()),
-            true
-          );*/
-
-          //child.gCost = newCostToNeighbour;
           child.hCost = Costs.calculateHCostBlockPos(child.blockPos, pathFinderConfig.destinationBlock);
           child.gCost = DistanceFromTo.distanceFromTo(child.blockPos(), startPoint.blockPos());
           child.totalCost = Costs.calculateFullCostDistance(child);

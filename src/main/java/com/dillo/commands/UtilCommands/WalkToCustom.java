@@ -1,18 +1,20 @@
 package com.dillo.commands.UtilCommands;
 
 import com.dillo.pathfinding.mit.finder.main.AStarPathFinder;
+import com.dillo.pathfinding.mit.finder.main.OnPathRenderer;
+import com.dillo.pathfinding.mit.finder.utils.BlockNodeClass;
 import com.dillo.pathfinding.mit.finder.utils.PathFinderConfig;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
-import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
+
+import java.util.List;
 
 public class WalkToCustom extends Command {
 
@@ -28,11 +30,12 @@ public class WalkToCustom extends Command {
     RenderMultipleBlocksMod.renderMultipleBlocks(null, false);
 
     new Thread(() -> {
+      OnPathRenderer.renderList(null, false);
       long start = System.currentTimeMillis();
 
-      RenderOneBlockMod.renderOneBlock(BlockUtils.fromBlockPosToVec3(ids.mc.thePlayer.getPosition()), true);
+      //RenderOneBlockMod.renderOneBlock(ids.mc.thePlayer.getPositionVector().addVector(-0.5, 0, -0.5), true);
 
-      List<BlockPos> route = pathFinder.AStarPathFinder(
+      List<BlockNodeClass> route = pathFinder.AStarPathFinder(
         new PathFinderConfig(
           false,
           false,
@@ -40,9 +43,9 @@ public class WalkToCustom extends Command {
           false,
           false,
           10,
-          1000,
+          50,
           100,
-          ids.mc.thePlayer.getPosition(),
+          BlockUtils.fromVec3ToBlockPos(ids.mc.thePlayer.getPositionVector().addVector(0, 0, -0.5)),
           new BlockPos(x, y, z),
           new Block[] { Blocks.air },
           new Block[] { Blocks.air },
@@ -51,8 +54,14 @@ public class WalkToCustom extends Command {
         )
       );
 
+      if (route == null) {
+        SendChat.chat("Didnt find a route.");
+        return;
+      }
+
+      OnPathRenderer.renderList(route, true);
+
       SendChat.chat("Took " + (System.currentTimeMillis() - start) + "ms. And the route size is " + route.size());
-      if (route == null) SendChat.chat("Didnt find a route.");
     })
       .start();
   }
