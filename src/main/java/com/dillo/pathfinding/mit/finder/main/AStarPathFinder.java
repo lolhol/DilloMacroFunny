@@ -6,12 +6,13 @@ import com.dillo.pathfinding.mit.finder.utils.PathFinderConfig;
 import com.dillo.pathfinding.mit.finder.utils.Utils;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.SendChat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class AStarPathFinder {
 
@@ -93,8 +94,6 @@ public class AStarPathFinder {
       previousNode = node;
       depth++;
     }
-
-    SendChat.chat(String.valueOf(depth));
 
     return null;
   }

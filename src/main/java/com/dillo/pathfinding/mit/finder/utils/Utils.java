@@ -2,12 +2,11 @@ package com.dillo.pathfinding.mit.finder.utils;
 
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Utils {
 
