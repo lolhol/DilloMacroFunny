@@ -228,6 +228,10 @@ public class BlockUtils {
     return true;
   }
 
+  public static boolean isBlockLoaded(BlockPos pos) {
+    return ids.mc.theWorld.getChunkFromBlockCoords(pos).isLoaded();
+  }
+
   public static List<BlockPos> getSpecificBlocksInRadius(
     Block[] blockTypes,
     int radiusX,

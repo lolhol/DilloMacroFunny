@@ -1,6 +1,5 @@
 package com.dillo.pathfinding.mit.finder.utils;
 
-import com.dillo.pathfinding.Brigeros.BlockNode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.block.Block;
@@ -36,10 +35,16 @@ public class BlockNodeClass {
     return this.blockPos;
   }
 
-  public boolean equals(BlockNode other) {
-    return this.blockPos.equals(other.blockPos);
+  @Override
+  public boolean equals(Object other) {
+    if (other instanceof BlockNodeClass) {
+      return this.blockPos.equals(((BlockNodeClass) other).blockPos);
+    }
+
+    return false;
   }
 
+  @Override
   public int hashCode() {
     return this.blockPos.hashCode();
   }

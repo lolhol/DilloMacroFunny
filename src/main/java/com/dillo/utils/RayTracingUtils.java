@@ -178,6 +178,8 @@ public class RayTracingUtils {
       }
     }
 
+    SendChat.chat("Found " + points.size());
+
     if (!points.isEmpty() && points.size() >= minObstructions) {
       // TODO: Test @this algorithm for speed
       return getValidPoint(points);

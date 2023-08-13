@@ -23,8 +23,6 @@ public class CancelAllBadSounds {
     if (ids.mc.theWorld == null || !removeSounds) return;
 
     if (!isContains(list, event.name)) {
-      //SendChat.chat(event.name);
-      //event.setCanceled(true);
       event.setResult(null);
       event.result = null;
     }

@@ -411,6 +411,24 @@ public class config extends Vigilant {
   public static int bedrockPercentAmount = 50;
 
   @Property(
+    type = PropertyType.SWITCH,
+    name = "Is Blocks Added To Route Failsafe",
+    description = "When a new Block is added to ur route (checks every like 20 sec) the macro will see how many new blocks wer placed.",
+    category = "Failsafes"
+  )
+  public static boolean blockAddRouteFail = false;
+
+  @Property(
+    type = PropertyType.SLIDER,
+    name = "Block add route failsafe amount",
+    description = "The amount of blocks added to ur dug out route for the failsafe to trigger.",
+    category = "Failsafes",
+    min = 1,
+    max = 100
+  )
+  public static int amountOBlocksAdded = 10;
+
+  @Property(
     type = PropertyType.SLIDER,
     name = "Tick Failsafe trigger",
     description = "Happens rarely but ehhh. Basically the amount of ticks that the server has ( /sec) for the macro to stop and wait (untill ticks go back up) (changing is not recommended)",

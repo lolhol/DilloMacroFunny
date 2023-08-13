@@ -6,12 +6,10 @@ import com.dillo.pathfinding.mit.finder.utils.PathFinderConfig;
 import com.dillo.pathfinding.mit.finder.utils.Utils;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.SendChat;
-import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -59,6 +57,7 @@ public class AStarPathFinder {
 
       if (node.isSame(endPoint.blockPos)) {
         endPoint.parentOfBlock = previousNode;
+        SendChat.chat("Found!");
         return Utils.retracePath(startPoint, endPoint);
       }
 
@@ -76,26 +75,26 @@ public class AStarPathFinder {
 
         double newCostToNeighbour = node.gCost + DistanceFromTo.distanceFromTo(node.blockPos(), child.blockPos());
         if (newCostToNeighbour < child.gCost || !openSet.contains(child)) {
-          RenderMultipleBlocksMod.renderMultipleBlocks(
+          /*RenderMultipleBlocksMod.renderMultipleBlocks(
             new Vec3(child.blockPos().getX(), child.blockPos().getY(), child.blockPos().getZ()),
             true
-          );
+          );*/
 
-          child.gCost = newCostToNeighbour;
+          //child.gCost = newCostToNeighbour;
           child.hCost = Costs.calculateHCostBlockPos(child.blockPos, pathFinderConfig.destinationBlock);
-          //child.gCost = DistanceFromTo.distanceFromTo(child.blockPos(), endPoint.blockPos());
+          child.gCost = DistanceFromTo.distanceFromTo(child.blockPos(), startPoint.blockPos());
           child.totalCost = Costs.calculateFullCostDistance(child);
           child.parentOfBlock = node;
 
-          if (!openSet.contains(child)) {
-            openSet.add(child);
-          }
+          openSet.add(child);
         }
       }
 
       previousNode = node;
       depth++;
     }
+
+    SendChat.chat(String.valueOf(depth));
 
     return null;
   }

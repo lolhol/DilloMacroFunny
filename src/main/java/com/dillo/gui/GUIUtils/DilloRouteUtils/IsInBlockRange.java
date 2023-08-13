@@ -1,17 +1,13 @@
 package com.dillo.gui.GUIUtils.DilloRouteUtils;
 
-import com.dillo.main.files.localizedData.currentRoute;
-
 import static com.dillo.gui.GUIUtils.MatchServer.IsChecked.isChecked;
 import static com.dillo.utils.BlockUtils.areAllLoaded;
 
+import com.dillo.main.files.localizedData.currentRoute;
+
 public class IsInBlockRange {
 
-    public static boolean isInCheckRange() {
-        if (currentRoute.currentRoute.size() == 0 || !areAllLoaded(currentRoute.currentRoute) || isChecked()) {
-            return false;
-        }
-
-        return true;
-    }
+  public static boolean isInCheckRange() {
+    return !currentRoute.currentRoute.isEmpty() && areAllLoaded(currentRoute.currentRoute) && !isChecked();
+  }
 }

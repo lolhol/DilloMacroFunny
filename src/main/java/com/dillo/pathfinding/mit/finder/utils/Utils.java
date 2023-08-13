@@ -1,10 +1,13 @@
 package com.dillo.pathfinding.mit.finder.utils;
 
 import com.dillo.utils.BlockUtils;
-import java.util.ArrayList;
-import java.util.List;
+import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.Vec3;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
 
@@ -92,6 +95,12 @@ public class Utils {
 
     while (currentNode.parentOfBlock != null && !currentNode.equals(startNode)) {
       //SendChat.chat("!");
+
+      RenderMultipleBlocksMod.renderMultipleBlocks(
+        new Vec3(currentNode.blockPos().getX(), currentNode.blockPos().getY(), currentNode.blockPos().getZ()),
+        true
+      );
+
       blockPath.add(currentNode.blockPos());
       currentNode = currentNode.parentOfBlock;
     }
@@ -120,25 +129,24 @@ public class Utils {
       return BlockUtils.getBlock(block) != Blocks.bedrock && BlockUtils.isBlockSolid(block);
     }
 
-    return canWalkOn(block); // || canJumpOn(block, parentBlock) || canFall(block, parentBlock);
+    return canWalkOn(block) || canJumpOn(block, parentBlock) || canFall(block, parentBlock);
   }
 
   public static boolean canWalkOn(BlockPos block) {
-    if (
+    return (
       BlockUtils.getBlock(block) == Blocks.air &&
       BlockUtils.getBlock(BlockUtils.makeNewBlock(0, -1, 0, block)) != Blocks.air &&
-      BlockUtils.getBlock(BlockUtils.makeNewBlock(0, 1, 0, block)) == Blocks.air
-    ) {
-      return true; //BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block));
-    }
-
-    return false;
+      BlockUtils.getBlock(BlockUtils.makeNewBlock(0, 1, 0, block)) == Blocks.air &&
+      BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block))
+    );
   }
 
   public static boolean canJumpOn(BlockPos block, BlockPos parentBlock) {
     double yDiff = block.getY() - parentBlock.getY();
 
     // TODO: Modify here to adjust sb player jump height
+
+    //RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(block), true);
     return yDiff > 0 && yDiff < 1 && BlockUtils.isBlockSolid(block);
   }
 
