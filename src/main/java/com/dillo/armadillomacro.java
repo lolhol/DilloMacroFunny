@@ -1,7 +1,5 @@
 package com.dillo;
 
-import static com.dillo.main.failsafes.AnswerPPL.makeAcusation;
-
 import com.dillo.calls.ArmadilloMain;
 import com.dillo.commands.*;
 import com.dillo.commands.AnswerCommands.AddAnswer;
@@ -14,10 +12,8 @@ import com.dillo.commands.RouteCommands.*;
 import com.dillo.commands.RouteMakerUtils.CalcRouteAvgGemPerc;
 import com.dillo.commands.RouteMakerUtils.CheckIfCanTpToEvery;
 import com.dillo.commands.RouteMakerUtils.GemESP;
-import com.dillo.commands.UtilCommands.DetectEntityUnderCommand;
-import com.dillo.commands.UtilCommands.RouteChecker;
-import com.dillo.commands.UtilCommands.StartClearLegit;
 import com.dillo.commands.UtilCommands.Test;
+import com.dillo.commands.UtilCommands.*;
 import com.dillo.commands.baritone.StartAutoSetupWithBaritone;
 import com.dillo.commands.baritone.WalkToBlockWithBaritone;
 import com.dillo.config.AutoSaveConfig;
@@ -39,9 +35,9 @@ import com.dillo.main.esp.chat.FilterChat;
 import com.dillo.main.esp.other.BigDildoDillo;
 import com.dillo.main.esp.other.StopRenderStand;
 import com.dillo.main.esp.route.BlockOnRouteESP;
-import com.dillo.main.failsafes.*;
 import com.dillo.main.failsafes.AminStuff.BedrockFail;
 import com.dillo.main.failsafes.AminStuff.WarpOutFail;
+import com.dillo.main.failsafes.*;
 import com.dillo.main.failsafes.RouteFailsafes.RemoveBlockFailsafe;
 import com.dillo.main.files.init.CheckFile;
 import com.dillo.main.macro.main.GetOffArmadillo;
@@ -71,15 +67,6 @@ import com.dillo.utils.GetConfigFolder;
 import com.dillo.utils.renderUtils.renderModules.*;
 import gg.essential.api.EssentialAPI;
 import gg.essential.api.commands.Command;
-import java.io.File;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -91,6 +78,18 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
+
+import java.io.File;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import static com.dillo.main.failsafes.AnswerPPL.makeAcusation;
 
 @Mod(modid = "autogg", name = "autogg", version = "1.0.0", clientSideOnly = true)
 @SideOnly(Side.CLIENT)
@@ -155,7 +154,8 @@ public class armadillomacro {
       new WalkToBlockWithBaritone(),
       new StartAutoSetupWithBaritone(),
       new RouteDestroyr(destroyer),
-      new ImportRouteFromWebsite()
+      new ImportRouteFromWebsite(),
+      new WalkToCustom()
     );
 
     try {

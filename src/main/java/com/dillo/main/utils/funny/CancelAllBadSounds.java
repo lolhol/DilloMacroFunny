@@ -1,13 +1,12 @@
 package com.dillo.main.utils.funny;
 
-import com.dillo.utils.previous.random.ids;
-import net.minecraftforge.client.event.sound.PlaySoundEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import static com.dillo.config.config.removeSounds;
 
+import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.dillo.config.config.removeSounds;
+import net.minecraftforge.client.event.sound.PlaySoundEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class CancelAllBadSounds {
 
