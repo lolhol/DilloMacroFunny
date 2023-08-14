@@ -4,5 +4,6 @@ public enum ActionTypes {
   JUMP,
   WALK,
   FALL,
-  BREAK,
+  WALKANDBREAK,
+  JUMPANDBREAK,
 }

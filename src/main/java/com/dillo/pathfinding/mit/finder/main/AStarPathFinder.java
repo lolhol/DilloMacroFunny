@@ -65,7 +65,7 @@ public class AStarPathFinder {
           continue;
         }
 
-        ActionTypes typeAction = Utils.isAbleToInteract(child.blockPos, child.parentOfBlock.blockPos, false);
+        ActionTypes typeAction = Utils.isAbleToInteract(child.blockPos, child.parentOfBlock.blockPos, true);
         if (typeAction == null) {
           continue;
         }

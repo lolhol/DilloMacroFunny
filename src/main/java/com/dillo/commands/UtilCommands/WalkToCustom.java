@@ -8,6 +8,7 @@ import com.dillo.utils.BlockUtils;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
+import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
 import net.minecraft.block.Block;
@@ -33,7 +34,7 @@ public class WalkToCustom extends Command {
       OnPathRenderer.renderList(null, false);
       long start = System.currentTimeMillis();
 
-      //RenderOneBlockMod.renderOneBlock(ids.mc.thePlayer.getPositionVector().addVector(-0.5, 0, -0.5), true);
+      RenderOneBlockMod.renderOneBlock(ids.mc.thePlayer.getPositionVector().addVector(-0.5, 0, -0.5), true);
 
       List<BlockNodeClass> route = pathFinder.AStarPathFinder(
         new PathFinderConfig(
@@ -43,9 +44,9 @@ public class WalkToCustom extends Command {
           false,
           false,
           10,
-          50,
+          1000,
           100,
-          BlockUtils.fromVec3ToBlockPos(ids.mc.thePlayer.getPositionVector().addVector(0, 0, -0.5)),
+          BlockUtils.fromVec3ToBlockPos(ids.mc.thePlayer.getPositionVector().addVector(-0.5, 0, -0.5)),
           new BlockPos(x, y, z),
           new Block[] { Blocks.air },
           new Block[] { Blocks.air },

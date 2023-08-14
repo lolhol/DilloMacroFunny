@@ -1,12 +1,11 @@
 package com.dillo.pathfinding.mit.finder.utils;
 
 import com.dillo.utils.BlockUtils;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Utils {
 
@@ -74,16 +73,11 @@ public class Utils {
         for (int z = -1; z <= 1; z++) {
           BlockPos curBlock = BlockUtils.makeNewBlock(x, y, z, reference.blockPos);
           returnBlocks.add(getClassOfBlock(curBlock, reference, reference.startBlock, reference.finalBlock));
-          /*curBlock = BlockUtils.makeNewBlock(x, 0, z, reference.blockPos);
-          returnBlocks.add(getClassOfBlock(curBlock, reference, reference.startBlock, reference.finalBlock));*/
 
-          /*int i = 1;
-
-          while (BlockUtils.getBlockType(curBlock) == Blocks.air && i <= 4) {
-            curBlock = BlockUtils.makeNewBlock(x, -i, z, reference.blockPos);
+          while (y == -1 && !BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, curBlock))) {
+            curBlock = BlockUtils.makeNewBlock(0, -1, 0, curBlock);
             returnBlocks.add(getClassOfBlock(curBlock, reference, reference.startBlock, reference.finalBlock));
-            i++;
-          }*/
+          }
         }
       }
     }
@@ -129,40 +123,33 @@ public class Utils {
   }
 
   public static ActionTypes isAbleToInteract(BlockPos block, BlockPos parentBlock, boolean isMine) {
-    if (isMine) {
-      return BlockUtils.getBlock(block) != Blocks.bedrock && BlockUtils.isBlockSolid(block) ? ActionTypes.BREAK : null;
-    }
-
     if (canWalkOn(block, parentBlock)) {
       return ActionTypes.WALK;
     }
 
-    /*if (canJumpOn(block, parentBlock)) {
+    if (canJumpOn(block, parentBlock)) {
       return ActionTypes.JUMP;
     }
 
     if (canFall(block, parentBlock)) {
       return ActionTypes.FALL;
+    }
+
+    /*if (isMine && BlockUtils.getBlock(block) != Blocks.bedrock && BlockUtils.isBlockSolid(block)) {
+      return ActionTypes.BREAK;
     }*/
 
     return null;
   }
 
   public static boolean canWalkOn(BlockPos block, BlockPos parent) {
-    Block blockType = BlockUtils.getBlock(block);
-
     double yDif = Math.abs(block.getY() - parent.getY());
 
     /*if (
       yDif < 0.001
     ) */
     return ( //RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(block), true);
-      (
-        blockType == Blocks.air ||
-        blockType == Blocks.tallgrass ||
-        blockType == Blocks.red_flower ||
-        blockType == Blocks.yellow_flower
-      ) &&
+      !BlockUtils.isBlockSolid(block) &&
       BlockUtils.getBlock(BlockUtils.makeNewBlock(0, 1, 0, block)) == Blocks.air &&
       BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block)) &&
       yDif <= 0.0001
@@ -174,8 +161,21 @@ public class Utils {
 
     // TODO: Modify here to adjust sb player jump height
 
-    //RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(block), true);
-    return yDiff > 0 && yDiff < 1 && BlockUtils.isBlockSolid(block);
+    /*if (
+      yDiff == 1 &&
+      !BlockUtils.isBlockSolid(block) &&
+      BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block)) &&
+      !BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, 1, 0, block))
+    ) {
+      RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(block), true);
+    }*/
+
+    return (
+      yDiff == 1 &&
+      !BlockUtils.isBlockSolid(block) &&
+      BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block)) &&
+      !BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, 1, 0, block))
+    );
   }
 
   public static boolean canFall(BlockPos block, BlockPos parentBlock) {
@@ -186,7 +186,8 @@ public class Utils {
       yDiff < 0 &&
       yDiff > -4 &&
       BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block)) &&
-      BlockUtils.getBlock(block) == Blocks.air
+      !BlockUtils.isBlockSolid(block) &&
+      isAllClearToY(block.getY(), parentBlock.getY(), block)
     );
   }
 
