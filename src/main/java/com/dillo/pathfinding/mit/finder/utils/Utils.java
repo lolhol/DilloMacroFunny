@@ -2,7 +2,10 @@ package com.dillo.pathfinding.mit.finder.utils;
 
 import com.dillo.utils.BlockUtils;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
@@ -122,72 +125,102 @@ public class Utils {
     return initList;
   }
 
-  public static ActionTypes isAbleToInteract(BlockPos block, BlockPos parentBlock, boolean isMine) {
-    if (canWalkOn(block, parentBlock)) {
-      return ActionTypes.WALK;
+  public static ReturnClass isAbleToInteract(BlockPos block, BlockPos parentBlock, boolean isMine) {
+    List<BlockPos> removeBlocksWalk = canWalkOn(block, parentBlock);
+
+    if (removeBlocksWalk != null && removeBlocksWalk.isEmpty()) {
+      return new ReturnClass(removeBlocksWalk, ActionTypes.WALK);
     }
 
-    if (canJumpOn(block, parentBlock)) {
-      return ActionTypes.JUMP;
+    List<BlockPos> removeBlocksJump = canJumpOn(block, parentBlock);
+    if (removeBlocksJump != null && removeBlocksJump.isEmpty()) {
+      return new ReturnClass(removeBlocksJump, ActionTypes.JUMP);
     }
 
-    if (canFall(block, parentBlock)) {
-      return ActionTypes.FALL;
+    List<BlockPos> removeBlocksFall = canFall(block, parentBlock);
+    if (removeBlocksFall != null && removeBlocksFall.isEmpty()) {
+      return new ReturnClass(removeBlocksFall, ActionTypes.FALL);
     }
 
-    /*if (isMine && BlockUtils.getBlock(block) != Blocks.bedrock && BlockUtils.isBlockSolid(block)) {
-      return ActionTypes.BREAK;
-    }*/
+    if (isMine) {
+      List<List<BlockPos>> combined = new ArrayList<>();
+
+      if (removeBlocksWalk != null) combined.add(removeBlocksWalk);
+      if (removeBlocksJump != null) combined.add(removeBlocksJump);
+      if (removeBlocksFall != null) combined.add(removeBlocksFall);
+
+      List<BlockPos> min = null;
+
+      if (!combined.isEmpty()) {
+        min = getTheMinList(combined);
+      }
+
+      if (min == null) return null;
+
+      return new ReturnClass(removeBlocksFall, ActionTypes.BREAK);
+    }
 
     return null;
   }
 
-  public static boolean canWalkOn(BlockPos block, BlockPos parent) {
-    double yDif = Math.abs(block.getY() - parent.getY());
-
-    /*if (
-      yDif < 0.001
-    ) */
-    return ( //RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(block), true);
-      !BlockUtils.isBlockSolid(block) &&
-      BlockUtils.getBlock(BlockUtils.makeNewBlock(0, 1, 0, block)) == Blocks.air &&
-      BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block)) &&
-      yDif <= 0.0001
-    );
+  private static List<BlockPos> getTheMinList(List<List<BlockPos>> lists) {
+    return lists.stream().min(Comparator.comparingInt(List::size)).orElse(null);
   }
 
-  public static boolean canJumpOn(BlockPos block, BlockPos parentBlock) {
-    double yDiff = block.getY() - parentBlock.getY();
+  @Getter
+  @AllArgsConstructor
+  public static class ReturnClass {
 
-    // TODO: Modify here to adjust sb player jump height
+    public List<BlockPos> blocksToBreak;
+    public ActionTypes actionType;
+  }
 
-    /*if (
-      yDiff == 1 &&
-      !BlockUtils.isBlockSolid(block) &&
-      BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block)) &&
-      !BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, 1, 0, block))
-    ) {
-      RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(block), true);
-    }*/
+  public static List<BlockPos> canWalkOn(BlockPos block, BlockPos parent) {
+    double yDif = Math.abs(block.getY() - parent.getY());
+    List<BlockPos> blocksToBeRemoved = new ArrayList<>();
+
+    if (BlockUtils.isBlockSolid(block)) blocksToBeRemoved.add(block);
+
+    BlockPos block1 = BlockUtils.makeNewBlock(0, 1, 0, block);
+    if (BlockUtils.isBlockSolid(block1)) blocksToBeRemoved.add(block1);
 
     return (
-      yDiff == 1 &&
-      !BlockUtils.isBlockSolid(block) &&
-      BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block)) &&
-      !BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, 1, 0, block))
+      yDif <= 0.001 && BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block)) ? blocksToBeRemoved : null
     );
   }
 
-  public static boolean canFall(BlockPos block, BlockPos parentBlock) {
+  public static List<BlockPos> canJumpOn(BlockPos block, BlockPos parentBlock) {
+    double yDiff = block.getY() - parentBlock.getY();
+    List<BlockPos> blocksToBeRemoved = new ArrayList<>();
+
+    if (BlockUtils.isBlockSolid(block)) blocksToBeRemoved.add(block);
+
+    BlockPos block1 = BlockUtils.makeNewBlock(0, 1, 0, block);
+    if (BlockUtils.isBlockSolid(block1)) blocksToBeRemoved.add(block1);
+
+    BlockPos block2 = BlockUtils.makeNewBlock(0, 1, 0, parentBlock);
+    if (BlockUtils.isBlockSolid(block2)) blocksToBeRemoved.add(block2);
+
+    return (yDiff == 1 && BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block)) ? blocksToBeRemoved : null);
+  }
+
+  public static List<BlockPos> canFall(BlockPos block, BlockPos parentBlock) {
     double yDiff = block.getY() - parentBlock.getY();
 
-    // TODO: Modify here to adjust for the player takin no dmg from fall in SB.
+    List<BlockPos> blocksToBeRemoved = new ArrayList<>();
+
+    if (BlockUtils.isBlockSolid(block)) blocksToBeRemoved.add(block);
+
+    BlockPos block1 = new BlockPos(block.getX(), parentBlock.getY() + 1, block.getZ());
+    if (BlockUtils.isBlockSolid(block1)) blocksToBeRemoved.add(block1);
+
     return (
       yDiff < 0 &&
-      yDiff > -4 &&
-      BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block)) &&
-      !BlockUtils.isBlockSolid(block) &&
-      isAllClearToY(block.getY(), parentBlock.getY(), block)
+        yDiff > -4 &&
+        BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, block)) &&
+        isAllClearToY(block.getY(), parentBlock.getY(), block)
+        ? blocksToBeRemoved
+        : null
     );
   }
 

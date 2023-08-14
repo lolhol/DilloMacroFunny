@@ -65,6 +65,7 @@ import com.dillo.main.utils.looks.LookAt;
 import com.dillo.main.utils.looks.YawLook;
 import com.dillo.pathfinding.Brigeros.DestroyBlock;
 import com.dillo.pathfinding.Brigeros.WalkOnPath;
+import com.dillo.pathfinding.mit.finder.main.AStarPathFinder;
 import com.dillo.pathfinding.mit.finder.main.OnPathRenderer;
 import com.dillo.remote.*;
 import com.dillo.utils.GetConfigFolder;
@@ -222,7 +223,8 @@ public class armadillomacro {
         new BedrockFail(),
         new CancelAllBadSounds(),
         new AdminRenamingDrillFail(),
-        new OnPathRenderer()
+        new OnPathRenderer(),
+        new AStarPathFinder()
       );
     } catch (NoClassDefFoundError e) {
       System.out.println(Arrays.toString(e.getStackTrace()) + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");

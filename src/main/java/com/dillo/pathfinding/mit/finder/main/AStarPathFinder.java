@@ -1,13 +1,18 @@
 package com.dillo.pathfinding.mit.finder.main;
 
-import com.dillo.pathfinding.mit.finder.utils.*;
+import com.dillo.pathfinding.mit.finder.utils.BlockNodeClass;
+import com.dillo.pathfinding.mit.finder.utils.Costs;
+import com.dillo.pathfinding.mit.finder.utils.PathFinderConfig;
+import com.dillo.pathfinding.mit.finder.utils.Utils;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.SendChat;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class AStarPathFinder {
 
@@ -53,11 +58,12 @@ public class AStarPathFinder {
 
       if (node.isSame(endPoint.blockPos)) {
         endPoint.parentOfBlock = previousNode;
-        SendChat.chat("Found!");
+        SendChat.chat(
+          "Found! Opened " + this.opened + ". And closed " + this.closed + ". Total -> " + (this.opened + this.closed)
+        );
         return Utils.retracePath(startPoint, endPoint);
       }
 
-      //List<BlockNode> children = getChildren(node, endPoint.blockPos());
       List<BlockNodeClass> children = Utils.getBlocksAround(node);
 
       for (BlockNodeClass child : children) {
@@ -65,12 +71,23 @@ public class AStarPathFinder {
           continue;
         }
 
-        ActionTypes typeAction = Utils.isAbleToInteract(child.blockPos, child.parentOfBlock.blockPos, true);
+        Utils.ReturnClass typeAction = Utils.isAbleToInteract(
+          child.blockPos,
+          child.parentOfBlock.blockPos,
+          pathFinderConfig.isMine
+        );
+
         if (typeAction == null) {
           continue;
         }
 
-        child.actionType = typeAction;
+        child.actionType = typeAction.actionType;
+
+        if (pathFinderConfig.isMine && typeAction.blocksToBreak != null) {
+          for (BlockPos block : typeAction.blocksToBreak) {
+            child.totalCost += Costs.getBreakCost(block);
+          }
+        }
 
         double newCostToNeighbour = node.gCost + DistanceFromTo.distanceFromTo(node.blockPos(), child.blockPos());
         if (newCostToNeighbour < child.gCost || !openSet.contains(child)) {

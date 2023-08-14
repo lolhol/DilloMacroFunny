@@ -38,14 +38,14 @@ public class WalkToCustom extends Command {
 
       List<BlockNodeClass> route = pathFinder.AStarPathFinder(
         new PathFinderConfig(
-          false,
+          true,
           false,
           false,
           false,
           false,
           10,
           1000,
-          100,
+          1000,
           BlockUtils.fromVec3ToBlockPos(ids.mc.thePlayer.getPositionVector().addVector(-0.5, 0, -0.5)),
           new BlockPos(x, y, z),
           new Block[] { Blocks.air },
