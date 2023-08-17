@@ -1,5 +1,6 @@
 package com.dillo.pathfinding.mit.finder.utils;
 
+import java.util.HashSet;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.block.Block;
@@ -32,6 +33,7 @@ public class BlockNodeClass {
   public Block blockType;
 
   public ActionTypes actionType;
+  public HashSet<BlockPos> broken;
 
   public BlockPos blockPos() {
     return this.blockPos;

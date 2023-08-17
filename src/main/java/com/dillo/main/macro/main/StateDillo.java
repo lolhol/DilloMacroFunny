@@ -29,14 +29,14 @@ import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -126,10 +126,9 @@ public class StateDillo {
         interactWithEntity(entity);
 
         ThreadUtils.threadSleepRandom(100);
-
-        if (randomClick == 1) {
+        /*if (randomClick == 1) {
           interactWithEntity(entity);
-        }
+        }*/
       })
         .start();
     } else {
@@ -161,11 +160,26 @@ public class StateDillo {
   }
 
   public static void interactWithEntity(Entity entity) {
-    double dx = ids.mc.thePlayer.getPositionVector().xCoord - entity.getPositionVector().xCoord;
-    double dy = ids.mc.thePlayer.getPositionVector().yCoord - entity.getPositionVector().yCoord;
-    double dz = ids.mc.thePlayer.getPositionVector().zCoord - entity.getPositionVector().zCoord;
-    Vec3 vec = new Vec3(dx, dy, dz);
-    ids.mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(entity, vec));
+    MovingObjectPosition objectMouseOver = ids.mc.objectMouseOver;
+
+    if (
+      objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY &&
+      objectMouseOver.entityHit instanceof EntityHorse &&
+      isDillo(objectMouseOver.entityHit) &&
+      DistanceFromTo.distanceFromTo(objectMouseOver.hitVec, ids.mc.thePlayer.getPositionVector().addVector(0, 1, 0)) <
+      2 &&
+      !ids.mc.playerController.isPlayerRightClickingOnEntity(
+        ids.mc.thePlayer,
+        ids.mc.objectMouseOver.entityHit,
+        ids.mc.objectMouseOver
+      )
+    ) {
+      ids.mc.playerController.interactWithEntitySendPacket(ids.mc.thePlayer, ids.mc.objectMouseOver.entityHit);
+    }
+  }
+
+  public static boolean isDillo(Entity ent) {
+    return ent.getName().toLowerCase().contains(ids.mc.thePlayer.getName().toLowerCase());
   }
 
   public static Entity getDilloArmorStand() {
@@ -185,7 +199,7 @@ public class StateDillo {
       .getEntitiesWithinAABB(Entity.class, boundingBox)
       .stream()
       .filter(a -> {
-        return a instanceof EntityArmorStand;
+        return a instanceof EntityHorse;
       })
       .collect(Collectors.toList());
 

@@ -3,4 +3,12 @@
     <!-- Filter out Hypixel scoreboard and sound errors -->
     <RegexFilter regex="Error executing task.*|Unable to play unknown soundEvent.*" onMatch="DENY"
                  onMismatch="NEUTRAL"/>
+
+    <Logger name="io.netty" level="INFO" additivity="false">
+        <AppenderRef ref="Console"/>
+    </Logger>
+
+    <Logger name="net.minecraft.network" level="INFO" additivity="false">
+        <AppenderRef ref="Console"/>
+    </Logger>
 </Configuration>

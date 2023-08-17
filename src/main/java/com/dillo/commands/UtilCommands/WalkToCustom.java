@@ -1,21 +1,23 @@
 package com.dillo.commands.UtilCommands;
 
+import static com.dillo.armadillomacro.walker;
+
 import com.dillo.pathfinding.mit.finder.main.AStarPathFinder;
 import com.dillo.pathfinding.mit.finder.main.OnPathRenderer;
 import com.dillo.pathfinding.mit.finder.utils.BlockNodeClass;
 import com.dillo.pathfinding.mit.finder.utils.PathFinderConfig;
+import com.dillo.pathfinding.mit.finder.walker.Utils;
 import com.dillo.utils.BlockUtils;
-import com.dillo.utils.previous.SendChat;
+import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
-import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
+import com.dillo.utils.renderUtils.renderModules.RenderPoints;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
+import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
-
-import java.util.List;
 
 public class WalkToCustom extends Command {
 
@@ -27,6 +29,13 @@ public class WalkToCustom extends Command {
 
   @DefaultHandler
   public void handle(int x, int y, int z) {
+    //if (StateDillo.getDilloArmorStand() == null) SendChat.chat("!!!!!!");
+
+    //StateDillo.interactWithEntity(Objects.requireNonNull(StateDillo.getDilloArmorStand()));
+    //SendChat.chat("!!");
+
+    RenderPoints.renderPoint(null, 0.2, false);
+
     AStarPathFinder pathFinder = new AStarPathFinder();
     RenderMultipleBlocksMod.renderMultipleBlocks(null, false);
 
@@ -34,11 +43,11 @@ public class WalkToCustom extends Command {
       OnPathRenderer.renderList(null, false);
       long start = System.currentTimeMillis();
 
-      RenderOneBlockMod.renderOneBlock(ids.mc.thePlayer.getPositionVector().addVector(-0.5, 0, -0.5), true);
+      //RenderOneBlockMod.renderOneBlock(ids.mc.thePlayer.getPositionVector().addVector(-0.5, 0, -0.5), true);
 
       List<BlockNodeClass> route = pathFinder.AStarPathFinder(
         new PathFinderConfig(
-          true,
+          false,
           false,
           false,
           false,
@@ -60,9 +69,28 @@ public class WalkToCustom extends Command {
         return;
       }
 
-      OnPathRenderer.renderList(route, true);
-
       SendChat.chat("Took " + (System.currentTimeMillis() - start) + "ms. And the route size is " + route.size());
+
+      //WalkerMain walker = new WalkerMain();
+
+      //OnPathRenderer.renderList(walker.getSmoothPath(route), true);
+
+      List<BlockPos> shortSegment = Utils.getShortList(route);
+      shortSegment.forEach(a -> {
+        RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(a), true);
+        //SendChat.chat(String.valueOf(DistanceFromTo.distanceFromTo(a, ids.mc.thePlayer.getPosition())));
+      });
+
+      walker.walkOnPath(shortSegment, true);
+      //List<BlockPos> blocks1 = new ArrayList<>();
+
+      /*for (BlockNodeClass block : route) {
+        blocks1.add(block.blockPos);
+      }
+
+      ArmadilloStates.offlineState = KillSwitch.ONLINE;
+
+      walkOnPath(blocks1);*/
     })
       .start();
   }

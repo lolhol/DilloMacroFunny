@@ -1,10 +1,6 @@
 package com.dillo.main.failsafes.AminStuff;
 
 import com.dillo.calls.ArmadilloStates;
-import com.dillo.calls.KillSwitch;
-import com.dillo.main.utils.DilloItemUtil;
-import com.dillo.utils.previous.SendChat;
-import com.dillo.utils.previous.random.prefix;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -14,9 +10,8 @@ public class AdminRenamingDrillFail {
 
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
-    if (!ArmadilloStates.isOnline()) return;
-
-    if (count < 500) {
+    if (ArmadilloStates.isOnline()) return;
+    /*if (count < 500) {
       count++;
       return;
     }
@@ -28,6 +23,6 @@ public class AdminRenamingDrillFail {
     ArmadilloStates.currentState = null;
     ArmadilloStates.offlineState = KillSwitch.OFFLINE;
 
-    SendChat.chat(prefix.prefix + "Something fishy is going on with ur items... Admin check?");
+    SendChat.chat(prefix.prefix + "Something fishy is going on with ur items... Admin check?");*/
   }
 }

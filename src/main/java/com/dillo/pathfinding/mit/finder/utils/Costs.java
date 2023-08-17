@@ -33,12 +33,26 @@ public class Costs {
 
   public static double getFullCost(BlockPos pos1, BlockPos startBlock, BlockPos finalBlock) {
     return (
-      calculateGCostBlockPos(pos1, startBlock) +
-      calculateHCostBlockPos(pos1, finalBlock) +
-      calculateSurroundingsDoubleCost(pos1) +
+      calculateGCostBlockPos(pos1, startBlock) + calculateHCostBlockPos(pos1, finalBlock)
+      /*calculateSurroundingsDoubleCost(pos1) +
       getBreakCost(pos1) +
-      walkCost()
+      walkCost()*/
     );
+  }
+
+  public static double getActionCost(ActionTypes action) {
+    switch (action) {
+      case WALK:
+        return 1;
+      case JUMP:
+        return 2;
+      case FALL:
+        return 5;
+      case BREAK:
+        return 4;
+    }
+
+    return 0;
   }
 
   public static double calculateSurroundingsDoubleCost(BlockPos block) {

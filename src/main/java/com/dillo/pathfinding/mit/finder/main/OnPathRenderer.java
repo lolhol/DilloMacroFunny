@@ -30,7 +30,6 @@ public class OnPathRenderer {
 
     for (BlockNodeClass block : blocks) {
       BlockPos pos = block.blockPos;
-
       if (block.actionType != null) {
         switch (block.actionType) {
           case WALK:

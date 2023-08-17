@@ -6,13 +6,12 @@ import com.dillo.pathfinding.mit.finder.utils.PathFinderConfig;
 import com.dillo.pathfinding.mit.finder.utils.Utils;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.SendChat;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class AStarPathFinder {
 
@@ -73,7 +72,7 @@ public class AStarPathFinder {
 
         Utils.ReturnClass typeAction = Utils.isAbleToInteract(
           child.blockPos,
-          child.parentOfBlock.blockPos,
+          child.parentOfBlock,
           pathFinderConfig.isMine
         );
 
@@ -83,17 +82,23 @@ public class AStarPathFinder {
 
         child.actionType = typeAction.actionType;
 
+        double totalAddBreak = 0;
         if (pathFinderConfig.isMine && typeAction.blocksToBreak != null) {
           for (BlockPos block : typeAction.blocksToBreak) {
-            child.totalCost += Costs.getBreakCost(block);
+            child.broken.add(block);
+            totalAddBreak += Costs.getBreakCost(block);
           }
         }
 
-        double newCostToNeighbour = node.gCost + DistanceFromTo.distanceFromTo(node.blockPos(), child.blockPos());
+        double newCostToNeighbour = DistanceFromTo.distanceFromTo(child.blockPos(), startPoint.blockPos());
         if (newCostToNeighbour < child.gCost || !openSet.contains(child)) {
           child.hCost = Costs.calculateHCostBlockPos(child.blockPos, pathFinderConfig.destinationBlock);
-          child.gCost = DistanceFromTo.distanceFromTo(child.blockPos(), startPoint.blockPos());
-          child.totalCost = Costs.calculateFullCostDistance(child);
+          child.gCost = newCostToNeighbour;
+
+          child.totalCost =
+            Costs.getFullCost(child.blockPos, child.startBlock, child.finalBlock) +
+            totalAddBreak +
+            Costs.getActionCost(child.actionType);
           child.parentOfBlock = node;
 
           openSet.add(child);

@@ -300,7 +300,7 @@ public class RayTracingUtils {
     double y2,
     double z2,
     double maxDist,
-    Block[] blocksToIgnore1
+    Block[] blocksToIgnore
   ) {
     double dx = x2 - x1;
     double dy = y2 - y1;
@@ -332,7 +332,7 @@ public class RayTracingUtils {
             IBlockState blockState = ids.mc.theWorld.getBlockState(new BlockPos(x, y, z));
             Block block = blockState.getBlock();
 
-            if (isContains(blocksToIgnore1, block)) {
+            if (isContains(blocksToIgnore, block)) {
               continue;
             }
 
@@ -340,9 +340,6 @@ public class RayTracingUtils {
             double[] rd = new double[] { stepX, stepY, stepZ };
             double[][] aabb = new double[][] { { x, y, z }, { x + 1, y + 1, z + 1 } };
             double[] output = intersection(ro, rd, aabb);
-            if (output == null) {
-              continue;
-            }
 
             if (getDistanceB(ro, new double[] { x + 0.5, y + 0.5, z + 0.5 }) > maxDist) {
               continue;
@@ -358,9 +355,73 @@ public class RayTracingUtils {
       zCur += stepZ;
     }
 
-    collidingBlocks.sort(Comparator.comparingDouble(a -> getDistanceB(new double[] { x1, y1, z1 }, a.output)));
+    return !collidingBlocks.isEmpty() ? collidingBlocks.get(0) : null;
+  }
 
-    return collidingBlocks.size() > 0 ? collidingBlocks.get(0) : null;
+  public static List<CollisionResult> getCollisionVecsList(
+    double x1,
+    double y1,
+    double z1,
+    double x2,
+    double y2,
+    double z2,
+    double maxDist,
+    Block[] blocksToNotIgnore
+  ) {
+    double dx = x2 - x1;
+    double dy = y2 - y1;
+    double dz = z2 - z1;
+
+    double length = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+    double stepX = dx / length;
+    double stepY = dy / length;
+    double stepZ = dz / length;
+
+    double xCur = x1;
+    double yCur = y1;
+    double zCur = z1;
+
+    List<CollisionResult> collidingBlocks = new ArrayList<>();
+    for (int i = 0; i < maxDist + 1; i++) {
+      for (int sx = -1; sx <= 1; sx++) {
+        for (int sy = -1; sy <= 1; sy++) {
+          for (int sz = -1; sz <= 1; sz++) {
+            if (sx * stepX + sy * stepY + sz * stepZ < 0) {
+              continue;
+            }
+
+            int x = (int) Math.floor(xCur + sx);
+            int y = (int) Math.floor(yCur + sy);
+            int z = (int) Math.floor(zCur + sz);
+
+            IBlockState blockState = ids.mc.theWorld.getBlockState(new BlockPos(x, y, z));
+            Block block = blockState.getBlock();
+
+            if (!isContains(blocksToNotIgnore, block)) {
+              continue;
+            }
+
+            double[] ro = new double[] { x1, y1, z1 };
+            double[] rd = new double[] { stepX, stepY, stepZ };
+            double[][] aabb = new double[][] { { x, y, z }, { x + 1, y + 1, z + 1 } };
+            double[] output = intersection(ro, rd, aabb);
+
+            if (getDistanceB(ro, new double[] { x + 0.5, y + 0.5, z + 0.5 }) > maxDist) {
+              continue;
+            }
+
+            collidingBlocks.add(new CollisionResult(new BlockPos(x, y, z), output));
+          }
+        }
+      }
+
+      xCur += stepX;
+      yCur += stepY;
+      zCur += stepZ;
+    }
+
+    return !collidingBlocks.isEmpty() ? collidingBlocks : null;
   }
 
   public static MovingObjectPosition rayTraceBlocks(

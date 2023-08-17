@@ -8,6 +8,7 @@ import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -286,5 +287,33 @@ public class BlockUtils {
       blockType != Blocks.tallgrass &&
       blockType != Blocks.yellow_flower
     );
+  }
+
+  public static BlockPos getCenteredBlock(BlockPos block) {
+    return block.add(0.5, 0, 0.5);
+  }
+
+  public static List<BlockPos> getSpecificBlocksInRadius(
+    Predicate<? super BlockPos> predicate,
+    int radiusX,
+    int radiusY,
+    int radiusZ,
+    BlockPos reference
+  ) {
+    List<BlockPos> blocks = new ArrayList<>();
+
+    for (int x = -radiusX; x <= radiusX; x++) {
+      for (int y = -radiusY; y <= radiusY; y++) {
+        for (int z = -radiusZ; z <= radiusZ; z++) {
+          BlockPos newBlock = makeNewBlock(x, y, z, reference);
+
+          if (predicate.test(newBlock)) {
+            blocks.add(newBlock);
+          }
+        }
+      }
+    }
+
+    return blocks;
   }
 }
