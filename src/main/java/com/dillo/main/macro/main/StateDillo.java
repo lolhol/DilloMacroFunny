@@ -18,6 +18,7 @@ import com.dillo.main.teleport.macro.TeleportToNextBlock;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.GetSBItems;
 import com.dillo.utils.RandomisationUtils;
+import com.dillo.utils.keyBindings;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.SwapToSlot;
 import com.dillo.utils.previous.random.getItemInSlot;
@@ -97,8 +98,8 @@ public class StateDillo {
         boolean isDilloSummoned = isDilloSummoned();
         int timeChecked = 0;
 
-        while (!isDilloSummoned && timeChecked <= 20) {
-          if (timeChecked == 10) {
+        while (!isDilloSummoned && timeChecked <= 80) {
+          if (timeChecked == 40) {
             throwRodDillo(rodSlot, drillSlot);
           }
 
@@ -108,9 +109,10 @@ public class StateDillo {
           timeChecked++;
         }
 
-        if (timeChecked > 20) {
+        if (timeChecked >= 80) {
           ArmadilloStates.currentState = null;
           ArmadilloStates.offlineState = KillSwitch.OFFLINE;
+          SendChat.chat(prefix.prefix + "Dillo summon took too long stopping!");
           return;
         }
 
@@ -123,12 +125,14 @@ public class StateDillo {
           return;
         }
 
-        interactWithEntity(entity);
+        keyBindings.rightClick();
+
+        canCheckIfOnDillo = true;
 
         ThreadUtils.threadSleepRandom(100);
-        /*if (randomClick == 1) {
-          interactWithEntity(entity);
-        }*/
+        if (randomClick == 1) {
+          keyBindings.rightClick();
+        }
       })
         .start();
     } else {

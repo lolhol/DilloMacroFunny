@@ -1,17 +1,5 @@
 package com.dillo.main.teleport.macro;
 
-import static com.dillo.armadillomacro.vertexMover;
-import static com.dillo.calls.CurrentState.*;
-import static com.dillo.calls.KillSwitch.ONLINE;
-import static com.dillo.config.config.actuallySwitchAOTV;
-import static com.dillo.config.config.earlyLook;
-import static com.dillo.main.macro.main.StateDillo.canDillo;
-import static com.dillo.main.teleport.utils.LookWhileGoingDown.stopLook;
-import static com.dillo.main.utils.GetMostOptimalPath.isClear;
-import static com.dillo.main.utils.keybinds.AllKeybinds.SNEAK;
-import static com.dillo.main.utils.looks.LookYaw.curRotation;
-import static com.dillo.utils.BlockUtils.getNextBlock;
-
 import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.KillSwitch;
 import com.dillo.config.config;
@@ -30,6 +18,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.BlockPos;
 
+import static com.dillo.armadillomacro.vertexMover;
+import static com.dillo.calls.CurrentState.*;
+import static com.dillo.calls.KillSwitch.ONLINE;
+import static com.dillo.config.config.actuallySwitchAOTV;
+import static com.dillo.config.config.earlyLook;
+import static com.dillo.main.macro.main.StateDillo.canDillo;
+import static com.dillo.main.teleport.utils.LookWhileGoingDown.stopLook;
+import static com.dillo.main.utils.GetMostOptimalPath.isClear;
+import static com.dillo.main.utils.keybinds.AllKeybinds.SNEAK;
+import static com.dillo.main.utils.looks.LookYaw.curRotation;
+import static com.dillo.utils.BlockUtils.getNextBlock;
+
 public class TeleportToNextBlock {
 
   public static final KeyBinding SNEEK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
@@ -42,33 +42,43 @@ public class TeleportToNextBlock {
   public static boolean attemptedToSmartTP = false;
 
   public static void teleportToNextBlock() {
-    if (ArmadilloStates.offlineState == ONLINE) {
-      BlockPos nextBlock = getNextBlock();
-      nextBlockInList = nextBlock;
-      isTeleporting = true;
+    new Thread(() -> {
+      if (ArmadilloStates.offlineState == ONLINE) {
+        BlockPos nextBlock = getNextBlock();
+        nextBlockInList = nextBlock;
+        isTeleporting = true;
 
-      if (nextBlock == null) {
-        SendChat.chat(prefix.prefix + "FAILED TO TELEPORT FOR SOME REASON! DM GODBRIGERO!");
-        ArmadilloStates.currentState = null;
-        ArmadilloStates.offlineState = ONLINE;
-        return;
+        if (nextBlock == null) {
+          SendChat.chat(prefix.prefix + "FAILED TO TELEPORT FOR SOME REASON! DM GODBRIGERO!");
+          ArmadilloStates.currentState = null;
+          ArmadilloStates.offlineState = ONLINE;
+          return;
+        }
+
+        int aotv = GetSBItems.getAOTVSlot();
+
+        if (aotv == -1) {
+          SendChat.chat(prefix.prefix + "Failed to find aotv in hotbar :/");
+          return;
+        }
+
+        if (actuallySwitchAOTV) SwapToSlot.swapToSlot(aotv);
+
+        if (isThrowRod) {
+          if (earlyLook) LookWhileGoingDown.lookUntilState(
+            NEXTBLOCKSTAGE2,
+            nextBlock,
+            config.tpHeadMoveSpeed + RandomisationUtils.getRandomAdd(config.tpHeadMoveSpeed)
+          );
+
+          ArmadilloStates.currentState = STARTCHECKDILLO;
+        } else {
+          ArmadilloStates.currentState = NEXTBLOCKSTAGE2;
+          isThrowRod = true;
+        }
       }
-
-      if (actuallySwitchAOTV) SwapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
-
-      if (isThrowRod) {
-        if (earlyLook) LookWhileGoingDown.lookUntilState(
-          NEXTBLOCKSTAGE2,
-          nextBlock,
-          config.tpHeadMoveSpeed + RandomisationUtils.getRandomAdd(config.tpHeadMoveSpeed)
-        );
-
-        ArmadilloStates.currentState = STARTCHECKDILLO;
-      } else {
-        ArmadilloStates.currentState = NEXTBLOCKSTAGE2;
-        isThrowRod = true;
-      }
-    }
+    })
+      .start();
   }
 
   public static void teleportToNextBlockStage2() {
@@ -84,6 +94,15 @@ public class TeleportToNextBlock {
       isThrowRod = false;
       stopLook();
 
+      if (!attemptedToSmartTP) {
+        if (config.smartTeleport) {
+          SendChat.chat(prefix.prefix + "Route is obstructed! Attempting other method of tp!");
+          SmartTP.smartTP(nextBlockInList, false);
+          attemptedToSmartTP = true;
+          return;
+        }
+      }
+
       VertexGetter getVertex = new VertexGetter();
       VertexGetterConfig vertConfig = new VertexGetterConfig(
         ids.mc.thePlayer.getPositionVector(),
@@ -96,15 +115,6 @@ public class TeleportToNextBlock {
         vertexMover.moveToVertex(vertex, TPSTAGEWALK, true, 60);
         alrMoved = true;
         return;
-      }
-
-      if (!attemptedToSmartTP) {
-        if (config.smartTeleport) {
-          SendChat.chat(prefix.prefix + "Route is obstructed! Attempting other method of tp!");
-          SmartTP.smartTP(nextBlockInList, false);
-          attemptedToSmartTP = true;
-          return;
-        }
       }
 
       if (canDillo() && clearAttempts < 5) {

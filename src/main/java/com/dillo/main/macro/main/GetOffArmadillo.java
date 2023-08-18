@@ -6,11 +6,13 @@ import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.CurrentState;
 import com.dillo.main.teleport.macro.TeleportToNextBlock;
 import com.dillo.utils.previous.SendChat;
+import com.dillo.utils.previous.random.getItemInSlot;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.throwRod;
 import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.init.Items;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -25,19 +27,26 @@ public class GetOffArmadillo {
   private final int MIN_DELAY_AMOUNT = 0;
   private final int MAX_DELAY_AMOUNT = 60;
   private final Random random = new Random();
+  private static CurrentState nextState = null;
 
   public static void getOffArmadillo(CurrentState newState, double blockY, int amountOfTicks, boolean turnOffSneak) {
-    throwRod.throwRodInv();
-    ArmadilloStates.currentState = null;
-    sneak = turnOffSneak;
+    new Thread(() -> {
+      ArmadilloStates.currentState = null;
+      nextState = newState;
 
-    regJump.reset();
+      int rodSlot = getItemInSlot.getItemSlot(Items.fishing_rod);
 
-    blockYPos = blockY;
-    startOff = true;
-    ammountOfCheckTicks = amountOfTicks;
+      throwRod.throwRodDillo(rodSlot, ids.mc.thePlayer.inventory.currentItem);
+      sneak = turnOffSneak;
 
-    KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
+      regJump.reset();
+
+      blockYPos = blockY;
+      startOff = true;
+      ammountOfCheckTicks = amountOfTicks;
+      KeyBinding.setKeyBindState(SNEAK.getKeyCode(), sneak);
+    })
+      .start();
   }
 
   @SubscribeEvent
@@ -48,14 +57,20 @@ public class GetOffArmadillo {
           if (ArmadilloStates.isOnline()) {
             if (Math.abs(blockYPos - ids.mc.thePlayer.posY + 1) < 0.0001) {
               new Thread(() -> {
-                swapWithRandomDelay();
+                sleepRandom();
                 regJump.startStop(false);
-                if (sneak) KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
+
+                if (SNEAK.isPressed()) KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
+
                 startOff = false;
                 currTicks = 0;
-                ArmadilloStates.currentState = null;
 
-                TeleportToNextBlock.teleportToNextBlockStage2();
+                if (nextState == CurrentState.NEXTBLOCKSTAGE2) {
+                  TeleportToNextBlock.teleportToNextBlockStage2();
+                  return;
+                }
+
+                ArmadilloStates.currentState = nextState;
               })
                 .start();
             }
@@ -77,7 +92,7 @@ public class GetOffArmadillo {
     }
   }
 
-  private void swapWithRandomDelay() {
+  private void sleepRandom() {
     try {
       int delay = MIN_DELAY_AMOUNT + random.nextInt(MAX_DELAY_AMOUNT - MIN_DELAY_AMOUNT + 1);
       Thread.sleep(delay);

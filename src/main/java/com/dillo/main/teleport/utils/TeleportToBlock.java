@@ -16,10 +16,12 @@ import com.dillo.main.teleport.TeleportMovePlayer.VertexGetter;
 import com.dillo.main.teleport.TeleportMovePlayer.VertexGetterConfig;
 import com.dillo.main.utils.looks.LookAt;
 import com.dillo.utils.GetSBItems;
+import com.dillo.utils.getSBAtr;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.SwapToSlot;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
+import com.dillo.utils.random.ThreadUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
@@ -104,24 +106,38 @@ public class TeleportToBlock {
     new Thread(() -> {
       ArmadilloStates.currentState = null;
 
-      KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
+      if (!SNEAK.isPressed()) KeyBinding.setKeyBindState(SNEAK.getKeyCode(), true);
 
       int aotvSlot = GetSBItems.getAOTVSlot();
-      if (aotvSlot != -1) {
-        SwapToSlot.swapToSlot(GetSBItems.getAOTVSlot());
-        ids.mc.playerController.sendUseItem(
-          ids.mc.thePlayer,
-          ids.mc.theWorld,
-          ids.mc.thePlayer.inventory.getStackInSlot(ids.mc.thePlayer.inventory.currentItem)
-        );
-      }
-
       int drillSlot = GetSBItems.getDrillSlot();
-      if (drillSlot != -1) {
-        SwapToSlot.swapToSlot(drillSlot);
+
+      if (aotvSlot == -1 || drillSlot == -1) {
+        SendChat.chat(prefix.prefix + "Failed to find some item. Stopping.");
+        ArmadilloStates.currentState = null;
+        ArmadilloStates.offlineState = KillSwitch.OFFLINE;
+        return;
       }
 
-      KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
+      if (
+        !getSBAtr
+          .getSkyBlockID(ids.mc.thePlayer.inventory.mainInventory[ids.mc.thePlayer.inventory.currentItem])
+          .toLowerCase()
+          .contains("void")
+      ) SwapToSlot.swapToSlot(aotvSlot);
+
+      ThreadUtils.threadSleepRandom(20);
+
+      ids.mc.playerController.sendUseItem(
+        ids.mc.thePlayer,
+        ids.mc.theWorld,
+        ids.mc.thePlayer.inventory.getStackInSlot(ids.mc.thePlayer.inventory.currentItem)
+      );
+
+      ThreadUtils.threadSleepRandom(20);
+
+      SwapToSlot.swapToSlot(drillSlot);
+
+      if (SNEAK.isPressed()) KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
       WaitThenCall.waitThenCall(1, TPSTAGE3);
     })
       .start();

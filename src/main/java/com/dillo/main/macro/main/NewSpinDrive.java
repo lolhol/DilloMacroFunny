@@ -69,7 +69,22 @@ public class NewSpinDrive {
           throw new RuntimeException(e);
         }*/
 
-        startAgain();
+        if (
+          canDilloOn() &&
+          driveClearCount < 2 &&
+          !smartTpBlocks.contains(currentRoute.currentBlock) &&
+          attemptToClearOnSpot
+        ) {
+          isClear = true;
+          ArmadilloStates.currentState = STATEDILLONOGETTINGON;
+          driveClearCount++;
+        } else {
+          isThrowRod = true;
+          ArmadilloStates.currentState = null;
+          SendChat.chat(prefix.prefix + "Done breaking! Moving to next vein!");
+          TeleportToNextBlock.teleportToNextBlock();
+          // ADD A FASTER TP TO NEXT BLOCK MODULE VIA MAKING IT DISMOUNT A BIT EARLY
+        }
       } else {
         ArmadilloStates.offlineState = KillSwitch.OFFLINE;
         ArmadilloStates.currentState = null;
@@ -109,21 +124,7 @@ public class NewSpinDrive {
       .start();
   }
 
-  public static void startAgain() {
-    if (
-      canDilloOn() && driveClearCount < 2 && !smartTpBlocks.contains(currentRoute.currentBlock) && attemptToClearOnSpot
-    ) {
-      isClear = true;
-      ArmadilloStates.currentState = STATEDILLONOGETTINGON;
-      driveClearCount++;
-    } else {
-      isThrowRod = true;
-      ArmadilloStates.currentState = null;
-      SendChat.chat(prefix.prefix + "Done breaking! Moving to next vein!");
-      TeleportToNextBlock.teleportToNextBlock();
-      // ADD A FASTER TP TO NEXT BLOCK MODULE VIA MAKING IT DISMOUNT A BIT EARLY
-    }
-  }
+  public static void startAgain() {}
 
   public static void putAllTogether() {
     //com.dillo.utils.previous.SendChaxt.chat(isLeft ? "left" : "right");
