@@ -1,20 +1,22 @@
 package com.dillo.pathfinding.mit.finder.walker;
 
+import static com.dillo.pathfinding.mit.finder.walker.WalkerMain.BlockWalkerState.WAITING;
+import static com.dillo.pathfinding.mit.finder.walker.WalkerMain.BlockWalkerState.WALKING;
+
 import com.dillo.keybinds.KeybindHandler;
 import com.dillo.main.utils.looks.LookAt;
 import com.dillo.pathfinding.mit.finder.walker.event.DoneRotating;
+import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.SendChat;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-
+import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-
-import static com.dillo.pathfinding.mit.finder.walker.WalkerMain.BlockWalkerState.WAITING;
-import static com.dillo.pathfinding.mit.finder.walker.WalkerMain.BlockWalkerState.WALKING;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class WalkerMain {
 
@@ -26,6 +28,8 @@ public class WalkerMain {
   BlockPos curBlock = null;
   BlockPos nextBlock = null;
   boolean isDoneWithPath;
+  int failTime = 0;
+  Vec3 beforePlayerPos = null;
 
   public static boolean test = false;
 
@@ -49,6 +53,21 @@ public class WalkerMain {
     this.walkedOnBlocks.clear();
     this.isDoneWithPath = false;
     KeybindHandler.updateKeys(false, false, false, false, false, false, false, false);
+  }
+
+  public boolean isNotMoving() {
+    if (beforePlayerPos == null) {
+      beforePlayerPos = ids.mc.thePlayer.getPositionVector();
+      return false;
+    }
+
+    if (DistanceFromTo.distanceFromTo(beforePlayerPos, ids.mc.thePlayer.getPositionVector()) < 0.1) {
+      beforePlayerPos = ids.mc.thePlayer.getPositionVector();
+
+      return true;
+    }
+
+    return false;
   }
 
   @SubscribeEvent
@@ -81,13 +100,9 @@ public class WalkerMain {
           break;
         }
 
-        if (!Utils.isLookingAtYaw(LookAt.getRotation(curBlock).yaw)) {
-          LookAt.Rotation rot = LookAt.getRotation(curBlock);
-          rot.pitch = 0.0F;
-
-          LookAt.smoothLook(rot, 20);
-          break;
-        }
+        LookAt.Rotation rotation = LookAt.getRotation(curBlock);
+        rotation.pitch = 0.0F;
+        LookAt.smoothLook(rotation, 20);
 
         KeybindHandler.updateKeys(true, false, false, false, false, false, false, Utils.isCloseToJumpBlock());
       case NEXT_BLOCK:

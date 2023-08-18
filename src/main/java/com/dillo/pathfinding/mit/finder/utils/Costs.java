@@ -47,7 +47,7 @@ public class Costs {
       case JUMP:
         return 2;
       case FALL:
-        return 5;
+        return 3;
       case BREAK:
         return 4;
     }

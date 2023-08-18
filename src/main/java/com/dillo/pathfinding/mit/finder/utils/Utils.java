@@ -266,4 +266,8 @@ public class Utils {
 
     return true;
   }
+
+  public static boolean isSameBlock(BlockNodeClass block1, BlockNodeClass block2) {
+    return block1.blockPos.equals(block2.blockPos);
+  }
 }

@@ -43,23 +43,21 @@ public class AStarPathFinder {
       //fCost ====> gCost + hCost.
 
       BlockNodeClass node = openSet.get(0);
-
       for (BlockNodeClass blockNode : openSet) {
-        if (blockNode.totalCost <= node.totalCost && blockNode.hCost < node.hCost) {
-          if (!closedSet.contains(blockNode)) {
-            node = blockNode;
-          }
+        if (blockNode.totalCost < node.totalCost && blockNode.hCost < node.hCost && !closedSet.contains(blockNode)) {
+          node = blockNode;
         }
       }
 
       openSet.remove(node);
       closedSet.add(node);
 
-      if (node.isSame(endPoint.blockPos)) {
+      if (Utils.isSameBlock(node, endPoint) && node.parentOfBlock != null) {
         endPoint.parentOfBlock = previousNode;
         SendChat.chat(
           "Found! Opened " + this.opened + ". And closed " + this.closed + ". Total -> " + (this.opened + this.closed)
         );
+
         return Utils.retracePath(startPoint, endPoint);
       }
 
@@ -92,14 +90,13 @@ public class AStarPathFinder {
 
         double newCostToNeighbour = DistanceFromTo.distanceFromTo(child.blockPos(), startPoint.blockPos());
         if (newCostToNeighbour < child.gCost || !openSet.contains(child)) {
-          child.hCost = Costs.calculateHCostBlockPos(child.blockPos, pathFinderConfig.destinationBlock);
+          child.hCost =
+            Costs.calculateHCostBlockPos(child.blockPos, pathFinderConfig.destinationBlock) +
+            Costs.getActionCost(child.actionType) +
+            Costs.calculateSurroundingsDoubleCost(child.blockPos);
           child.gCost = newCostToNeighbour;
 
-          child.totalCost =
-            Costs.getFullCost(child.blockPos, child.startBlock, child.finalBlock) +
-            totalAddBreak +
-            Costs.getActionCost(child.actionType);
-          child.parentOfBlock = node;
+          child.totalCost = Costs.getFullCost(child.blockPos, child.startBlock, child.finalBlock) + totalAddBreak;
 
           openSet.add(child);
         }
