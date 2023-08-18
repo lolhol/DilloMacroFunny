@@ -6,8 +6,8 @@ import net.minecraft.item.ItemStack;
 
 public class SwapToSlot {
 
-  private static final int MIN_DELAY_AMOUNT = 80;
-  private static final int MAX_DELAY_AMOUNT = 120;
+  private static final int MIN_DELAY_AMOUNT = 20;
+  private static final int MAX_DELAY_AMOUNT = 80;
   private static final Random random = new Random();
 
   public static void swapToItem(Item item) {

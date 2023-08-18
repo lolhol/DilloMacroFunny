@@ -1,20 +1,19 @@
 package com.dillo.pathfinding.mit.finder.walker;
 
+import static com.dillo.pathfinding.mit.finder.walker.WalkerMain.BlockWalkerState.WAITING;
+import static com.dillo.pathfinding.mit.finder.walker.WalkerMain.BlockWalkerState.WALKING;
+
 import com.dillo.keybinds.KeybindHandler;
 import com.dillo.main.utils.looks.LookAt;
 import com.dillo.pathfinding.mit.finder.walker.event.DoneRotating;
 import com.dillo.utils.previous.SendChat;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
-import static com.dillo.pathfinding.mit.finder.walker.WalkerMain.BlockWalkerState.WAITING;
-import static com.dillo.pathfinding.mit.finder.walker.WalkerMain.BlockWalkerState.WALKING;
 
 public class WalkerMain {
 
