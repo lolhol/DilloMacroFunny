@@ -41,6 +41,7 @@ public class WalkToCustom extends Command {
 
     new Thread(() -> {
       OnPathRenderer.renderList(null, false);
+      OnPathRenderer.renderList(null, false);
       long start = System.currentTimeMillis();
 
       //RenderOneBlockMod.renderOneBlock(ids.mc.thePlayer.getPositionVector().addVector(-0.5, 0, -0.5), true);
@@ -53,7 +54,7 @@ public class WalkToCustom extends Command {
           false,
           false,
           10,
-          1000,
+          100000,
           1000,
           BlockUtils.fromVec3ToBlockPos(ids.mc.thePlayer.getPositionVector().addVector(-0.5, 0, -0.5)),
           new BlockPos(x, y, z),
@@ -73,6 +74,8 @@ public class WalkToCustom extends Command {
 
       //WalkerMain walker = new WalkerMain();
 
+      //OnPathRenderer.renderList(route, true);
+
       //OnPathRenderer.renderList(walker.getSmoothPath(route), true);
 
       List<BlockPos> shortSegment = Utils.getShortList(route);
@@ -80,7 +83,6 @@ public class WalkToCustom extends Command {
         RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(a), true);
         //SendChat.chat(String.valueOf(DistanceFromTo.distanceFromTo(a, ids.mc.thePlayer.getPosition())));
       });
-
       walker.walkOnPath(shortSegment, true);
       //List<BlockPos> blocks1 = new ArrayList<>();
 

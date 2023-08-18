@@ -365,8 +365,7 @@ public class RayTracingUtils {
     double x2,
     double y2,
     double z2,
-    double maxDist,
-    Block[] blocksToNotIgnore
+    double maxDist
   ) {
     double dx = x2 - x1;
     double dy = y2 - y1;
@@ -394,13 +393,6 @@ public class RayTracingUtils {
             int x = (int) Math.floor(xCur + sx);
             int y = (int) Math.floor(yCur + sy);
             int z = (int) Math.floor(zCur + sz);
-
-            IBlockState blockState = ids.mc.theWorld.getBlockState(new BlockPos(x, y, z));
-            Block block = blockState.getBlock();
-
-            if (!isContains(blocksToNotIgnore, block)) {
-              continue;
-            }
 
             double[] ro = new double[] { x1, y1, z1 };
             double[] rd = new double[] { stepX, stepY, stepZ };
@@ -822,8 +814,8 @@ public class RayTracingUtils {
 
   public static class CollisionResult {
 
-    BlockPos blockPos;
-    double[] output;
+    public BlockPos blockPos;
+    public double[] output;
 
     public CollisionResult(BlockPos blockPos, double[] output) {
       this.blockPos = blockPos;
