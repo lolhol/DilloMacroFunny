@@ -118,7 +118,10 @@ public class Utils {
   }
 
   public static boolean isCloseToNextBlock(BlockPos block) {
-    return DistanceFromTo.distanceFromTo(block, ids.mc.thePlayer.getPosition()) < 1.5;
+    return (
+      DistanceFromTo.distanceFromTo(block, ids.mc.thePlayer.getPosition()) < 1.5 &&
+      Math.abs(ids.mc.thePlayer.getPositionVector().yCoord - block.getY()) < 0.001
+    );
   }
 
   public static boolean isCloseToJumpBlock() {

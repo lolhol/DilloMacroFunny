@@ -29,11 +29,6 @@ public class WalkToCustom extends Command {
 
   @DefaultHandler
   public void handle(int x, int y, int z) {
-    //if (StateDillo.getDilloArmorStand() == null) SendChat.chat("!!!!!!");
-
-    //StateDillo.interactWithEntity(Objects.requireNonNull(StateDillo.getDilloArmorStand()));
-    //SendChat.chat("!!");
-
     RenderPoints.renderPoint(null, 0.2, false);
 
     AStarPathFinder pathFinder = new AStarPathFinder();
@@ -46,24 +41,24 @@ public class WalkToCustom extends Command {
 
       //RenderOneBlockMod.renderOneBlock(ids.mc.thePlayer.getPositionVector().addVector(-0.5, 0, -0.5), true);
 
-      List<BlockNodeClass> route = pathFinder.AStarPathFinder(
-        new PathFinderConfig(
-          false,
-          false,
-          false,
-          false,
-          false,
-          10,
-          100000,
-          1000,
-          BlockUtils.fromVec3ToBlockPos(ids.mc.thePlayer.getPositionVector().addVector(-0.5, 0, -0.5)),
-          new BlockPos(x, y, z),
-          new Block[] { Blocks.air },
-          new Block[] { Blocks.air },
-          100,
-          0
-        )
+      PathFinderConfig newConfig = new PathFinderConfig(
+        true,
+        false,
+        false,
+        false,
+        false,
+        10,
+        100000,
+        1000,
+        BlockUtils.fromVec3ToBlockPos(ids.mc.thePlayer.getPositionVector().addVector(-0.5, 0, -0.5)),
+        new BlockPos(x, y, z),
+        new Block[] { Blocks.air },
+        new Block[] { Blocks.air },
+        100,
+        0
       );
+
+      List<BlockNodeClass> route = pathFinder.AStarPathFinder(newConfig);
 
       if (route == null) {
         SendChat.chat("Didnt find a route.");
@@ -72,27 +67,12 @@ public class WalkToCustom extends Command {
 
       SendChat.chat("Took " + (System.currentTimeMillis() - start) + "ms. And the route size is " + route.size());
 
-      //WalkerMain walker = new WalkerMain();
-
-      //OnPathRenderer.renderList(route, true);
-
-      //OnPathRenderer.renderList(walker.getSmoothPath(route), true);
-
       List<BlockPos> shortSegment = Utils.getShortList(route);
       shortSegment.forEach(a -> {
         RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(a), true);
-        //SendChat.chat(String.valueOf(DistanceFromTo.distanceFromTo(a, ids.mc.thePlayer.getPosition())));
       });
-      walker.walkOnPath(shortSegment, true);
-      //List<BlockPos> blocks1 = new ArrayList<>();
 
-      /*for (BlockNodeClass block : route) {
-        blocks1.add(block.blockPos);
-      }
-
-      ArmadilloStates.offlineState = KillSwitch.ONLINE;
-
-      walkOnPath(blocks1);*/
+      walker.walkOnPath(shortSegment, false, new BlockPos(x, y, z), newConfig);
     })
       .start();
   }
