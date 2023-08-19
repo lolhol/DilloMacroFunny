@@ -1,5 +1,17 @@
 package com.dillo.main.teleport.macro;
 
+import static com.dillo.armadillomacro.vertexMover;
+import static com.dillo.calls.CurrentState.*;
+import static com.dillo.calls.KillSwitch.ONLINE;
+import static com.dillo.config.config.actuallySwitchAOTV;
+import static com.dillo.config.config.earlyLook;
+import static com.dillo.main.macro.main.StateDillo.canDillo;
+import static com.dillo.main.teleport.utils.LookWhileGoingDown.stopLook;
+import static com.dillo.main.utils.GetMostOptimalPath.isClear;
+import static com.dillo.main.utils.keybinds.AllKeybinds.SNEAK;
+import static com.dillo.main.utils.looks.LookYaw.curRotation;
+import static com.dillo.utils.BlockUtils.getNextBlock;
+
 import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.KillSwitch;
 import com.dillo.config.config;
@@ -18,18 +30,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.BlockPos;
 
-import static com.dillo.armadillomacro.vertexMover;
-import static com.dillo.calls.CurrentState.*;
-import static com.dillo.calls.KillSwitch.ONLINE;
-import static com.dillo.config.config.actuallySwitchAOTV;
-import static com.dillo.config.config.earlyLook;
-import static com.dillo.main.macro.main.StateDillo.canDillo;
-import static com.dillo.main.teleport.utils.LookWhileGoingDown.stopLook;
-import static com.dillo.main.utils.GetMostOptimalPath.isClear;
-import static com.dillo.main.utils.keybinds.AllKeybinds.SNEAK;
-import static com.dillo.main.utils.looks.LookYaw.curRotation;
-import static com.dillo.utils.BlockUtils.getNextBlock;
-
 public class TeleportToNextBlock {
 
   public static final KeyBinding SNEEK = Minecraft.getMinecraft().gameSettings.keyBindSneak;
@@ -43,7 +43,7 @@ public class TeleportToNextBlock {
 
   public static void teleportToNextBlock() {
     new Thread(() -> {
-      if (ArmadilloStates.offlineState == ONLINE) {
+      if (ArmadilloStates.isOnline()) {
         BlockPos nextBlock = getNextBlock();
         nextBlockInList = nextBlock;
         isTeleporting = true;

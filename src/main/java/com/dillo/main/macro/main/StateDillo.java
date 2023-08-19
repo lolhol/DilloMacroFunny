@@ -109,7 +109,7 @@ public class StateDillo {
           timeChecked++;
         }
 
-        if (timeChecked >= 80) {
+        if (timeChecked > 80) {
           ArmadilloStates.currentState = null;
           ArmadilloStates.offlineState = KillSwitch.OFFLINE;
           SendChat.chat(prefix.prefix + "Dillo summon took too long stopping!");
@@ -117,13 +117,13 @@ public class StateDillo {
         }
 
         int randomClick = RandomisationUtils.randomNumberBetweenInt(0, 1);
-        Entity entity = getDilloArmorStand();
+        //Entity entity = getDilloArmorStand();
 
-        if (entity == null || DistanceFromTo.distanceFromTo(entity.getPosition(), ids.mc.thePlayer.getPosition()) < 2) {
+        /*if (entity == null || DistanceFromTo.distanceFromTo(entity.getPosition(), ids.mc.thePlayer.getPosition()) < 2) {
           ArmadilloStates.currentState = null;
           ArmadilloStates.offlineState = KillSwitch.OFFLINE;
           return;
-        }
+        }*/
 
         keyBindings.rightClick();
 

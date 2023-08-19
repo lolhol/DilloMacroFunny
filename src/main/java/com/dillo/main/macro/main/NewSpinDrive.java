@@ -59,7 +59,7 @@ public class NewSpinDrive {
 
       Pair<Boolean, Integer> pair = isAdminPreventing(originalBlocks);
 
-      if (ArmadilloStates.isOnline()/* && !pair.getKey()*/) {
+      if (ArmadilloStates.isOnline()) {
         // Later => add the % vein
 
         //TODO: test @this
@@ -68,6 +68,8 @@ public class NewSpinDrive {
         } catch (InterruptedException e) {
           throw new RuntimeException(e);
         }*/
+
+        SendChat.chat(prefix.prefix + "Done breaking! Moving to next vein!");
 
         if (
           canDilloOn() &&
@@ -79,13 +81,14 @@ public class NewSpinDrive {
           ArmadilloStates.currentState = STATEDILLONOGETTINGON;
           driveClearCount++;
         } else {
+          SendChat.chat(prefix.prefix + "Initiated TP.");
           isThrowRod = true;
           ArmadilloStates.currentState = null;
-          SendChat.chat(prefix.prefix + "Done breaking! Moving to next vein!");
           TeleportToNextBlock.teleportToNextBlock();
           // ADD A FASTER TP TO NEXT BLOCK MODULE VIA MAKING IT DISMOUNT A BIT EARLY
         }
       } else {
+        SendChat.chat(prefix.prefix + "Detected Macro stop after rotation! Stopping.");
         ArmadilloStates.offlineState = KillSwitch.OFFLINE;
         ArmadilloStates.currentState = null;
       }
