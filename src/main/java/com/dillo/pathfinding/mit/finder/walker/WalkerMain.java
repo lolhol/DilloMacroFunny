@@ -60,6 +60,7 @@ public class WalkerMain {
     } else {
       this.reset();
     }
+    //dgjnjdg
   }
 
   public void reset() {
