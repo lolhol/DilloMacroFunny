@@ -314,23 +314,28 @@ public class PathFinderV2 {
 
         return children;
     }
-
     public static boolean isInMiddle(BlockPos child, BlockPos parent) {
-        if (
-                DistanceFromTo.distanceFromTo(new BlockPos(child.getX(), child.getY() - 1, child.getZ()), parent) >
-                        DistanceFromTo.distanceFromTo(child, parent)
-        ) {
+        if (DistanceFromTo.distanceFromTo(new BlockPos(child.getX(), child.getY() - 1, child.getZ()), parent) >
+                DistanceFromTo.distanceFromTo(child, parent)) {
             return true;
         }
 
         return false;
     }
 
-    public static double getGCost(BlockNode parent, BlockPos childPos) {
-        return (parent.gCost() + DistanceFromTo.distanceFromTo(parent.blockPos(), childPos));
-    }
+    public static List<BlockPos> reverseList(List<BlockPos> initList) {
+        int len = initList.size();
+        if (len == 0) return null;
 
-    public static double getHCost(BlockPos childPos, BlockPos destinationPos) {
-        return DistanceFromTo.distanceFromTo(childPos, destinationPos);
+        int len2 = len >> 1;
+        BlockPos temp;
+
+        for (int i = 0; i < len2; ++i) {
+            temp = initList.get(i);
+            initList.set(i, initList.get(initList.size() - i - 1));
+            initList.set(initList.size() - i - 1, temp);
+        }
+
+        return initList;
     }
 }
