@@ -107,13 +107,6 @@ public class Utils {
     BlockNodeClass currentNode = endNode;
 
     while (currentNode.parentOfBlock != null && !currentNode.equals(startNode)) {
-      //SendChat.chat("!");
-
-      /*RenderMultipleBlocksMod.renderMultipleBlocks(
-        new Vec3(currentNode.blockPos().getX(), currentNode.blockPos().getY(), currentNode.blockPos().getZ()),
-        true
-      );*/
-
       blockPath.add(currentNode.blockPos());
       nodeClass.add(currentNode);
       currentNode = currentNode.parentOfBlock;

@@ -5,7 +5,6 @@ import com.dillo.pathfinding.mit.finder.utils.BlockNodeClass;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.RayTracingUtils;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +53,7 @@ public class Utils {
           }
         }
 
-        SendChat.chat(String.valueOf(airAmount));
+        //SendChat.chat(String.valueOf(airAmount));
 
         if (airAmount > 2) {
           returnBlocks.add(blocks.get(i - 1).blockPos);

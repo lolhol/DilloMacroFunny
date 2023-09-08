@@ -49,6 +49,8 @@ public class WalkerMain {
     this.config = config;
     this.endBlock = endBlock;
 
+    com.dillo.utils.previous.chatUtils.SendChat.chat("!!");
+
     if (walkerState) {
       KeybindHandler.updateKeys(false, false, false, false, false, false, false, false);
       this.isWalk = true;

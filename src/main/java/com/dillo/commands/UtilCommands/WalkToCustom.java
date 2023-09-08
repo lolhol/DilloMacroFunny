@@ -1,12 +1,9 @@
 package com.dillo.commands.UtilCommands;
 
-import static com.dillo.armadillomacro.walker;
-
 import com.dillo.pathfinding.mit.finder.main.AStarPathFinder;
 import com.dillo.pathfinding.mit.finder.main.OnPathRenderer;
 import com.dillo.pathfinding.mit.finder.utils.BlockNodeClass;
 import com.dillo.pathfinding.mit.finder.utils.PathFinderConfig;
-import com.dillo.pathfinding.mit.finder.walker.Utils;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
@@ -36,19 +33,18 @@ public class WalkToCustom extends Command {
 
     new Thread(() -> {
       OnPathRenderer.renderList(null, false);
-      OnPathRenderer.renderList(null, false);
       long start = System.currentTimeMillis();
 
       //RenderOneBlockMod.renderOneBlock(ids.mc.thePlayer.getPositionVector().addVector(-0.5, 0, -0.5), true);
 
       PathFinderConfig newConfig = new PathFinderConfig(
-        true,
+        false,
         false,
         false,
         false,
         false,
         10,
-        100000,
+        10000,
         1000,
         BlockUtils.fromVec3ToBlockPos(ids.mc.thePlayer.getPositionVector().addVector(-0.5, 0, -0.5)),
         new BlockPos(x, y, z),
@@ -66,13 +62,22 @@ public class WalkToCustom extends Command {
       }
 
       SendChat.chat("Took " + (System.currentTimeMillis() - start) + "ms. And the route size is " + route.size());
-
-      List<BlockPos> shortSegment = Utils.getShortList(route);
+      // Un comment @this to display the init route.
+      OnPathRenderer.renderList(route, true);
+      // ==============================
+      // Add @this to display a shorter path
+      /*List<BlockPos> shortSegment = Utils.getShortList(route);
       shortSegment.forEach(a -> {
+        RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(a), true);
+      });*/
+      // ==============================
+
+      //List<BlockPos> shortSegment = Utils.getShortList(route);
+      /*shortSegment.forEach(a -> {
         RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(a), true);
       });
 
-      walker.walkOnPath(shortSegment, false, new BlockPos(x, y, z), newConfig);
+      walker.walkOnPath(shortSegment, false, new BlockPos(x, y, z), newConfig);*/
     })
       .start();
   }

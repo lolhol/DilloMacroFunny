@@ -4,7 +4,6 @@ import com.dillo.pathfinding.mit.finder.utils.BlockNodeClass;
 import com.dillo.pathfinding.mit.finder.utils.Costs;
 import com.dillo.pathfinding.mit.finder.utils.PathFinderConfig;
 import com.dillo.pathfinding.mit.finder.utils.Utils;
-import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.SendChat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,6 +14,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class AStarPathFinder {
 
+  public static BlockNodeClass startClass = null;
+  public static BlockNodeClass endClass = null;
+  public static BlockPos startBlock = null;
+  public static BlockPos endBlock = null;
+
   boolean isStart;
   int ticks;
 
@@ -23,7 +27,10 @@ public class AStarPathFinder {
 
   public List<BlockNodeClass> AStarPathFinder(PathFinderConfig pathFinderConfig) {
     int depth = 0;
+
     List<BlockNodeClass> openSet = new ArrayList<>();
+    isStart = true;
+
     HashSet<BlockNodeClass> closedSet = new HashSet<>();
     BlockNodeClass previousNode = null;
 
@@ -31,6 +38,7 @@ public class AStarPathFinder {
       pathFinderConfig.startingBlock,
       pathFinderConfig.destinationBlock
     );
+
     BlockNodeClass endPoint = Utils.getClassOfEnding(pathFinderConfig.startingBlock, pathFinderConfig.destinationBlock);
     openSet.add(Utils.getClassOfStarting(pathFinderConfig.startingBlock, pathFinderConfig.destinationBlock));
 
@@ -38,9 +46,11 @@ public class AStarPathFinder {
       opened = openSet.size();
       closed = closedSet.size();
 
-      //hCost ====> distance from end node.
-      //gCost ====> distance from start node.
-      //fCost ====> gCost + hCost.
+      //----------------------------------------------------------------------
+      //| hCost ====> distance from end node.                                |
+      //| gCost ====> distance from start node.                              |
+      //| fCost ====> gCost + hCost.                                         |
+      //----------------------------------------------------------------------
 
       BlockNodeClass node = openSet.get(0);
       for (BlockNodeClass blockNode : openSet) {
@@ -48,12 +58,13 @@ public class AStarPathFinder {
           node = blockNode;
         }
       }
-
       openSet.remove(node);
       closedSet.add(node);
 
       if (Utils.isSameBlock(node, endPoint) && node.parentOfBlock != null) {
         endPoint.parentOfBlock = previousNode;
+        isStart = false;
+
         SendChat.chat(
           "Found! Opened " + this.opened + ". And closed " + this.closed + ". Total -> " + (this.opened + this.closed)
         );
@@ -62,7 +73,6 @@ public class AStarPathFinder {
       }
 
       List<BlockNodeClass> children = Utils.getBlocksAround(node);
-
       for (BlockNodeClass child : children) {
         if (closedSet.contains(child)) {
           continue;
@@ -79,7 +89,6 @@ public class AStarPathFinder {
         }
 
         child.actionType = typeAction.actionType;
-
         double totalAddBreak = 0;
         if (pathFinderConfig.isMine && typeAction.blocksToBreak != null) {
           for (BlockPos block : typeAction.blocksToBreak) {
@@ -88,24 +97,16 @@ public class AStarPathFinder {
           }
         }
 
-        double newCostToNeighbour = DistanceFromTo.distanceFromTo(child.blockPos(), startPoint.blockPos());
-        if (newCostToNeighbour < child.gCost || !openSet.contains(child)) {
-          child.hCost =
-            Costs.calculateHCostBlockPos(child.blockPos, pathFinderConfig.destinationBlock) +
-            Costs.getActionCost(child.actionType) +
-            Costs.calculateSurroundingsDoubleCost(child.blockPos);
-          child.gCost = newCostToNeighbour;
-
-          child.totalCost = Costs.getFullCost(child.blockPos, child.startBlock, child.finalBlock) + totalAddBreak;
-
-          openSet.add(child);
-        }
+        child.hCost += Costs.getActionCost(child.actionType);
+        child.totalCost = Costs.getFullCost(child.blockPos, child.startBlock, child.finalBlock) + totalAddBreak;
+        openSet.add(child);
       }
 
       previousNode = node;
       depth++;
     }
 
+    isStart = false;
     return null;
   }
 
