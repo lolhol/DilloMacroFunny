@@ -11,6 +11,7 @@ import com.dillo.pathfinding.mit.finder.main.OnPathRenderer;
 import com.dillo.pathfinding.mit.finder.utils.BlockNodeClass;
 import com.dillo.pathfinding.mit.finder.utils.PathFinderConfig;
 import com.dillo.pathfinding.mit.finder.walker.event.DoneRotating;
+import com.dillo.pathfinding.mit.finder.walker.event.DoneWalking;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.SendChat;
@@ -39,6 +40,7 @@ public class WalkerMain {
   int failTime = 0;
   Vec3 beforePlayerPos = null;
   int notMovingTicks = 0;
+  int movingC = 0;
 
   PathFinderConfig config = null;
   BlockPos endBlock = null;
@@ -48,8 +50,6 @@ public class WalkerMain {
   public void walkOnPath(List<BlockPos> blocks, boolean walkerState, BlockPos endBlock, PathFinderConfig config) {
     this.config = config;
     this.endBlock = endBlock;
-
-    com.dillo.utils.previous.chatUtils.SendChat.chat("!!");
 
     if (walkerState) {
       KeybindHandler.updateKeys(false, false, false, false, false, false, false, false);
@@ -96,10 +96,10 @@ public class WalkerMain {
 
     new Thread(() -> {
       OnPathRenderer.renderList(null, false);
-      OnPathRenderer.renderList(null, false);
       long start = System.currentTimeMillis();
+      this.config.startingBlock = ids.mc.thePlayer.getPosition();
 
-      List<BlockNodeClass> route = pathFinder.AStarPathFinder(this.config);
+      List<BlockNodeClass> route = pathFinder.run(this.config);
 
       if (route == null) {
         com.dillo.utils.previous.chatUtils.SendChat.chat("Didnt find a route.");
@@ -118,6 +118,10 @@ public class WalkerMain {
       walker.walkOnPath(shortSegment, true, this.endBlock, this.config);
     })
       .start();
+  }
+
+  public boolean isBlockToFall(BlockPos block) {
+    return block.getY() < ids.mc.thePlayer.posY;
   }
 
   @SubscribeEvent
@@ -148,10 +152,27 @@ public class WalkerMain {
 
     switch (state) {
       case WALKING:
+        if (
+          isBlockToFall(this.curBlock) &&
+          DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), this.curBlock) < 1
+        ) {
+          movingC++;
+
+          if (movingC >= 4) {
+            movingC = 0;
+            KeybindHandler.updateKeys(true, false, false, false, false, false, false, Utils.isCloseToJumpBlock());
+            return;
+          }
+
+          KeybindHandler.updateKeys(false, false, false, false, false, false, false, Utils.isCloseToJumpBlock());
+          return;
+        }
+
         if (Utils.isCloseToNextBlock(this.curBlock)) {
           if (isDoneWithPath) {
             reset();
             SendChat.chat("Done with path!");
+            MinecraftForge.EVENT_BUS.post(new DoneWalking());
             return;
           }
 

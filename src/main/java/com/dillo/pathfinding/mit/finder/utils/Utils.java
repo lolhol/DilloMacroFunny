@@ -17,15 +17,9 @@ public class Utils {
     return new BlockNodeClass(
       null,
       startingBlock,
-      endBlock,
-      startingBlock,
       Costs.calculateGCostBlockPos(startingBlock, startingBlock),
       Costs.calculateHCostBlockPos(startingBlock, endBlock),
-      Costs.calculateSurroundingsDoubleCost(startingBlock),
-      Costs.getBreakCost(startingBlock),
-      Costs.walkCost(),
       Costs.getFullCost(startingBlock, startingBlock, endBlock),
-      BlockUtils.getBlockType(startingBlock),
       null,
       new HashSet<>()
     );
@@ -35,15 +29,9 @@ public class Utils {
     return new BlockNodeClass(
       null,
       endBlock,
-      endBlock,
-      startingBlock,
       Costs.calculateGCostBlockPos(startingBlock, endBlock),
       Costs.calculateHCostBlockPos(endBlock, endBlock),
-      Costs.calculateSurroundingsDoubleCost(endBlock),
-      Costs.getBreakCost(endBlock),
-      Costs.walkCost(),
       Costs.getFullCost(endBlock, startingBlock, endBlock),
-      BlockUtils.getBlockType(endBlock),
       null,
       new HashSet<>()
     );
@@ -61,21 +49,15 @@ public class Utils {
     return new BlockNodeClass(
       parent,
       block,
-      ending,
-      starting,
       Costs.calculateGCostBlockPos(block, starting),
       Costs.calculateHCostBlockPos(block, ending),
-      Costs.calculateSurroundingsDoubleCost(block),
-      Costs.getBreakCost(block),
-      Costs.walkCost(),
       Costs.getFullCost(block, starting, ending),
-      BlockUtils.getBlockType(block),
       null,
       addBroken
     );
   }
 
-  public static List<BlockNodeClass> getBlocksAround(BlockNodeClass reference) {
+  public static List<BlockNodeClass> getBlocksAround(BlockNodeClass reference, BlockPos start, BlockPos end) {
     List<BlockNodeClass> returnBlocks = new ArrayList<>();
 
     for (int x = -1; x <= 1; x++) {
@@ -83,15 +65,11 @@ public class Utils {
         for (int z = -1; z <= 1; z++) {
           if (x == 0 || z == 0) {
             BlockPos curBlock = BlockUtils.makeNewBlock(x, y, z, reference.blockPos);
-            returnBlocks.add(
-              getClassOfBlock(curBlock, reference, reference.startBlock, reference.finalBlock, reference.broken)
-            );
+            returnBlocks.add(getClassOfBlock(curBlock, reference, start, end, reference.broken));
 
             while (y == -1 && !BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, curBlock))) {
               curBlock = BlockUtils.makeNewBlock(0, -1, 0, curBlock);
-              returnBlocks.add(
-                getClassOfBlock(curBlock, reference, reference.startBlock, reference.finalBlock, reference.broken)
-              );
+              returnBlocks.add(getClassOfBlock(curBlock, reference, start, end, reference.broken));
             }
           }
         }
@@ -133,7 +111,6 @@ public class Utils {
 
   public static ReturnClass isAbleToInteract(BlockPos block, BlockNodeClass parentBlock, boolean isMine) {
     List<BlockPos> removeBlocksWalk = canWalkOn(block, parentBlock);
-
     if (removeBlocksWalk != null && removeBlocksWalk.isEmpty()) {
       return new ReturnClass(removeBlocksWalk, ActionTypes.WALK);
     }

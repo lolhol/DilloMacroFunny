@@ -7,16 +7,16 @@ import net.minecraft.util.BlockPos;
 
 public class Costs {
 
-  public static double calculateGCost(BlockNodeClass nodeClass) {
-    return DistanceFromTo.distanceFromTo(nodeClass.blockPos, nodeClass.startBlock);
+  public static double calculateGCost(BlockNodeClass nodeClass, BlockPos startBlock) {
+    return DistanceFromTo.distanceFromTo(nodeClass.blockPos, startBlock);
   }
 
-  public static double calculateHCost(BlockNodeClass nodeClass) {
-    return DistanceFromTo.distanceFromTo(nodeClass.blockPos, nodeClass.finalBlock);
+  public static double calculateHCost(BlockNodeClass nodeClass, BlockPos finalBlock) {
+    return DistanceFromTo.distanceFromTo(nodeClass.blockPos, finalBlock);
   }
 
-  public static double calculateFullCostDistance(BlockNodeClass nodeClass) {
-    return calculateGCost(nodeClass) + calculateHCost(nodeClass);
+  public static double calculateFullCostDistance(BlockNodeClass nodeClass, BlockPos start, BlockPos end) {
+    return calculateGCost(nodeClass, start) + calculateHCost(nodeClass, end);
   }
 
   public static double calculateGCostBlockPos(BlockPos pos1, BlockPos startBlock) {
@@ -49,7 +49,7 @@ public class Costs {
       case FALL:
         return 3;
       case BREAK:
-        return 4;
+        return 10;
     }
 
     return 0;

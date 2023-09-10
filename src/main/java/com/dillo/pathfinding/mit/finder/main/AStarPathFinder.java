@@ -1,23 +1,21 @@
 package com.dillo.pathfinding.mit.finder.main;
 
-import com.dillo.pathfinding.mit.finder.utils.BlockNodeClass;
-import com.dillo.pathfinding.mit.finder.utils.Costs;
-import com.dillo.pathfinding.mit.finder.utils.PathFinderConfig;
-import com.dillo.pathfinding.mit.finder.utils.Utils;
+import com.dillo.pathfinding.mit.finder.utils.*;
 import com.dillo.utils.previous.SendChat;
-import java.util.ArrayList;
+import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
 import java.util.HashSet;
 import java.util.List;
+import java.util.PriorityQueue;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class AStarPathFinder {
 
-  public static BlockNodeClass startClass = null;
-  public static BlockNodeClass endClass = null;
-  public static BlockPos startBlock = null;
-  public static BlockPos endBlock = null;
+  public static HashSet<BlockNodeClass> closedSet = new HashSet<>();
+
+  public BlockPos startBlock = null;
+  public BlockPos endBlock = null;
 
   boolean isStart;
   int ticks;
@@ -25,19 +23,22 @@ public class AStarPathFinder {
   int opened = 0;
   int closed = 0;
 
-  public List<BlockNodeClass> AStarPathFinder(PathFinderConfig pathFinderConfig) {
-    int depth = 0;
+  public List<BlockNodeClass> run(PathFinderConfig pathFinderConfig) {
+    RenderMultipleBlocksMod.renderMultipleBlocks(null, false);
 
-    List<BlockNodeClass> openSet = new ArrayList<>();
+    int depth = 0;
     isStart = true;
 
-    HashSet<BlockNodeClass> closedSet = new HashSet<>();
-    BlockNodeClass previousNode = null;
+    PriorityQueue<BlockNodeClass> openSet = new PriorityQueue<>(new BlockNodeCompare());
+    closedSet = new HashSet<>();
 
+    BlockNodeClass previousNode = null;
     BlockNodeClass startPoint = Utils.getClassOfStarting(
       pathFinderConfig.startingBlock,
       pathFinderConfig.destinationBlock
     );
+    startBlock = pathFinderConfig.startingBlock;
+    endBlock = pathFinderConfig.destinationBlock;
 
     BlockNodeClass endPoint = Utils.getClassOfEnding(pathFinderConfig.startingBlock, pathFinderConfig.destinationBlock);
     openSet.add(Utils.getClassOfStarting(pathFinderConfig.startingBlock, pathFinderConfig.destinationBlock));
@@ -52,16 +53,10 @@ public class AStarPathFinder {
       //| fCost ====> gCost + hCost.                                         |
       //----------------------------------------------------------------------
 
-      BlockNodeClass node = openSet.get(0);
-      for (BlockNodeClass blockNode : openSet) {
-        if (blockNode.totalCost < node.totalCost && blockNode.hCost < node.hCost && !closedSet.contains(blockNode)) {
-          node = blockNode;
-        }
-      }
-      openSet.remove(node);
+      BlockNodeClass node = openSet.poll();
       closedSet.add(node);
 
-      if (Utils.isSameBlock(node, endPoint) && node.parentOfBlock != null) {
+      if (node.blockPos.equals(endBlock) && node.parentOfBlock != null) {
         endPoint.parentOfBlock = previousNode;
         isStart = false;
 
@@ -72,9 +67,10 @@ public class AStarPathFinder {
         return Utils.retracePath(startPoint, endPoint);
       }
 
-      List<BlockNodeClass> children = Utils.getBlocksAround(node);
+      List<BlockNodeClass> children = Utils.getBlocksAround(node, startBlock, endBlock);
       for (BlockNodeClass child : children) {
         if (closedSet.contains(child)) {
+          openSet.remove(child);
           continue;
         }
 
@@ -92,13 +88,12 @@ public class AStarPathFinder {
         double totalAddBreak = 0;
         if (pathFinderConfig.isMine && typeAction.blocksToBreak != null) {
           for (BlockPos block : typeAction.blocksToBreak) {
-            child.broken.add(block);
             totalAddBreak += Costs.getBreakCost(block);
           }
         }
 
         child.hCost += Costs.getActionCost(child.actionType);
-        child.totalCost = Costs.getFullCost(child.blockPos, child.startBlock, child.finalBlock) + totalAddBreak;
+        child.totalCost = Costs.getFullCost(child.blockPos, startBlock, endBlock) + totalAddBreak;
         openSet.add(child);
       }
 
@@ -115,7 +110,7 @@ public class AStarPathFinder {
     if (!this.isStart) return;
     if (this.ticks >= 50) {
       this.ticks = 0;
-      SendChat.chat("Opened " + this.opened + ". And closed " + this.closed);
+      SendChat.chat("Update: Opened " + this.opened + ". And closed " + this.closed);
     }
 
     this.ticks++;

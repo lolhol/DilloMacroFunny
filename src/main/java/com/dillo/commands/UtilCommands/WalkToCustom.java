@@ -1,9 +1,12 @@
 package com.dillo.commands.UtilCommands;
 
+import static com.dillo.armadillomacro.walker;
+
 import com.dillo.pathfinding.mit.finder.main.AStarPathFinder;
 import com.dillo.pathfinding.mit.finder.main.OnPathRenderer;
 import com.dillo.pathfinding.mit.finder.utils.BlockNodeClass;
 import com.dillo.pathfinding.mit.finder.utils.PathFinderConfig;
+import com.dillo.pathfinding.mit.finder.walker.Utils;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
@@ -44,7 +47,7 @@ public class WalkToCustom extends Command {
         false,
         false,
         10,
-        10000,
+        100000,
         1000,
         BlockUtils.fromVec3ToBlockPos(ids.mc.thePlayer.getPositionVector().addVector(-0.5, 0, -0.5)),
         new BlockPos(x, y, z),
@@ -54,7 +57,7 @@ public class WalkToCustom extends Command {
         0
       );
 
-      List<BlockNodeClass> route = pathFinder.AStarPathFinder(newConfig);
+      List<BlockNodeClass> route = pathFinder.run(newConfig);
 
       if (route == null) {
         SendChat.chat("Didnt find a route.");
@@ -63,21 +66,21 @@ public class WalkToCustom extends Command {
 
       SendChat.chat("Took " + (System.currentTimeMillis() - start) + "ms. And the route size is " + route.size());
       // Un comment @this to display the init route.
-      OnPathRenderer.renderList(route, true);
+      //OnPathRenderer.renderList(route, true);
       // ==============================
       // Add @this to display a shorter path
-      /*List<BlockPos> shortSegment = Utils.getShortList(route);
+      List<BlockPos> shortSegment = Utils.getShortList(route);
       shortSegment.forEach(a -> {
         RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(a), true);
-      });*/
+      });
       // ==============================
 
       //List<BlockPos> shortSegment = Utils.getShortList(route);
       /*shortSegment.forEach(a -> {
         RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(a), true);
-      });
+      });*/
 
-      walker.walkOnPath(shortSegment, false, new BlockPos(x, y, z), newConfig);*/
+      walker.walkOnPath(shortSegment, true, new BlockPos(x, y, z), newConfig);
     })
       .start();
   }

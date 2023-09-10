@@ -3,7 +3,6 @@ package com.dillo.pathfinding.mit.finder.utils;
 import java.util.HashSet;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.minecraft.block.Block;
 import net.minecraft.util.BlockPos;
 
 @Getter
@@ -13,25 +12,12 @@ public class BlockNodeClass {
   public BlockNodeClass parentOfBlock;
   public BlockPos blockPos;
 
-  // Info
-
-  public BlockPos finalBlock;
-  public BlockPos startBlock;
-
   // Costs
-
   public double gCost;
   public double hCost;
-  public double surroundings;
-  public double breakCost;
-  public double walkCost;
-
   public double totalCost;
 
   // Other
-
-  public Block blockType;
-
   public ActionTypes actionType;
   public HashSet<BlockPos> broken;
 

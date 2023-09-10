@@ -29,6 +29,7 @@ public class Utils {
     pointList.add(new Vec3(BlockSideVecs.BACKRIGHT.dx, 0, BlockSideVecs.BACKRIGHT.dz));
     pointList.add(new Vec3(0, 0, 0));
 
+    int curCount = 0;
     for (int i = 1; i < blocks.size(); i++) {
       BlockNodeClass curBlockClassNode = blocks.get(i);
       BlockPos curBlockArList = blocks.get(i).blockPos;
@@ -58,6 +59,7 @@ public class Utils {
         if (airAmount > 2) {
           returnBlocks.add(blocks.get(i - 1).blockPos);
           curBlock = blocks.get(i - 1).blockPos;
+          curCount = 0;
           continue;
         }
       }
@@ -90,9 +92,19 @@ public class Utils {
         ) {
           returnBlocks.add(blocks.get(i - 1).blockPos);
           curBlock = blocks.get(i - 1).blockPos;
+          curCount = 0;
           break;
         }
       }
+
+      if (curCount >= 4) {
+        curCount = 0;
+        returnBlocks.add(blocks.get(i - 1).blockPos);
+        curBlock = blocks.get(i - 1).blockPos;
+        continue;
+      }
+
+      curCount++;
     }
 
     return returnBlocks;
