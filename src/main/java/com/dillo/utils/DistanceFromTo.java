@@ -20,4 +20,13 @@ public class DistanceFromTo {
 
     return Math.sqrt(d1 * d1 + d2 * d2 + d3 * d3);
   }
+
+  public static double distanceFromToXZ(BlockPos pos1, BlockPos pos2) {
+    return Math.sqrt(
+      (pos1.getX() - pos2.getX()) *
+      (pos1.getX() - pos2.getX()) -
+      (pos1.getZ() - pos2.getZ()) *
+      (pos1.getZ() - pos2.getZ())
+    );
+  }
 }

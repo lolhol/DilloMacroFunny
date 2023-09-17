@@ -286,7 +286,8 @@ public class BlockUtils {
       blockType != Blocks.red_flower &&
       blockType != Blocks.tallgrass &&
       blockType != Blocks.yellow_flower &&
-      blockType != Blocks.double_plant
+      blockType != Blocks.double_plant &&
+      blockType != Blocks.flowing_water
     );
   }
 

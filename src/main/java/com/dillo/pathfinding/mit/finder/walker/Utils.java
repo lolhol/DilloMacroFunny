@@ -17,7 +17,11 @@ import net.minecraft.util.Vec3;
 
 public class Utils {
 
+  public static boolean isCloseToEnd = false;
+
   public static List<BlockPos> getShortList(List<BlockNodeClass> blocks) {
+    boolean added = false;
+
     List<BlockPos> returnBlocks = new ArrayList<>();
     BlockPos curBlock = BlockUtils.getCenteredBlock(blocks.get(0).blockPos);
     returnBlocks.add(curBlock);
@@ -64,6 +68,12 @@ public class Utils {
         }
       }
 
+      if (added) {
+        added = false;
+        returnBlocks.add(blocks.get(i - 1).blockPos);
+        curBlock = blocks.get(i - 1).blockPos;
+      }
+
       for (Vec3 vec : pointList) {
         Vec3 cur = new Vec3(
           curBlockArList.getX() + vec.xCoord + 0.5,
@@ -85,27 +95,30 @@ public class Utils {
 
         if (
           (obj != null && !obj.hitVec.equals(cur)) ||
-          curBlockClassNode.actionType == ActionTypes.FALL ||
           curBlockClassNode.actionType == ActionTypes.BREAK ||
           curBlockClassNode.actionType == ActionTypes.JUMP ||
           Math.abs(curBlockArList.getY() - curBlock.getY()) > 0.001
         ) {
-          returnBlocks.add(blocks.get(i - 1).blockPos);
-          curBlock = blocks.get(i - 1).blockPos;
+          if (curBlockClassNode.actionType == ActionTypes.FALL) added = true;/*else {
+            returnBlocks.add(blocks.get(i - 1).blockPos);
+            curBlock = blocks.get(i - 1).blockPos;
+          }*/
+
           curCount = 0;
           break;
         }
       }
-
-      if (curCount >= 4) {
+      /*if (curCount >= 4) {
         curCount = 0;
         returnBlocks.add(blocks.get(i - 1).blockPos);
         curBlock = blocks.get(i - 1).blockPos;
         continue;
       }
 
-      curCount++;
+      curCount++;*/
     }
+
+    returnBlocks.add(blocks.get(blocks.size() - 1).blockPos);
 
     return returnBlocks;
   }
@@ -130,7 +143,7 @@ public class Utils {
 
   public static boolean isCloseToNextBlock(BlockPos block) {
     return (
-      DistanceFromTo.distanceFromTo(block, ids.mc.thePlayer.getPosition()) < 1.5 &&
+      DistanceFromTo.distanceFromTo(block, ids.mc.thePlayer.getPosition()) < 2 &&
       Math.abs(ids.mc.thePlayer.getPositionVector().yCoord - block.getY()) < 0.001
     );
   }
@@ -141,7 +154,23 @@ public class Utils {
 
     BlockPos block1Pos = playerPosition.offset(playerFacing);
     BlockPos block2Pos = playerPosition.offset(playerFacing, 1);
+    BlockPos block3Pos = playerPosition.offset(playerFacing, 2);
 
-    return (BlockUtils.isBlockSolid(block1Pos) || BlockUtils.isBlockSolid(block2Pos));
+    BlockPos blockUnder = BlockUtils.makeNewBlock(
+      0,
+      -1,
+      0,
+      BlockUtils.fromVec3ToBlockPos(ids.mc.thePlayer.getPositionVector())
+    );
+
+    return (
+      (
+        BlockUtils.isBlockSolid(block1Pos) || BlockUtils.isBlockSolid(block2Pos) || BlockUtils.isBlockSolid(block3Pos)
+      ) &&
+      !BlockUtils.getBlock(block1Pos).getRegistryName().toLowerCase().contains("slab") &&
+      !BlockUtils.getBlock(block2Pos).getRegistryName().toLowerCase().contains("slab") &&
+      !BlockUtils.getBlock(blockUnder).getRegistryName().toLowerCase().contains("slab") &&
+      !isCloseToEnd
+    );
   }
 }

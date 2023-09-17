@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 
@@ -65,6 +64,7 @@ public class Utils {
         for (int z = -1; z <= 1; z++) {
           if (x == 0 || z == 0) {
             BlockPos curBlock = BlockUtils.makeNewBlock(x, y, z, reference.blockPos);
+
             returnBlocks.add(getClassOfBlock(curBlock, reference, start, end, reference.broken));
 
             while (y == -1 && !BlockUtils.isBlockSolid(BlockUtils.makeNewBlock(0, -1, 0, curBlock))) {
@@ -162,7 +162,10 @@ public class Utils {
     double yDif = Math.abs(block.getY() - parent.blockPos.getY());
     List<BlockPos> blocksToBeRemoved = new ArrayList<>();
 
-    if (BlockUtils.isBlockSolid(block) && !parent.broken.contains(block)) blocksToBeRemoved.add(block);
+    if (
+      BlockUtils.isBlockSolid(block) && !parent.broken.contains(block) // &&
+      //!BlockUtils.getBlock(block).getRegistryName().toLowerCase().contains("slab")
+    ) blocksToBeRemoved.add(block);
 
     BlockPos block1 = BlockUtils.makeNewBlock(0, 1, 0, block);
     if (BlockUtils.isBlockSolid(block1) && !parent.broken.contains(block1)) blocksToBeRemoved.add(block1);
@@ -212,7 +215,7 @@ public class Utils {
         yDiff > -4 &&
         BlockUtils.isBlockSolid(block2) &&
         !parentBlock.broken.contains(block2) &&
-        isAllClearToY(block.getY(), parentBlock.blockPos.getY(), block)
+        BlockUtils.getBlock(block) == Blocks.air
         ? blocksToBeRemoved
         : null
     );
@@ -220,18 +223,14 @@ public class Utils {
 
   public static boolean isAllClearToY(int y1, int y2, BlockPos block) {
     boolean isGreater = y1 < y2;
+    int rem = 0;
 
     while (y1 != y2) {
-      if (isGreater) {
-        y1++;
-      } else {
-        y1--;
-      }
+      BlockPos curBlock = BlockUtils.makeNewBlock(0, rem, 0, block);
 
-      Block curBlock = BlockUtils.getBlock(BlockUtils.makeNewBlock(0, y1, 0, block));
-
-      if (curBlock != Blocks.air) return false;
-      curBlock = BlockUtils.getBlock(BlockUtils.makeNewBlock(0, y1, 0, block));
+      if (!BlockUtils.isBlockSolid(curBlock)) return false;
+      y2--;
+      rem--;
     }
 
     return true;

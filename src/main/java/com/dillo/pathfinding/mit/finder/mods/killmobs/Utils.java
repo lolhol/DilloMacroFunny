@@ -1,4 +1,4 @@
-package com.dillo.pathfinding.mit.finder.mobs;
+package com.dillo.pathfinding.mit.finder.mods.killmobs;
 
 import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.previous.random.ids;

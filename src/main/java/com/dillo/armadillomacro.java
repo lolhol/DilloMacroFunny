@@ -67,6 +67,7 @@ import com.dillo.pathfinding.Brigeros.DestroyBlock;
 import com.dillo.pathfinding.Brigeros.WalkOnPath;
 import com.dillo.pathfinding.mit.finder.main.AStarPathFinder;
 import com.dillo.pathfinding.mit.finder.main.OnPathRenderer;
+import com.dillo.pathfinding.mit.finder.mods.breaklogs.LogBreaker;
 import com.dillo.pathfinding.mit.finder.walker.WalkerMain;
 import com.dillo.remote.*;
 import com.dillo.utils.GetConfigFolder;
@@ -122,9 +123,11 @@ public class armadillomacro {
     keybinds.add(new KeyBinding("Add Point", Keyboard.KEY_NONE, "Mining In Two"));
     keybinds.add(new KeyBinding("Test Key", Keyboard.KEY_NONE, "Mining In Two"));
 
+    LogBreaker b = new LogBreaker();
+
     registerCommands(
       new StartMacroCommand(),
-      new DetectEntityUnderCommand(),
+      new DetectEntityUnderCommand(b),
       new AddBlockRouteCommand(),
       new ClearBlockRoute(),
       new SelectRouteCommand(),
@@ -227,7 +230,8 @@ public class armadillomacro {
         new AdminRenamingDrillFail(),
         new OnPathRenderer(),
         new AStarPathFinder(),
-        walker
+        walker,
+        b
       );
     } catch (NoClassDefFoundError e) {
       System.out.println(Arrays.toString(e.getStackTrace()) + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -282,7 +286,7 @@ public class armadillomacro {
 
   private void registerEvents(Object... events) {
     for (Object event : events) {
-      System.out.println(event.toString() + "!!!");
+      //System.out.println(event.toString() + "!!!");
       MinecraftForge.EVENT_BUS.register(event);
     }
 

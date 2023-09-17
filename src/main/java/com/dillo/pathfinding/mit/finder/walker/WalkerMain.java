@@ -14,13 +14,13 @@ import com.dillo.pathfinding.mit.finder.walker.event.DoneRotating;
 import com.dillo.pathfinding.mit.finder.walker.event.DoneWalking;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.DistanceFromTo;
-import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
 import com.dillo.utils.renderUtils.renderModules.RenderPoints;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.MinecraftForge;
@@ -38,18 +38,21 @@ public class WalkerMain {
   BlockPos nextBlock = null;
   boolean isDoneWithPath;
   int failTime = 0;
+  int countV1 = 0;
   Vec3 beforePlayerPos = null;
   int notMovingTicks = 0;
-  int movingC = 0;
+  boolean movingC = false;
+  boolean shifting = false;
 
   PathFinderConfig config = null;
   BlockPos endBlock = null;
 
-  public static boolean test = false;
+  boolean shiftWhenClosedToEnd = false;
 
   public void walkOnPath(List<BlockPos> blocks, boolean walkerState, BlockPos endBlock, PathFinderConfig config) {
     this.config = config;
     this.endBlock = endBlock;
+    //sprint = false;
 
     if (walkerState) {
       KeybindHandler.updateKeys(false, false, false, false, false, false, false, false);
@@ -58,14 +61,49 @@ public class WalkerMain {
       blocks.remove(0);
       this.nextBlock = blocks.get(0);
       this.blocks = blocks;
+
+      /*LookAt.Rotation rot = LookAt.getRotation(curBlock);
+      rot.pitch = 0.0F;
+      LookAt.smoothLook(rot, 200);*/
+
       this.state = WALKING;
     } else {
       this.reset();
     }
-    //dgjnjdg
+  }
+
+  public void walkOnPath(
+    List<BlockPos> blocks,
+    boolean walkerState,
+    BlockPos endBlock,
+    PathFinderConfig config,
+    boolean shift
+  ) {
+    this.config = config;
+    this.endBlock = endBlock;
+    this.shiftWhenClosedToEnd = shift;
+    //sprint = false;
+
+    if (walkerState) {
+      KeybindHandler.updateKeys(false, false, false, false, false, false, false, false);
+      this.isWalk = true;
+      this.curBlock = blocks.get(0);
+      blocks.remove(0);
+      this.nextBlock = blocks.get(0);
+      this.blocks = blocks;
+
+      /*LookAt.Rotation rot = LookAt.getRotation(curBlock);
+      rot.pitch = 0.0F;
+      LookAt.smoothLook(rot, 200);*/
+
+      this.state = WALKING;
+    } else {
+      this.reset();
+    }
   }
 
   public void reset() {
+    Utils.isCloseToEnd = false;
     this.isWalk = false;
     this.blocks.clear();
     this.walkedOnBlocks.clear();
@@ -124,84 +162,125 @@ public class WalkerMain {
     return block.getY() < ids.mc.thePlayer.posY;
   }
 
+  boolean isOnGround() {
+    return BlockUtils.getBlock(BlockUtils.makeNewBlock(0, -1, 0, ids.mc.thePlayer.getPosition())) != Blocks.air;
+  }
+
   @SubscribeEvent
   public void onTick(TickEvent.ClientTickEvent event) {
-    if (test) {
-      SendChat.chat(String.valueOf(Utils.isCloseToJumpBlock()));
-    }
+    //RenderOneBlockMod.renderOneBlock(BlockUtils.fromBlockPosToVec3(ids.mc.thePlayer.getPosition()), true);
 
     if (!isWalk || state == null) return;
 
-    if (notMovingTicks >= 5) {
-      notMovingTicks = 0;
+    if (state != WAITING) {
+      if (notMovingTicks >= 5) {
+        notMovingTicks = 0;
 
-      if (isNotMoving()) {
-        failTime++;
+        if (isNotMoving()) {
+          failTime++;
+        } else {
+          failTime = 0;
+        }
       } else {
-        failTime = 0;
+        notMovingTicks++;
       }
-    } else {
-      notMovingTicks++;
-    }
 
-    if (failTime >= 4) {
-      failTime = 0;
-      this.reset();
-      this.restartFinder();
+      if (failTime >= 4) {
+        failTime = 0;
+        this.reset();
+        this.restartFinder();
+        return;
+      }
     }
 
     switch (state) {
       case WALKING:
         if (
-          isBlockToFall(this.curBlock) &&
-          DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), this.curBlock) < 1
+          DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), this.endBlock) < 3 &&
+          shiftWhenClosedToEnd &&
+          this.curBlock.getY() == ids.mc.thePlayer.posY
         ) {
-          movingC++;
+          Utils.isCloseToEnd = true;
+          shifting = true;
+          KeybindHandler.updateKeys(true, false, false, false, false, false, shifting, Utils.isCloseToJumpBlock());
+        } else {
+          shifting = false;
+        }
 
-          if (movingC >= 4) {
-            movingC = 0;
-            KeybindHandler.updateKeys(true, false, false, false, false, false, false, Utils.isCloseToJumpBlock());
-            return;
-          }
-
-          KeybindHandler.updateKeys(false, false, false, false, false, false, false, Utils.isCloseToJumpBlock());
+        if (
+          DistanceFromTo.distanceFromToXZ(
+            BlockUtils.fromVec3ToBlockPos(ids.mc.thePlayer.getPositionVector()),
+            this.curBlock
+          ) <
+          2
+        ) {
+          this.state = BlockWalkerState.NEXT_BLOCK;
           return;
         }
 
-        if (Utils.isCloseToNextBlock(this.curBlock)) {
-          if (isDoneWithPath) {
-            reset();
-            SendChat.chat("Done with path!");
-            MinecraftForge.EVENT_BUS.post(new DoneWalking());
-            return;
+        if (isOnGround()) {
+          if (Utils.isCloseToNextBlock(this.curBlock)) {
+            this.state = BlockWalkerState.NEXT_BLOCK;
+            break;
           }
 
-          this.state = BlockWalkerState.NEXT_BLOCK;
-          this.curBlock = this.nextBlock;
+          LookAt.Rotation rotation = LookAt.getRotation(curBlock);
+          rotation.pitch = 0.0F;
+          LookAt.smoothLook(rotation, 20);
 
-          if (!blocks.isEmpty()) {
-            this.nextBlock = this.blocks.get(0);
-            blocks.remove(0);
-          } else {
-            this.isDoneWithPath = true;
-          }
-
-          break;
+          movingC = false;
         }
 
-        LookAt.Rotation rotation = LookAt.getRotation(curBlock);
-        rotation.pitch = 0.0F;
-        LookAt.smoothLook(rotation, 20);
-
-        KeybindHandler.updateKeys(true, false, false, false, false, false, false, Utils.isCloseToJumpBlock());
+        KeybindHandler.updateKeys(true, false, false, false, false, false, shifting, Utils.isCloseToJumpBlock());
+        break;
       case NEXT_BLOCK:
+        if (isDoneWithPath) {
+          reset();
+          MinecraftForge.EVENT_BUS.post(new DoneWalking());
+          return;
+        }
+
+        this.curBlock = this.nextBlock;
+        if (!blocks.isEmpty()) {
+          this.nextBlock = this.blocks.get(0);
+          this.blocks.remove(0);
+
+          if (blocks.isEmpty()) {
+            //sprint = true;
+          }
+          //SendChat.chat(String.valueOf(blocks.size()));
+        } else {
+          this.isDoneWithPath = true;
+        }
+
         LookAt.Rotation rot = LookAt.getRotation(curBlock);
         rot.pitch = 0.0F;
 
         LookAt.smoothLook(rot, 200);
         this.state = WAITING;
+        break;
       case DONE_ROTATION:
         this.state = WALKING;
+        break;
+      case FALLING:
+        if (ids.mc.thePlayer.posY == this.curBlock.getY()) {
+          //SendChat.chat(String.valueOf(ids.mc.thePlayer.posY == this.curBlock.getY()));
+
+          if (countV1 == 10) {
+            this.state = BlockWalkerState.NEXT_BLOCK;
+            countV1 = 0;
+          }
+
+          countV1++;
+        }
+
+        break;
+      case WAITING:
+        countV1++;
+        if (countV1 == 4) {
+          countV1 = 0;
+          this.state = BlockWalkerState.DONE_ROTATION;
+        }
     }
   }
 
@@ -211,7 +290,12 @@ public class WalkerMain {
 
     if (!event.isDoneRotate) return;
     MinecraftForge.EVENT_BUS.post(new DoneRotating(false));
+
+    if (!movingC) return;
+
     this.state = BlockWalkerState.DONE_ROTATION;
+
+    movingC = false;
   }
 
   enum BlockWalkerState {

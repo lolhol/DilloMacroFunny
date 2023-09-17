@@ -3,6 +3,7 @@ package com.dillo.pathfinding.mit.finder.main;
 import com.dillo.pathfinding.mit.finder.utils.*;
 import com.dillo.utils.previous.SendChat;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -37,8 +38,16 @@ public class AStarPathFinder {
       pathFinderConfig.startingBlock,
       pathFinderConfig.destinationBlock
     );
+
     startBlock = pathFinderConfig.startingBlock;
     endBlock = pathFinderConfig.destinationBlock;
+
+    if (pathFinderConfig.startingBlock.equals(pathFinderConfig.destinationBlock)) {
+      List<BlockNodeClass> ls = new ArrayList<>();
+      ls.add(Utils.getClassOfStarting(pathFinderConfig.startingBlock, pathFinderConfig.destinationBlock));
+
+      return ls;
+    }
 
     BlockNodeClass endPoint = Utils.getClassOfEnding(pathFinderConfig.startingBlock, pathFinderConfig.destinationBlock);
     openSet.add(Utils.getClassOfStarting(pathFinderConfig.startingBlock, pathFinderConfig.destinationBlock));
@@ -60,9 +69,9 @@ public class AStarPathFinder {
         endPoint.parentOfBlock = previousNode;
         isStart = false;
 
-        SendChat.chat(
+        /*SendChat.chat(
           "Found! Opened " + this.opened + ". And closed " + this.closed + ". Total -> " + (this.opened + this.closed)
-        );
+        );*/
 
         return Utils.retracePath(startPoint, endPoint);
       }
@@ -102,6 +111,7 @@ public class AStarPathFinder {
     }
 
     isStart = false;
+    SendChat.chat("!!!" + openSet.size());
     return null;
   }
 

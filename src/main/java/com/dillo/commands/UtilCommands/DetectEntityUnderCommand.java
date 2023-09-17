@@ -1,40 +1,25 @@
 package com.dillo.commands.UtilCommands;
 
-import com.dillo.utils.previous.SendChat;
-import com.dillo.utils.previous.random.ids;
+import com.dillo.main.files.localizedData.currentRoute;
+import com.dillo.pathfinding.mit.finder.mods.breaklogs.LogBreaker;
+import com.dillo.utils.previous.chatUtils.SendChat;
 import gg.essential.api.commands.Command;
 import gg.essential.api.commands.DefaultHandler;
-import net.minecraft.util.BlockPos;
-
-import java.util.List;
-
-import static com.dillo.main.utils.GetMostOptimalPath.getBestPath;
-import static com.dillo.main.utils.looks.LookYaw.curRotation;
-import static com.dillo.utils.BlockUtils.getBlocksLayer;
 
 public class DetectEntityUnderCommand extends Command {
 
-    public DetectEntityUnderCommand() {
-        super("testE");
-    }
+  public LogBreaker b = null;
+  boolean st = false;
 
-    @DefaultHandler
-    public void handle() {
-        Test.first = true;
-        BlockPos refrenceBlock2 = new BlockPos(ids.mc.thePlayer.posX, ids.mc.thePlayer.posY + 2, ids.mc.thePlayer.posZ);
-        List<BlockPos> returnList = getBlocksLayer(refrenceBlock2);
+  public DetectEntityUnderCommand(LogBreaker breaker) {
+    super("testE");
+    this.b = breaker;
+  }
 
-        float curYaw = curRotation();
-
-        if (curYaw < 0) {
-            curYaw = 360 + curYaw;
-        }
-
-        SendChat.chat(String.valueOf(getBestPath(returnList, curYaw).displacement));
-        //Test.path = getBestPath(returnList, curYaw);
-        Test.startRender = !Test.startRender;
-        //SendChat.chat("Testing");
-        //currentRoute.curPlayerPos = ids.mc.thePlayer.getPosition();
-        //test = !test;
-    }
+  @DefaultHandler
+  public void handle() {
+    SendChat.chat("Starting!");
+    b.logBreakerMain(!st, currentRoute.currentRoute);
+    st = !st;
+  }
 }
