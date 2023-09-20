@@ -6,6 +6,7 @@ import com.dillo.events.MillisecondEvent;
 import com.dillo.pathfinding.mit.finder.walker.event.DoneWalking;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.previous.chatUtils.SendChat;
+import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
 import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
 import java.util.ArrayList;
@@ -76,6 +77,7 @@ public class LogBreaker {
 
         break;
       case BREAKING:
+        BlockPos closest = utils.getClosest(utils.getSurroundingLogs(3, 3, 3, ids.mc.thePlayer.getPosition()));
         //KeybindHandler.updateKeys(false, false, false, false, false, false, false, false);
         this.curState = State.WAITINGFORDONE;
 

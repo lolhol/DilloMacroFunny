@@ -67,8 +67,8 @@ public class IsOnBlock {
     if (event.phase == TickEvent.Phase.END) {
       if (startCheck) {
         if (
-          Math.abs(ids.mc.thePlayer.getPosition().getX() - blockPos.getX() - 1) < 0.001 &&
-          Math.abs(ids.mc.thePlayer.getPosition().getZ() - blockPos.getZ() - 1) < 0.001 &&
+          Math.abs(ids.mc.thePlayer.posX - blockPos.getX() - 0.5) < 0.001 &&
+          Math.abs(ids.mc.thePlayer.posZ - blockPos.getZ() - 0.5) < 0.001 &&
           !alrDoing
         ) {
           doneTp();

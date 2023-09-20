@@ -1,15 +1,5 @@
 package com.dillo.main.macro.main;
 
-import static com.dillo.calls.CurrentState.ROUTEOBSTRUCTEDCLEAR;
-import static com.dillo.calls.CurrentState.SPINDRIVE;
-import static com.dillo.config.config.ping;
-import static com.dillo.main.macro.main.NewSpinDrive.*;
-import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
-import static com.dillo.main.utils.keybinds.AllKeybinds.JUMP;
-import static com.dillo.utils.BlockUtils.getBlocksLayer;
-import static com.dillo.utils.BlockUtils.getNextBlock;
-import static com.dillo.utils.RayTracingUtils.adjustLook;
-
 import com.dillo.calls.ArmadilloStates;
 import com.dillo.calls.KillSwitch;
 import com.dillo.config.config;
@@ -25,8 +15,6 @@ import com.dillo.utils.previous.random.getItemInSlot;
 import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.previous.random.prefix;
 import com.dillo.utils.random.ThreadUtils;
-import java.util.List;
-import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
@@ -42,17 +30,29 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.dillo.calls.CurrentState.ROUTEOBSTRUCTEDCLEAR;
+import static com.dillo.calls.CurrentState.SPINDRIVE;
+import static com.dillo.config.config.ping;
+import static com.dillo.main.macro.main.NewSpinDrive.*;
+import static com.dillo.main.teleport.macro.TeleportToNextBlock.isThrowRod;
+import static com.dillo.main.utils.keybinds.AllKeybinds.JUMP;
+import static com.dillo.main.utils.keybinds.AllKeybinds.SNEAK;
+import static com.dillo.utils.BlockUtils.getBlocksLayer;
+import static com.dillo.utils.BlockUtils.getNextBlock;
+import static com.dillo.utils.RayTracingUtils.adjustLook;
+
 public class StateDillo {
 
   public static float playerYBe4 = 0;
   public static boolean canCheckIfOnDillo = false;
   public static int tickDilloCheckCount = 0;
   public static boolean isNoTp = false;
-  public static int checkedNumber = 0;
+  public static double prevY = 0;
   public static boolean isSmartTP = false;
-  private static boolean look = true;
   private static float isDilloSummonedTickCount = 0;
-  boolean looking = false;
 
   public static void stateDilloNoGettingOn() {
     if (canDillo() && ArmadilloStates.isOnline()) {
@@ -92,14 +92,17 @@ public class StateDillo {
         if (!ArmadilloStates.isOnline()) {
           ArmadilloStates.currentState = null;
           ArmadilloStates.offlineState = KillSwitch.OFFLINE;
+          SendChat.chat("Not online! Stopping.");
           return;
         }
 
         boolean isDilloSummoned = isDilloSummoned();
         int timeChecked = 0;
 
-        while (!isDilloSummoned && timeChecked <= 80) {
-          if (timeChecked == 40) {
+        KeyBinding.setKeyBindState(SNEAK.getKeyCode(), false);
+
+        while (!isDilloSummoned && timeChecked <= 160) {
+          if (timeChecked == 80) {
             throwRodDillo(rodSlot, drillSlot);
           }
 
@@ -127,12 +130,8 @@ public class StateDillo {
 
         keyBindings.rightClick();
 
+        prevY = ids.mc.thePlayer.posY;
         canCheckIfOnDillo = true;
-
-        ThreadUtils.threadSleepRandom(100);
-        if (randomClick == 1) {
-          keyBindings.rightClick();
-        }
       })
         .start();
     } else {
@@ -146,6 +145,8 @@ public class StateDillo {
 
   public static void throwRodDillo(int rodSlot, int drillSlot) {
     SwapToSlot.swapToSlot(rodSlot);
+
+    ThreadUtils.threadSleepRandom(100);
 
     ids.mc.thePlayer.sendQueue.addToSendQueue(
       new C08PacketPlayerBlockPlacement(
@@ -303,7 +304,7 @@ public class StateDillo {
       return;
     }
 
-    if (ids.mc.thePlayer.isRiding()) {
+    if (ids.mc.thePlayer.isRiding()/*prevY - ids.mc.thePlayer.posY + 1 < 0.0001*/) {
       new Thread(() -> {
         resetDillo();
 

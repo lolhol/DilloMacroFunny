@@ -57,7 +57,7 @@ public class Utils {
           0
         );
 
-      this.foundPath = com.dillo.pathfinding.mit.finder.walker.Utils.getShortList(finder.run(config));
+      this.foundPath = com.dillo.pathfinding.mit.finder.walker.Utils.getShortListV2(finder.run(config));
     })
       .start();
   }

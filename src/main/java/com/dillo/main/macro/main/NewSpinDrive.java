@@ -63,11 +63,6 @@ public class NewSpinDrive {
         // Later => add the % vein
 
         //TODO: test @this
-        /*try {
-          Thread.sleep(RandomisationUtils.randomNumberBetweenInt(50, 100));
-        } catch (InterruptedException e) {
-          throw new RuntimeException(e);
-        }*/
 
         SendChat.chat(prefix.prefix + "Done breaking! Moving to next vein!");
 
@@ -85,7 +80,6 @@ public class NewSpinDrive {
           isThrowRod = true;
           ArmadilloStates.currentState = null;
           TeleportToNextBlock.teleportToNextBlock();
-          // ADD A FASTER TP TO NEXT BLOCK MODULE VIA MAKING IT DISMOUNT A BIT EARLY
         }
       } else {
         SendChat.chat(prefix.prefix + "Detected Macro stop after rotation! Stopping.");
@@ -147,7 +141,7 @@ public class NewSpinDrive {
     isLeft = false;
     path = getBestPath(returnList, 0);
     float displacement = path.displacement;
-    LookYaw.lookToYaw(config.rod_drill_switch_time + 200, displacement, true);
+    LookYaw.lookToYaw(config.rod_drill_switch_time, displacement, true);
   }
 
   public static void debugText(List<BlockPos> startBlocks) {

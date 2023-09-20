@@ -6,161 +6,161 @@ import net.minecraft.item.ItemStack;
 
 public class GetSBItems {
 
-    public static String getSbItemName(ItemStack stack) {
-        String skyblockID = getSBAtr.getSkyBlockID(stack);
+  public static String getSbItemName(ItemStack stack) {
+    String skyblockID = getSBAtr.getSkyBlockID(stack);
 
-        if (skyblockID != null) {
-            skyblockID = skyblockID.toLowerCase();
-        }
-
-        return skyblockID;
+    if (skyblockID != null) {
+      skyblockID = skyblockID.toLowerCase();
     }
 
-    public static int getDrillSlot() {
-        for (int i = 0; i < 8; i++) {
-            ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
+    return skyblockID;
+  }
 
-            String skyblockID = getSBAtr.getSkyBlockID(stack);
+  public static int getDrillSlot() {
+    for (int i = 0; i < 8; i++) {
+      ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
 
-            if (skyblockID != null) {
-                skyblockID = skyblockID.toLowerCase();
+      String skyblockID = getSBAtr.getSkyBlockID(stack);
 
-                if (skyblockID.contains("drill") || skyblockID.contains("gauntlet") || skyblockID.contains("picko")) {
-                    return i;
-                }
-            }
+      if (skyblockID != null) {
+        skyblockID = skyblockID.toLowerCase();
+
+        if (skyblockID.contains("drill") || skyblockID.contains("gauntlet") || skyblockID.contains("pickon")) {
+          return i;
         }
-
-        return -1;
+      }
     }
 
-    public static int getAOTVSlot() {
-        for (int i = 0; i < 8; i++) {
-            ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
+    return -1;
+  }
 
-            String skyblockID = getSBAtr.getSkyBlockID(stack);
+  public static int getAOTVSlot() {
+    for (int i = 0; i < 8; i++) {
+      ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
 
-            if (skyblockID != null) {
-                skyblockID = skyblockID.toLowerCase();
+      String skyblockID = getSBAtr.getSkyBlockID(stack);
 
-                if (skyblockID.contains("void")) {
-                    return i;
-                }
-            }
+      if (skyblockID != null) {
+        skyblockID = skyblockID.toLowerCase();
+
+        if (skyblockID.contains("void")) {
+          return i;
         }
-
-        return -1;
+      }
     }
 
-    public static int getBarrelSlot() {
-        for (int i = 0; i < 8; i++) {
-            ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
+    return -1;
+  }
 
-            String skyblockID = getSBAtr.getSkyBlockID(stack);
+  public static int getBarrelSlot() {
+    for (int i = 0; i < 8; i++) {
+      ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
 
-            if (skyblockID != null) {
-                skyblockID = skyblockID.toLowerCase();
+      String skyblockID = getSBAtr.getSkyBlockID(stack);
 
-                if (skyblockID.contains("barrel")) {
-                    return i;
-                }
-            }
+      if (skyblockID != null) {
+        skyblockID = skyblockID.toLowerCase();
+
+        if (skyblockID.contains("barrel")) {
+          return i;
         }
-
-        return -1;
+      }
     }
 
-    public static int getPhoneSlot() {
-        for (int i = 0; i < 8; i++) {
-            ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
+    return -1;
+  }
 
-            String skyblockID = getSBAtr.getSkyBlockID(stack);
+  public static int getPhoneSlot() {
+    for (int i = 0; i < 8; i++) {
+      ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
 
-            if (skyblockID != null) {
-                skyblockID = skyblockID.toLowerCase();
+      String skyblockID = getSBAtr.getSkyBlockID(stack);
 
-                if (skyblockID.contains("abiphone")) {
-                    return i;
-                }
-            }
+      if (skyblockID != null) {
+        skyblockID = skyblockID.toLowerCase();
+
+        if (skyblockID.contains("abiphone")) {
+          return i;
         }
-
-        return -1;
+      }
     }
 
-    public static int getSack() {
-        for (int i = 0; i < 8; i++) {
-            ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
+    return -1;
+  }
 
-            String skyblockID = getSBAtr.getSkyBlockID(stack);
-            String skyblock = getSBAtr.getSBData(stack);
+  public static int getSack() {
+    for (int i = 0; i < 8; i++) {
+      ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
 
-            if (skyblockID != null) {
-                skyblockID = skyblockID.toLowerCase();
+      String skyblockID = getSBAtr.getSkyBlockID(stack);
+      String skyblock = getSBAtr.getSBData(stack);
 
-                if (skyblockID.contains("sack")) {
-                    SendChat.chat("!!!");
-                    getSBAtr.getSBData(stack);
-                    //SendChat.chat(skyblock);
-                    return i;
-                }
-            }
+      if (skyblockID != null) {
+        skyblockID = skyblockID.toLowerCase();
+
+        if (skyblockID.contains("sack")) {
+          SendChat.chat("!!!");
+          getSBAtr.getSBData(stack);
+          //SendChat.chat(skyblock);
+          return i;
         }
-
-        return -1;
+      }
     }
 
-    public static int getBoomSlot() {
-        for (int i = 0; i < 8; i++) {
-            ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
+    return -1;
+  }
 
-            String skyblockID = getSBAtr.getSkyBlockID(stack);
+  public static int getBoomSlot() {
+    for (int i = 0; i < 8; i++) {
+      ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
 
-            if (skyblockID != null) {
-                skyblockID = skyblockID.toLowerCase();
+      String skyblockID = getSBAtr.getSkyBlockID(stack);
 
-                if (skyblockID.contains("bob") && skyblockID.contains("omb")) {
-                    return i;
-                }
-            }
+      if (skyblockID != null) {
+        skyblockID = skyblockID.toLowerCase();
+
+        if (skyblockID.contains("bob") && skyblockID.contains("omb")) {
+          return i;
         }
-
-        return -1;
+      }
     }
 
-    public static int getFireVeilSlot() {
-        for (int i = 0; i < 8; i++) {
-            ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
+    return -1;
+  }
 
-            String skyblockID = getSBAtr.getSkyBlockID(stack);
+  public static int getFireVeilSlot() {
+    for (int i = 0; i < 8; i++) {
+      ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
 
-            if (skyblockID != null) {
-                skyblockID = skyblockID.toLowerCase();
+      String skyblockID = getSBAtr.getSkyBlockID(stack);
 
-                if (skyblockID.contains("fire") && skyblockID.contains("veil")) {
-                    return i;
-                }
-            }
+      if (skyblockID != null) {
+        skyblockID = skyblockID.toLowerCase();
+
+        if (skyblockID.contains("fire") && skyblockID.contains("veil")) {
+          return i;
         }
-
-        return -1;
+      }
     }
 
-    public static int getCustomSlot(String name) {
-        for (int i = 0; i < 8; i++) {
-            ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
+    return -1;
+  }
 
-            String skyblockID = getSBAtr.getSkyBlockID(stack);
+  public static int getCustomSlot(String name) {
+    for (int i = 0; i < 8; i++) {
+      ItemStack stack = ids.mc.thePlayer.inventory.mainInventory[i];
 
-            if (skyblockID != null) {
-                skyblockID = skyblockID.toLowerCase();
+      String skyblockID = getSBAtr.getSkyBlockID(stack);
 
-                if (skyblockID.contains(name)) {
-                    return i;
-                }
-            }
+      if (skyblockID != null) {
+        skyblockID = skyblockID.toLowerCase();
+
+        if (skyblockID.contains(name)) {
+          return i;
         }
-
-        return -1;
+      }
     }
+
+    return -1;
+  }
 }

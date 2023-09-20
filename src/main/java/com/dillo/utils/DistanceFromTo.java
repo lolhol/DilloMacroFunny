@@ -1,6 +1,7 @@
 package com.dillo.utils;
 
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 public class DistanceFromTo {
@@ -22,11 +23,8 @@ public class DistanceFromTo {
   }
 
   public static double distanceFromToXZ(BlockPos pos1, BlockPos pos2) {
-    return Math.sqrt(
-      (pos1.getX() - pos2.getX()) *
-      (pos1.getX() - pos2.getX()) -
-      (pos1.getZ() - pos2.getZ()) *
-      (pos1.getZ() - pos2.getZ())
-    );
+    final double d0 = pos1.getX() - pos2.getX();
+    final double d2 = pos1.getZ() - pos2.getZ();
+    return MathHelper.sqrt_double(d0 * d0 + d2 * d2);
   }
 }

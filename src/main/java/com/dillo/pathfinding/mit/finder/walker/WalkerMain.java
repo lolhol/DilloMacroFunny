@@ -1,10 +1,5 @@
 package com.dillo.pathfinding.mit.finder.walker;
 
-import static com.dillo.armadillomacro.walker;
-import static com.dillo.main.utils.looks.LookAt.updateServerLook;
-import static com.dillo.pathfinding.mit.finder.walker.WalkerMain.BlockWalkerState.WAITING;
-import static com.dillo.pathfinding.mit.finder.walker.WalkerMain.BlockWalkerState.WALKING;
-
 import com.dillo.events.PlayerMoveEvent;
 import com.dillo.keybinds.KeybindHandler;
 import com.dillo.main.utils.looks.LookAt;
@@ -22,9 +17,6 @@ import com.dillo.utils.previous.random.ids;
 import com.dillo.utils.random.ThreadUtils;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
 import com.dillo.utils.renderUtils.renderModules.RenderPoints;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.util.BlockPos;
@@ -33,6 +25,15 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+import static com.dillo.armadillomacro.walker;
+import static com.dillo.main.utils.looks.LookAt.updateServerLook;
+import static com.dillo.pathfinding.mit.finder.walker.WalkerMain.BlockWalkerState.WAITING;
+import static com.dillo.pathfinding.mit.finder.walker.WalkerMain.BlockWalkerState.WALKING;
 
 public class WalkerMain {
 
@@ -250,10 +251,9 @@ public class WalkerMain {
       case WALKING:
         isStartLooking = false;
         if (
-          DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), this.endBlock) < 4 &&
-          ids.mc.thePlayer.posY == endBlock.getY() &&
-          shiftWhenClosedToEnd &&
-          this.curBlock.getY() == ids.mc.thePlayer.posY
+          DistanceFromTo.distanceFromToXZ(ids.mc.thePlayer.getPosition(), this.endBlock) < 3 &&
+          ids.mc.thePlayer.posY - 1 == endBlock.getY() &&
+          shiftWhenClosedToEnd
         ) {
           Utils.isCloseToEnd = true;
           shifting = true;
@@ -267,7 +267,7 @@ public class WalkerMain {
             BlockUtils.fromVec3ToBlockPos(ids.mc.thePlayer.getPositionVector()),
             BlockUtils.getCenteredBlock(this.curBlock)
           ) <
-          2.5
+          0.7
         ) {
           this.state = BlockWalkerState.NEXT_BLOCK;
           return;
@@ -281,7 +281,9 @@ public class WalkerMain {
 
           LookAt.Rotation rotation = LookAt.getRotation(curBlock);
           rotation.pitch = 0.0F;
-          LookAt.smoothLook(rotation, 60);
+          if (LookAt.done) {
+            LookAt.smoothLook(rotation, 150L);
+          }
 
           movingC = false;
         }

@@ -7,13 +7,13 @@ import com.dillo.utils.DistanceFromTo;
 import com.dillo.utils.RayTracingUtils;
 import com.dillo.utils.previous.random.ids;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 
 public class Utils {
 
@@ -123,6 +123,29 @@ public class Utils {
     return returnBlocks;
   }
 
+  public static List<BlockPos> getShortListV2(List<BlockNodeClass> blocks) {
+    boolean added = false;
+
+    List<BlockPos> returnBlocks = new ArrayList<>();
+    BlockPos curBlock = BlockUtils.getCenteredBlock(blocks.get(0).blockPos);
+    returnBlocks.add(curBlock);
+
+    int curCount = 0;
+    for (int i = 1; i < blocks.size(); i++) {
+      BlockNodeClass curBlockClassNode = blocks.get(i);
+      BlockPos curBlockArList = blocks.get(i).blockPos;
+      BlockPos centered = BlockUtils.getCenteredBlock(curBlockArList);
+
+      if (isGood(BlockUtils.fromBlockPosToVec3(centered))) {
+        returnBlocks.add(centered);
+      }
+    }
+
+    returnBlocks.add(blocks.get(blocks.size() - 1).blockPos);
+
+    return returnBlocks;
+  }
+
   public static boolean isTrenchInWay(BlockPos startBlock, BlockPos endBlock) {
     List<RayTracingUtils.CollisionResult> collisionResults = RayTracingUtils.getCollisionVecsList(
       startBlock.getX() + 0.5,
@@ -172,5 +195,75 @@ public class Utils {
       !BlockUtils.getBlock(blockUnder).getRegistryName().toLowerCase().contains("slab") &&
       !isCloseToEnd
     );
+  }
+
+  private static Vec3 goodPoints(ArrayList<Vec3> path) {
+    ArrayList<Vec3> reversed = new ArrayList<>(path);
+    Collections.reverse(reversed);
+    for (Vec3 vec : reversed
+      .stream()
+      .filter(vec -> new BlockPos(vec).getY() == ids.mc.thePlayer.getPosition().getY())
+      .collect(Collectors.toList())) {
+      if (isGood(vec)) {
+        return vec;
+      }
+    }
+    return null;
+  }
+
+  private static boolean isGood(Vec3 point) {
+    if (point == null) return false;
+    Vec3 topPoint = point.add(new Vec3(0, 2, 0));
+
+    Vec3 topPos = ids.mc.thePlayer.getPositionVector().addVector(0, 1, 0);
+    Vec3 botPos = ids.mc.thePlayer.getPositionVector();
+    Vec3 underPos = ids.mc.thePlayer.getPositionVector().addVector(0, -1, 0);
+
+    Vec3 directionTop = getLook(topPoint);
+    directionTop = scaleVec(directionTop, 0.5f);
+    for (int i = 0; i < Math.round(topPoint.distanceTo(ids.mc.thePlayer.getPositionEyes(1))) * 2; i++) {
+      IBlockState topBlockState = ids.mc.theWorld.getBlockState(new BlockPos(topPos));
+      if (
+        topBlockState.getBlock().getCollisionBoundingBox(ids.mc.theWorld, new BlockPos(topPos), topBlockState) != null
+      ) return false;
+
+      IBlockState botBlockState = ids.mc.theWorld.getBlockState(new BlockPos(botPos));
+      if (
+        botBlockState.getBlock().getCollisionBoundingBox(ids.mc.theWorld, new BlockPos(botPos), botBlockState) != null
+      ) return false;
+
+      IBlockState underBlockState = ids.mc.theWorld.getBlockState(new BlockPos(underPos));
+      if (
+        underBlockState.getBlock().getCollisionBoundingBox(ids.mc.theWorld, new BlockPos(underPos), underBlockState) !=
+        null
+      ) return false;
+
+      underPos = underPos.add(directionTop);
+    }
+    return true;
+  }
+
+  public static Vec3 getLook(final Vec3 vec) {
+    final double diffX = vec.xCoord - ids.mc.thePlayer.posX;
+    final double diffY = vec.yCoord - (ids.mc.thePlayer.posY + ids.mc.thePlayer.getEyeHeight());
+    final double diffZ = vec.zCoord - ids.mc.thePlayer.posZ;
+    final double dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
+    return getVectorForRotation(
+      (float) (-(MathHelper.atan2(diffY, dist) * 180.0 / 3.141592653589793)),
+      (float) (MathHelper.atan2(diffZ, diffX) * 180.0 / 3.141592653589793 - 90.0)
+    );
+  }
+
+  public static Vec3 getVectorForRotation(final float pitch, final float yaw) {
+    final float f2 = -MathHelper.cos(-pitch * 0.017453292f);
+    return new Vec3(
+      MathHelper.sin(-yaw * 0.017453292f - 3.1415927f) * f2,
+      MathHelper.sin(-pitch * 0.017453292f),
+      MathHelper.cos(-yaw * 0.017453292f - 3.1415927f) * f2
+    );
+  }
+
+  public static Vec3 scaleVec(Vec3 vec, float scale) {
+    return new Vec3(vec.xCoord * scale, vec.yCoord * scale, vec.zCoord * scale);
   }
 }
