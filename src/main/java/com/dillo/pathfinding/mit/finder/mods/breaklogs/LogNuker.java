@@ -23,12 +23,15 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class LogNuker {
 
-  boolean isHard = false;
+  boolean start = false;
   boolean isStart = false;
   int init = 0;
   boolean isStartLooking = false;
   int ticksUntilCheck = 0;
   int count = 5;
+  int fCount = 0;
+
+  BlockPos closestBlock = null;
 
   List<BlockPos> logList = new ArrayList<>();
   List<BlockPos> finishedList = new ArrayList<>();
@@ -38,18 +41,7 @@ public class LogNuker {
   public void init(boolean isStart) {
     this.logList = utils.getSurroundingLogs(3, 3, 3, ids.mc.thePlayer.getPosition());
 
-    int i = 0;
-    while (i < logList.size()) {
-      if (
-        BlockUtils.getBlock(logList.get(i)) != Blocks.log ||
-        DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), logList.get(i)) >
-        ids.mc.playerController.getBlockReachDistance()
-      ) {
-        logList.remove(i);
-      } else {
-        i++;
-      }
-    }
+    closestBlock = utils.getClosest(logList);
 
     init = logList.size();
     finishedList.clear();
@@ -66,6 +58,7 @@ public class LogNuker {
   public void reset() {
     MinecraftForge.EVENT_BUS.unregister(this);
     count = 5;
+    this.fCount = 0;
   }
 
   public boolean isDone() {
@@ -92,12 +85,6 @@ public class LogNuker {
   public void onTick(TickEvent.ClientTickEvent event) {
     if (!isStart) return;
 
-    if (isDoneNow()) {
-      this.isStart = false;
-      reset();
-      return;
-    }
-
     if (count < 4) {
       count++;
       return;
@@ -111,6 +98,17 @@ public class LogNuker {
 
     //SendChat.chat(ids.mc.thePlayer.inventory.getStackInSlot(ids.mc.thePlayer.inventory.currentItem).getDisplayName());
 
+    if (start) {
+      if (fCount > 1) {
+        reset();
+        this.isStart = false;
+        start = false;
+        return;
+      }
+
+      fCount++;
+    }
+
     if (
       ids.mc.thePlayer.inventory.getStackInSlot(ids.mc.thePlayer.inventory.currentItem).getItem() != Items.golden_axe
     ) {
@@ -118,38 +116,24 @@ public class LogNuker {
       return;
     }
 
-    BlockPos closest = utils.getClosest(logList);
-    if (logList.isEmpty() || closest == null) {
-      this.isStart = false;
-      reset();
-      return;
-    }
-
     if (
-      DistanceFromTo.distanceFromTo(closest, ids.mc.thePlayer.getPosition()) >
+      DistanceFromTo.distanceFromTo(closestBlock, ids.mc.thePlayer.getPosition()) >
       ids.mc.playerController.getBlockReachDistance()
     ) {
       return;
     }
 
-    /*if (isSendStop) {
-      isSendStop = false;
-      sendStop.sendStopPacket(closest, getBlockEnum.getEnum(closest));
-    }*/
+    RenderOneBlockMod.renderOneBlock(BlockUtils.fromBlockPosToVec3(closestBlock), true);
 
-    finishedList.add(closest);
-    logList.remove(closest);
-
-    RenderOneBlockMod.renderOneBlock(BlockUtils.fromBlockPosToVec3(closest), true);
-
-    if (BlockUtils.getBlock(closest) != Blocks.log) {
+    if (BlockUtils.getBlock(closestBlock) != Blocks.log) {
       return;
     }
 
     isStartLooking = true;
-    LookAt.serverSmoothLook(LookAt.getRotation(closest), 50);
+    LookAt.serverSmoothLook(LookAt.getRotation(closestBlock), 150);
 
-    sendStart.sendStartPacket(closest, getBlockEnum.getEnum(closest));
+    sendStart.sendStartPacket(closestBlock, getBlockEnum.getEnum(closestBlock));
+    start = true;
   }
 
   @SubscribeEvent(priority = EventPriority.NORMAL)

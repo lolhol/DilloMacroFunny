@@ -1,9 +1,11 @@
 package com.dillo.pathfinding.mit.finder.walker;
 
 import static com.dillo.armadillomacro.walker;
+import static com.dillo.main.utils.looks.LookAt.updateServerLook;
 import static com.dillo.pathfinding.mit.finder.walker.WalkerMain.BlockWalkerState.WAITING;
 import static com.dillo.pathfinding.mit.finder.walker.WalkerMain.BlockWalkerState.WALKING;
 
+import com.dillo.events.PlayerMoveEvent;
 import com.dillo.keybinds.KeybindHandler;
 import com.dillo.main.utils.looks.LookAt;
 import com.dillo.pathfinding.mit.finder.main.AStarPathFinder;
@@ -14,16 +16,21 @@ import com.dillo.pathfinding.mit.finder.walker.event.DoneRotating;
 import com.dillo.pathfinding.mit.finder.walker.event.DoneWalking;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.DistanceFromTo;
+import com.dillo.utils.GetSBItems;
+import com.dillo.utils.previous.random.SwapToSlot;
 import com.dillo.utils.previous.random.ids;
+import com.dillo.utils.random.ThreadUtils;
 import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
 import com.dillo.utils.renderUtils.renderModules.RenderPoints;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import net.minecraft.init.Blocks;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -43,9 +50,13 @@ public class WalkerMain {
   int notMovingTicks = 0;
   boolean movingC = false;
   boolean shifting = false;
+  boolean isTeleport = false;
+  boolean isTped = false;
+  boolean isStartLooking = false;
 
   PathFinderConfig config = null;
   BlockPos endBlock = null;
+  TpState tpState = null;
 
   boolean shiftWhenClosedToEnd = false;
 
@@ -77,8 +88,11 @@ public class WalkerMain {
     boolean walkerState,
     BlockPos endBlock,
     PathFinderConfig config,
-    boolean shift
+    boolean shift,
+    boolean isTeleport
   ) {
+    this.isTped = false;
+    this.isTeleport = isTeleport;
     this.config = config;
     this.endBlock = endBlock;
     this.shiftWhenClosedToEnd = shift;
@@ -108,7 +122,7 @@ public class WalkerMain {
     this.blocks.clear();
     this.walkedOnBlocks.clear();
     this.isDoneWithPath = false;
-    KeybindHandler.updateKeys(false, false, false, false, false, false, false, false);
+    KeybindHandler.updateKeys(true, false, false, false, false, false, true, false);
   }
 
   public boolean isNotMoving() {
@@ -193,10 +207,51 @@ public class WalkerMain {
       }
     }
 
+    if (DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), this.curBlock) > 10 && isTeleport && !isTped) {
+      this.state = BlockWalkerState.TELEPORTING;
+      this.tpState = TpState.SWITCHING;
+    }
+
     switch (state) {
+      case TELEPORTING:
+        this.state = BlockWalkerState.WAITINGV2;
+        KeybindHandler.updateKeys(false, false, false, false, false, false, false, false);
+        this.isTped = true;
+
+        new Thread(() -> {
+          ThreadUtils.sleepThread(50);
+          int slot = GetSBItems.getAOTVSlot();
+          SwapToSlot.swapToSlot(slot);
+
+          ThreadUtils.sleepThread(50);
+
+          LookAt.serverSmoothLook(LookAt.getRotation(this.curBlock), 50);
+
+          ThreadUtils.sleepThread(50);
+
+          ThreadUtils.sleepThread(50);
+
+          ids.mc.thePlayer.sendQueue.addToSendQueue(
+            new C08PacketPlayerBlockPlacement(
+              new BlockPos(-1, -1, -1),
+              255,
+              ids.mc.thePlayer.inventory.getStackInSlot(slot),
+              0,
+              0,
+              0
+            )
+          );
+
+          this.state = WALKING;
+        })
+          .start();
+
+        return;
       case WALKING:
+        isStartLooking = false;
         if (
-          DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), this.endBlock) < 3 &&
+          DistanceFromTo.distanceFromTo(ids.mc.thePlayer.getPosition(), this.endBlock) < 4 &&
+          ids.mc.thePlayer.posY == endBlock.getY() &&
           shiftWhenClosedToEnd &&
           this.curBlock.getY() == ids.mc.thePlayer.posY
         ) {
@@ -210,9 +265,9 @@ public class WalkerMain {
         if (
           DistanceFromTo.distanceFromToXZ(
             BlockUtils.fromVec3ToBlockPos(ids.mc.thePlayer.getPositionVector()),
-            this.curBlock
+            BlockUtils.getCenteredBlock(this.curBlock)
           ) <
-          2
+          2.5
         ) {
           this.state = BlockWalkerState.NEXT_BLOCK;
           return;
@@ -226,7 +281,7 @@ public class WalkerMain {
 
           LookAt.Rotation rotation = LookAt.getRotation(curBlock);
           rotation.pitch = 0.0F;
-          LookAt.smoothLook(rotation, 20);
+          LookAt.smoothLook(rotation, 60);
 
           movingC = false;
         }
@@ -253,10 +308,12 @@ public class WalkerMain {
           this.isDoneWithPath = true;
         }
 
-        LookAt.Rotation rot = LookAt.getRotation(curBlock);
-        rot.pitch = 0.0F;
+        if (nextBlock != null) {
+          LookAt.Rotation rot = LookAt.getRotation(nextBlock);
+          rot.pitch = 0.0F;
+          LookAt.smoothLook(rot, 200);
+        }
 
-        LookAt.smoothLook(rot, 200);
         this.state = WAITING;
         break;
       case DONE_ROTATION:
@@ -281,6 +338,14 @@ public class WalkerMain {
           countV1 = 0;
           this.state = BlockWalkerState.DONE_ROTATION;
         }
+
+        break;
+      case FINISH_TP:
+        //blocks.get();
+
+        break;
+      case WAITINGV2:
+        break;
     }
   }
 
@@ -304,9 +369,21 @@ public class WalkerMain {
     WAITING,
     JUMPING,
     FALLING,
-    START_BREAK,
-    BREAKING,
+    FINISH_TP,
+    WAITINGV2,
     DONE_ROTATION,
     NEXT_BLOCK,
+    TELEPORTING,
+  }
+
+  enum TpState {
+    SWITCHING,
+    CLICK,
+  }
+
+  @SubscribeEvent(priority = EventPriority.NORMAL)
+  public void onUpdatePre(PlayerMoveEvent.Pre pre) {
+    if (!isStartLooking) return;
+    updateServerLook();
   }
 }

@@ -22,11 +22,11 @@ public class SwapToSlot {
 
   public static void swapToSlot(int slot) {
     ids.mc.thePlayer.inventory.currentItem = slot;
-    try {
+    /*try {
       int delay = MIN_DELAY_AMOUNT + random.nextInt(MAX_DELAY_AMOUNT - MIN_DELAY_AMOUNT + 1);
       Thread.sleep(delay);
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
-    }
+    }*/
   }
 }

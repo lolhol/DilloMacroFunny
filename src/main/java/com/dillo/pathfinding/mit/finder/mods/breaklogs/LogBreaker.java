@@ -3,9 +3,10 @@ package com.dillo.pathfinding.mit.finder.mods.breaklogs;
 import static com.dillo.armadillomacro.walker;
 
 import com.dillo.events.MillisecondEvent;
-import com.dillo.keybinds.KeybindHandler;
 import com.dillo.pathfinding.mit.finder.walker.event.DoneWalking;
+import com.dillo.utils.BlockUtils;
 import com.dillo.utils.previous.chatUtils.SendChat;
+import com.dillo.utils.renderUtils.renderModules.RenderMultipleBlocksMod;
 import com.dillo.utils.renderUtils.renderModules.RenderOneBlockMod;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,11 @@ public class LogBreaker {
 
         this.curState = State.WALKING;
         List<BlockPos> path = utils.retrieveFoundPath();
-        walker.walkOnPath(path, true, this.curBlock, utils.config, true);
+        path.forEach(a -> {
+          RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(a), true);
+        });
+
+        walker.walkOnPath(path, true, this.curBlock, utils.config, true, false);
         break;
       case WALKING:
         if (this.isDoneWalking) {
@@ -71,7 +76,7 @@ public class LogBreaker {
 
         break;
       case BREAKING:
-        KeybindHandler.updateKeys(false, false, false, false, false, false, false, false);
+        //KeybindHandler.updateKeys(false, false, false, false, false, false, false, false);
         this.curState = State.WAITINGFORDONE;
 
         if (add >= blocks.size() - 1) {
