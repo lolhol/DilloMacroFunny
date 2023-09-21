@@ -96,13 +96,10 @@ public class Utils {
         if (
           (obj != null && !obj.hitVec.equals(cur)) ||
           curBlockClassNode.actionType == ActionTypes.BREAK ||
-          curBlockClassNode.actionType == ActionTypes.JUMP ||
-          Math.abs(curBlockArList.getY() - curBlock.getY()) > 0.001
+          curBlockClassNode.actionType == ActionTypes.JUMP
         ) {
-          if (curBlockClassNode.actionType == ActionTypes.FALL) added = true;/*else {
-            returnBlocks.add(blocks.get(i - 1).blockPos);
-            curBlock = blocks.get(i - 1).blockPos;
-          }*/
+          returnBlocks.add(blocks.get(i - 1).blockPos);
+          curBlock = blocks.get(i - 1).blockPos;
 
           curCount = 0;
           break;

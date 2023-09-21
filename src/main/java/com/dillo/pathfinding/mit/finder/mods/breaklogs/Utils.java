@@ -88,4 +88,48 @@ public class Utils {
 
     return logList;
   }
+
+  public List<BlockPos> getSurroundingLogs(float xMax, float yMax, float zMax, BlockPos reference) {
+    List<BlockPos> logList = new ArrayList<>();
+
+    for (float x = -xMax; x <= xMax; x++) {
+      for (float y = -yMax; y <= yMax; y++) {
+        for (float z = -zMax; z <= zMax; z++) {
+          BlockPos newBlock = BlockUtils.makeNewBlock(x, y, z, reference);
+
+          if (BlockUtils.getBlock(newBlock) == Blocks.log) {
+            logList.add(newBlock);
+          }
+        }
+      }
+    }
+
+    return logList;
+  }
+
+  public List<BlockPos> getSurroundingLogs(
+    float xMax,
+    float yMax,
+    float zMax,
+    BlockPos reference,
+    List<BlockPos> broken
+  ) {
+    List<BlockPos> logList = new ArrayList<>();
+
+    for (float x = -xMax; x <= xMax; x++) {
+      for (float y = -yMax; y <= yMax; y++) {
+        for (float z = -zMax; z <= zMax; z++) {
+          BlockPos newBlock = BlockUtils.makeNewBlock(x, y, z, reference);
+
+          if (broken.contains(newBlock)) continue;
+
+          if (BlockUtils.getBlock(newBlock) == Blocks.log) {
+            logList.add(newBlock);
+          }
+        }
+      }
+    }
+
+    return logList;
+  }
 }
