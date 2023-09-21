@@ -7,6 +7,7 @@ import com.dillo.pathfinding.mit.finder.main.OnPathRenderer;
 import com.dillo.pathfinding.mit.finder.utils.BlockNodeClass;
 import com.dillo.pathfinding.mit.finder.utils.PathFinderConfig;
 import com.dillo.pathfinding.mit.finder.walker.Utils;
+import com.dillo.pathfinding.mit.finder.walker.WalkerConfig;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
@@ -80,7 +81,7 @@ public class WalkToCustom extends Command {
         RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(a), true);
       });*/
 
-      walker.walkOnPath(shortSegment, true, new BlockPos(x, y, z), newConfig);
+      walker.run(shortSegment, new WalkerConfig(true, 4, shortSegment.get(shortSegment.size() - 1)));
     })
       .start();
   }

@@ -1,7 +1,5 @@
 package com.dillo.pathfinding.mit.finder.mods.breaklogs;
 
-import static com.dillo.armadillomacro.walker;
-
 import com.dillo.events.MillisecondEvent;
 import com.dillo.pathfinding.mit.finder.walker.event.DoneWalking;
 import com.dillo.utils.BlockUtils;
@@ -67,7 +65,7 @@ public class LogBreaker {
           RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(a), true);
         });
 
-        walker.walkOnPath(path, true, this.curBlock, utils.config, true, false);
+        //walker.walkOnPath(path, true, this.curBlock, utils.config, true, false);
         break;
       case WALKING:
         if (this.isDoneWalking) {
