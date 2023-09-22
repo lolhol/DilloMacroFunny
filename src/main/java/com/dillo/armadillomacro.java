@@ -68,7 +68,6 @@ import com.dillo.pathfinding.Brigeros.WalkOnPath;
 import com.dillo.pathfinding.mit.finder.main.AStarPathFinder;
 import com.dillo.pathfinding.mit.finder.main.OnPathRenderer;
 import com.dillo.pathfinding.mit.finder.mods.breaklogs.LogBreaker;
-import com.dillo.pathfinding.mit.finder.walker.WalkerMain;
 import com.dillo.remote.*;
 import com.dillo.utils.GetConfigFolder;
 import com.dillo.utils.renderUtils.renderModules.*;
@@ -110,7 +109,6 @@ public class armadillomacro {
   public static ArrayList<KeyBinding> keybinds = new ArrayList<>();
   public static List<Element> allOverlays = new ArrayList<>();
   public static JumpProgressRegister regJump = new JumpProgressRegister();
-  public static WalkerMain walker = new WalkerMain();
 
   @Mod.EventHandler
   public void init(FMLInitializationEvent event) {
@@ -230,7 +228,6 @@ public class armadillomacro {
         new AdminRenamingDrillFail(),
         new OnPathRenderer(),
         new AStarPathFinder(),
-        walker,
         b
       );
     } catch (NoClassDefFoundError e) {

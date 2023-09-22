@@ -121,9 +121,12 @@ public class Utils {
         for (float z = -zMax; z <= zMax; z++) {
           BlockPos newBlock = BlockUtils.makeNewBlock(x, y, z, reference);
 
-          if (broken.contains(newBlock)) continue;
+          if (
+            broken.contains(newBlock) ||
+            DistanceFromTo.distanceFromTo(newBlock, reference) > ids.mc.playerController.getBlockReachDistance()
+          ) continue;
 
-          if (BlockUtils.getBlock(newBlock) == Blocks.log) {
+          if (BlockUtils.getBlock(newBlock) == Blocks.log || BlockUtils.getBlock(newBlock) == Blocks.log2) {
             logList.add(newBlock);
           }
         }

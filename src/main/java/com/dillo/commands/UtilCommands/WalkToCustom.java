@@ -1,13 +1,11 @@
 package com.dillo.commands.UtilCommands;
 
-import static com.dillo.armadillomacro.walker;
-
 import com.dillo.pathfinding.mit.finder.main.AStarPathFinder;
 import com.dillo.pathfinding.mit.finder.main.OnPathRenderer;
 import com.dillo.pathfinding.mit.finder.utils.BlockNodeClass;
 import com.dillo.pathfinding.mit.finder.utils.PathFinderConfig;
 import com.dillo.pathfinding.mit.finder.walker.Utils;
-import com.dillo.pathfinding.mit.finder.walker.WalkerConfig;
+import com.dillo.pathfinding.mit.finder.walker.WalkerMain;
 import com.dillo.utils.BlockUtils;
 import com.dillo.utils.previous.chatUtils.SendChat;
 import com.dillo.utils.previous.random.ids;
@@ -23,6 +21,7 @@ import net.minecraft.util.BlockPos;
 public class WalkToCustom extends Command {
 
   public static boolean startRender = false;
+  public WalkerMain walker = new WalkerMain();
 
   public WalkToCustom() {
     super("walkToCustom");
@@ -81,7 +80,7 @@ public class WalkToCustom extends Command {
         RenderMultipleBlocksMod.renderMultipleBlocks(BlockUtils.fromBlockPosToVec3(a), true);
       });*/
 
-      walker.run(shortSegment, new WalkerConfig(true, 4, shortSegment.get(shortSegment.size() - 1)));
+      //walker.runWalker(new BlockPos(x, y, z), true, new WalkerConfig(true, 4, new BlockPos(x, y, z)));
     })
       .start();
   }

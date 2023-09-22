@@ -23,8 +23,9 @@ public class Utils {
     boolean added = false;
 
     List<BlockPos> returnBlocks = new ArrayList<>();
+    blocks.remove(0);
     BlockPos curBlock = BlockUtils.getCenteredBlock(blocks.get(0).blockPos);
-    returnBlocks.add(curBlock);
+    //returnBlocks.add(curBlock);
 
     List<Vec3> pointList = new ArrayList<>();
     pointList.add(new Vec3(BlockSideVecs.LEFT.dx, 0, BlockSideVecs.LEFT.dz));
@@ -174,24 +175,8 @@ public class Utils {
 
     BlockPos block1Pos = playerPosition.offset(playerFacing);
     BlockPos block2Pos = playerPosition.offset(playerFacing, 1);
-    BlockPos block3Pos = playerPosition.offset(playerFacing, 2);
 
-    BlockPos blockUnder = BlockUtils.makeNewBlock(
-      0,
-      -1,
-      0,
-      BlockUtils.fromVec3ToBlockPos(ids.mc.thePlayer.getPositionVector())
-    );
-
-    return (
-      (
-        BlockUtils.isBlockSolid(block1Pos) || BlockUtils.isBlockSolid(block2Pos) || BlockUtils.isBlockSolid(block3Pos)
-      ) &&
-      !BlockUtils.getBlock(block1Pos).getRegistryName().toLowerCase().contains("slab") &&
-      !BlockUtils.getBlock(block2Pos).getRegistryName().toLowerCase().contains("slab") &&
-      !BlockUtils.getBlock(blockUnder).getRegistryName().toLowerCase().contains("slab") &&
-      !isCloseToEnd
-    );
+    return BlockUtils.isBlockSolid(block1Pos) || BlockUtils.isBlockSolid(block2Pos);
   }
 
   private static Vec3 goodPoints(ArrayList<Vec3> path) {
